@@ -4,541 +4,349 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jose x Jocelyn — From Applications to Offers</title>
-  <meta name="description" content="No one should have to guess their way from first internship search to first offer. Jose x Jocelyn maps the pipeline for first-gen and underrepresented students in tech." />
+  <meta name="description" content="The student-to-early-career relay for first-gen and underrepresented talent in tech." />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="Jose x Jocelyn — From Applications to Offers" />
-  <meta property="og:description" content="The student-to-early-career relay for first-gen and underrepresented talent in tech." />
-  <meta property="og:type" content="website" />
+  <!-- Fonts: Clash Display (heavy geometric like PP Nikkei Maru) + Satoshi body -->
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
 
-  <!-- Fonts -->
-  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
-
-  <!-- GSAP + Plugins -->
+  <!-- GSAP + ScrollTrigger -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
 
-  <!-- Lenis Smooth Scroll -->
+  <!-- Lenis -->
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
 
   <!-- Swiper -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 
-  <link rel="stylesheet" href="./base.css" />
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
 
-  <!-- ============ LOADER ============ -->
+  <!-- ===== LOADER (3-panel wipe like kobykooba) ===== -->
   <div class="loader" id="loader">
-    <div class="loader__bar loader__bar--1"></div>
-    <div class="loader__bar loader__bar--2"></div>
-    <div class="loader__bar loader__bar--3"></div>
+    <div class="loader__panel loader__panel--1"></div>
+    <div class="loader__panel loader__panel--2"></div>
+    <div class="loader__panel loader__panel--3"></div>
     <div class="loader__progress">
-      <div class="loader__progress-fill" id="loaderFill"></div>
+      <div class="loader__fill" id="loaderFill"></div>
     </div>
   </div>
 
-  <!-- ============ NAV ============ -->
+  <!-- ===== NAV (top-right, transparent, like kobykooba) ===== -->
   <nav class="nav" id="nav">
-    <a href="#" class="nav__logo" aria-label="Jose x Jocelyn Home">
-      <svg viewBox="0 0 200 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Jose x Jocelyn" class="nav__logo-svg">
-        <text x="0" y="26" font-family="'Clash Display', sans-serif" font-weight="600" font-size="26" fill="currentColor">J<tspan fill="var(--color-accent)">x</tspan>J</text>
-      </svg>
-    </a>
     <div class="nav__links">
       <a href="#about" class="nav__link">About</a>
-      <a href="#programs" class="nav__link">Programs</a>
+      <a href="#services" class="nav__link">Services</a>
       <a href="#editorial" class="nav__link">Editorial</a>
-      <a href="#contact" class="nav__link nav__link--cta">Join Us</a>
+      <a href="#contact" class="nav__link nav__link--cta">
+        Get in Touch
+        <span class="nav__link-accent" aria-hidden="true"></span>
+      </a>
     </div>
-    <button class="nav__hamburger" id="hamburger" aria-label="Open menu">
+    <!-- Mobile hamburger -->
+    <button class="nav__burger" id="navBurger" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- Mobile Menu -->
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#about" class="mobile-menu__link">About</a>
-    <a href="#programs" class="mobile-menu__link">Programs</a>
-    <a href="#editorial" class="mobile-menu__link">Editorial</a>
-    <a href="#contact" class="mobile-menu__link mobile-menu__link--cta">Join Us</a>
+  <!-- Mobile overlay -->
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#about" class="mobile-nav__link">About</a>
+    <a href="#services" class="mobile-nav__link">Services</a>
+    <a href="#editorial" class="mobile-nav__link">Editorial</a>
+    <a href="#contact" class="mobile-nav__link">Get in Touch</a>
   </div>
 
-  <!-- ============ HERO ============ -->
+  <!-- ===== HERO — Giant "JxJ" wordmark filling viewport ===== -->
   <section class="hero" id="hero">
-    <div class="hero__accent"></div>
-    <div class="hero__content">
-      <h1 class="hero__title">
-        <span class="hero__title-line">Jose</span>
-        <span class="hero__title-x">x</span>
-        <span class="hero__title-line">Jocelyn</span>
-      </h1>
-      <p class="hero__tagline">From Applications to Offers</p>
-    </div>
-    <div class="hero__scroll-cue">
-      <span>Scroll</span>
-      <div class="hero__scroll-line"></div>
+    <div class="hero__wordmark">
+      <!-- SVG wordmark mimicking kō's massive viewport-filling type -->
+      <svg class="hero__svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-label="Jose x Jocelyn">
+        <text x="0" y="560" class="hero__text-j1">J</text>
+        <text x="330" y="420" class="hero__text-x">x</text>
+        <text x="440" y="560" class="hero__text-j2">J</text>
+        <!-- Accent bar (like kō's macron over ō) -->
+        <rect class="hero__accent-bar" x="480" y="80" width="280" height="58" rx="4" transform="rotate(-18 620 109)" />
+      </svg>
     </div>
   </section>
 
-  <!-- ============ INTRO ============ -->
+  <!-- ===== INTRO — 50/50 split: zoomed logo left, text right ===== -->
   <section class="intro" id="intro">
-    <div class="intro__container">
-      <div class="intro__left">
-        <span class="intro__label">Who We Are</span>
-        <h2 class="intro__heading">We map the pipeline from first internship to first offer.</h2>
-      </div>
-      <div class="intro__right">
-        <p class="intro__text">No one should have to guess their way through recruiting. We are two first-gen students in tech who believe every step — from discovery to onboarding — should be visible, mapped, and community-supported.</p>
-        <p class="intro__text">Jose covers <strong>getting in</strong>. Jocelyn covers <strong>staying and growing</strong>. Together, we form the relay that career centers never built.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ ABOUT ============ -->
-  <section class="about" id="about">
-    <div class="about__container">
-      <div class="about__tabs">
-        <button class="about__tab about__tab--active" data-tab="jose">Jose's Arc</button>
-        <button class="about__tab" data-tab="jocelyn">Jocelyn's Arc</button>
-        <button class="about__tab" data-tab="together">Together</button>
-        <div class="about__tab-indicator"></div>
-      </div>
-
-      <div class="about__panels">
-        <div class="about__panel about__panel--active" data-panel="jose">
-          <div class="about__panel-grid">
-            <div class="about__panel-content">
-              <h3 class="about__panel-title">The On-the-Ground Scout</h3>
-              <p>First-gen computer engineering student actively recruiting, sharing in real time what works and what fails. ColorStack Fellow. Hackathon winner. AI/ML Fellow. Soft robotics researcher.</p>
-              <ul class="about__list">
-                <li>Internship and early-career role discovery</li>
-                <li>Application strategy and resume reviews</li>
-                <li>Coffee chats and peer mentorship</li>
-                <li>Real-time recruiting insights</li>
-              </ul>
-            </div>
-            <div class="about__panel-visual">
-              <div class="about__card about__card--jose">
-                <span class="about__card-icon">&#9889;</span>
-                <span class="about__card-label">Student Perspective</span>
-                <span class="about__card-role">Getting In</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="about__panel" data-panel="jocelyn">
-          <div class="about__panel-grid">
-            <div class="about__panel-content">
-              <h3 class="about__panel-title">The Bridge Builder</h3>
-              <p>First-gen Latina in tech working in data at Fidelity. Microsoft LEAD Marketing Lead. Student ambassador. She crossed the bridge from student to industry and translates the mystery of early-career life into transparent guides.</p>
-              <ul class="about__list">
-                <li>Converting internships into return offers</li>
-                <li>Navigating compensation and negotiations</li>
-                <li>Early-career growth and office navigation</li>
-                <li>Onboarding and first-90-day strategies</li>
-              </ul>
-            </div>
-            <div class="about__panel-visual">
-              <div class="about__card about__card--jocelyn">
-                <span class="about__card-icon">&#127919;</span>
-                <span class="about__card-label">Post-Grad Perspective</span>
-                <span class="about__card-role">Staying & Growing</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="about__panel" data-panel="together">
-          <div class="about__panel-grid">
-            <div class="about__panel-content">
-              <h3 class="about__panel-title">The Relay Model</h3>
-              <p>Live notes from both sides of the bridge. Jose documents the journey as it happens. Jocelyn documents what life and growth look like on the other side. This handoff — from undergraduate recruiting to post-grad full-time reality — is what students never get from campus career centers.</p>
-              <ul class="about__list">
-                <li>Student-to-early-career pipeline, mapped end to end</li>
-                <li>Split-screen perspectives on every topic</li>
-                <li>Community-supported recruiting sprints</li>
-                <li>For first-gen and underrepresented talent in tech and data</li>
-              </ul>
-            </div>
-            <div class="about__panel-visual">
-              <div class="about__card about__card--together">
-                <span class="about__card-icon">&#9851;</span>
-                <span class="about__card-label">The Full Pipeline</span>
-                <span class="about__card-role">Applications to Offers</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Marquee -->
-    <div class="marquee">
-      <div class="marquee__track">
-        <span class="marquee__text">collaborate &bull; </span>
-        <span class="marquee__text">community &bull; </span>
-        <span class="marquee__text">pipeline &bull; </span>
-        <span class="marquee__text">first-gen &bull; </span>
-        <span class="marquee__text">collaborate &bull; </span>
-        <span class="marquee__text">community &bull; </span>
-        <span class="marquee__text">pipeline &bull; </span>
-        <span class="marquee__text">first-gen &bull; </span>
-        <span class="marquee__text">collaborate &bull; </span>
-        <span class="marquee__text">community &bull; </span>
-        <span class="marquee__text">pipeline &bull; </span>
-        <span class="marquee__text">first-gen &bull; </span>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ PROGRAMS (Gallery-style) ============ -->
-  <section class="programs" id="programs">
-    <div class="programs__container">
-      <div class="programs__header">
-        <span class="programs__label">What We Offer</span>
-        <h2 class="programs__heading">Programs & Content</h2>
-      </div>
-
-      <div class="swiper programs__swiper">
-        <div class="swiper-wrapper">
-          <!-- Card 1 -->
-          <div class="swiper-slide programs__slide">
-            <div class="programs__card">
-              <div class="programs__card-accent"></div>
-              <div class="programs__card-number">01</div>
-              <h3 class="programs__card-title">LinkedIn Series</h3>
-              <p class="programs__card-subtitle">One Journey, Two Perspectives</p>
-              <p class="programs__card-desc">Recurring co-hosted LinkedIn series: one role analyzed from both the student and post-grad lens. Inbox-to-offer case studies, split-screen carousels, and "what we wish we knew" frameworks.</p>
-            </div>
-          </div>
-          <!-- Card 2 -->
-          <div class="swiper-slide programs__slide">
-            <div class="programs__card">
-              <div class="programs__card-accent"></div>
-              <div class="programs__card-number">02</div>
-              <h3 class="programs__card-title">Sprint Cohorts</h3>
-              <p class="programs__card-subtitle">Last-Minute Internship Sprint</p>
-              <p class="programs__card-desc">Small 20–30 person sprints to move through a specific career milestone. Weekly application blocks, accountability sessions, interview prep, and storytelling workshops.</p>
-            </div>
-          </div>
-          <!-- Card 3 -->
-          <div class="swiper-slide programs__slide">
-            <div class="programs__card">
-              <div class="programs__card-accent"></div>
-              <div class="programs__card-number">03</div>
-              <h3 class="programs__card-title">Offer-to-Onboarding</h3>
-              <p class="programs__card-subtitle">Bridge Year Sprint</p>
-              <p class="programs__card-desc">Workshops on reading benefits, setting first-90-day goals, building workplace relationships. For students between graduation and their first role — project building, networking, and mental health.</p>
-            </div>
-          </div>
-          <!-- Card 4 -->
-          <div class="swiper-slide programs__slide">
-            <div class="programs__card">
-              <div class="programs__card-accent"></div>
-              <div class="programs__card-number">04</div>
-              <h3 class="programs__card-title">Opportunity Board</h3>
-              <p class="programs__card-subtitle">Curated + Accountability</p>
-              <p class="programs__card-desc">Public, curated board of late-breaking internships and early-career roles. Layered with accountability threads — commit to applying, share when you hear back.</p>
-            </div>
-          </div>
-          <!-- Card 5 -->
-          <div class="swiper-slide programs__slide">
-            <div class="programs__card">
-              <div class="programs__card-accent"></div>
-              <div class="programs__card-number">05</div>
-              <h3 class="programs__card-title">Templates & Scripts</h3>
-              <p class="programs__card-subtitle">Outreach Toolkit</p>
-              <p class="programs__card-desc">Ready-to-use outreach messages, recruiter follow-ups, manager one-on-one templates, and email scripts for asking for feedback. Copy, customize, send.</p>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-pagination"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ INTERRUPTION ============ -->
-  <section class="interruption">
-    <div class="interruption__bars" aria-hidden="true">
-      <div class="interruption__bar interruption__bar--1"></div>
-      <div class="interruption__bar interruption__bar--2"></div>
-      <div class="interruption__bar interruption__bar--3"></div>
-      <div class="interruption__bar interruption__bar--4"></div>
-      <div class="interruption__bar interruption__bar--5"></div>
-    </div>
-    <div class="interruption__content">
-      <h2 class="interruption__heading">
-        <span class="interruption__line">Strong pipelines.</span>
-        <span class="interruption__line">Visible paths.</span>
-      </h2>
-    </div>
-  </section>
-
-  <!-- ============ SERVICES / CONTENT STRATEGY ============ -->
-  <section class="services" id="services">
-    <div class="services__container">
-      <div class="services__visual">
-        <div class="services__image-wrap">
-          <div class="services__pattern" aria-hidden="true"></div>
-        </div>
-      </div>
-      <div class="services__info">
-        <div class="services__tabs">
-          <button class="services__tab services__tab--active" data-stab="content">Content</button>
-          <button class="services__tab" data-stab="sprints">Sprints</button>
-          <button class="services__tab" data-stab="community">Community</button>
-          <div class="services__tab-indicator"></div>
-        </div>
-
-        <div class="services__panels">
-          <div class="services__panel services__panel--active" data-spanel="content">
-            <h3 class="services__panel-title">Signature Content</h3>
-            <ul class="services__list">
-              <li>Split-screen carousels — student vs. post-grad perspective</li>
-              <li>Monthly pipeline check posts</li>
-              <li>Short video clips and LinkedIn Live sessions</li>
-              <li>Inbox-to-offer case studies (anonymized)</li>
-              <li>"What we wish we knew" frameworks</li>
-              <li>Templates: outreach, follow-up, one-on-one scripts</li>
-            </ul>
-          </div>
-          <div class="services__panel" data-spanel="sprints">
-            <h3 class="services__panel-title">Sprint Programs</h3>
-            <ul class="services__list">
-              <li>Last-Minute Internship Sprint (late-cycle recruiting)</li>
-              <li>Offer-to-Onboarding Sprint (first-90-days)</li>
-              <li>Bridge Year Sprint (gap year support)</li>
-              <li>Weekly application blocks + accountability</li>
-              <li>Interview prep and storytelling sessions</li>
-              <li>Small cohorts (20–30 people) for real support</li>
-            </ul>
-          </div>
-          <div class="services__panel" data-spanel="community">
-            <h3 class="services__panel-title">Community Building</h3>
-            <ul class="services__list">
-              <li>Opportunity + accountability boards</li>
-              <li>Partnerships with ColorStack, career offices, affinity groups</li>
-              <li>Co-hosted panels and workshops</li>
-              <li>Coffee chat network for peer mentorship</li>
-              <li>Resume review circles</li>
-              <li>Employer engagement for underrepresented talent</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ EDITORIAL HUB ============ -->
-  <section class="editorial" id="editorial">
-    <div class="editorial__container">
-      <div class="editorial__header">
-        <span class="editorial__label">Knowledge Hub</span>
-        <h2 class="editorial__heading">Editorial</h2>
-        <p class="editorial__intro">Articles on recruiting, internships, full-time offers, and early-career survival in tech — written by both of us, from both sides of the bridge.</p>
-      </div>
-
-      <div class="editorial__grid">
-        <!-- Featured article -->
-        <article class="editorial__card editorial__card--featured">
-          <div class="editorial__card-tag">Featured</div>
-          <div class="editorial__card-meta">
-            <span class="editorial__card-author">Jose & Jocelyn</span>
-            <span class="editorial__card-date">Coming Soon</span>
-          </div>
-          <h3 class="editorial__card-title">The Complete First-Gen Internship Playbook</h3>
-          <p class="editorial__card-excerpt">Everything we learned about landing your first tech internship as a first-generation student — from discovery to signed offer, with no sugar-coating.</p>
-          <span class="editorial__card-cta">Read Article &rarr;</span>
-        </article>
-
-        <!-- Article cards -->
-        <article class="editorial__card">
-          <div class="editorial__card-tag editorial__card-tag--jose">Jose</div>
-          <div class="editorial__card-meta">
-            <span class="editorial__card-author">Jose G. Cruz-Lopez</span>
-            <span class="editorial__card-date">Coming Soon</span>
-          </div>
-          <h3 class="editorial__card-title">Late-Cycle Internships: Where to Look When Everyone Says It's Over</h3>
-          <p class="editorial__card-excerpt">It is April and you still don't have an internship. Here is what to do right now.</p>
-          <span class="editorial__card-cta">Read Article &rarr;</span>
-        </article>
-
-        <article class="editorial__card">
-          <div class="editorial__card-tag editorial__card-tag--jocelyn">Jocelyn</div>
-          <div class="editorial__card-meta">
-            <span class="editorial__card-author">Jocelyn V.</span>
-            <span class="editorial__card-date">Coming Soon</span>
-          </div>
-          <h3 class="editorial__card-title">Your First 90 Days: A Survival Guide for First-Gen Professionals</h3>
-          <p class="editorial__card-excerpt">No one teaches you how to read benefits, navigate office politics, or build a career ladder. Until now.</p>
-          <span class="editorial__card-cta">Read Article &rarr;</span>
-        </article>
-
-        <article class="editorial__card">
-          <div class="editorial__card-tag editorial__card-tag--jose">Jose</div>
-          <div class="editorial__card-meta">
-            <span class="editorial__card-author">Jose G. Cruz-Lopez</span>
-            <span class="editorial__card-date">Coming Soon</span>
-          </div>
-          <h3 class="editorial__card-title">The Coffee Chat Framework That Actually Gets Responses</h3>
-          <p class="editorial__card-excerpt">A step-by-step system for reaching out to professionals, getting replies, and turning conversations into opportunities.</p>
-          <span class="editorial__card-cta">Read Article &rarr;</span>
-        </article>
-
-        <article class="editorial__card">
-          <div class="editorial__card-tag editorial__card-tag--jocelyn">Jocelyn</div>
-          <div class="editorial__card-meta">
-            <span class="editorial__card-author">Jocelyn V.</span>
-            <span class="editorial__card-date">Coming Soon</span>
-          </div>
-          <h3 class="editorial__card-title">How to Negotiate When You've Never Seen a Six-Figure Salary</h3>
-          <p class="editorial__card-excerpt">Compensation is not just a number. It is benefits, equity, signing bonuses, and leverage you didn't know you had.</p>
-          <span class="editorial__card-cta">Read Article &rarr;</span>
-        </article>
-
-        <article class="editorial__card">
-          <div class="editorial__card-tag">Both</div>
-          <div class="editorial__card-meta">
-            <span class="editorial__card-author">Jose & Jocelyn</span>
-            <span class="editorial__card-date">Coming Soon</span>
-          </div>
-          <h3 class="editorial__card-title">Rejection Doesn't Mean You Did It Wrong</h3>
-          <p class="editorial__card-excerpt">You can do everything right and still get rejected. How to process it, learn from it, and keep moving without burning out.</p>
-          <span class="editorial__card-cta">Read Article &rarr;</span>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ CONTACT / SIGN UP ============ -->
-  <section class="contact" id="contact">
-    <div class="contact__container">
-      <div class="contact__left">
-        <svg viewBox="0 0 280 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="contact__logo" aria-label="Jose x Jocelyn">
-          <text x="0" y="48" font-family="'Clash Display', sans-serif" font-weight="600" font-size="48" fill="currentColor">J<tspan fill="var(--color-accent)">x</tspan>J</text>
+    <div class="intro__left">
+      <!-- Large cropped brand element like kobykooba's zoomed kō -->
+      <div class="intro__brand-crop">
+        <svg viewBox="0 0 600 800" class="intro__brand-svg" aria-hidden="true">
+          <text x="-80" y="650" class="intro__brand-letter">J</text>
+          <rect x="200" y="380" width="300" height="65" rx="4" transform="rotate(-20 350 412)" fill="var(--color-dark)" />
         </svg>
       </div>
-      <div class="contact__right">
-        <a href="#contact" class="contact__cta">
-          <span class="contact__cta-text">Let's<br/>Connect</span>
-        </a>
+    </div>
+    <div class="intro__right">
+      <div class="intro__dot" aria-hidden="true"></div>
+      <p class="intro__text">We are Jose x Jocelyn. We build pipelines that work. Fast. We deliver pathways that speak for themselves, and scale with your growth.</p>
+    </div>
+  </section>
+
+  <!-- ===== ABOUT — Dark section with tabs + "collaborate" marquee ===== -->
+  <section class="about" id="about">
+    <div class="about__content">
+      <!-- Tabs with | separators like kobykooba -->
+      <div class="about__tabs">
+        <button class="about__tab about__tab--active" data-tab="about-us">About Us</button>
+        <span class="about__tab-sep">|</span>
+        <button class="about__tab" data-tab="approach">Approach</button>
+        <span class="about__tab-sep">|</span>
+        <button class="about__tab" data-tab="why">Why JxJ?</button>
+      </div>
+
+      <!-- Panels -->
+      <div class="about__panel about__panel--active" data-panel="about-us">
+        <p class="about__body">Jose x Jocelyn maps the pipeline from first internship to first offer for first-gen and underrepresented students in tech. We combine real-time student perspective with early-career professional insight, creating a relay that campus career centers never built.</p>
+      </div>
+      <div class="about__panel" data-panel="approach">
+        <p class="about__body">Our approach is simple: Jose covers getting in — discovering internships, early-ID programs, and application strategy as an actively recruiting student. Jocelyn covers staying and growing — converting internships to offers, negotiating compensation, and navigating early-career growth at a major firm.</p>
+      </div>
+      <div class="about__panel" data-panel="why">
+        <p class="about__body">No one should have to guess their way from first internship search to first offer. Every step should be visible, mapped, and community-supported. We are the visible relay — live notes from both sides of the bridge — that turns confusion into clarity through concrete next steps.</p>
       </div>
     </div>
 
-    <div class="contact__form-section">
-      <div class="contact__form-container">
-        <h2 class="contact__form-heading">Join the Community</h2>
-        <p class="contact__form-desc">Get sprint announcements, new articles, and curated opportunities straight to your inbox.</p>
-        <form class="contact__form" id="contactForm">
-          <div class="contact__form-row">
-            <input type="text" name="name" placeholder="Your name" class="contact__input" required />
-            <input type="email" name="email" placeholder="Your email" class="contact__input" required />
+    <!-- Right side: repeating "collaborate" text + JxJ logo (like kobykooba) -->
+    <div class="about__marquee-side">
+      <span class="about__marquee-word">collaborate</span>
+      <div class="about__marquee-logo">
+        <svg viewBox="0 0 200 240" class="about__logo-svg" aria-hidden="true">
+          <text x="10" y="180" font-family="'Clash Display', sans-serif" font-weight="700" font-size="180" fill="var(--color-cream)">J<tspan font-size="100" dy="-30" fill="var(--color-accent)">x</tspan><tspan font-size="180" dy="30">J</tspan></text>
+        </svg>
+      </div>
+      <span class="about__marquee-word">collaborate</span>
+      <span class="about__marquee-word">collaborate</span>
+    </div>
+  </section>
+
+  <!-- ===== GALLERY — Scattered/fanned cards like kobykooba portfolio ===== -->
+  <section class="gallery" id="gallery">
+    <div class="gallery__cards">
+      <div class="gallery__card gallery__card--1" style="--card-bg: #3B5BDB; --card-rotate: -12deg;">
+        <span class="gallery__card-icon">&#9889;</span>
+        <span class="gallery__card-name">Sprints</span>
+      </div>
+      <div class="gallery__card gallery__card--2" style="--card-bg: #2B8A3E; --card-rotate: -4deg;">
+        <span class="gallery__card-icon">&#128218;</span>
+        <span class="gallery__card-name">Editorial</span>
+      </div>
+      <div class="gallery__card gallery__card--3 gallery__card--active" style="--card-bg: #E8590C; --card-rotate: 0deg;">
+        <span class="gallery__card-icon">&#127919;</span>
+        <span class="gallery__card-name">Pipeline</span>
+      </div>
+      <div class="gallery__card gallery__card--4" style="--card-bg: #7048E8; --card-rotate: 6deg;">
+        <span class="gallery__card-icon">&#128161;</span>
+        <span class="gallery__card-name">Templates</span>
+      </div>
+      <div class="gallery__card gallery__card--5" style="--card-bg: #1098AD; --card-rotate: 14deg;">
+        <span class="gallery__card-icon">&#129309;</span>
+        <span class="gallery__card-name">Community</span>
+      </div>
+    </div>
+    <!-- Orange accent bar (kobykooba motif) -->
+    <div class="gallery__accent-bar" aria-hidden="true"></div>
+  </section>
+
+  <!-- ===== SERVICES — 50/50: image left, tabs right ===== -->
+  <section class="services" id="services">
+    <div class="services__image">
+      <div class="services__image-inner">
+        <!-- Abstract pattern representing team/brand -->
+        <div class="services__pattern" aria-hidden="true">
+          <div class="services__pattern-text">JxJ</div>
+        </div>
+      </div>
+    </div>
+    <div class="services__content">
+      <div class="services__tabs">
+        <button class="services__tab services__tab--active" data-stab="content">Content</button>
+        <span class="services__tab-sep">|</span>
+        <button class="services__tab" data-stab="sprints">Sprints</button>
+        <span class="services__tab-sep">|</span>
+        <button class="services__tab" data-stab="community">Community</button>
+      </div>
+
+      <div class="services__panel services__panel--active" data-spanel="content">
+        <p class="services__body">Our content strategy prioritizes clarity, shareability, and real value. That means split-screen perspectives, actionable templates, and honest recruiting insights — without the fluff.</p>
+        <div class="services__list">
+          <div class="services__list-col">
+            <span>LinkedIn Series</span>
+            <span>Career Templates</span>
           </div>
-          <div class="contact__form-row">
-            <select name="stage" class="contact__select" required>
-              <option value="" disabled selected>Where are you in your journey?</option>
-              <option value="searching">Searching for first internship</option>
-              <option value="interviewing">Interviewing / actively applying</option>
-              <option value="converting">Converting internship to full-time</option>
-              <option value="early-career">In my first full-time role</option>
-              <option value="mentor">I want to mentor or partner</option>
-            </select>
+          <div class="services__list-col">
+            <span>Case Studies</span>
+            <span>Pipeline Checks</span>
           </div>
-          <button type="submit" class="contact__submit">
-            <span>Join the Pipeline</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-        </form>
+        </div>
+      </div>
+      <div class="services__panel" data-spanel="sprints">
+        <p class="services__body">Sprint-based programs that move small cohorts through a specific career milestone. Weekly application blocks, accountability sessions, interview prep, and storytelling workshops.</p>
+        <div class="services__list">
+          <div class="services__list-col">
+            <span>Internship Sprint</span>
+            <span>Bridge Year Sprint</span>
+          </div>
+          <div class="services__list-col">
+            <span>Offer-to-Onboarding</span>
+            <span>Interview Prep</span>
+          </div>
+        </div>
+      </div>
+      <div class="services__panel" data-spanel="community">
+        <p class="services__body">Community-driven support built on accountability and real connections. Opportunity boards, partnership panels, coffee chat networks, and resume review circles.</p>
+        <div class="services__list">
+          <div class="services__list-col">
+            <span>Opportunity Board</span>
+            <span>Coffee Chat Network</span>
+          </div>
+          <div class="services__list-col">
+            <span>Resume Reviews</span>
+            <span>Partner Panels</span>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <div class="footer__container">
-      <div class="footer__top">
-        <div class="footer__brand">
-          <span class="footer__name">Jose x Jocelyn</span>
-          <p class="footer__mission">From applications to offers. The student-to-early-career relay for first-gen and underrepresented talent in tech.</p>
-        </div>
-        <div class="footer__links-group">
-          <div class="footer__col">
-            <h4 class="footer__col-title">Navigate</h4>
-            <a href="#about" class="footer__link">About</a>
-            <a href="#programs" class="footer__link">Programs</a>
-            <a href="#editorial" class="footer__link">Editorial</a>
-            <a href="#contact" class="footer__link">Join Us</a>
-          </div>
-          <div class="footer__col">
-            <h4 class="footer__col-title">Connect</h4>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer__link">LinkedIn</a>
-            <a href="https://github.com/Jose-Gael-Cruz-Lopez" target="_blank" rel="noopener noreferrer" class="footer__link">GitHub</a>
-            <a href="mailto:josegaelcl6@gmail.com" class="footer__link">Email</a>
-          </div>
-          <div class="footer__col">
-            <h4 class="footer__col-title">Community</h4>
-            <a href="#" class="footer__link">ColorStack</a>
-            <a href="#" class="footer__link">Sapling</a>
-            <a href="#" class="footer__link">Partners</a>
-          </div>
+  <!-- ===== INTERRUPTION — Massive white text + rotated bars ===== -->
+  <section class="interr">
+    <div class="interr__bars" aria-hidden="true">
+      <div class="interr__bar interr__bar--cream"></div>
+      <div class="interr__bar interr__bar--accent"></div>
+    </div>
+    <div class="interr__text">
+      <span class="interr__line">Strong</span>
+      <span class="interr__line">pipelines.</span>
+      <span class="interr__line">Visible</span>
+      <span class="interr__line">paths.</span>
+    </div>
+  </section>
+
+  <!-- ===== EDITORIAL HUB — Showcase reel area ===== -->
+  <section class="editorial" id="editorial">
+    <div class="editorial__showcase">
+      <div class="editorial__showcase-inner">
+        <div class="editorial__showcase-content">
+          <span class="editorial__showcase-label">Knowledge Hub</span>
+          <h2 class="editorial__showcase-title">Editorial</h2>
+          <p class="editorial__showcase-desc">Articles on recruiting, internships, full-time offers, and early-career survival — written by both of us, from both sides of the bridge.</p>
         </div>
       </div>
-      <div class="footer__bottom">
-        <span class="footer__copy">&copy; 2026 Jose x Jocelyn. All rights reserved.</span>
-        <div class="footer__legal">
-          <a href="#" class="footer__legal-link">Privacy</a>
-          <a href="#" class="footer__legal-link">Terms</a>
-        </div>
+    </div>
+
+    <!-- Article cards (2-up like kobykooba portfolio images) -->
+    <div class="editorial__grid">
+      <article class="editorial__card">
+        <div class="editorial__card-tag">Jose</div>
+        <h3 class="editorial__card-title">Late-Cycle Internships: Where to Look When Everyone Says It's Over</h3>
+        <p class="editorial__card-excerpt">It is April and you still don't have an internship. Here is what to do right now.</p>
+      </article>
+      <article class="editorial__card editorial__card--dark">
+        <div class="editorial__card-tag">Jocelyn</div>
+        <h3 class="editorial__card-title">Your First 90 Days: A Survival Guide for First-Gen Professionals</h3>
+        <p class="editorial__card-excerpt">No one teaches you how to read benefits, navigate office politics, or build a career ladder. Until now.</p>
+      </article>
+    </div>
+    <div class="editorial__grid">
+      <article class="editorial__card editorial__card--dark">
+        <div class="editorial__card-tag">Both</div>
+        <h3 class="editorial__card-title">The Complete First-Gen Internship Playbook</h3>
+        <p class="editorial__card-excerpt">From discovery to signed offer, with no sugar-coating. Everything we learned.</p>
+      </article>
+      <article class="editorial__card">
+        <div class="editorial__card-tag">Jose</div>
+        <h3 class="editorial__card-title">The Coffee Chat Framework That Actually Gets Responses</h3>
+        <p class="editorial__card-excerpt">A step-by-step system for reaching out to professionals and turning conversations into opportunities.</p>
+      </article>
+    </div>
+    <div class="editorial__grid">
+      <article class="editorial__card">
+        <div class="editorial__card-tag">Jocelyn</div>
+        <h3 class="editorial__card-title">How to Negotiate When You've Never Seen a Six-Figure Salary</h3>
+        <p class="editorial__card-excerpt">Compensation is benefits, equity, signing bonuses, and leverage you didn't know you had.</p>
+      </article>
+      <article class="editorial__card editorial__card--dark">
+        <div class="editorial__card-tag">Both</div>
+        <h3 class="editorial__card-title">Rejection Doesn't Mean You Did It Wrong</h3>
+        <p class="editorial__card-excerpt">You can do everything right and still get rejected. How to process it and keep moving.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER — Large logo left, rotated CTA right, social links ===== -->
+  <footer class="footer" id="contact">
+    <!-- Large JxJ logo (like kobykooba's large kō footer logo) -->
+    <div class="footer__logo">
+      <svg viewBox="0 0 500 400" class="footer__logo-svg" aria-label="Jose x Jocelyn">
+        <text x="0" y="320" class="footer__logo-text">J</text>
+        <text x="170" y="240" class="footer__logo-x">x</text>
+        <text x="250" y="320" class="footer__logo-text">J</text>
+        <rect x="280" y="50" width="130" height="30" rx="3" transform="rotate(-18 345 65)" fill="var(--color-dark)" />
+      </svg>
+    </div>
+
+    <!-- Rotated "Let's connect" CTA (like kobykooba's "Let's chat") -->
+    <a href="mailto:josegaelcl6@gmail.com" class="footer__cta" id="footerCta">
+      <span class="footer__cta-text">Let's<br/>connect</span>
+    </a>
+
+    <!-- Social links with orange dash separators -->
+    <div class="footer__socials">
+      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer__social-link">LinkedIn</a>
+      <span class="footer__social-dash" aria-hidden="true"></span>
+      <a href="https://github.com/Jose-Gael-Cruz-Lopez" target="_blank" rel="noopener noreferrer" class="footer__social-link">GitHub</a>
+      <span class="footer__social-dash" aria-hidden="true"></span>
+      <a href="mailto:josegaelcl6@gmail.com" class="footer__social-link">Email</a>
+    </div>
+    <div class="footer__contact-info">
+      <span>josegaelcl6@gmail.com</span>
+    </div>
+
+    <div class="footer__bottom">
+      <span class="footer__credit">Jose x Jocelyn &copy; 2026</span>
+      <div class="footer__legal">
+        <a href="#" class="footer__legal-link">Privacy</a>
+        <a href="#" class="footer__legal-link">Terms</a>
       </div>
     </div>
   </footer>
 
-  <!-- Contact Modal -->
-  <div class="modal" id="contactModal">
-    <div class="modal__overlay"></div>
-    <div class="modal__content">
-      <button class="modal__close" aria-label="Close">&times;</button>
-      <div class="modal__steps">
-        <!-- Step 1 -->
-        <div class="modal__step modal__step--active" data-step="1">
-          <h3 class="modal__step-title">Tell us about you</h3>
-          <div class="modal__field">
-            <label class="modal__label">Name</label>
-            <input type="text" class="modal__input" id="modalName" placeholder="Your full name" />
-          </div>
-          <div class="modal__field">
-            <label class="modal__label">Email</label>
-            <input type="email" class="modal__input" id="modalEmail" placeholder="you@example.com" />
-          </div>
-          <button class="modal__next">Next &rarr;</button>
-        </div>
-        <!-- Step 2 -->
-        <div class="modal__step" data-step="2">
-          <h3 class="modal__step-title">What interests you?</h3>
-          <div class="modal__checkboxes">
-            <label class="modal__checkbox"><input type="checkbox" value="sprints" /> Sprint cohorts</label>
-            <label class="modal__checkbox"><input type="checkbox" value="editorial" /> Editorial content</label>
-            <label class="modal__checkbox"><input type="checkbox" value="opportunities" /> Opportunity board</label>
-            <label class="modal__checkbox"><input type="checkbox" value="mentorship" /> Mentorship</label>
-            <label class="modal__checkbox"><input type="checkbox" value="partnership" /> Partnership</label>
-          </div>
-          <button class="modal__next">Next &rarr;</button>
-        </div>
-        <!-- Step 3 -->
-        <div class="modal__step" data-step="3">
-          <h3 class="modal__step-title">You're in.</h3>
-          <p class="modal__success-text">Welcome to the pipeline. We will reach out soon with the next steps.</p>
-          <button class="modal__done">Close</button>
-        </div>
+  <!-- Contact Modal (multi-step like kobykooba's getform) -->
+  <div class="modal" id="modal">
+    <div class="modal__bg"></div>
+    <div class="modal__box">
+      <button class="modal__close" id="modalClose">&times;</button>
+      <div class="modal__step modal__step--active" data-mstep="1">
+        <h3 class="modal__title">Tell us about you</h3>
+        <input type="text" class="modal__input" placeholder="Your full name" />
+        <input type="email" class="modal__input" placeholder="Your email" />
+        <button class="modal__btn" data-next="2">Next &rarr;</button>
       </div>
-      <div class="modal__progress">
-        <div class="modal__progress-dot modal__progress-dot--active" data-dot="1"></div>
-        <div class="modal__progress-dot" data-dot="2"></div>
-        <div class="modal__progress-dot" data-dot="3"></div>
+      <div class="modal__step" data-mstep="2">
+        <h3 class="modal__title">What interests you?</h3>
+        <label class="modal__check"><input type="checkbox" /> Sprint cohorts</label>
+        <label class="modal__check"><input type="checkbox" /> Editorial content</label>
+        <label class="modal__check"><input type="checkbox" /> Opportunity board</label>
+        <label class="modal__check"><input type="checkbox" /> Mentorship</label>
+        <button class="modal__btn" data-next="3">Next &rarr;</button>
+      </div>
+      <div class="modal__step" data-mstep="3">
+        <h3 class="modal__title">You're in.</h3>
+        <p class="modal__msg">Welcome to the pipeline. We'll reach out with next steps.</p>
+        <button class="modal__btn modal__btn--done">Close</button>
+      </div>
+      <div class="modal__dots">
+        <span class="modal__dot modal__dot--active" data-mdot="1"></span>
+        <span class="modal__dot" data-mdot="2"></span>
+        <span class="modal__dot" data-mdot="3"></span>
       </div>
     </div>
   </div>

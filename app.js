@@ -1,509 +1,278 @@
 /* ============================================
-   JOSE x JOCELYN — Main Application JS
-   Replicates kobykooba.com interactions:
-   - Page loader with animated panels
-   - Lenis smooth scroll + GSAP integration
-   - GSAP ScrollTrigger section reveals
-   - Tabbed components
-   - Swiper gallery
-   - Multi-step modal
-   - Nav scroll behavior
+   JOSE x JOCELYN — Faithful kobykooba.com replica
+   Animations: loader, Lenis, GSAP ScrollTrigger,
+   section pinning, text reveals, clip-path wipes
    ============================================ */
-
 (function () {
   'use strict';
 
-  // ============ LOADER ============
-  const loader = document.getElementById('loader');
-  const loaderFill = document.getElementById('loaderFill');
-  const bars = loader?.querySelectorAll('.loader__bar');
+  let lenis = null;
 
+  /* === LOADER === */
   function runLoader() {
-    if (!loader || !loaderFill || !bars || typeof gsap === 'undefined') {
-      loader?.classList.add('loader--hidden');
+    const loader = document.getElementById('loader');
+    const fill = document.getElementById('loaderFill');
+    const panels = loader?.querySelectorAll('.loader__panel');
+    if (!loader || !fill || !panels?.length || typeof gsap === 'undefined') {
       loader?.remove();
-      initSite();
-      return;
+      return initSite();
     }
 
-    // Animate progress
     const tl = gsap.timeline({
-      onComplete: () => {
-        // Slide bars away
-        gsap.to(bars[0], { yPercent: -100, duration: 0.7, ease: 'power3.inOut' });
-        gsap.to(bars[1], { yPercent: 100, duration: 0.7, ease: 'power3.inOut', delay: 0.05 });
-        gsap.to(bars[2], { yPercent: -100, duration: 0.7, ease: 'power3.inOut', delay: 0.1, onComplete: () => {
-          loader.classList.add('loader--hidden');
-          setTimeout(() => loader.remove(), 300);
-          initSite();
-        }});
+      onComplete() {
+        gsap.to(panels[0], { yPercent: -100, duration: 0.7, ease: 'power3.inOut' });
+        gsap.to(panels[1], { yPercent: 100, duration: 0.7, ease: 'power3.inOut', delay: 0.06 });
+        gsap.to(panels[2], { yPercent: -100, duration: 0.7, ease: 'power3.inOut', delay: 0.12,
+          onComplete() { loader.remove(); initSite(); }
+        });
       }
     });
-
-    tl.to(loaderFill, { width: '40%', duration: 0.5, ease: 'power2.out' })
-      .to(loaderFill, { width: '75%', duration: 0.4, ease: 'power2.out' })
-      .to(loaderFill, { width: '100%', duration: 0.3, ease: 'power2.out' });
+    tl.to(fill, { width: '40%', duration: 0.4, ease: 'power2.out' })
+      .to(fill, { width: '80%', duration: 0.35, ease: 'power2.out' })
+      .to(fill, { width: '100%', duration: 0.25, ease: 'power2.out' });
   }
 
-  // ============ MAIN INIT ============
+  /* === INIT === */
   function initSite() {
     initLenis();
     initNav();
-    initHamburger();
-    initTabs();
+    initBurger();
+    initAboutTabs();
     initServicesTabs();
-    initSwiper();
-    initScrollAnimations();
     initModal();
-    initFormHandler();
-    initInterruptionBars();
+    initGSAP();
   }
 
-  // ============ LENIS SMOOTH SCROLL ============
-  let lenisInstance = null;
-
+  /* === LENIS SMOOTH SCROLL === */
   function initLenis() {
     if (typeof Lenis === 'undefined') return;
-
-    lenisInstance = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
-    });
-
-    // Integrate with GSAP ticker
+    lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true });
     if (typeof gsap !== 'undefined') {
-      gsap.ticker.add((time) => {
-        lenisInstance.raf(time * 1000);
-      });
+      gsap.ticker.add(t => lenis.raf(t * 1000));
       gsap.ticker.lagSmoothing(0);
     } else {
-      function raf(time) {
-        lenisInstance.raf(time);
-        requestAnimationFrame(raf);
-      }
-      requestAnimationFrame(raf);
+      (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
     }
-
-    // Handle anchor clicks with smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', (e) => {
-        const target = document.querySelector(anchor.getAttribute('href'));
-        if (target) {
-          e.preventDefault();
-          lenisInstance.scrollTo(target, { offset: -80 });
-        }
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) { e.preventDefault(); lenis.scrollTo(target, { offset: -40 }); }
       });
     });
   }
 
-  // ============ NAV ============
+  /* === NAV hide on scroll === */
   function initNav() {
     const nav = document.getElementById('nav');
     if (!nav) return;
-
-    let lastScroll = 0;
-    const threshold = 100;
-
-    function onScroll() {
-      const currentScroll = window.scrollY;
-
-      if (currentScroll > threshold) {
-        nav.classList.add('nav--scrolled');
-      } else {
-        nav.classList.remove('nav--scrolled');
-      }
-
-      if (currentScroll > lastScroll && currentScroll > 300) {
-        nav.classList.add('nav--hidden');
-      } else {
-        nav.classList.remove('nav--hidden');
-      }
-
-      lastScroll = currentScroll;
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
+    let last = 0;
+    window.addEventListener('scroll', () => {
+      const cur = window.scrollY;
+      nav.classList.toggle('nav--hidden', cur > last && cur > 300);
+      last = cur;
+    }, { passive: true });
   }
 
-  // ============ HAMBURGER MENU ============
-  function initHamburger() {
-    const hamburger = document.getElementById('hamburger');
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (!hamburger || !mobileMenu) return;
-
-    hamburger.addEventListener('click', () => {
-      hamburger.classList.toggle('nav__hamburger--open');
-      mobileMenu.classList.toggle('mobile-menu--open');
-      document.body.style.overflow = mobileMenu.classList.contains('mobile-menu--open') ? 'hidden' : '';
+  /* === BURGER === */
+  function initBurger() {
+    const btn = document.getElementById('navBurger');
+    const menu = document.getElementById('mobileNav');
+    if (!btn || !menu) return;
+    btn.addEventListener('click', () => {
+      btn.classList.toggle('nav__burger--open');
+      menu.classList.toggle('mobile-nav--open');
+      document.body.style.overflow = menu.classList.contains('mobile-nav--open') ? 'hidden' : '';
     });
-
-    mobileMenu.querySelectorAll('.mobile-menu__link').forEach(link => {
-      link.addEventListener('click', () => {
-        hamburger.classList.remove('nav__hamburger--open');
-        mobileMenu.classList.remove('mobile-menu--open');
-        document.body.style.overflow = '';
-      });
-    });
+    menu.querySelectorAll('.mobile-nav__link').forEach(l => l.addEventListener('click', () => {
+      btn.classList.remove('nav__burger--open');
+      menu.classList.remove('mobile-nav--open');
+      document.body.style.overflow = '';
+    }));
   }
 
-  // ============ ABOUT TABS ============
-  function initTabs() {
+  /* === ABOUT TABS (with | separators) === */
+  function initAboutTabs() {
     const tabs = document.querySelectorAll('.about__tab');
     const panels = document.querySelectorAll('.about__panel');
-    const indicator = document.querySelector('.about__tab-indicator');
-    if (!tabs.length || !panels.length) return;
-
-    function updateIndicator(tab) {
-      if (!indicator) return;
-      indicator.style.left = tab.offsetLeft + 'px';
-      indicator.style.width = tab.offsetWidth + 'px';
-    }
-
-    // Init indicator position
-    const activeTab = document.querySelector('.about__tab--active');
-    if (activeTab) updateIndicator(activeTab);
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.dataset.tab;
-
-        tabs.forEach(t => t.classList.remove('about__tab--active'));
-        panels.forEach(p => p.classList.remove('about__panel--active'));
-
-        tab.classList.add('about__tab--active');
-        document.querySelector(`[data-panel="${target}"]`)?.classList.add('about__panel--active');
-
-        updateIndicator(tab);
-      });
-    });
-
-    // Handle resize
-    window.addEventListener('resize', () => {
-      const active = document.querySelector('.about__tab--active');
-      if (active) updateIndicator(active);
-    });
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('about__tab--active'));
+      panels.forEach(p => p.classList.remove('about__panel--active'));
+      tab.classList.add('about__tab--active');
+      document.querySelector(`[data-panel="${tab.dataset.tab}"]`)?.classList.add('about__panel--active');
+    }));
   }
 
-  // ============ SERVICES TABS ============
+  /* === SERVICES TABS === */
   function initServicesTabs() {
     const tabs = document.querySelectorAll('.services__tab');
     const panels = document.querySelectorAll('.services__panel');
-    const indicator = document.querySelector('.services__tab-indicator');
-    if (!tabs.length || !panels.length) return;
-
-    function updateIndicator(tab) {
-      if (!indicator) return;
-      indicator.style.left = tab.offsetLeft + 'px';
-      indicator.style.width = tab.offsetWidth + 'px';
-    }
-
-    const activeTab = document.querySelector('.services__tab--active');
-    if (activeTab) updateIndicator(activeTab);
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.dataset.stab;
-
-        tabs.forEach(t => t.classList.remove('services__tab--active'));
-        panels.forEach(p => p.classList.remove('services__panel--active'));
-
-        tab.classList.add('services__tab--active');
-        document.querySelector(`[data-spanel="${target}"]`)?.classList.add('services__panel--active');
-
-        updateIndicator(tab);
-      });
-    });
-
-    window.addEventListener('resize', () => {
-      const active = document.querySelector('.services__tab--active');
-      if (active) updateIndicator(active);
-    });
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('services__tab--active'));
+      panels.forEach(p => p.classList.remove('services__panel--active'));
+      tab.classList.add('services__tab--active');
+      document.querySelector(`[data-spanel="${tab.dataset.stab}"]`)?.classList.add('services__panel--active');
+    }));
   }
 
-  // ============ SWIPER ============
-  function initSwiper() {
-    if (typeof Swiper === 'undefined') return;
-
-    new Swiper('.programs__swiper', {
-      slidesPerView: 'auto',
-      spaceBetween: 24,
-      centeredSlides: false,
-      grabCursor: true,
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
-      breakpoints: {
-        768: {
-          spaceBetween: 32,
-        },
-        1024: {
-          spaceBetween: 40,
-        }
-      }
-    });
-  }
-
-  // ============ SCROLL ANIMATIONS (GSAP ScrollTrigger) ============
-  function initScrollAnimations() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Hero elements
-    gsap.from('.hero__title-line', {
-      y: 60,
-      opacity: 0,
-      duration: 1,
-      ease: 'power3.out',
-      stagger: 0.15,
-      delay: 0.2
-    });
-
-    gsap.from('.hero__title-x', {
-      scale: 0,
-      opacity: 0,
-      duration: 0.6,
-      ease: 'back.out(1.7)',
-      delay: 0.5
-    });
-
-    gsap.from('.hero__tagline', {
-      y: 20,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power2.out',
-      delay: 0.7
-    });
-
-    gsap.from('.hero__accent', {
-      scaleX: 0,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power3.out',
-      delay: 0.4
-    });
-
-    gsap.from('.hero__scroll-cue', {
-      opacity: 0,
-      duration: 1,
-      delay: 1.2
-    });
-
-    // Intro section
-    gsap.from('.intro__label', {
-      scrollTrigger: { trigger: '.intro', start: 'top 80%' },
-      x: -30, opacity: 0, duration: 0.6, ease: 'power2.out'
-    });
-
-    gsap.from('.intro__heading', {
-      scrollTrigger: { trigger: '.intro', start: 'top 80%' },
-      y: 40, opacity: 0, duration: 0.8, ease: 'power2.out', delay: 0.15
-    });
-
-    gsap.from('.intro__text', {
-      scrollTrigger: { trigger: '.intro__right', start: 'top 80%' },
-      y: 30, opacity: 0, duration: 0.7, ease: 'power2.out', stagger: 0.15
-    });
-
-    // About section
-    gsap.from('.about__tabs', {
-      scrollTrigger: { trigger: '.about', start: 'top 80%' },
-      y: 30, opacity: 0, duration: 0.7, ease: 'power2.out'
-    });
-
-    // Programs header
-    gsap.from('.programs__header', {
-      scrollTrigger: { trigger: '.programs', start: 'top 80%' },
-      y: 40, opacity: 0, duration: 0.8, ease: 'power2.out'
-    });
-
-    // Interruption heading
-    gsap.from('.interruption__line', {
-      scrollTrigger: { trigger: '.interruption', start: 'top 70%' },
-      y: 50, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.2
-    });
-
-    // Services
-    gsap.from('.services__image-wrap', {
-      scrollTrigger: { trigger: '.services', start: 'top 80%' },
-      clipPath: 'inset(20%)',
-      scale: 1.15,
-      duration: 1,
-      ease: 'power2.out'
-    });
-
-    // Editorial
-    gsap.from('.editorial__header', {
-      scrollTrigger: { trigger: '.editorial', start: 'top 80%' },
-      y: 40, opacity: 0, duration: 0.8, ease: 'power2.out'
-    });
-
-    gsap.from('.editorial__card', {
-      scrollTrigger: { trigger: '.editorial__grid', start: 'top 80%' },
-      y: 40, opacity: 0, duration: 0.7, ease: 'power2.out', stagger: 0.1
-    });
-
-    // Contact
-    gsap.from('.contact__logo', {
-      scrollTrigger: { trigger: '.contact', start: 'top 80%' },
-      x: -40, opacity: 0, duration: 0.8, ease: 'power2.out'
-    });
-
-    gsap.from('.contact__cta', {
-      scrollTrigger: { trigger: '.contact', start: 'top 80%' },
-      x: 40, opacity: 0, rotation: -15, duration: 0.8, ease: 'power2.out', delay: 0.2
-    });
-
-    gsap.from('.contact__form-container', {
-      scrollTrigger: { trigger: '.contact__form-section', start: 'top 85%' },
-      y: 40, opacity: 0, duration: 0.8, ease: 'power2.out'
-    });
-
-    // Section pin on desktop (kobykooba-style cinematic scroll)
-    if (window.matchMedia('(min-width: 1024px)').matches) {
-      // Pin hero slightly
-      ScrollTrigger.create({
-        trigger: '.hero',
-        start: 'top top',
-        end: 'bottom top',
-        pin: false,
-        onUpdate: (self) => {
-          const hero = document.querySelector('.hero__content');
-          if (hero) {
-            hero.style.opacity = 1 - self.progress * 1.5;
-            hero.style.transform = `translateY(${self.progress * -60}px) scale(${1 - self.progress * 0.1})`;
-          }
-        }
-      });
-    }
-  }
-
-  // ============ INTERRUPTION BARS ANIMATION ============
-  function initInterruptionBars() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
-
-    const bars = document.querySelectorAll('.interruption__bar');
-    if (!bars.length) return;
-
-    bars.forEach((bar, i) => {
-      gsap.to(bar, {
-        scrollTrigger: {
-          trigger: '.interruption',
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: 1,
-        },
-        y: (i % 2 === 0 ? -1 : 1) * (20 + i * 15),
-        ease: 'none'
-      });
-    });
-  }
-
-  // ============ MODAL ============
+  /* === MODAL === */
   function initModal() {
-    const modal = document.getElementById('contactModal');
+    const modal = document.getElementById('modal');
     if (!modal) return;
-
-    const overlay = modal.querySelector('.modal__overlay');
-    const closeBtn = modal.querySelector('.modal__close');
     const steps = modal.querySelectorAll('.modal__step');
-    const dots = modal.querySelectorAll('.modal__progress-dot');
-    const nextBtns = modal.querySelectorAll('.modal__next');
-    const doneBtn = modal.querySelector('.modal__done');
-    let currentStep = 1;
-
-    // Open triggers
-    document.querySelectorAll('.contact__cta, .nav__link--cta, .mobile-menu__link--cta').forEach(trigger => {
-      trigger.addEventListener('click', (e) => {
-        e.preventDefault();
-        openModal();
-      });
-    });
+    const dots = modal.querySelectorAll('.modal__dot');
+    let current = 1;
 
     function openModal() {
       modal.classList.add('modal--open');
       document.body.style.overflow = 'hidden';
-      if (lenisInstance) lenisInstance.stop();
+      if (lenis) lenis.stop();
     }
-
     function closeModal() {
       modal.classList.remove('modal--open');
       document.body.style.overflow = '';
-      if (lenisInstance) lenisInstance.start();
-      // Reset to step 1
-      setTimeout(() => {
-        currentStep = 1;
-        goToStep(1);
-      }, 400);
+      if (lenis) lenis.start();
+      setTimeout(() => { current = 1; goStep(1); }, 400);
+    }
+    function goStep(n) {
+      steps.forEach(s => s.classList.remove('modal__step--active'));
+      dots.forEach(d => d.classList.remove('modal__dot--active'));
+      modal.querySelector(`[data-mstep="${n}"]`)?.classList.add('modal__step--active');
+      dots.forEach(d => { if (parseInt(d.dataset.mdot) <= n) d.classList.add('modal__dot--active'); });
     }
 
-    function goToStep(step) {
-      steps.forEach(s => s.classList.remove('modal__step--active'));
-      dots.forEach(d => d.classList.remove('modal__progress-dot--active'));
+    // Triggers
+    document.querySelectorAll('.nav__link--cta, .mobile-nav__link:last-child, .footer__cta').forEach(el => {
+      el.addEventListener('click', e => { e.preventDefault(); openModal(); });
+    });
 
-      const targetStep = modal.querySelector(`[data-step="${step}"]`);
-      const targetDot = modal.querySelector(`[data-dot="${step}"]`);
-      if (targetStep) targetStep.classList.add('modal__step--active');
+    modal.querySelectorAll('[data-next]').forEach(btn => {
+      btn.addEventListener('click', () => { current = parseInt(btn.dataset.next); goStep(current); });
+    });
+    modal.querySelector('.modal__btn--done')?.addEventListener('click', closeModal);
+    modal.querySelector('.modal__bg')?.addEventListener('click', closeModal);
+    document.getElementById('modalClose')?.addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('modal--open')) closeModal(); });
+  }
 
-      // Activate all dots up to current
-      dots.forEach(d => {
-        if (parseInt(d.dataset.dot) <= step) {
-          d.classList.add('modal__progress-dot--active');
+  /* === GSAP ANIMATIONS === */
+  function initGSAP() {
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* Hero entrance */
+    gsap.from('.hero__text-j1', { y: 80, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.1 });
+    gsap.from('.hero__text-x', { scale: 0, opacity: 0, duration: 0.7, ease: 'back.out(1.7)', delay: 0.4 });
+    gsap.from('.hero__text-j2', { y: 80, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.25 });
+    gsap.from('.hero__accent-bar', { scaleX: 0, opacity: 0, duration: 0.8, ease: 'power3.out', delay: 0.5, transformOrigin: 'left center' });
+
+    /* Hero parallax on scroll (kobykooba: content fades/scales out) */
+    if (window.innerWidth >= 1024) {
+      ScrollTrigger.create({
+        trigger: '.hero', start: 'top top', end: 'bottom top',
+        onUpdate(self) {
+          const el = document.querySelector('.hero__wordmark');
+          if (el) {
+            el.style.opacity = 1 - self.progress * 1.5;
+            el.style.transform = `scale(${1 - self.progress * 0.15}) translateY(${self.progress * -80}px)`;
+          }
         }
       });
     }
 
-    nextBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        currentStep++;
-        goToStep(currentStep);
+    /* Intro text reveal (word-by-word fade like kobykooba) */
+    gsap.from('.intro__text', {
+      scrollTrigger: { trigger: '.intro__right', start: 'top 75%' },
+      opacity: 0, y: 40, duration: 1, ease: 'power2.out'
+    });
+    gsap.from('.intro__dot', {
+      scrollTrigger: { trigger: '.intro__right', start: 'top 80%' },
+      scale: 0, duration: 0.6, ease: 'back.out(1.7)'
+    });
+
+    /* Intro left brand crop — clip-path reveal */
+    gsap.from('.intro__brand-crop', {
+      scrollTrigger: { trigger: '.intro', start: 'top 60%' },
+      clipPath: 'inset(0 100% 0 0)', duration: 1.2, ease: 'power3.inOut'
+    });
+
+    /* About section reveals */
+    gsap.from('.about__tabs', {
+      scrollTrigger: { trigger: '.about', start: 'top 70%' },
+      y: 30, opacity: 0, duration: 0.8, ease: 'power2.out'
+    });
+    gsap.from('.about__body', {
+      scrollTrigger: { trigger: '.about', start: 'top 60%' },
+      y: 50, opacity: 0, duration: 1, ease: 'power2.out', delay: 0.2
+    });
+
+    /* Gallery cards — staggered entrance */
+    gsap.from('.gallery__card', {
+      scrollTrigger: { trigger: '.gallery', start: 'top 70%' },
+      y: 80, opacity: 0, rotation: 20, duration: 0.9, ease: 'power3.out',
+      stagger: 0.1
+    });
+    gsap.from('.gallery__accent-bar', {
+      scrollTrigger: { trigger: '.gallery', start: 'top 60%' },
+      scaleX: 0, opacity: 0, duration: 1, ease: 'power3.out',
+      transformOrigin: 'left center'
+    });
+
+    /* Services — clip-path image reveal (kobykooba style) */
+    gsap.from('.services__image-inner', {
+      scrollTrigger: { trigger: '.services', start: 'top 70%' },
+      clipPath: 'inset(20%)', scale: 1.2, duration: 1.2, ease: 'power2.out'
+    });
+    gsap.from('.services__body', {
+      scrollTrigger: { trigger: '.services__content', start: 'top 70%' },
+      y: 40, opacity: 0, duration: 0.9, ease: 'power2.out'
+    });
+
+    /* Interruption — text entrance */
+    gsap.from('.interr__line', {
+      scrollTrigger: { trigger: '.interr', start: 'top 65%' },
+      y: 60, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.15
+    });
+
+    /* Interruption bars parallax */
+    gsap.to('.interr__bar--cream', {
+      scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 1 },
+      y: -40, ease: 'none'
+    });
+    gsap.to('.interr__bar--accent', {
+      scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 1 },
+      y: 30, ease: 'none'
+    });
+
+    /* Editorial showcase */
+    gsap.from('.editorial__showcase-inner', {
+      scrollTrigger: { trigger: '.editorial__showcase', start: 'top 75%' },
+      y: 60, opacity: 0, duration: 1, ease: 'power2.out'
+    });
+
+    /* Editorial cards — staggered clip-path wipe (kobykooba portfolio reveal) */
+    gsap.utils.toArray('.editorial__card').forEach((card, i) => {
+      gsap.from(card, {
+        scrollTrigger: { trigger: card, start: 'top 85%' },
+        clipPath: 'inset(0 0 100% 0)',
+        duration: 0.9, ease: 'power3.out',
+        delay: (i % 2) * 0.15
       });
     });
 
-    if (doneBtn) doneBtn.addEventListener('click', closeModal);
-    if (overlay) overlay.addEventListener('click', closeModal);
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modal.classList.contains('modal--open')) {
-        closeModal();
-      }
+    /* Footer reveals */
+    gsap.from('.footer__logo-svg', {
+      scrollTrigger: { trigger: '.footer', start: 'top 80%' },
+      x: -60, opacity: 0, duration: 1, ease: 'power2.out'
+    });
+    gsap.from('.footer__cta', {
+      scrollTrigger: { trigger: '.footer', start: 'top 70%' },
+      x: 80, rotation: -15, opacity: 0, duration: 1, ease: 'power2.out', delay: 0.2
     });
   }
 
-  // ============ FORM HANDLER ============
-  function initFormHandler() {
-    const form = document.getElementById('contactForm');
-    if (!form) return;
-
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      // Open modal as confirmation
-      const modal = document.getElementById('contactModal');
-      if (modal) {
-        modal.classList.add('modal--open');
-        document.body.style.overflow = 'hidden';
-        if (lenisInstance) lenisInstance.stop();
-        // Jump to step 3 (success)
-        modal.querySelectorAll('.modal__step').forEach(s => s.classList.remove('modal__step--active'));
-        modal.querySelectorAll('.modal__progress-dot').forEach(d => d.classList.add('modal__progress-dot--active'));
-        const step3 = modal.querySelector('[data-step="3"]');
-        if (step3) step3.classList.add('modal__step--active');
-      }
-    });
-  }
-
-  // ============ BOOT ============
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runLoader);
-  } else {
-    runLoader();
-  }
-
-  // Scroll to top on load (kobykooba pattern)
+  /* === BOOT === */
   window.history.scrollRestoration = 'manual';
   window.addEventListener('beforeunload', () => window.scrollTo(0, 0));
-
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', runLoader);
+  else runLoader();
 })();
