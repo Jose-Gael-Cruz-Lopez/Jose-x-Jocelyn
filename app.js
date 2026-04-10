@@ -367,8 +367,8 @@
       scale: 0, duration: 0.5, ease: 'back.out(1.7)'
     });
 
-    /* Intro left brand crop — clip-path reveal */
-    gsap.from('.intro__brand-crop', {
+    /* Intro left — banner grid clip-path reveal */
+    gsap.from('.intro__banners', {
       scrollTrigger: { trigger: '.intro', start: 'top 65%', toggleActions: toggle },
       clipPath: 'inset(0 100% 0 0)', duration: 1, ease: 'power3.inOut'
     });

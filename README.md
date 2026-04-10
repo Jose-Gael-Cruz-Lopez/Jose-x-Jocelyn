@@ -5,7 +5,7 @@ From Campus to Career is a collaborative initiative for first-generation and und
 ## About
 
 - **Jose G. Cruz-Lopez** focuses on getting in: internships, applications, and recruiting insight as an actively recruiting student.
-- **Jocelyn Vázquez** focuses on staying and growing: offers, negotiation, and early-career growth in tech and data.
+- **Jocelyn Vazquez** focuses on staying and growing: offers, negotiation, and early-career growth in tech and data.
 
 ## Features
 
