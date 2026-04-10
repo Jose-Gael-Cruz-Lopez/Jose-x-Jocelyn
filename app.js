@@ -288,7 +288,7 @@
     gsap.from('.hero__text-j1', { y: 80, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.1 });
     gsap.from('.hero__text-x', { scale: 0, opacity: 0, duration: 0.7, ease: 'back.out(1.7)', delay: 0.4 });
     gsap.from('.hero__text-j2', { y: 80, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.25 });
-    gsap.from('.hero__accent-bar', { scaleX: 0, opacity: 0, duration: 0.8, ease: 'power3.out', delay: 0.5, transformOrigin: 'left center' });
+    gsap.from('.hero__accent-bar', { scaleX: 0, opacity: 0, duration: 0.8, ease: 'power3.out', delay: 0.5, stagger: 0.15, transformOrigin: 'left center' });
 
     /* Hero parallax on scroll (kobykooba: content fades/scales out) */
     if (window.innerWidth >= 1024) {
@@ -304,49 +304,58 @@
       });
     }
 
-    /* Intro text reveal (word-by-word fade like kobykooba) */
+    /*
+     * toggleActions: 'play none none reverse'
+     *   onEnter → play       (scroll down into section)
+     *   onLeave → none       (content stays while you keep scrolling)
+     *   onEnterBack → none   (content stays when scrolling back into it)
+     *   onLeaveBack → reverse (only resets when section fully leaves viewport going up)
+     */
+    const toggle = 'play none none reverse';
+
+    /* Intro text reveal */
     gsap.from('.intro__text', {
-      scrollTrigger: { trigger: '.intro__right', start: 'top 75%' },
-      opacity: 0, y: 40, duration: 1, ease: 'power2.out'
+      scrollTrigger: { trigger: '.intro__right', start: 'top 80%', toggleActions: toggle },
+      opacity: 0, y: 40, duration: 0.8, ease: 'power2.out'
     });
     gsap.from('.intro__dot', {
-      scrollTrigger: { trigger: '.intro__right', start: 'top 80%' },
-      scale: 0, duration: 0.6, ease: 'back.out(1.7)'
+      scrollTrigger: { trigger: '.intro__right', start: 'top 80%', toggleActions: toggle },
+      scale: 0, duration: 0.5, ease: 'back.out(1.7)'
     });
 
     /* Intro left brand crop — clip-path reveal */
     gsap.from('.intro__brand-crop', {
-      scrollTrigger: { trigger: '.intro', start: 'top 60%' },
-      clipPath: 'inset(0 100% 0 0)', duration: 1.2, ease: 'power3.inOut'
+      scrollTrigger: { trigger: '.intro', start: 'top 65%', toggleActions: toggle },
+      clipPath: 'inset(0 100% 0 0)', duration: 1, ease: 'power3.inOut'
     });
 
     /* About section reveals */
     gsap.from('.about__tabs', {
-      scrollTrigger: { trigger: '.about', start: 'top 70%' },
-      y: 30, opacity: 0, duration: 0.8, ease: 'power2.out'
+      scrollTrigger: { trigger: '.about', start: 'top 75%', toggleActions: toggle },
+      y: 30, opacity: 0, duration: 0.7, ease: 'power2.out'
     });
     gsap.from('.about__body', {
-      scrollTrigger: { trigger: '.about', start: 'top 60%' },
-      y: 50, opacity: 0, duration: 1, ease: 'power2.out', delay: 0.2
+      scrollTrigger: { trigger: '.about', start: 'top 65%', toggleActions: toggle },
+      y: 50, opacity: 0, duration: 0.8, ease: 'power2.out', delay: 0.15
     });
 
-    /* Services — clip-path image reveal (kobykooba style) */
+    /* Services — clip-path image reveal */
     gsap.from('.services__image-inner', {
-      scrollTrigger: { trigger: '.services', start: 'top 70%' },
-      clipPath: 'inset(20%)', scale: 1.2, duration: 1.2, ease: 'power2.out'
+      scrollTrigger: { trigger: '.services', start: 'top 75%', toggleActions: toggle },
+      clipPath: 'inset(20%)', scale: 1.2, duration: 1, ease: 'power2.out'
     });
     gsap.from('.services__body', {
-      scrollTrigger: { trigger: '.services__content', start: 'top 70%' },
-      y: 40, opacity: 0, duration: 0.9, ease: 'power2.out'
+      scrollTrigger: { trigger: '.services__content', start: 'top 75%', toggleActions: toggle },
+      y: 40, opacity: 0, duration: 0.8, ease: 'power2.out'
     });
 
     /* Interruption — text entrance */
     gsap.from('.interr__line', {
-      scrollTrigger: { trigger: '.interr', start: 'top 65%' },
-      y: 60, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.15
+      scrollTrigger: { trigger: '.interr', start: 'top 70%', toggleActions: toggle },
+      y: 60, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.12
     });
 
-    /* Interruption bars parallax */
+    /* Interruption bars parallax (scrub already works both directions) */
     gsap.to('.interr__bar--cream', {
       scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 0.35 },
       y: -40, ease: 'none'
@@ -358,28 +367,28 @@
 
     /* Editorial showcase */
     gsap.from('.editorial__showcase-inner', {
-      scrollTrigger: { trigger: '.editorial__showcase', start: 'top 75%' },
-      y: 60, opacity: 0, duration: 1, ease: 'power2.out'
+      scrollTrigger: { trigger: '.editorial__showcase', start: 'top 80%', toggleActions: toggle },
+      y: 60, opacity: 0, duration: 0.8, ease: 'power2.out'
     });
 
-    /* Editorial cards — staggered clip-path wipe (kobykooba portfolio reveal) */
+    /* Editorial cards — staggered clip-path wipe */
     gsap.utils.toArray('.editorial__card').forEach((card, i) => {
       gsap.from(card, {
-        scrollTrigger: { trigger: card, start: 'top 85%' },
+        scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: toggle },
         clipPath: 'inset(0 0 100% 0)',
-        duration: 0.9, ease: 'power3.out',
-        delay: (i % 2) * 0.15
+        duration: 0.7, ease: 'power3.out',
+        delay: (i % 2) * 0.1
       });
     });
 
     /* Footer reveals */
     gsap.from('.footer__logo-svg', {
-      scrollTrigger: { trigger: '.footer', start: 'top 80%' },
-      x: -60, opacity: 0, duration: 1, ease: 'power2.out'
+      scrollTrigger: { trigger: '.footer', start: 'top 80%', toggleActions: toggle },
+      x: -60, opacity: 0, duration: 0.8, ease: 'power2.out'
     });
     gsap.from('.footer__cta', {
-      scrollTrigger: { trigger: '.footer', start: 'top 70%' },
-      x: 80, rotation: -15, opacity: 0, duration: 1, ease: 'power2.out', delay: 0.2
+      scrollTrigger: { trigger: '.footer', start: 'top 75%', toggleActions: toggle },
+      x: 80, rotation: -15, opacity: 0, duration: 0.8, ease: 'power2.out', delay: 0.15
     });
   }
 

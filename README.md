@@ -1,38 +1,36 @@
-# Jose x Jocelyn — From Applications to Offers
+# Jose x Jocelyn · From Campus to Career
 
-The student-to-early-career relay for first-gen and underrepresented talent in tech.
+From Campus to Career is a collaborative initiative for first-generation and underrepresented students in tech and data: practical advice, transparent insights, and a visible path from first internship search to full-time role.
 
 ## About
 
-Jose x Jocelyn is a collaborative platform co-created by Jose G. Cruz-Lopez and Jocelyn V. — mapping the pipeline from first internship search to first full-time offer for first-generation and underrepresented students in tech and data.
-
-- **Jose** covers "getting in": internship discovery, application strategy, resume reviews, and real-time recruiting insights
-- **Jocelyn** covers "staying and growing": converting internships to offers, negotiation, onboarding, and early-career growth
+- **Jose G. Cruz-Lopez** focuses on getting in: internships, applications, and recruiting insight as an actively recruiting student.
+- **Jocelyn Vázquez** focuses on staying and growing: offers, negotiation, and early-career growth in tech and data.
 
 ## Features
 
-- **Hero** — Cinematic full-viewport brand introduction with GSAP animations
-- **About Section** — Tabbed profiles (Jose / Jocelyn / Together) with animated tab indicator
-- **Programs Carousel** — Swiper-powered card gallery showcasing LinkedIn Series, Sprint Cohorts, Opportunity Boards, and Templates
-- **Interruption Panel** — Bold typographic statement with animated bars (kobykooba-inspired)
-- **Services Tabs** — Content, Sprints, and Community offerings with tabbed navigation
-- **Editorial Hub** — Magazine-style article grid with featured card and author-tagged articles
-- **Contact & Sign-up** — Multi-step modal form + inline email signup
-- **Smooth Scroll** — Lenis smooth scroll with GSAP ticker integration
-- **Responsive Design** — Mobile-first with hamburger menu, adapted layouts
+- **Hero:** Full-viewport brand wordmark with GSAP entrance animations
+- **About:** Tabs for Who We Are, Mission, and Vision
+- **Gallery:** Animated portfolio-style card carousel
+- **Interruption:** Bold typographic statement with animated bars
+- **Services:** Content, Sprints, and Community with tabbed navigation
+- **Editorial:** Article grid with author tags
+- **Contact:** Multi-step modal form
+- **Scroll animations:** GSAP ScrollTrigger
+- **Responsive:** Mobile hamburger menu and adapted layouts
 
 ## Tech Stack
 
 - **HTML5 / CSS3 / Vanilla JavaScript**
-- **GSAP** (ScrollTrigger) — scroll-driven animations and reveals
-- **Lenis** — smooth scroll
-- **Swiper.js** — touch-enabled carousel
-- **Clash Display** (Fontshare) — display typography
-- **Satoshi** (Fontshare) — body typography
+- **GSAP** (ScrollTrigger): scroll-driven animations and reveals
+- **Anime.js:** gallery motion
+- **Swiper.js:** carousel assets (if used)
+- **Clash Display** (Fontshare): display typography
+- **Satoshi** (Fontshare): body typography
 
 ## Design Inspiration
 
-UI/UX design inspired by [kobykooba.com](https://kobykooba.com/) — adapted and tailored for the Jose x Jocelyn career-pipeline brand.
+UI/UX design inspired by [kobykooba.com](https://kobykooba.com/), adapted for the Jose x Jocelyn / From Campus to Career brand.
 
 ## Getting Started
 
