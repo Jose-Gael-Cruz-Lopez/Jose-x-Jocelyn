@@ -726,13 +726,39 @@ ul { list-style: none; }
   margin: 0;
 }
 
+.about__card-role-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
 .about__card-role {
   font-family: var(--font-serif);
   font-size: clamp(16px, 2vw, 22px);
   font-style: italic;
   font-weight: 400;
   color: var(--color-gold);
-  margin: 4px 0 0;
+  margin: 0;
+}
+
+.about__card-linkedin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  border-radius: 6px;
+  transition: transform 0.2s var(--ease-out), opacity 0.2s;
+}
+.about__card-linkedin:hover {
+  transform: scale(1.08);
+  opacity: 0.95;
+}
+.about__card-linkedin img {
+  width: clamp(22px, 3vw, 28px);
+  height: auto;
+  display: block;
 }
 
 .about__card-desc {
