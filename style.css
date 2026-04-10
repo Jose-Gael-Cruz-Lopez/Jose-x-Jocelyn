@@ -1536,7 +1536,7 @@ ul { list-style: none; }
 /* --- Editorial: moon inside navy showcase block (top-right, inset from edges) --- */
 .mascot--editorial {
   width: clamp(52px, 7vw, 96px);
-  top: clamp(16px, 2.2vw, 28px);
+  top: clamp(24px, 3.2vw, 38px);
   right: clamp(16px, 2.2vw, 28px);
 }
 
