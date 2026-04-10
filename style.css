@@ -521,6 +521,7 @@ ul { list-style: none; }
 }
 
 .intro__right {
+  position: relative;
   display: flex; flex-direction: column; justify-content: center;
   padding: 80px 80px 80px 60px;
 }
@@ -1491,6 +1492,52 @@ ul { list-style: none; }
   .footer__social-link { font-size: 14px; }
 
   .mobile-nav__link { font-size: clamp(24px, 6vw, 36px); }
+}
+
+/* ============================================
+   MASCOTS — Sun & Moon decorative characters
+   ============================================ */
+.mascot {
+  position: absolute;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  will-change: transform;
+}
+
+.mascot--sun {
+  animation: mascotFloat 4s ease-in-out infinite, mascotRock 6s ease-in-out infinite;
+}
+.mascot--moon2 {
+  animation: mascotFloat 4.5s ease-in-out infinite 1s, mascotRock 5.5s ease-in-out infinite;
+}
+
+@keyframes mascotFloat {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -12px; }
+}
+@keyframes mascotRock {
+  0%, 100% { rotate: 0deg; }
+  25%      { rotate: 6deg; }
+  75%      { rotate: -6deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot { animation: none !important; }
+}
+
+/* --- Intro section: sun peeking bottom-right of text column --- */
+.mascot--intro {
+  width: clamp(72px, 10vw, 130px);
+  bottom: 1%;
+  right: 6%;
+}
+
+/* --- Editorial: moon inside navy showcase block (top-right, inset from edges) --- */
+.mascot--editorial {
+  width: clamp(52px, 7vw, 96px);
+  top: clamp(16px, 2.2vw, 28px);
+  right: clamp(16px, 2.2vw, 28px);
 }
 
 /* ============================================
