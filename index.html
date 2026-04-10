@@ -6,8 +6,9 @@
   <title>Jose x Jocelyn · From Campus to Career</title>
   <meta name="description" content="From Campus to Career: practical advice and a visible pipeline from first internship search to full-time role for first-generation and underrepresented students in tech and data." />
 
-  <!-- Fonts: Clash Display (heavy geometric like PP Nikkei Maru) + Satoshi body -->
+  <!-- Fonts: Clash Display + Satoshi + Playfair + Montserrat (hero names — geometric caps) -->
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
 
   <!-- GSAP + ScrollTrigger -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
@@ -23,18 +24,20 @@
 </head>
 <body>
 
-  <!-- ===== LOADER (3-panel wipe like kobykooba) ===== -->
+  <!-- ===== LOADER (3 horizontal yellow bands slide away after progress) ===== -->
   <div class="loader" id="loader">
-    <div class="loader__panel loader__panel--1"></div>
-    <div class="loader__panel loader__panel--2"></div>
-    <div class="loader__panel loader__panel--3"></div>
+    <div class="loader__bands">
+      <div class="loader__panel loader__panel--1"></div>
+      <div class="loader__panel loader__panel--2"></div>
+      <div class="loader__panel loader__panel--3"></div>
+    </div>
     <div class="loader__progress">
       <div class="loader__fill" id="loaderFill"></div>
     </div>
   </div>
 
   <!-- ===== NAV (top-right, transparent, like kobykooba) ===== -->
-  <nav class="nav" id="nav">
+  <nav class="nav nav--on-hero" id="nav">
     <div class="nav__links">
       <a href="#about" class="nav__link">About</a>
       <a href="#services" class="nav__link">Services</a>
@@ -58,18 +61,40 @@
     <a href="#contact" class="mobile-nav__link">Get in Touch</a>
   </div>
 
-  <!-- ===== HERO - Giant "JxJ" wordmark filling viewport ===== -->
+  <!-- ===== HERO — Terracotta landing (pre–pixel-perfect mockup match) ===== -->
   <section class="hero" id="hero">
-    <div class="hero__wordmark">
-      <!-- SVG wordmark mimicking kō's massive viewport-filling type -->
-      <svg class="hero__svg" viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" aria-label="Jose x Jocelyn">
-        <text x="0" y="560" class="hero__text-j1">J</text>
-        <text x="500" y="560" class="hero__text-j2">J</text>
-        <rect class="hero__accent-bar" x="70" y="72" width="200" height="48" rx="4" transform="rotate(-18 170 96)" />
-        <rect class="hero__accent-bar" x="560" y="72" width="200" height="48" rx="4" transform="rotate(-18 660 96)" />
-        <text x="340" y="430" class="hero__text-x">x</text>
-      </svg>
+    <div class="hero__chrome-strip hero__chrome-strip--top" aria-hidden="true"></div>
+    <div class="hero__inner">
+      <div class="hero__mark-row">
+        <div class="hero__sun hero__sun--spin" aria-hidden="true">
+          <svg class="hero__sun-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="22" y="22" width="56" height="56" class="hero__sun-square"/>
+            <rect x="22" y="22" width="56" height="56" class="hero__sun-square" transform="rotate(45 50 50)"/>
+            <circle cx="50" cy="50" r="20" class="hero__sun-core"/>
+          </svg>
+        </div>
+
+        <div class="hero__jxj">
+          <span class="hero__j">J</span>
+          <span class="hero__x">×</span>
+          <span class="hero__j">J</span>
+        </div>
+
+        <div class="hero__sun hero__sun--spin-reverse" aria-hidden="true">
+          <svg class="hero__sun-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="22" y="22" width="56" height="56" class="hero__sun-square"/>
+            <rect x="22" y="22" width="56" height="56" class="hero__sun-square" transform="rotate(45 50 50)"/>
+            <circle cx="50" cy="50" r="20" class="hero__sun-core"/>
+          </svg>
+        </div>
+      </div>
+
+      <h1 class="hero__names">Jose &amp; Jocelyn</h1>
+      <p class="hero__tagline" lang="es">El sol sale para todos…</p>
+      <div class="hero__rule" aria-hidden="true"></div>
+      <p class="hero__foot">First-gen · Mexican American · Tech careers</p>
     </div>
+    <div class="hero__chrome-strip hero__chrome-strip--bottom" aria-hidden="true"></div>
   </section>
 
   <!-- ===== INTRO - 50/50 split: zoomed logo left, text right ===== -->
@@ -101,7 +126,7 @@
         <button class="about__tab" data-tab="vision">Vision</button>
       </div>
 
-      <!-- Panels (order matches tab order for clarity) -->
+      <!-- Panels (order matches tab order: Mission → Who We Are → Vision) -->
       <div class="about__panel about__panel--active" data-panel="mission">
         <p class="about__label">Why we built this and who it is for</p>
         <blockquote class="about__quote">No one should have to <em>guess</em> their way from first internship to first offer. Every step should be <em>visible, mapped,</em> and <em>community-supported.</em></blockquote>

@@ -16,18 +16,36 @@
       return initSite();
     }
 
+    const wipeEase = 'power3.inOut';
+    const wipeDur = 0.88;
+
+    /* One timeline: progress bar, then staggered horizontal bands (left / right / left) */
     const tl = gsap.timeline({
       onComplete() {
-        gsap.to(panels[0], { yPercent: -100, duration: 0.7, ease: 'power3.inOut' });
-        gsap.to(panels[1], { yPercent: 100, duration: 0.7, ease: 'power3.inOut', delay: 0.06 });
-        gsap.to(panels[2], { yPercent: -100, duration: 0.7, ease: 'power3.inOut', delay: 0.12,
-          onComplete() { loader.remove(); initSite(); }
-        });
-      }
+        loader.remove();
+        initSite();
+      },
     });
-    tl.to(fill, { width: '40%', duration: 0.4, ease: 'power2.out' })
-      .to(fill, { width: '80%', duration: 0.35, ease: 'power2.out' })
-      .to(fill, { width: '100%', duration: 0.25, ease: 'power2.out' });
+
+    tl.to(fill, { width: '35%', duration: 0.35, ease: 'power2.out' })
+      .to(fill, { width: '72%', duration: 0.32, ease: 'power2.out' })
+      .to(fill, { width: '100%', duration: 0.28, ease: 'power2.out' })
+      .add('wipe')
+      .to(
+        panels[0],
+        { xPercent: -100, duration: wipeDur, ease: wipeEase, force3D: true },
+        'wipe'
+      )
+      .to(
+        panels[1],
+        { xPercent: 100, duration: wipeDur, ease: wipeEase, force3D: true },
+        'wipe+=0.08'
+      )
+      .to(
+        panels[2],
+        { xPercent: -100, duration: wipeDur, ease: wipeEase, force3D: true },
+        'wipe+=0.16'
+      );
   }
 
   /* === INIT === */
@@ -284,21 +302,48 @@
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
     gsap.registerPlugin(ScrollTrigger);
 
-    /* Hero entrance */
-    gsap.from('.hero__text-j1', { y: 80, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.1 });
-    gsap.from('.hero__text-x', { scale: 0, opacity: 0, duration: 0.7, ease: 'back.out(1.7)', delay: 0.4 });
-    gsap.from('.hero__text-j2', { y: 80, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.25 });
-    gsap.from('.hero__accent-bar', { scaleX: 0, opacity: 0, duration: 0.8, ease: 'power3.out', delay: 0.5, stagger: 0.15, transformOrigin: 'left center' });
+    const nav = document.getElementById('nav');
+    if (nav) {
+      ScrollTrigger.create({
+        trigger: '.hero',
+        start: 'top top',
+        end: 'bottom top',
+        onLeave: () => {
+          nav.classList.remove('nav--on-hero');
+          nav.classList.add('nav--dark');
+        },
+        onEnterBack: () => {
+          nav.classList.add('nav--on-hero');
+          nav.classList.remove('nav--dark');
+        },
+      });
+    }
 
-    /* Hero parallax on scroll (kobykooba: content fades/scales out) */
+    /* Hero entrance (terracotta landing) */
+    gsap.from('.hero__sun', { scale: 0.85, opacity: 0, duration: 0.75, ease: 'power2.out', delay: 0.12, stagger: 0.1 });
+    gsap.from('.hero__j', { y: 80, opacity: 0, duration: 1.2, ease: 'power3.out', delay: 0.15, stagger: 0.13 });
+    gsap.from('.hero__x', { scale: 0, opacity: 0, duration: 0.7, ease: 'back.out(1.7)', delay: 0.45 });
+    gsap.from('.hero__names', { y: 20, opacity: 0, duration: 0.8, ease: 'power2.out', delay: 0.5 });
+    gsap.from('.hero__tagline', { y: 16, opacity: 0, duration: 0.7, ease: 'power2.out', delay: 0.65 });
+    gsap.from('.hero__rule', {
+      scaleX: 0,
+      opacity: 0,
+      duration: 0.5,
+      ease: 'power2.out',
+      delay: 0.75,
+      transformOrigin: 'center center',
+    });
+    gsap.from('.hero__foot', { y: 12, opacity: 0, duration: 0.6, ease: 'power2.out', delay: 0.85 });
+
+    /* Hero parallax on scroll */
     if (window.innerWidth >= 1024) {
       ScrollTrigger.create({
         trigger: '.hero', start: 'top top', end: 'bottom top',
         onUpdate(self) {
-          const el = document.querySelector('.hero__wordmark');
+          const el = document.querySelector('.hero__inner');
           if (el) {
             el.style.opacity = 1 - self.progress * 1.5;
-            el.style.transform = `scale(${1 - self.progress * 0.15}) translateY(${self.progress * -80}px)`;
+            el.style.transform = `scale(${1 - self.progress * 0.12}) translateY(${self.progress * -60}px)`;
           }
         }
       });

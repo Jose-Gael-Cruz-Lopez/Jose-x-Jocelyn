@@ -27,7 +27,18 @@
   --color-light-text: #F2E4CE;
 
   --font-display: 'Clash Display', 'Helvetica Neue', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
   --font-body: 'Satoshi', 'Inter', sans-serif;
+  /* Hero “JOSE & JOCELYN” — geometric caps (ref: Montserrat-style) */
+  --font-hero-names: 'Montserrat', 'Satoshi', system-ui, sans-serif;
+
+  /* Hero terracotta (red landing) */
+  --hero-bg: #A34333;
+  /* Sun / hero accent yellow — same as overlapping-square sun fill */
+  --hero-gold: #f5c026;
+  --hero-sun-core: #7B2424;
+  /* Thin edge strip on hero (terracotta → forest green → gold → cream) */
+  --hero-strip-green: #2a4a3d;
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
@@ -63,22 +74,75 @@ ul { list-style: none; }
 }
 
 /* ============================================
-   LOADER — 3 vertical panels wipe away
+   LOADER — 3 horizontal yellow bands wipe open (reveal scene)
+   .loader stays transparent so you can SEE three separate bands (solid yellow
+   on .loader hid them). Seams are handled with row overlap + drawn dividers
+   on the panels (no gap through to the page).
    ============================================ */
 .loader {
-  position: fixed; inset: 0; z-index: 9999;
-  display: flex; pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: 100svh;
+  min-height: -webkit-fill-available;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  pointer-events: auto;
+  background: transparent;
+  box-sizing: border-box;
+}
+/* Fills the entire viewport; only the three panels participate in the grid */
+.loader__bands {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 0;
 }
 .loader__panel {
-  flex: 1; background: var(--color-navy);
+  width: 100%;
+  min-width: 100%;
+  min-height: 0;
+  background: var(--hero-gold);
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+/* Slight overlap kills subpixel hairlines without a solid full-screen yellow */
+.loader__panel + .loader__panel {
+  margin-top: -2px;
+}
+/* Visible edge between bands (drawn ON the yellow — not a gap) */
+.loader__bands > .loader__panel:nth-child(-n + 2) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 .loader__progress {
-  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-  width: 120px; height: 3px; background: rgba(255,255,255,0.15);
-  border-radius: 2px; overflow: hidden; z-index: 1;
+  position: absolute;
+  bottom: max(40px, env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(200px, 45vw);
+  height: 4px;
+  background: rgba(26, 25, 22, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+  z-index: 2;
 }
 .loader__fill {
-  height: 100%; width: 0; background: var(--color-gold);
+  height: 100%; width: 0;
+  background: var(--hero-bg);
   border-radius: 2px;
 }
 
@@ -106,6 +170,27 @@ ul { list-style: none; }
   justify-content: center;
 }
 .nav__link:hover { color: var(--color-accent); }
+
+/* Light nav on terracotta hero */
+.nav--on-hero .nav__link { color: #ffffff; }
+.nav--on-hero .nav__link:hover { color: var(--hero-gold); }
+.nav--on-hero .nav__burger span { background: #ffffff; }
+/* CTA: gold bar + white label (same as other hero nav links) */
+.nav--on-hero .nav__link--cta .nav__link-label {
+  color: #ffffff;
+}
+.nav--on-hero .nav__link--cta .nav__link-accent {
+  background: var(--hero-gold);
+}
+.nav--on-hero .nav__link--cta:hover .nav__link-label {
+  color: var(--hero-gold);
+}
+
+/* Nav over cream / light sections after hero */
+.nav--dark .nav__link { color: var(--color-dark); }
+.nav--dark .nav__link:hover { color: var(--color-accent); }
+.nav--dark .nav__burger span { background: var(--color-dark); }
+.nav--dark .nav__link--cta .nav__link-label { color: var(--color-dark); }
 
 .nav__link--cta {
   position: relative;
@@ -178,37 +263,171 @@ ul { list-style: none; }
 .mobile-nav__link:hover { color: var(--color-accent); }
 
 /* ============================================
-   HERO — Massive wordmark fills viewport (like kō)
+   HERO — Terracotta landing (red hero, pre–exact mockup pass)
    ============================================ */
 .hero {
   position: relative;
-  width: 100%; height: 100dvh;
-  display: flex; align-items: center; justify-content: flex-start;
-  background: var(--color-white);
+  width: 100%;
+  min-height: 100dvh;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--hero-bg);
   overflow: hidden;
-  padding-left: 5vw;
+  padding: max(100px, env(safe-area-inset-top, 0px)) clamp(20px, 5vw, 48px) max(48px, env(safe-area-inset-bottom, 0px));
+  text-align: center;
 }
 
-.hero__wordmark {
-  width: 90%; max-width: 1300px;
+/* Thin multi-color bars at top & bottom of hero (ref: terracotta / green / gold / cream) */
+.hero__chrome-strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: clamp(10px, 1.6vh, 16px);
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--hero-bg) 0%,
+    var(--hero-bg) 70%,
+    var(--hero-strip-green) 70%,
+    var(--hero-strip-green) 79%,
+    var(--hero-gold) 79%,
+    var(--hero-gold) 88%,
+    var(--color-cream) 88%,
+    var(--color-cream) 100%
+  );
+}
+.hero__chrome-strip--top {
+  top: 0;
+}
+.hero__chrome-strip--bottom {
+  bottom: 0;
+  transform: rotate(180deg);
 }
 
-.hero__svg {
-  width: 100%; height: auto;
+.hero__inner {
+  width: 100%;
+  max-width: min(96vw, 960px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(26px, 4.2vh, 48px);
 }
 
-.hero__text-j1, .hero__text-j2 {
-  font-family: 'Clash Display', sans-serif;
-  font-size: 520px; font-weight: 700;
-  fill: var(--color-dark);
+.hero__mark-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 3.5vw, 40px);
+  width: 100%;
 }
-.hero__text-x {
-  font-family: 'Clash Display', sans-serif;
-  font-size: 260px; font-weight: 300;
-  fill: var(--color-accent);
+
+.hero__sun {
+  flex: 0 0 auto;
+  width: clamp(96px, 20vw, 200px);
+  height: clamp(96px, 20vw, 200px);
+  transition: transform 0.7s ease-out;
 }
-.hero__accent-bar {
-  fill: var(--color-gold);
+.hero__sun:hover {
+  transform: scale(1.1);
+}
+
+.hero__sun-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 20px rgba(245,192,38,0.2));
+}
+
+.hero__sun-square {
+  fill: var(--hero-gold);
+}
+
+.hero__sun-core {
+  fill: #7F1D1D;
+}
+
+.hero__sun--spin {
+  animation: sunSpin 30s linear infinite;
+}
+.hero__sun--spin-reverse {
+  animation: sunSpin 30s linear infinite reverse;
+}
+@keyframes sunSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__sun--spin,
+  .hero__sun--spin-reverse {
+    animation: none;
+  }
+}
+
+.hero__jxj {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.8vw, 22px);
+  filter: drop-shadow(3px 4px 2px rgba(74,21,21,0.6));
+}
+
+.hero__j {
+  font-family: var(--font-serif);
+  font-size: clamp(88px, 16vw, 190px);
+  font-weight: 700;
+  color: var(--hero-gold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.hero__x {
+  font-family: var(--font-body);
+  font-size: clamp(44px, 7vw, 88px);
+  font-weight: 300;
+  color: rgba(255,255,255,0.6);
+  line-height: 1;
+  margin-top: 0.08em;
+}
+
+.hero__names {
+  font-family: var(--font-hero-names);
+  font-size: clamp(15px, 3.1vw, 24px);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.hero__tagline {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 3.5vw, 32px);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-cream);
+  margin: -0.25rem 0 0;
+}
+
+.hero__rule {
+  width: clamp(56px, 12vw, 96px);
+  height: 3px;
+  background: var(--hero-gold);
+  border-radius: 2px;
+  margin: 0;
+}
+
+.hero__foot {
+  font-family: var(--font-body);
+  font-size: clamp(10px, 1.85vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  margin: 0;
 }
 
 /* ============================================
@@ -793,7 +1012,7 @@ ul { list-style: none; }
 /* Rotated CTA (like kobykooba's "Let's chat") */
 .footer__cta {
   position: absolute;
-  right: -2%; top: 30%;
+  right: -2%; top: 18%;
   background: var(--color-gold);
   padding: clamp(32px, 4vw, 56px) clamp(48px, 8vw, 120px);
   transform: rotate(-7deg);
@@ -957,6 +1176,14 @@ ul { list-style: none; }
    ============================================ */
 /* ---- TABLET (max 1023px) ---- */
 @media (max-width: 1023px) {
+  .hero__inner { gap: clamp(18px, 3vh, 32px); }
+  .hero__mark-row { gap: clamp(10px, 2.5vw, 28px); }
+  .hero__sun { width: clamp(76px, 17vw, 150px); height: clamp(76px, 17vw, 150px); }
+  .hero__j { font-size: clamp(76px, 13vw, 150px); }
+  .hero__x { font-size: clamp(38px, 5.5vw, 68px); }
+  .hero__names { font-size: clamp(14px, 3.4vw, 22px); letter-spacing: 0.2em; }
+  .hero__tagline { font-size: clamp(19px, 3.2vw, 28px); }
+
   .intro { grid-template-columns: 1fr; }
   .intro__left { min-height: 45vh; }
   .intro__right { padding: 48px 32px; }
@@ -992,8 +1219,17 @@ ul { list-style: none; }
   .nav__burger { display: flex; }
   .nav { padding: 16px 20px; }
 
-  .hero { padding-left: 4vw; height: 80dvh; }
-  .hero__wordmark { width: 95%; }
+  .hero {
+    min-height: 100dvh;
+    padding: 88px 18px 40px;
+  }
+  .hero__inner { gap: clamp(14px, 2.8vh, 24px); }
+  .hero__mark-row { gap: 6px; flex-wrap: nowrap; }
+  .hero__sun { width: clamp(58px, 15vw, 92px); height: clamp(58px, 15vw, 92px); }
+  .hero__j { font-size: clamp(64px, 13vw, 104px); }
+  .hero__x { font-size: clamp(32px, 5.5vw, 50px); }
+  .hero__names { letter-spacing: 0.18em; font-size: clamp(13px, 3.6vw, 19px); }
+  .hero__tagline { font-size: clamp(17px, 3.5vw, 24px); }
 
   .intro__left { min-height: 35vh; }
   .intro__right { padding: 36px 20px; }
@@ -1058,7 +1294,13 @@ ul { list-style: none; }
 
 /* ---- SMALL PHONES (max 480px) ---- */
 @media (max-width: 480px) {
-  .hero { height: 70dvh; padding-left: 3vw; }
+  .hero { padding: 80px 14px 36px; min-height: 100dvh; }
+  .hero__mark-row { gap: 2px; }
+  .hero__sun { width: clamp(40px, 13vw, 64px); height: clamp(40px, 13vw, 64px); }
+  .hero__j { font-size: clamp(48px, 11vw, 72px); }
+  .hero__x { font-size: clamp(24px, 4.5vw, 36px); }
+  .hero__names { font-size: clamp(11px, 3.2vw, 14px); letter-spacing: 0.16em; }
+  .hero__tagline { font-size: clamp(15px, 3.5vw, 20px); }
 
   .intro__left { min-height: 28vh; }
   .intro__text { font-size: 16px; }
