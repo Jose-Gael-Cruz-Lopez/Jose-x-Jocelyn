@@ -424,10 +424,24 @@ ul { list-style: none; }
   font-family: var(--font-body);
   font-size: clamp(10px, 1.85vw, 13px);
   font-weight: 500;
-  letter-spacing: 0.3em;
+  letter-spacing: normal;
   text-transform: uppercase;
   color: rgba(255,255,255,0.55);
   margin: 0;
+}
+/* Wide tracking on phrases only — full-line letter-spacing hid hyphens/dashes */
+.hero__foot-phrase {
+  letter-spacing: 0.3em;
+}
+.hero__foot-sep {
+  letter-spacing: normal;
+  opacity: 0.9;
+}
+.hero__foot-emdash {
+  letter-spacing: 0;
+  font-weight: 600;
+  margin: 0 0.04em;
+  opacity: 0.95;
 }
 
 /* ============================================
