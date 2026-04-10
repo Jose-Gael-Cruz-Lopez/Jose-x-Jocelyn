@@ -1,12 +1,10 @@
 /* ============================================
    JOSE x JOCELYN — Faithful kobykooba.com replica
-   Animations: loader, Lenis, GSAP ScrollTrigger,
+   Animations: loader, native scroll, GSAP ScrollTrigger,
    section pinning, text reveals, clip-path wipes
    ============================================ */
 (function () {
   'use strict';
-
-  let lenis = null;
 
   /* === LOADER === */
   function runLoader() {
@@ -34,29 +32,29 @@
 
   /* === INIT === */
   function initSite() {
-    initLenis();
+    initAnchorScroll();
     initNav();
     initBurger();
     initAboutTabs();
     initServicesTabs();
+    initGallery();
     initModal();
     initGSAP();
   }
 
-  /* === LENIS SMOOTH SCROLL === */
-  function initLenis() {
-    if (typeof Lenis === 'undefined') return;
-    lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smooth: true });
-    if (typeof gsap !== 'undefined') {
-      gsap.ticker.add(t => lenis.raf(t * 1000));
-      gsap.ticker.lagSmoothing(0);
-    } else {
-      (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
-    }
+  /* === IN-PAGE ANCHORS (native scroll) === */
+  function initAnchorScroll() {
+    const navOffset = 80;
+    const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) { e.preventDefault(); lenis.scrollTo(target, { offset: -40 }); }
+        const id = a.getAttribute('href');
+        if (!id || id === '#') return;
+        const target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        const y = target.getBoundingClientRect().top + window.scrollY - navOffset;
+        window.scrollTo({ top: Math.max(0, y), behavior: reduceMotion() ? 'auto' : 'smooth' });
       });
     });
   }
@@ -102,6 +100,84 @@
     }));
   }
 
+  /* === GALLERY — back-and-forth fan carousel === */
+  function initGallery() {
+    const cards = Array.from(document.querySelectorAll('.gallery__card'));
+    if (!cards.length || typeof anime === 'undefined') return;
+
+    const total = cards.length;
+    let active = Math.floor(total / 2);
+    let dir = 1;
+
+    // Fan layout config keyed by offset from active card
+    const FAN = [
+      { x: -340, rotate: -14, scale: 0.78, opacity: 0.55, z: 1 },  // offset -2
+      { x: -180, rotate:  -7, scale: 0.88, opacity: 0.80, z: 2 },  // offset -1
+      { x:    0, rotate:   0, scale: 1.00, opacity: 1.00, z: 5 },  // offset  0 (active)
+      { x:  180, rotate:   7, scale: 0.88, opacity: 0.80, z: 2 },  // offset +1
+      { x:  340, rotate:  14, scale: 0.78, opacity: 0.55, z: 1 },  // offset +2
+    ];
+
+    function applyPositions(animate) {
+      cards.forEach((card, i) => {
+        const rawOffset = i - active;
+        const clampedOffset = Math.max(-2, Math.min(2, rawOffset));
+        const cfg = FAN[clampedOffset + 2];
+
+        card.style.zIndex = cfg.z;
+
+        if (animate) {
+          anime({
+            targets: card,
+            translateX: cfg.x,
+            rotate: `${cfg.rotate}deg`,
+            scale: cfg.scale,
+            opacity: cfg.opacity,
+            duration: 680,
+            easing: 'cubicBezier(0.16, 1, 0.3, 1)',
+          });
+        } else {
+          // Set position only; CSS starts at opacity:0 for the fade-in below
+          anime.set(card, {
+            translateX: cfg.x,
+            rotate: `${cfg.rotate}deg`,
+            scale: cfg.scale,
+          });
+        }
+      });
+    }
+
+    // Snap cards into fan positions (no opacity), then stagger-fade in
+    applyPositions(false);
+    anime({
+      targets: cards,
+      opacity: (el, i) => {
+        const offset = Math.max(-2, Math.min(2, i - active));
+        return FAN[offset + 2].opacity;
+      },
+      duration: 500,
+      easing: 'easeOutQuad',
+      delay: anime.stagger(80),
+    });
+
+    function step() {
+      active += dir;
+      if (active >= total - 1) { active = total - 1; dir = -1; }
+      if (active <= 0)          { active = 0;         dir =  1; }
+      applyPositions(true);
+    }
+
+    cards.forEach((card, i) => {
+      card.addEventListener('click', () => {
+        active = i;
+        dir = (i >= Math.floor(total / 2)) ? -1 : 1;
+        applyPositions(true);
+      });
+    });
+
+    setInterval(step, 3000);
+  }
+
   /* === SERVICES TABS === */
   function initServicesTabs() {
     const tabs = document.querySelectorAll('.services__tab');
@@ -125,12 +201,10 @@
     function openModal() {
       modal.classList.add('modal--open');
       document.body.style.overflow = 'hidden';
-      if (lenis) lenis.stop();
     }
     function closeModal() {
       modal.classList.remove('modal--open');
       document.body.style.overflow = '';
-      if (lenis) lenis.start();
       setTimeout(() => { current = 1; goStep(1); }, 400);
     }
     function goStep(n) {
@@ -205,18 +279,6 @@
       y: 50, opacity: 0, duration: 1, ease: 'power2.out', delay: 0.2
     });
 
-    /* Gallery cards — staggered entrance */
-    gsap.from('.gallery__card', {
-      scrollTrigger: { trigger: '.gallery', start: 'top 70%' },
-      y: 80, opacity: 0, rotation: 20, duration: 0.9, ease: 'power3.out',
-      stagger: 0.1
-    });
-    gsap.from('.gallery__accent-bar', {
-      scrollTrigger: { trigger: '.gallery', start: 'top 60%' },
-      scaleX: 0, opacity: 0, duration: 1, ease: 'power3.out',
-      transformOrigin: 'left center'
-    });
-
     /* Services — clip-path image reveal (kobykooba style) */
     gsap.from('.services__image-inner', {
       scrollTrigger: { trigger: '.services', start: 'top 70%' },
@@ -235,11 +297,11 @@
 
     /* Interruption bars parallax */
     gsap.to('.interr__bar--cream', {
-      scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 1 },
+      scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 0.35 },
       y: -40, ease: 'none'
     });
     gsap.to('.interr__bar--accent', {
-      scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 1 },
+      scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 0.35 },
       y: 30, ease: 'none'
     });
 

@@ -28,7 +28,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: 5rem;
 }
 
@@ -91,19 +91,53 @@ ul { list-style: none; }
   color: var(--color-dark);
   transition: color 0.2s;
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .nav__link:hover { color: var(--color-accent); }
 
-.nav__link--cta { position: relative; }
+.nav__link--cta {
+  position: relative;
+  padding: 0;
+}
+.nav__link-label {
+  position: relative;
+  z-index: 1;
+}
+/* Orange bar shares center with label (~60% width, cap-height); text sits centered on top */
 .nav__link-accent {
-  position: absolute; top: -10px; right: -14px;
-  width: 14px; height: 14px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 60%;
+  height: 0.78em;
+  min-height: 10px;
+  max-height: 14px;
+  margin: 0;
   background: var(--color-accent);
-  transform: rotate(45deg);
-  transition: transform 0.3s var(--ease-out);
+  border-radius: 3px;
+  transform: translate(-50%, -50%) rotate(0deg);
+  transform-origin: center center;
+  z-index: 0;
+  animation: navCtaAccentSpin 12s linear infinite;
 }
 .nav__link--cta:hover .nav__link-accent {
-  transform: rotate(45deg) scale(1.3);
+  animation-duration: 6s;
+}
+@keyframes navCtaAccentSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav__link-accent {
+    animation: none;
+    transform: translate(-50%, -50%) rotate(18deg);
+  }
 }
 
 .nav__burger {
@@ -221,11 +255,20 @@ ul { list-style: none; }
    + "collaborate" marquee on right (like kobykooba)
    ============================================ */
 .about {
-  display: grid; grid-template-columns: 1fr 0.5fr;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  /* The grid row itself sets the height — children stretch into it */
+  grid-template-rows: 1fr;
   min-height: 100vh;
-  background: var(--color-dark);
+  background: #121212;
   color: var(--color-light-text);
   overflow: hidden;
+}
+
+/* Both cells fill the full row height */
+.about__content,
+.about__marquee-side {
+  align-self: stretch;
 }
 
 .about__content {
@@ -242,15 +285,20 @@ ul { list-style: none; }
   font-family: var(--font-body);
   font-size: 16px; font-weight: 500;
   color: var(--color-light-text);
-  padding: 6px 20px;
+  padding: 8px 20px;
   transition: background 0.3s, color 0.3s;
   border-radius: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .about__tab--active {
   background: var(--color-accent);
   color: var(--color-white);
-  border-radius: 2px;
+  border-radius: 6px;
 }
 
 .about__tab-sep {
@@ -278,100 +326,141 @@ ul { list-style: none; }
   max-width: 800px;
 }
 
-/* Right side marquee column */
+/* ============================================
+   ABOUT — Right panel: kō-style full-bleed texture
+   ============================================ */
 .about__marquee-side {
-  position: relative; overflow: hidden;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  position: relative;
+  /* Stretch to full section height via grid align-self: stretch */
+  min-height: 100vh;
+  overflow: hidden;
+  background: #121212;
 }
 
-.about__marquee-word {
+/*
+  The key: font-size 20vw means "collaborate" is ~2.2× the panel width
+  (panel = ~50vw), so only ~5 chars ("colla") are visible — same as kō's "colla" crop.
+  flex:1 on rows means 6 equal rows fill 100% of the panel height with zero gaps.
+*/
+.about__colla-rows {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  user-select: none;
+}
+
+.about__colla-row {
+  flex: 1;          /* equal height — 6 rows fills 100% */
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  overflow: hidden; /* clips the part of the word that bleeds off the right */
   font-family: var(--font-display);
-  font-size: clamp(80px, 10vw, 140px);
   font-weight: 700;
-  color: rgba(240, 237, 232, 0.06);
-  writing-mode: vertical-lr;
-  text-orientation: mixed;
+  font-size: 20vw;  /* MUST be 20vw — word is 2.2× panel width → shows "colla" */
+  line-height: 1;
+  letter-spacing: -0.04em;
   white-space: nowrap;
-  letter-spacing: -0.02em;
+  padding-left: 2%; /* slight inset so the "c" starts just inside the left edge */
 }
 
-.about__marquee-logo {
-  z-index: 1;
+/* Depth: brightest at top & bottom edges, darkest in the center — matches kō */
+.about__colla-row--1 { color: rgba(255,255,255, 0.28); }
+.about__colla-row--2 { color: rgba(255,255,255, 0.15); }
+.about__colla-row--3 { color: rgba(255,255,255, 0.08); }
+.about__colla-row--4 { color: rgba(255,255,255, 0.08); }
+.about__colla-row--5 { color: rgba(255,255,255, 0.15); }
+.about__colla-row--6 { color: rgba(255,255,255, 0.28); }
+
+/* JxJ mark — centered over the texture */
+.about__jxj-mark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  pointer-events: none;
 }
 
-.about__logo-svg {
-  width: clamp(120px, 15vw, 200px);
+/* SVG sized to ~40% of panel (panel ≈ 50vw → ~20vw target) */
+.about__jxj-svg {
+  width: clamp(160px, 20vw, 340px);
   height: auto;
+  overflow: visible;
 }
+
+.about__jxj-j {
+  font-family: 'Clash Display', 'Helvetica Neue', sans-serif;
+  font-size: 300px;
+  font-weight: 700;
+  fill: #ffffff;
+}
+
+.about__jxj-x {
+  font-family: 'Clash Display', 'Helvetica Neue', sans-serif;
+  font-size: 150px;
+  font-weight: 300;
+  fill: #e8590c;
+}
+
 
 /* ============================================
-   GALLERY — Scattered fanned cards (kobykooba portfolio)
+   GALLERY — Fan carousel (anime.js driven)
    ============================================ */
 .gallery {
   position: relative;
   min-height: 80vh;
-  background: var(--color-cream);
-  display: flex; align-items: center; justify-content: center;
+  background: var(--color-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 80px 0;
   overflow: hidden;
 }
 
 .gallery__cards {
-  display: flex; align-items: center; justify-content: center;
-  gap: -20px;
   position: relative;
-  width: 100%; max-width: 1100px;
-  height: 480px;
+  width: 100%;
+  max-width: 1100px;
+  height: 440px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .gallery__card {
   position: absolute;
-  width: clamp(180px, 18vw, 240px);
-  height: clamp(260px, 28vw, 360px);
+  width: clamp(190px, 17vw, 230px);
+  height: clamp(270px, 25vw, 340px);
   background: var(--card-bg);
-  border-radius: 12px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 16px;
-  transform: rotate(var(--card-rotate));
-  transition: transform 0.6s var(--ease-out), box-shadow 0.4s;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 20px 28px;
   cursor: pointer;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+  opacity: 0;
+  will-change: transform, opacity;
 }
-
-.gallery__card:hover {
-  transform: rotate(0deg) scale(1.05);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.25);
-  z-index: 10;
-}
-
-.gallery__card--1 { left: 5%; }
-.gallery__card--2 { left: 20%; }
-.gallery__card--3 { left: 50%; transform: translateX(-50%) rotate(var(--card-rotate)); }
-.gallery__card--4 { right: 20%; }
-.gallery__card--5 { right: 5%; }
 
 .gallery__card-icon {
-  font-size: 48px;
-}
-.gallery__card-name {
-  font-family: var(--font-display);
-  font-size: 18px; font-weight: 600;
-  color: var(--color-white);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-size: clamp(40px, 5vw, 58px);
+  line-height: 1;
 }
 
-.gallery__accent-bar {
-  position: absolute;
-  bottom: 60px; left: 50%;
-  width: clamp(200px, 25vw, 360px);
-  height: clamp(40px, 5vw, 65px);
-  background: var(--color-accent);
-  transform: translateX(-50%) rotate(-16deg);
-  border-radius: 4px;
-  z-index: 0;
+.gallery__card-name {
+  font-family: var(--font-display);
+  font-size: clamp(13px, 1.3vw, 17px);
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
 }
 
 /* ============================================

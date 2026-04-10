@@ -12,9 +12,8 @@
   <!-- GSAP + ScrollTrigger -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
-
-  <!-- Lenis -->
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js" defer></script>
+  <!-- Anime.js -->
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" defer></script>
 
   <!-- Swiper -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
@@ -41,8 +40,8 @@
       <a href="#services" class="nav__link">Services</a>
       <a href="#editorial" class="nav__link">Editorial</a>
       <a href="#contact" class="nav__link nav__link--cta">
-        Get in Touch
         <span class="nav__link-accent" aria-hidden="true"></span>
+        <span class="nav__link-label">Get in Touch</span>
       </a>
     </div>
     <!-- Mobile hamburger -->
@@ -114,45 +113,50 @@
       </div>
     </div>
 
-    <!-- Right side: repeating "collaborate" text + JxJ logo (like kobykooba) -->
-    <div class="about__marquee-side">
-      <span class="about__marquee-word">collaborate</span>
-      <div class="about__marquee-logo">
-        <svg viewBox="0 0 200 240" class="about__logo-svg" aria-hidden="true">
-          <text x="10" y="180" font-family="'Clash Display', sans-serif" font-weight="700" font-size="180" fill="var(--color-cream)">J<tspan font-size="100" dy="-30" fill="var(--color-accent)">x</tspan><tspan font-size="180" dy="30">J</tspan></text>
+    <!-- Right: kō-style full-panel texture + JxJ overlay -->
+    <div class="about__marquee-side" aria-hidden="true">
+      <div class="about__colla-rows">
+        <span class="about__colla-row about__colla-row--1">collaborate</span>
+        <span class="about__colla-row about__colla-row--2">collaborate</span>
+        <span class="about__colla-row about__colla-row--3">collaborate</span>
+        <span class="about__colla-row about__colla-row--4">collaborate</span>
+        <span class="about__colla-row about__colla-row--5">collaborate</span>
+        <span class="about__colla-row about__colla-row--6">collaborate</span>
+      </div>
+      <div class="about__jxj-mark">
+        <svg viewBox="0 0 580 400" class="about__jxj-svg" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="330" class="about__jxj-j">J</text>
+          <text x="195" y="215" class="about__jxj-x">x</text>
+          <text x="270" y="330" class="about__jxj-j">J</text>
         </svg>
       </div>
-      <span class="about__marquee-word">collaborate</span>
-      <span class="about__marquee-word">collaborate</span>
     </div>
   </section>
 
-  <!-- ===== GALLERY — Scattered/fanned cards like kobykooba portfolio ===== -->
+  <!-- ===== GALLERY — Fan carousel, auto-rotates back and forth every 3s ===== -->
   <section class="gallery" id="gallery">
-    <div class="gallery__cards">
-      <div class="gallery__card gallery__card--1" style="--card-bg: #3B5BDB; --card-rotate: -12deg;">
-        <span class="gallery__card-icon">&#9889;</span>
+    <div class="gallery__cards" id="galleryCards">
+      <div class="gallery__card" data-index="0" style="--card-bg:#3B5BDB;">
+        <span class="gallery__card-icon">⚡</span>
         <span class="gallery__card-name">Sprints</span>
       </div>
-      <div class="gallery__card gallery__card--2" style="--card-bg: #2B8A3E; --card-rotate: -4deg;">
-        <span class="gallery__card-icon">&#128218;</span>
+      <div class="gallery__card" data-index="1" style="--card-bg:#2B8A3E;">
+        <span class="gallery__card-icon">📚</span>
         <span class="gallery__card-name">Editorial</span>
       </div>
-      <div class="gallery__card gallery__card--3 gallery__card--active" style="--card-bg: #E8590C; --card-rotate: 0deg;">
-        <span class="gallery__card-icon">&#127919;</span>
+      <div class="gallery__card" data-index="2" style="--card-bg:#E8590C;">
+        <span class="gallery__card-icon">🎯</span>
         <span class="gallery__card-name">Pipeline</span>
       </div>
-      <div class="gallery__card gallery__card--4" style="--card-bg: #7048E8; --card-rotate: 6deg;">
-        <span class="gallery__card-icon">&#128161;</span>
+      <div class="gallery__card" data-index="3" style="--card-bg:#7048E8;">
+        <span class="gallery__card-icon">💡</span>
         <span class="gallery__card-name">Templates</span>
       </div>
-      <div class="gallery__card gallery__card--5" style="--card-bg: #1098AD; --card-rotate: 14deg;">
-        <span class="gallery__card-icon">&#129309;</span>
+      <div class="gallery__card" data-index="4" style="--card-bg:#1098AD;">
+        <span class="gallery__card-icon">🤝</span>
         <span class="gallery__card-name">Community</span>
       </div>
     </div>
-    <!-- Orange accent bar (kobykooba motif) -->
-    <div class="gallery__accent-bar" aria-hidden="true"></div>
   </section>
 
   <!-- ===== SERVICES — 50/50: image left, tabs right ===== -->
