@@ -8,7 +8,7 @@
 
   <!-- Fonts: Clash Display + Satoshi + Playfair + Montserrat (hero names — geometric caps) -->
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,500&display=swap" rel="stylesheet" />
 
   <!-- GSAP + ScrollTrigger -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
@@ -93,7 +93,7 @@
       <p class="hero__tagline" lang="es">El sol sale para todos…</p>
       <div class="hero__rule" aria-hidden="true"></div>
       <p class="hero__foot">
-        <span class="hero__foot-phrase">First-gen</span><span class="hero__foot-sep" aria-hidden="true"> · </span><span class="hero__foot-phrase">Mexican</span><span class="hero__foot-emdash">—</span><span class="hero__foot-phrase">American</span><span class="hero__foot-sep" aria-hidden="true"> · </span><span class="hero__foot-phrase">Tech careers</span>
+        <span class="hero__foot-phrase">First-gen</span><span class="hero__foot-sep" aria-hidden="true"> · </span><span class="hero__foot-phrase">Mexican-American</span><span class="hero__foot-sep" aria-hidden="true"> · </span><span class="hero__foot-phrase">Tech careers</span>
       </p>
     </div>
     <div class="hero__chrome-strip hero__chrome-strip--bottom" aria-hidden="true"></div>
@@ -116,51 +116,78 @@
     </div>
   </section>
 
-  <!-- ===== ABOUT - Dark section with tabs + "collaborate" marquee ===== -->
+  <!-- ===== ABOUT — Tabbed section: Mission / Who We Are / Vision ===== -->
   <section class="about" id="about">
-    <div class="about__content">
-      <!-- Tabs with | separators like kobykooba -->
-      <div class="about__tabs">
-        <button class="about__tab about__tab--active" data-tab="mission">Mission</button>
-        <span class="about__tab-sep">|</span>
-        <button class="about__tab" data-tab="who-we-are">Who We Are</button>
-        <span class="about__tab-sep">|</span>
-        <button class="about__tab" data-tab="vision">Vision</button>
-      </div>
-
-      <!-- Panels (order matches tab order: Mission → Who We Are → Vision) -->
-      <div class="about__panel about__panel--active" data-panel="mission">
-        <p class="about__label">Why we built this and who it is for</p>
-        <blockquote class="about__quote">No one should have to <em>guess</em> their way from first internship to first offer. Every step should be <em>visible, mapped,</em> and <em>community-supported.</em></blockquote>
-        <p class="about__attribution">Jose &amp; Jocelyn</p>
-        <p class="about__body about__body--tight">Our mission is to empower first-generation and underrepresented students to confidently navigate every step from their first internship search to their first full-time role in tech and data. We make the journey transparent, actionable, and community-powered because no one should have to guess their way to opportunity.</p>
-      </div>
-      <div class="about__panel" data-panel="who-we-are">
-        <p class="about__body">From Campus to Career is a collaborative initiative founded by Jose G. Cruz-Lopez, a first-generation college student passionate about helping peers land internships and early opportunities, and Jocelyn Vázquez, a first-generation Information Systems graduate now working in tech and data. Together, they bridge the gap from campus to career by sharing practical advice, transparent insights, and lived experiences. Their goal is to help first-gen and underrepresented students move from searching for internships to thriving in full-time roles with clarity, confidence, and community support.</p>
-        <p class="about__body about__body--tight">From Campus to Career is more than an idea. It is a movement that bridges the gap between education and industry, guided by lived experience and shared purpose.</p>
-      </div>
-      <div class="about__panel" data-panel="vision">
-        <p class="about__body">We envision a future where every first-generation student graduates with not only skills but direction, supported by a network that transforms uncertainty into possibility and ambition into long-term success.</p>
-      </div>
+    <div class="about__header">
+      <span class="about__number">02</span>
+      <h2 class="about__title">About Us</h2>
     </div>
 
-    <!-- Right: kō-style full-panel texture + JxJ overlay -->
-    <div class="about__marquee-side" aria-hidden="true">
-      <div class="about__colla-rows">
-        <span class="about__colla-row about__colla-row--1">collaborate</span>
-        <span class="about__colla-row about__colla-row--2">collaborate</span>
-        <span class="about__colla-row about__colla-row--3">collaborate</span>
-        <span class="about__colla-row about__colla-row--4">collaborate</span>
-        <span class="about__colla-row about__colla-row--5">collaborate</span>
-        <span class="about__colla-row about__colla-row--6">collaborate</span>
+    <div class="about__tabs">
+      <button class="about__tab about__tab--active" data-tab="mission">Mission</button>
+      <span class="about__tab-sep">|</span>
+      <button class="about__tab" data-tab="who-we-are">Who We Are</button>
+      <span class="about__tab-sep">|</span>
+      <button class="about__tab" data-tab="vision">Vision</button>
+    </div>
+
+    <!-- PANEL: Mission -->
+    <div class="about__panel about__panel--active" data-panel="mission">
+      <p class="about__label">Why we built this and who it is for</p>
+      <blockquote class="about__quote">No one should have to <em>guess</em> their way from first internship to first offer. Every step should be <em>visible, mapped,</em> and <em>community&#8209;supported.</em></blockquote>
+      <p class="about__attribution">Jose &amp; Jocelyn</p>
+      <p class="about__body">Our mission is to empower first&#8209;generation and underrepresented students to confidently navigate every step from their first internship search to their first full&#8209;time role in tech and data. We make the journey transparent, actionable, and community&#8209;powered because no one should have to guess their way to opportunity.</p>
+    </div>
+
+    <!-- PANEL: Who We Are (two-card layout) -->
+    <div class="about__panel" data-panel="who-we-are">
+      <p class="about__panel-subtitle">One pipeline, two perspectives</p>
+      <p class="about__intro"><em>From Campus to Career</em> is a collaborative initiative led by Jose G. Cruz&#8209;Lopez and Jocelyn Vázquez. Together, they turn lived experience into a roadmap that helps first&#8209;gen and underrepresented students move confidently from campus to career.</p>
+
+      <div class="about__cards">
+        <div class="about__card about__card--jose">
+          <span class="about__card-label">The Student Perspective</span>
+          <div class="about__card-identity">
+            <img src="./jose.jpeg" alt="Jose G. Cruz-Lopez" class="about__card-photo" />
+            <div>
+              <h3 class="about__card-name">Jose G. Cruz&#8209;Lopez</h3>
+              <p class="about__card-role">Breaking in</p>
+            </div>
+          </div>
+          <p class="about__card-desc">A first&#8209;generation college student helping peers land internships and early opportunities. Actively recruiting and documenting every step of the student journey in real time.</p>
+          <div class="about__card-tags">
+            <span>Internships</span>
+            <span>Applications</span>
+            <span>Fellowships</span>
+            <span>Student Life</span>
+          </div>
+        </div>
+
+        <div class="about__card about__card--jocelyn">
+          <span class="about__card-label">The Post&#8209;Grad Perspective</span>
+          <div class="about__card-identity">
+            <img src="./jocelyn.jpeg" alt="Jocelyn Vázquez" class="about__card-photo" />
+            <div>
+              <h3 class="about__card-name">Jocelyn Vázquez</h3>
+              <p class="about__card-role">Leveling up</p>
+            </div>
+          </div>
+          <p class="about__card-desc">A first&#8209;generation Information Systems graduate now working in tech and data. Translating the "mystery" parts&thinsp;—&thinsp;compensation, corporate culture, career growth&thinsp;—&thinsp;into first&#8209;gen&#8209;friendly guidance.</p>
+          <div class="about__card-tags">
+            <span>Full&#8209;Time Roles</span>
+            <span>Negotiation</span>
+            <span>Career Growth</span>
+            <span>Onboarding</span>
+          </div>
+        </div>
       </div>
-      <div class="about__jxj-mark">
-        <svg viewBox="0 0 580 400" class="about__jxj-svg" xmlns="http://www.w3.org/2000/svg">
-          <text x="0" y="330" class="about__jxj-j">J</text>
-          <text x="195" y="215" class="about__jxj-x">x</text>
-          <text x="270" y="330" class="about__jxj-j">J</text>
-        </svg>
-      </div>
+
+      <p class="about__closing">More than an idea, <em>From Campus to Career</em> is a movement driven by clarity, opportunity, and community.</p>
+    </div>
+
+    <!-- PANEL: Vision -->
+    <div class="about__panel" data-panel="vision">
+      <p class="about__body">We envision a future where every first&#8209;generation student graduates with not only skills but direction, supported by a network that transforms uncertainty into possibility and ambition into long&#8209;term success.</p>
     </div>
   </section>
 

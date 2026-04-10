@@ -309,27 +309,36 @@ ul { list-style: none; }
 
 .hero__inner {
   width: 100%;
-  max-width: min(96vw, 960px);
+  max-width: min(94vw, 1040px);
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(26px, 4.2vh, 48px);
+  gap: clamp(30px, 4.8vh, 56px);
 }
 
+/* Equal outer columns so suns + J×J read perfectly centered and symmetrical */
 .hero__mark-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: center;
-  gap: clamp(14px, 3.5vw, 40px);
   width: 100%;
+  max-width: min(100%, 1120px);
+  margin-inline: auto;
+  column-gap: clamp(16px, 3.2vw, 44px);
+}
+.hero__sun:first-of-type {
+  justify-self: end;
+}
+.hero__sun:last-of-type {
+  justify-self: start;
 }
 
 .hero__sun {
   flex: 0 0 auto;
-  width: clamp(96px, 20vw, 200px);
-  height: clamp(96px, 20vw, 200px);
+  width: clamp(112px, 21vw, 228px);
+  height: clamp(112px, 21vw, 228px);
   transition: transform 0.7s ease-out;
 }
 .hero__sun:hover {
@@ -350,6 +359,17 @@ ul { list-style: none; }
   fill: #7F1D1D;
 }
 
+/* Hide hero elements until loader wipe begins — JS will animate them in */
+.hero__sun,
+.hero__j,
+.hero__x,
+.hero__names,
+.hero__tagline,
+.hero__rule,
+.hero__foot {
+  opacity: 0;
+}
+
 .hero__sun--spin {
   animation: sunSpin 30s linear infinite;
 }
@@ -368,66 +388,87 @@ ul { list-style: none; }
 }
 
 .hero__jxj {
+  grid-column: 2;
+  justify-self: center;
   display: flex;
   align-items: center;
-  gap: clamp(10px, 1.8vw, 22px);
-  filter: drop-shadow(3px 4px 2px rgba(74,21,21,0.6));
+  justify-content: center;
+  gap: clamp(12px, 2vw, 26px);
 }
 
 .hero__j {
   font-family: var(--font-serif);
-  font-size: clamp(88px, 16vw, 190px);
-  font-weight: 700;
+  font-size: clamp(96px, 17vw, 210px);
+  font-weight: 900;
   color: var(--hero-gold);
   line-height: 1;
   letter-spacing: -0.02em;
+  /* Heavy serif + hard offset shadow (ref: black weight J on terracotta) */
+  text-shadow:
+    5px 6px 0 rgba(42, 10, 10, 0.72),
+    8px 10px 0 rgba(32, 8, 8, 0.35);
 }
 
 .hero__x {
   font-family: var(--font-body);
-  font-size: clamp(44px, 7vw, 88px);
+  font-size: clamp(48px, 7.2vw, 96px);
   font-weight: 300;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.62);
   line-height: 1;
-  margin-top: 0.08em;
+  flex-shrink: 0;
 }
 
 .hero__names {
   font-family: var(--font-hero-names);
-  font-size: clamp(15px, 3.1vw, 24px);
+  font-size: clamp(17px, 3.4vw, 28px);
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-white);
   margin: 0;
-  line-height: 1.25;
+  line-height: 1.2;
+  width: 100%;
+  max-width: 36em;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .hero__tagline {
   font-family: var(--font-serif);
-  font-size: clamp(22px, 3.5vw, 32px);
+  font-size: clamp(24px, 3.8vw, 36px);
   font-style: italic;
   font-weight: 400;
   color: var(--color-cream);
-  margin: -0.25rem 0 0;
+  margin: 0;
+  line-height: 1.35;
+  width: 100%;
+  max-width: 28em;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .hero__rule {
-  width: clamp(56px, 12vw, 96px);
-  height: 3px;
+  width: clamp(72px, 14vw, 112px);
+  height: 4px;
   background: var(--hero-gold);
   border-radius: 2px;
   margin: 0;
+  flex-shrink: 0;
 }
 
 .hero__foot {
   font-family: var(--font-body);
-  font-size: clamp(10px, 1.85vw, 13px);
+  font-size: clamp(11px, 2vw, 15px);
   font-weight: 500;
   letter-spacing: normal;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.58);
   margin: 0;
+  line-height: 1.5;
+  width: 100%;
+  max-width: 52em;
+  text-align: center;
+  text-wrap: balance;
 }
 /* Wide tracking on phrases only — full-line letter-spacing hid hyphens/dashes */
 .hero__foot-phrase {
@@ -436,12 +477,6 @@ ul { list-style: none; }
 .hero__foot-sep {
   letter-spacing: normal;
   opacity: 0.9;
-}
-.hero__foot-emdash {
-  letter-spacing: 0;
-  font-weight: 600;
-  margin: 0 0.04em;
-  opacity: 0.95;
 }
 
 /* ============================================
@@ -494,199 +529,258 @@ ul { list-style: none; }
 }
 
 /* ============================================
-   ABOUT — Dark bg, tabs with | separators, large body text
-   + "collaborate" marquee on right (like kobykooba)
+   ABOUT — "Who We Are" two-card layout
    ============================================ */
 .about {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  grid-template-rows: 1fr;
-  min-height: 100vh;
-  background: var(--color-navy);
-  color: var(--color-light-text);
+  background: var(--color-gold);
+  padding: clamp(64px, 10vh, 120px) clamp(24px, 6vw, 80px);
   overflow: hidden;
 }
 
-/* Both cells fill the full row height */
-.about__content,
-.about__marquee-side {
-  align-self: stretch;
+.about__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 16px;
+  margin-bottom: clamp(24px, 3vh, 40px);
 }
 
-.about__content {
-  padding: 100px 60px 80px 48px;
-}
-
-/* Tabs with | separators */
+/* Tabs */
 .about__tabs {
-  display: flex; align-items: center; gap: 0;
-  margin-bottom: 48px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: clamp(32px, 4vh, 48px);
 }
-
 .about__tab {
   font-family: var(--font-body);
-  font-size: 16px; font-weight: 500;
-  color: var(--color-light-text);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-dark);
   padding: 8px 20px;
   transition: background 0.3s, color 0.3s;
   border-radius: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  line-height: 1.2;
 }
-
 .about__tab--active {
-  background: var(--color-gold);
-  color: var(--color-navy);
+  background: var(--color-dark);
+  color: var(--color-gold);
   border-radius: 6px;
   font-weight: 600;
 }
-
 .about__tab-sep {
-  color: rgba(242, 228, 206, 0.25);
+  color: rgba(0, 0, 0, 0.2);
   font-size: 18px;
   margin: 0 4px;
 }
 
+/* Panels */
 .about__panel {
   display: none;
-  animation: fadeIn 0.5s var(--ease-out);
+  animation: aboutFadeIn 0.5s var(--ease-out);
 }
 .about__panel--active { display: block; }
-
-@keyframes fadeIn {
+@keyframes aboutFadeIn {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.about__body {
-  font-family: var(--font-body);
-  font-size: clamp(28px, 3.5vw, 48px);
-  font-weight: 400; line-height: 1.35;
-  color: var(--color-light-text);
-  max-width: 800px;
+.about__panel-subtitle {
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 2.2vw, 22px);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-dark);
+  opacity: 0.7;
+  margin-bottom: clamp(12px, 2vh, 20px);
 }
 
-.about__body--tight {
-  margin-top: 1.25em;
-}
-
+/* Mission / Vision panel text */
 .about__label {
-  display: block;
   font-size: clamp(14px, 1.4vw, 17px);
   font-weight: 500;
   font-style: italic;
-  color: rgba(242, 228, 206, 0.65);
+  color: rgba(0, 0, 0, 0.55);
   margin-bottom: 1.25rem;
 }
-
 .about__quote {
   font-family: var(--font-display);
   font-size: clamp(22px, 2.8vw, 36px);
   font-weight: 500;
   line-height: 1.35;
-  color: var(--color-light-text);
+  color: var(--color-dark);
   margin: 0 0 1rem;
   padding: 1.25rem 1.25rem 1.25rem 1.5rem;
   border-left: 4px solid var(--color-accent);
   background: rgba(179, 69, 57, 0.12);
   border-radius: 0 8px 8px 0;
 }
-
 .about__quote em {
   font-style: italic;
-  color: var(--color-gold);
+  color: var(--color-accent);
   font-weight: 600;
 }
-
 .about__attribution {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-gold);
+  color: var(--color-accent);
   margin: 0 0 1.5rem;
 }
-
-/* ============================================
-   ABOUT — Right panel: kō-style full-bleed texture
-   ============================================ */
-.about__marquee-side {
-  position: relative;
-  min-height: 100vh;
-  overflow: hidden;
-  background: var(--color-navy);
+.about__body {
+  font-family: var(--font-body);
+  font-size: clamp(18px, 2.4vw, 28px);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-dark);
+  max-width: 800px;
 }
 
-/*
-  The key: font-size 20vw means "collaborate" is ~2.2× the panel width
-  (panel = ~50vw), so only ~5 chars ("colla") are visible — same as kō's "colla" crop.
-  flex:1 on rows means 6 equal rows fill 100% of the panel height with zero gaps.
-*/
-.about__colla-rows {
-  position: absolute;
-  inset: 0;
+.about__number {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--color-accent);
+  line-height: 1;
+}
+
+.about__title {
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 5.5vw, 64px);
+  font-weight: 700;
+  color: var(--color-dark);
+  line-height: 1.1;
+}
+
+.about__intro {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--color-dark);
+  max-width: 860px;
+  margin: clamp(20px, 3vh, 36px) 0 clamp(36px, 5vh, 56px);
+}
+.about__intro em {
+  font-style: italic;
+  font-weight: 600;
+}
+
+.about__cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(16px, 2.5vw, 28px);
+  margin-bottom: clamp(36px, 5vh, 56px);
+}
+
+.about__card {
+  border-radius: clamp(16px, 2vw, 24px);
+  padding: clamp(32px, 4vw, 56px) clamp(28px, 3.5vw, 48px);
   display: flex;
   flex-direction: column;
-  pointer-events: none;
-  user-select: none;
+  gap: 0;
 }
 
-.about__colla-row {
-  flex: 1;          /* equal height — 6 rows fills 100% */
-  min-height: 0;
+.about__card--jose {
+  background: var(--color-teal);
+  color: var(--color-cream);
+}
+.about__card--jocelyn {
+  background: var(--color-accent);
+  color: var(--color-cream);
+}
+
+.about__card-label {
+  font-family: var(--font-body);
+  font-size: clamp(10px, 1.4vw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-bottom: clamp(16px, 2vh, 28px);
+}
+
+.about__card-identity {
   display: flex;
   align-items: center;
-  overflow: hidden; /* clips the part of the word that bleeds off the right */
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 20vw;  /* MUST be 20vw — word is 2.2× panel width → shows "colla" */
-  line-height: 1;
-  letter-spacing: -0.04em;
-  white-space: nowrap;
-  padding-left: 2%; /* slight inset so the "c" starts just inside the left edge */
+  gap: clamp(14px, 2vw, 22px);
+  margin-bottom: clamp(16px, 2vh, 24px);
 }
 
-/* Depth: brightest at edges, darkest in center — teal tint on navy */
-.about__colla-row--1 { color: rgba(58, 125, 107, 0.30); }
-.about__colla-row--2 { color: rgba(58, 125, 107, 0.18); }
-.about__colla-row--3 { color: rgba(58, 125, 107, 0.09); }
-.about__colla-row--4 { color: rgba(58, 125, 107, 0.09); }
-.about__colla-row--5 { color: rgba(58, 125, 107, 0.18); }
-.about__colla-row--6 { color: rgba(58, 125, 107, 0.30); }
+.about__card-photo {
+  width: clamp(64px, 8vw, 96px);
+  height: clamp(64px, 8vw, 96px);
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+}
 
-/* JxJ mark — centered over the texture */
-.about__jxj-mark {
-  position: absolute;
-  inset: 0;
+.about__card-name {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 3.2vw, 40px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-white);
+  margin: 0;
+}
+
+.about__card-role {
+  font-family: var(--font-serif);
+  font-size: clamp(16px, 2vw, 22px);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-gold);
+  margin: 4px 0 0;
+}
+
+.about__card-desc {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.6vw, 17px);
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.88);
+  flex: 1;
+  margin-bottom: clamp(20px, 3vh, 36px);
+}
+
+.about__card-tags {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  pointer-events: none;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.about__card-tags span {
+  font-family: var(--font-body);
+  font-size: clamp(10px, 1.2vw, 12px);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 100px;
+  color: var(--color-white);
+  transition: background 0.3s, border-color 0.3s;
+}
+.about__card-tags span:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
-/* SVG sized to ~40% of panel (panel ≈ 50vw → ~20vw target) */
-.about__jxj-svg {
-  width: clamp(160px, 20vw, 340px);
-  height: auto;
-  overflow: visible;
+.about__closing {
+  font-family: var(--font-body);
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--color-dark);
+  max-width: 680px;
+  text-align: center;
+  margin: 0 auto;
+  opacity: 0.8;
 }
-
-.about__jxj-j {
-  font-family: 'Clash Display', 'Helvetica Neue', sans-serif;
-  font-size: 300px;
-  font-weight: 700;
-  fill: #ffffff;
-}
-
-.about__jxj-x {
-  font-family: 'Clash Display', 'Helvetica Neue', sans-serif;
-  font-size: 150px;
-  font-weight: 300;
-  fill: var(--color-gold);
+.about__closing em {
+  font-style: italic;
+  font-weight: 600;
 }
 
 
@@ -1190,24 +1284,22 @@ ul { list-style: none; }
    ============================================ */
 /* ---- TABLET (max 1023px) ---- */
 @media (max-width: 1023px) {
-  .hero__inner { gap: clamp(18px, 3vh, 32px); }
-  .hero__mark-row { gap: clamp(10px, 2.5vw, 28px); }
-  .hero__sun { width: clamp(76px, 17vw, 150px); height: clamp(76px, 17vw, 150px); }
-  .hero__j { font-size: clamp(76px, 13vw, 150px); }
-  .hero__x { font-size: clamp(38px, 5.5vw, 68px); }
-  .hero__names { font-size: clamp(14px, 3.4vw, 22px); letter-spacing: 0.2em; }
-  .hero__tagline { font-size: clamp(19px, 3.2vw, 28px); }
+  .hero__inner { gap: clamp(22px, 3.4vh, 40px); }
+  .hero__mark-row { column-gap: clamp(12px, 2.8vw, 32px); }
+  .hero__sun { width: clamp(88px, 18vw, 170px); height: clamp(88px, 18vw, 170px); }
+  .hero__j { font-size: clamp(82px, 14vw, 168px); }
+  .hero__x { font-size: clamp(42px, 6vw, 78px); }
+  .hero__names { font-size: clamp(15px, 3.5vw, 24px); letter-spacing: 0.2em; }
+  .hero__tagline { font-size: clamp(21px, 3.4vw, 30px); }
+  .hero__foot { font-size: clamp(10px, 1.9vw, 14px); }
 
   .intro { grid-template-columns: 1fr; }
   .intro__left { min-height: 45vh; }
   .intro__right { padding: 48px 32px; }
   .intro__text { max-width: 100%; font-size: clamp(20px, 3vw, 32px); }
 
-  .about { grid-template-columns: 1fr; min-height: auto; }
-  .about__marquee-side { display: none; }
-  .about__content { padding: 60px 32px; }
-  .about__body { font-size: clamp(20px, 3vw, 32px); }
-  .about__quote { font-size: clamp(18px, 2.5vw, 28px); }
+  .about { padding: clamp(48px, 8vh, 80px) clamp(20px, 4vw, 48px); }
+  .about__cards { gap: 16px; }
 
   .services { grid-template-columns: 1fr; min-height: auto; }
   .services__image { min-height: 35vh; }
@@ -1237,27 +1329,23 @@ ul { list-style: none; }
     min-height: 100dvh;
     padding: 88px 18px 40px;
   }
-  .hero__inner { gap: clamp(14px, 2.8vh, 24px); }
-  .hero__mark-row { gap: 6px; flex-wrap: nowrap; }
-  .hero__sun { width: clamp(58px, 15vw, 92px); height: clamp(58px, 15vw, 92px); }
-  .hero__j { font-size: clamp(64px, 13vw, 104px); }
-  .hero__x { font-size: clamp(32px, 5.5vw, 50px); }
-  .hero__names { letter-spacing: 0.18em; font-size: clamp(13px, 3.6vw, 19px); }
-  .hero__tagline { font-size: clamp(17px, 3.5vw, 24px); }
+  .hero__inner { gap: clamp(18px, 3vh, 30px); }
+  .hero__mark-row { column-gap: clamp(8px, 2vw, 20px); }
+  .hero__sun { width: clamp(68px, 16vw, 108px); height: clamp(68px, 16vw, 108px); }
+  .hero__j { font-size: clamp(70px, 14vw, 118px); }
+  .hero__x { font-size: clamp(34px, 5.8vw, 56px); }
+  .hero__names { letter-spacing: 0.18em; font-size: clamp(14px, 3.7vw, 21px); }
+  .hero__tagline { font-size: clamp(18px, 3.6vw, 26px); }
+  .hero__foot { font-size: clamp(10px, 2.2vw, 13px); }
 
   .intro__left { min-height: 35vh; }
   .intro__right { padding: 36px 20px; }
   .intro__text { font-size: clamp(17px, 4.5vw, 24px); }
   .intro__dot { width: 8px; height: 8px; margin-bottom: 20px; }
 
-  .about__content { padding: 40px 20px; }
-  .about__tabs { margin-bottom: 28px; flex-wrap: wrap; gap: 4px; }
-  .about__tab { font-size: 14px; padding: 6px 14px; }
-  .about__body { font-size: clamp(16px, 4.5vw, 22px); line-height: 1.45; }
-  .about__body--tight { margin-top: 0.75em; }
-  .about__label { font-size: 13px; margin-bottom: 0.75rem; }
-  .about__quote { font-size: clamp(15px, 4vw, 20px); padding: 1rem; }
-  .about__attribution { margin-bottom: 1rem; }
+  .about { padding: clamp(40px, 6vh, 64px) 20px; }
+  .about__cards { grid-template-columns: 1fr; gap: 20px; }
+  .about__card { padding: clamp(28px, 5vw, 40px) clamp(24px, 4vw, 36px); }
 
   .gallery { min-height: 50vh; padding: 60px 0; }
   .gallery__track { height: 280px; }
@@ -1309,21 +1397,19 @@ ul { list-style: none; }
 /* ---- SMALL PHONES (max 480px) ---- */
 @media (max-width: 480px) {
   .hero { padding: 80px 14px 36px; min-height: 100dvh; }
-  .hero__mark-row { gap: 2px; }
-  .hero__sun { width: clamp(40px, 13vw, 64px); height: clamp(40px, 13vw, 64px); }
-  .hero__j { font-size: clamp(48px, 11vw, 72px); }
-  .hero__x { font-size: clamp(24px, 4.5vw, 36px); }
-  .hero__names { font-size: clamp(11px, 3.2vw, 14px); letter-spacing: 0.16em; }
-  .hero__tagline { font-size: clamp(15px, 3.5vw, 20px); }
+  .hero__mark-row { column-gap: clamp(4px, 1.5vw, 12px); }
+  .hero__sun { width: clamp(52px, 14vw, 76px); height: clamp(52px, 14vw, 76px); }
+  .hero__j { font-size: clamp(56px, 12vw, 84px); }
+  .hero__x { font-size: clamp(28px, 5vw, 42px); }
+  .hero__names { font-size: clamp(12px, 3.4vw, 16px); letter-spacing: 0.16em; }
+  .hero__tagline { font-size: clamp(16px, 3.6vw, 22px); }
+  .hero__foot { font-size: clamp(9px, 2.6vw, 12px); }
 
   .intro__left { min-height: 28vh; }
   .intro__text { font-size: 16px; }
 
-  .about__tabs { gap: 2px; }
-  .about__tab { font-size: 13px; padding: 5px 10px; }
-  .about__tab-sep { font-size: 14px; margin: 0 2px; }
-  .about__body { font-size: 15px; }
-  .about__quote { font-size: 14px; padding: 0.75rem; }
+  .about__card-tags span { font-size: 10px; padding: 6px 12px; }
+  .about__card-desc { font-size: 14px; }
 
   .gallery__track { height: 220px; }
 
