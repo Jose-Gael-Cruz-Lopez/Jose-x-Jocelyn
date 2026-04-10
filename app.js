@@ -100,82 +100,133 @@
     }));
   }
 
-  /* === GALLERY — back-and-forth fan carousel === */
+  /* === GALLERY — kobykooba-style horizontal rotating carousel === */
   function initGallery() {
     const cards = Array.from(document.querySelectorAll('.gallery__card'));
     if (!cards.length || typeof anime === 'undefined') return;
 
-    const total = cards.length;
-    let active = Math.floor(total / 2);
-    let dir = 1;
+    const N = cards.length;      // 6 cards
+    let activeIdx = 0;           // which logical card is in center position
 
-    // Fan layout config keyed by offset from active card
-    const FAN = [
-      { x: -340, rotate: -14, scale: 0.78, opacity: 0.55, z: 1 },  // offset -2
-      { x: -180, rotate:  -7, scale: 0.88, opacity: 0.80, z: 2 },  // offset -1
-      { x:    0, rotate:   0, scale: 1.00, opacity: 1.00, z: 5 },  // offset  0 (active)
-      { x:  180, rotate:   7, scale: 0.88, opacity: 0.80, z: 2 },  // offset +1
-      { x:  340, rotate:  14, scale: 0.78, opacity: 0.55, z: 1 },  // offset +2
-    ];
+    // Track dimensions for responsive sizing
+    const track = document.getElementById('galleryTrack');
+    function getTrackW() { return track ? track.offsetWidth : 1200; }
+    function isMobile() { return window.innerWidth < 768; }
 
-    function applyPositions(animate) {
+    /*
+     * Position slots (0-based from left to right):
+     *   slot 0: far left   — large square, no rotation
+     *   slot 1: left-mid   — small square, behind + rotated
+     *   slot 2: center     — TALLEST rectangle, no rotation, z-top
+     *   slot 3: right-mid  — small square, behind + rotated
+     *   slot 4: far right  — large square, no rotation
+     *   slot 5+: hidden (offscreen or invisible for >5 card setups)
+     */
+    function getSlots() {
+      const tw = getTrackW();
+      const mob = isMobile();
+
+      // Card sizes
+      const bigW   = mob ? tw * 0.38 : tw * 0.24;   // far-left, far-right cards
+      const bigH   = mob ? bigW * 1.05 : bigW * 1.05;
+      const centerW = mob ? tw * 0.42 : tw * 0.28;   // center card
+      const centerH = mob ? centerW * 1.4 : centerW * 1.4;
+      const smallW  = mob ? tw * 0.22 : tw * 0.16;   // overlap cards
+      const smallH  = mob ? smallW * 1.0 : smallW * 1.0;
+
+      const centerX = tw / 2;
+      const trackH  = mob ? 320 : 480;
+      const centerY  = trackH / 2;
+
+      return [
+        // slot 0 — far left
+        { x: centerX - tw * 0.37, y: centerY,
+          w: bigW, h: bigH, rotate: 0, z: 3, opacity: 1 },
+        // slot 1 — left-mid (smaller, overlaps between 0 and 2, rotated)
+        { x: centerX - tw * 0.17, y: centerY,
+          w: smallW, h: smallH, rotate: 12, z: 2, opacity: 1 },
+        // slot 2 — CENTER (tallest, no rotation)
+        { x: centerX, y: centerY,
+          w: centerW, h: centerH, rotate: 0, z: 5, opacity: 1 },
+        // slot 3 — right-mid (smaller, overlaps between 2 and 4, rotated)
+        { x: centerX + tw * 0.17, y: centerY,
+          w: smallW, h: smallH, rotate: -10, z: 2, opacity: 1 },
+        // slot 4 — far right
+        { x: centerX + tw * 0.37, y: centerY,
+          w: bigW, h: bigH, rotate: 0, z: 3, opacity: 1 },
+        // slot 5 — hidden (for 6th card)
+        { x: centerX + tw * 0.58, y: centerY,
+          w: bigW, h: bigH, rotate: 0, z: 0, opacity: 0 },
+      ];
+    }
+
+    function layout(animate) {
+      const slots = getSlots();
+
       cards.forEach((card, i) => {
-        const rawOffset = i - active;
-        const clampedOffset = Math.max(-2, Math.min(2, rawOffset));
-        const cfg = FAN[clampedOffset + 2];
+        // Map card to slot based on rotation offset
+        const slotIdx = ((i - activeIdx) % N + N) % N;
+        const slot = slots[slotIdx] || slots[slots.length - 1];
 
-        card.style.zIndex = cfg.z;
+        card.style.zIndex = slot.z;
+
+        const props = {
+          left: slot.x - slot.w / 2,
+          top: slot.y - slot.h / 2,
+          width: slot.w,
+          height: slot.h,
+          rotate: `${slot.rotate}deg`,
+          opacity: slot.opacity,
+        };
 
         if (animate) {
           anime({
             targets: card,
-            translateX: cfg.x,
-            rotate: `${cfg.rotate}deg`,
-            scale: cfg.scale,
-            opacity: cfg.opacity,
-            duration: 680,
+            ...props,
+            duration: 800,
             easing: 'cubicBezier(0.16, 1, 0.3, 1)',
           });
         } else {
-          // Set position only; CSS starts at opacity:0 for the fade-in below
-          anime.set(card, {
-            translateX: cfg.x,
-            rotate: `${cfg.rotate}deg`,
-            scale: cfg.scale,
-          });
+          anime.set(card, props);
         }
       });
     }
 
-    // Snap cards into fan positions (no opacity), then stagger-fade in
-    applyPositions(false);
+    // Initial snap (no animation), then fade in
+    layout(false);
     anime({
       targets: cards,
       opacity: (el, i) => {
-        const offset = Math.max(-2, Math.min(2, i - active));
-        return FAN[offset + 2].opacity;
+        const slotIdx = ((i - activeIdx) % N + N) % N;
+        return slotIdx < 5 ? 1 : 0;
       },
-      duration: 500,
+      duration: 600,
       easing: 'easeOutQuad',
-      delay: anime.stagger(80),
+      delay: anime.stagger(60),
     });
 
+    // Rotate forward every 3s
     function step() {
-      active += dir;
-      if (active >= total - 1) { active = total - 1; dir = -1; }
-      if (active <= 0)          { active = 0;         dir =  1; }
-      applyPositions(true);
+      activeIdx = (activeIdx + 1) % N;
+      layout(true);
     }
 
+    // Click a card to bring it to center
     cards.forEach((card, i) => {
       card.addEventListener('click', () => {
-        active = i;
-        dir = (i >= Math.floor(total / 2)) ? -1 : 1;
-        applyPositions(true);
+        activeIdx = i;
+        layout(true);
       });
     });
 
     setInterval(step, 3000);
+
+    // Re-layout on resize
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => layout(false), 150);
+    });
   }
 
   /* === SERVICES TABS === */

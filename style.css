@@ -408,59 +408,46 @@ ul { list-style: none; }
 
 
 /* ============================================
-   GALLERY — Fan carousel (anime.js driven)
+   GALLERY — kobykooba-style portfolio carousel
+   Sharp-edged, flat-color cards with centered SVG icons.
+   Different sizes (center = tall), overlap, auto-rotates.
    ============================================ */
 .gallery {
   position: relative;
-  min-height: 80vh;
+  min-height: 70vh;
   background: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 80px 0;
+  padding: 100px 0;
   overflow: hidden;
 }
 
-.gallery__cards {
+.gallery__track {
   position: relative;
   width: 100%;
-  max-width: 1100px;
-  height: 440px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  max-width: 1200px;
+  height: 480px;
+  margin: 0 auto;
 }
 
 .gallery__card {
   position: absolute;
-  width: clamp(190px, 17vw, 230px);
-  height: clamp(270px, 25vw, 340px);
   background: var(--card-bg);
-  border-radius: 20px;
+  border-radius: 0; /* sharp edges like kobykooba */
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 32px 20px 28px;
+  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.18);
-  opacity: 0;
   will-change: transform, opacity;
+  opacity: 0;
+  /* transition handled by anime.js */
 }
 
 .gallery__card-icon {
-  font-size: clamp(40px, 5vw, 58px);
-  line-height: 1;
-}
-
-.gallery__card-name {
-  font-family: var(--font-display);
-  font-size: clamp(13px, 1.3vw, 17px);
-  font-weight: 700;
-  color: #ffffff;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  text-align: center;
+  width: 42%;
+  max-width: 100px;
+  height: auto;
 }
 
 /* ============================================
@@ -937,10 +924,7 @@ ul { list-style: none; }
 
   .hero__wordmark { width: 90%; }
 
-  .gallery__cards { height: 340px; }
-  .gallery__card {
-    width: 160px; height: 240px;
-  }
+  .gallery__track { height: 320px; }
 
   .editorial__grid { grid-template-columns: 1fr; }
 

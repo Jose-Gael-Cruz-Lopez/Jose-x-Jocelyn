@@ -133,29 +133,55 @@
     </div>
   </section>
 
-  <!-- ===== GALLERY — Fan carousel, auto-rotates back and forth every 3s ===== -->
+  <!-- ===== GALLERY — kobykooba-style portfolio carousel, rotates every 3s ===== -->
   <section class="gallery" id="gallery">
-    <div class="gallery__cards" id="galleryCards">
+    <div class="gallery__track" id="galleryTrack">
+
+      <!-- Card 0 — Sprints (blue) -->
       <div class="gallery__card" data-index="0" style="--card-bg:#3B5BDB;">
-        <span class="gallery__card-icon">⚡</span>
-        <span class="gallery__card-name">Sprints</span>
+        <svg class="gallery__card-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M44 8L18 46h18L32 72l28-40H42L44 8z" fill="#fff"/>
+        </svg>
       </div>
-      <div class="gallery__card" data-index="1" style="--card-bg:#2B8A3E;">
-        <span class="gallery__card-icon">📚</span>
-        <span class="gallery__card-name">Editorial</span>
+
+      <!-- Card 1 — Editorial (lime) -->
+      <div class="gallery__card" data-index="1" style="--card-bg:#C8F240;">
+        <svg class="gallery__card-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M40 16c-4-4-10-4-10-4s0 6 4 10 10 4 10 4 0-6-4-10zm0 0c4-4 10-4 10-4s0 6-4 10-10 4-10 4 0-6 4-10zM40 48c-4 4-10 4-10 4s0-6 4-10 10-4 10-4 0 6-4 10zm0 0c4 4 10 4 10 4s0-6-4-10-10-4-10-4 0 6 4 10z" stroke="#1A1916" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
+
+      <!-- Card 2 — Pipeline (orange) -->
       <div class="gallery__card" data-index="2" style="--card-bg:#E8590C;">
-        <span class="gallery__card-icon">🎯</span>
-        <span class="gallery__card-name">Pipeline</span>
+        <svg class="gallery__card-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="36" r="14" fill="#fff" opacity=".3"/>
+          <path d="M40 22v28M28 36h24" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+        </svg>
       </div>
-      <div class="gallery__card" data-index="3" style="--card-bg:#7048E8;">
-        <span class="gallery__card-icon">💡</span>
-        <span class="gallery__card-name">Templates</span>
+
+      <!-- Card 3 — Templates (dark teal) -->
+      <div class="gallery__card" data-index="3" style="--card-bg:#0B3D3D;">
+        <svg class="gallery__card-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="18" y="20" width="18" height="40" rx="9" stroke="#5EEDC1" stroke-width="3"/>
+          <rect x="44" y="20" width="18" height="40" rx="9" stroke="#5EEDC1" stroke-width="3"/>
+        </svg>
       </div>
-      <div class="gallery__card" data-index="4" style="--card-bg:#1098AD;">
-        <span class="gallery__card-icon">🤝</span>
-        <span class="gallery__card-name">Community</span>
+
+      <!-- Card 4 — Community (mint) -->
+      <div class="gallery__card" data-index="4" style="--card-bg:#5EEDC1;">
+        <svg class="gallery__card-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 56V36c0-8.8 7.2-16 16-16s16 7.2 16 16v20" stroke="#0B3D3D" stroke-width="3.5" stroke-linecap="round"/>
+          <circle cx="40" cy="36" r="6" fill="#0B3D3D"/>
+        </svg>
       </div>
+
+      <!-- Card 5 — Opportunity Board (brown) -->
+      <div class="gallery__card" data-index="5" style="--card-bg:#6B3A2A;">
+        <svg class="gallery__card-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 28h14v24H22zM44 28h14v24H44z" fill="#C4A6F0" rx="3"/>
+        </svg>
+      </div>
+
     </div>
   </section>
 
