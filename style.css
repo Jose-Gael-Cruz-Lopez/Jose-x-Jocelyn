@@ -743,7 +743,13 @@ ul { list-style: none; }
   margin: 0;
 }
 
-.about__card-linkedin {
+.about__card-socials {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.about__card-social {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -751,11 +757,11 @@ ul { list-style: none; }
   border-radius: 6px;
   transition: transform 0.2s var(--ease-out), opacity 0.2s;
 }
-.about__card-linkedin:hover {
+.about__card-social:hover {
   transform: scale(1.08);
   opacity: 0.95;
 }
-.about__card-linkedin img {
+.about__card-social img {
   width: clamp(22px, 3vw, 28px);
   height: auto;
   display: block;
