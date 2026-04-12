@@ -152,9 +152,11 @@
     }
 
     function bigConfetti() {
-      const N = 200;
+      const N = 140;
       const vw = window.innerWidth;
       const vh = window.innerHeight;
+      const frag = document.createDocumentFragment();
+      const pieces = [];
 
       for (let i = 0; i < N; i++) {
         const el = document.createElement('div');
@@ -162,41 +164,49 @@
         const w = 8 + Math.random() * 16;
         const h = 4 + Math.random() * 10;
         const color = CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0];
-        const startX = vw * 0.3 + Math.random() * vw * 0.4;
-        const startY = vh * 0.3 + Math.random() * vh * 0.2;
+        const startX = vw * 0.2 + Math.random() * vw * 0.6;
+        const startY = vh * 0.25 + Math.random() * vh * 0.25;
         el.style.cssText = `
           position:fixed;
-          left:${startX}px; top:${startY}px;
-          width:${w}px; height:${h}px;
+          left:${startX}px;top:${startY}px;
+          width:${w}px;height:${h}px;
           background:${color};
           border-radius:${Math.random() > 0.4 ? '2px' : '50%'};
           pointer-events:none;
           z-index:10060;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+          will-change:transform,opacity;
         `;
-        document.body.appendChild(el);
-
-        if (typeof gsap !== 'undefined') {
-          const dx = (Math.random() - 0.5) * vw * 1.2;
-          const dy = (Math.random() - 0.6) * vh * 1.4;
-          const delay = Math.random() * 0.15;
-          gsap.fromTo(el,
-            { x: 0, y: 0, rotation: 0, scale: 0 },
-            {
-              x: dx, y: dy,
-              rotation: Math.random() * 1080 - 540,
-              scale: 1 + Math.random() * 0.5,
-              opacity: 0,
-              duration: 1.8 + Math.random() * 1.2,
-              delay: delay,
-              ease: 'power2.out',
-              onComplete: () => el.remove(),
-            }
-          );
-        } else {
-          setTimeout(() => el.remove(), 3000);
-        }
+        frag.appendChild(el);
+        pieces.push(el);
       }
+
+      /* Single DOM write — all pieces at once */
+      document.body.appendChild(frag);
+
+      /* Let the browser paint the frame, then animate */
+      requestAnimationFrame(() => {
+        if (typeof gsap !== 'undefined') {
+          pieces.forEach(el => {
+            const dx = (Math.random() - 0.5) * vw * 1.4;
+            const dy = (Math.random() - 0.55) * vh * 1.5;
+            gsap.fromTo(el,
+              { x: 0, y: 0, rotation: 0, scale: 0 },
+              {
+                x: dx, y: dy,
+                rotation: Math.random() * 900 - 450,
+                scale: 1 + Math.random() * 0.4,
+                opacity: 0,
+                duration: 1.6 + Math.random() * 1.0,
+                delay: Math.random() * 0.08,
+                ease: 'power2.out',
+                onComplete: () => el.remove(),
+              }
+            );
+          });
+        } else {
+          setTimeout(() => pieces.forEach(el => el.remove()), 2800);
+        }
+      });
     }
 
     body.addEventListener('click', (e) => {
@@ -204,20 +214,14 @@
       e.stopPropagation();
       hits++;
 
-      // Swing animation
       wrap.classList.remove('pinata--idle', 'pinata--hit');
       void wrap.offsetWidth;
       wrap.classList.add('pinata--hit');
 
-      // Swap to the correct damage image
       updateImage();
 
-      // Start shaking at stage 3 (step3.png — heavily cracked)
-      if (hits >= 5) {
-        wrap.classList.add('pinata--shaking');
-      }
+      if (hits >= 5) wrap.classList.add('pinata--shaking');
 
-      // Particle burst
       spawnHitStars(e.clientX, e.clientY, 6 + hits * 3);
 
       if (hits >= HITS_TO_BREAK) {
@@ -225,28 +229,31 @@
         prompt?.classList.add('pinata__prompt--hidden');
         wrap.classList.remove('pinata--shaking');
 
-        setTimeout(() => {
+        /* Pre-build the message so there's zero creation cost at reveal time */
+        const BREAK_MSGS = [
+          'Echale ganas, you already took the first step.',
+          'Nobody gave us the blueprint either. That\'s why we built this.',
+          'Ya llegaste. The sun rises for you too.',
+          'First-gen is not a limitation. It\'s the origin story.',
+          'No palancas needed. Just you and this community.',
+        ];
+        const msg = document.createElement('p');
+        msg.className = 'pinata__break-msg';
+        msg.setAttribute('role', 'status');
+        msg.textContent = BREAK_MSGS[(Math.random() * BREAK_MSGS.length) | 0];
+
+        /* Start break + confetti on the very next frame — no 150ms wait */
+        requestAnimationFrame(() => {
           wrap.classList.remove('pinata--hit');
           wrap.classList.add('pinata--break');
           bigConfetti();
 
+          /* Hide piñata and reveal message after break animation peaks (~600ms) */
           setTimeout(() => {
-            wrap.style.display = 'none';
-
-            const msg = document.createElement('p');
-            msg.style.cssText = `
-              font-family: var(--font-display);
-              font-size: clamp(22px, 3.5vw, 36px);
-              font-weight: 700;
-              color: var(--color-gold);
-              text-align: center;
-              padding: 20px;
-              animation: fadeIn 0.6s ease-out;
-            `;
-            msg.textContent = 'You broke it!';
+            wrap.style.visibility = 'hidden'; /* visibility avoids reflow vs display:none */
             wrap.parentElement.appendChild(msg);
-          }, 900);
-        }, 150);
+          }, 600);
+        });
       } else {
         setTimeout(() => {
           wrap.classList.remove('pinata--hit');
@@ -804,6 +811,27 @@
     });
     gsap.from('.about__closing', {
       scrollTrigger: { trigger: '.about__closing', start: 'top 90%', toggleActions: toggle },
+      y: 20, opacity: 0, duration: 0.6, ease: 'power2.out'
+    });
+
+    /* Campus to Career — explainer section */
+    gsap.from('.c2c__title-img', {
+      scrollTrigger: { trigger: '.c2c', start: 'top 75%', toggleActions: toggle },
+      y: -30, opacity: 0, duration: 0.9, ease: 'power2.out'
+    });
+    gsap.from('.c2c__lead', {
+      scrollTrigger: { trigger: '.c2c', start: 'top 65%', toggleActions: toggle },
+      y: 30, opacity: 0, duration: 0.7, ease: 'power2.out'
+    });
+    gsap.utils.toArray('.c2c__card').forEach((card, i) => {
+      gsap.from(card, {
+        scrollTrigger: { trigger: '.c2c__grid', start: 'top 80%', toggleActions: toggle },
+        y: 50, opacity: 0, duration: 0.6, ease: 'power3.out',
+        delay: i * 0.12
+      });
+    });
+    gsap.from('.c2c__closing', {
+      scrollTrigger: { trigger: '.c2c__closing', start: 'top 92%', toggleActions: toggle },
       y: 20, opacity: 0, duration: 0.6, ease: 'power2.out'
     });
 
