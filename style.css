@@ -868,8 +868,8 @@ ul { list-style: none; }
 
 /* ============================================
    GALLERY — kobykooba-style portfolio carousel
-   Sharp-edged, flat-color cards with centered SVG icons.
-   Different sizes (center = tall), overlap, auto-rotates.
+   All cards use the same aspect ratio as 1080×1350 frames (4:5); sizes differ by slot.
+   Overlap + auto-rotate; anime.js sets width/height from app.js.
    ============================================ */
 .gallery {
   position: relative;
@@ -886,6 +886,7 @@ ul { list-style: none; }
   position: relative;
   width: 100%;
   max-width: 1200px;
+  /* Min height fits portrait 4:5 cards at max width (see app.js CARD_ASPECT) */
   height: 480px;
   margin: 0 auto;
 }
@@ -900,7 +901,7 @@ ul { list-style: none; }
   cursor: pointer;
   will-change: transform, opacity;
   opacity: 0;
-  /* transition handled by anime.js */
+  /* transition handled by anime.js — dimensions use 4:5 (1080×1350) in app.js */
 }
 
 .gallery__card--photo {
@@ -1042,6 +1043,13 @@ ul { list-style: none; }
 
 .services__list-col {
   display: flex; flex-direction: column; gap: 16px;
+}
+
+.services__list-col--inline {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(20px, 5vw, 56px);
 }
 
 .services__list-col span {

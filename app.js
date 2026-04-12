@@ -228,52 +228,60 @@
     // Track dimensions for responsive sizing
     const track = document.getElementById('galleryTrack');
     function getTrackW() { return track ? track.offsetWidth : 1200; }
+    function getTrackH() {
+      if (track && track.offsetHeight > 0) return track.offsetHeight;
+      return window.innerWidth < 768 ? 320 : 480;
+    }
     function isMobile() { return window.innerWidth < 768; }
+
+    // All cards match 1080×1350 reference frames (4:5 width:height)
+    const CARD_ASPECT = 1350 / 1080;
+    const cardH = (w) => w * CARD_ASPECT;
 
     /*
      * Position slots (0-based from left to right):
-     *   slot 0: far left   — large square, no rotation
-     *   slot 1: left-mid   — small square, behind + rotated
-     *   slot 2: center     — TALLEST rectangle, no rotation, z-top
-     *   slot 3: right-mid  — small square, behind + rotated
-     *   slot 4: far right  — large square, no rotation
+     *   slot 0: far left   — large card, no rotation
+     *   slot 1: left-mid   — smaller card, behind + rotated
+     *   slot 2: center     — largest width, no rotation, z-top (same 4:5 aspect as others)
+     *   slot 3: right-mid  — smaller card, behind + rotated
+     *   slot 4: far right  — large card, no rotation
      *   slot 5+: hidden (offscreen or invisible for >5 card setups)
      */
     function getSlots() {
       const tw = getTrackW();
       const mob = isMobile();
 
-      // Card sizes
-      const bigW   = mob ? tw * 0.38 : tw * 0.24;   // far-left, far-right cards
-      const bigH   = mob ? bigW * 1.05 : bigW * 1.05;
-      const centerW = mob ? tw * 0.42 : tw * 0.28;   // center card
-      const centerH = mob ? centerW * 1.4 : centerW * 1.4;
-      const smallW  = mob ? tw * 0.22 : tw * 0.16;   // overlap cards
-      const smallH  = mob ? smallW * 1.0 : smallW * 1.0;
+      // Card widths — heights follow 1080×1350 (4:5) for every slot
+      const bigW = mob ? tw * 0.38 : tw * 0.24; // far-left, far-right
+      const bigHeight = cardH(bigW);
+      const centerW = mob ? tw * 0.42 : tw * 0.28; // center card
+      const centerHeight = cardH(centerW);
+      const smallW = mob ? tw * 0.22 : tw * 0.16; // overlap cards
+      const smallHeight = cardH(smallW);
 
       const centerX = tw / 2;
-      const trackH  = mob ? 320 : 480;
-      const centerY  = trackH / 2;
+      const trackH = getTrackH();
+      const centerY = trackH / 2;
 
       return [
         // slot 0 — far left
         { x: centerX - tw * 0.37, y: centerY,
-          w: bigW, h: bigH, rotate: 0, z: 3, opacity: 1 },
+          w: bigW, h: bigHeight, rotate: 0, z: 3, opacity: 1 },
         // slot 1 — left-mid (smaller, overlaps between 0 and 2, rotated)
         { x: centerX - tw * 0.17, y: centerY,
-          w: smallW, h: smallH, rotate: 12, z: 2, opacity: 1 },
-        // slot 2 — CENTER (tallest, no rotation)
+          w: smallW, h: smallHeight, rotate: 12, z: 2, opacity: 1 },
+        // slot 2 — CENTER (no rotation)
         { x: centerX, y: centerY,
-          w: centerW, h: centerH, rotate: 0, z: 5, opacity: 1 },
+          w: centerW, h: centerHeight, rotate: 0, z: 5, opacity: 1 },
         // slot 3 — right-mid (smaller, overlaps between 2 and 4, rotated)
         { x: centerX + tw * 0.17, y: centerY,
-          w: smallW, h: smallH, rotate: -10, z: 2, opacity: 1 },
+          w: smallW, h: smallHeight, rotate: -10, z: 2, opacity: 1 },
         // slot 4 — far right
         { x: centerX + tw * 0.37, y: centerY,
-          w: bigW, h: bigH, rotate: 0, z: 3, opacity: 1 },
+          w: bigW, h: bigHeight, rotate: 0, z: 3, opacity: 1 },
         // slot 5 — hidden (for 6th card)
         { x: centerX + tw * 0.58, y: centerY,
-          w: bigW, h: bigH, rotate: 0, z: 0, opacity: 0 },
+          w: bigW, h: bigHeight, rotate: 0, z: 0, opacity: 0 },
       ];
     }
 
