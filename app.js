@@ -71,8 +71,148 @@
     initServicesTabs();
     initGallery();
     initModal();
+    initFooterDots();
     initClickConfetti();
     initGSAP();
+  }
+
+  /* === FOOTER — dotted grid repelled by cursor (1080×1350-style reference: dense gray dots) === */
+  function initFooterDots() {
+    const footer = document.getElementById('contact');
+    const canvas = footer?.querySelector('.footer__dots-canvas');
+    if (!footer || !canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let dots = [];
+    let wCss = 1;
+    let hCss = 1;
+    let dpr = 1;
+    const mouse = { x: 0, y: 0, inside: false };
+    let visible = true;
+
+    const SPACING = 11;
+    const INFLUENCE = 120;
+    const MAX_PUSH = 40;
+    const LERP = 0.2;
+    const DOT_R = 1.05;
+
+    function buildDots() {
+      dots = [];
+      for (let y = SPACING * 0.5; y < hCss; y += SPACING) {
+        for (let x = SPACING * 0.5; x < wCss; x += SPACING) {
+          const g = 0.18 + Math.random() * 0.42;
+          dots.push({ bx: x, by: y, ox: 0, oy: 0, g });
+        }
+      }
+    }
+
+    function resize() {
+      const rect = footer.getBoundingClientRect();
+      wCss = Math.max(1, rect.width);
+      hCss = Math.max(1, rect.height);
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(wCss * dpr);
+      canvas.height = Math.floor(hCss * dpr);
+      canvas.style.width = `${wCss}px`;
+      canvas.style.height = `${hCss}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      buildDots();
+    }
+
+    function draw() {
+      if (!visible) return;
+      ctx.clearRect(0, 0, wCss, hCss);
+      const rect = footer.getBoundingClientRect();
+      const mx = mouse.x - rect.left;
+      const my = mouse.y - rect.top;
+
+      for (let i = 0; i < dots.length; i++) {
+        const d = dots[i];
+        let tx = 0;
+        let ty = 0;
+        if (!reduced && mouse.inside) {
+          const dx = d.bx - mx;
+          const dy = d.by - my;
+          const dist = Math.hypot(dx, dy);
+          if (dist < INFLUENCE && dist > 0.001) {
+            const t = 1 - dist / INFLUENCE;
+            const push = t * t * MAX_PUSH;
+            tx = (dx / dist) * push;
+            ty = (dy / dist) * push;
+          }
+        }
+        d.ox += (tx - d.ox) * LERP;
+        d.oy += (ty - d.oy) * LERP;
+        if (!mouse.inside) {
+          d.ox *= 0.93;
+          d.oy *= 0.93;
+        }
+
+        ctx.fillStyle = `rgba(26,25,22,${d.g})`;
+        ctx.beginPath();
+        ctx.arc(d.bx + d.ox, d.by + d.oy, DOT_R, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function loop() {
+      requestAnimationFrame(loop);
+      draw();
+    }
+
+    footer.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      mouse.inside = true;
+    });
+    footer.addEventListener('mouseenter', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      mouse.inside = true;
+    });
+    footer.addEventListener('mouseleave', () => {
+      mouse.inside = false;
+    });
+
+    footer.addEventListener(
+      'touchmove',
+      (e) => {
+        if (!e.touches.length) return;
+        mouse.x = e.touches[0].clientX;
+        mouse.y = e.touches[0].clientY;
+        mouse.inside = true;
+      },
+      { passive: true }
+    );
+    footer.addEventListener(
+      'touchstart',
+      (e) => {
+        if (!e.touches.length) return;
+        mouse.x = e.touches[0].clientX;
+        mouse.y = e.touches[0].clientY;
+        mouse.inside = true;
+      },
+      { passive: true }
+    );
+    footer.addEventListener('touchend', () => {
+      mouse.inside = false;
+    });
+
+    const ro = new ResizeObserver(() => resize());
+    ro.observe(footer);
+
+    const io = new IntersectionObserver((entries) => {
+      visible = entries[0]?.isIntersecting !== false;
+    }, { threshold: 0 });
+    io.observe(footer);
+
+    resize();
+    window.addEventListener('resize', resize);
+    loop();
   }
 
   /* === CLICK CONFETTI — larger rectangular burst, longer motion (site palette) === */
