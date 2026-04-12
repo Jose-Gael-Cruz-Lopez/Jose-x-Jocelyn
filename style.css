@@ -318,10 +318,10 @@ ul { list-style: none; }
   gap: clamp(30px, 4.8vh, 56px);
 }
 
-/* Equal outer columns so suns + J×J read perfectly centered and symmetrical */
+/* Three equal columns: center column stretches so J×J can use symmetric inner spacing */
 .hero__mark-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
   width: 100%;
   max-width: min(100%, 1120px);
@@ -389,11 +389,26 @@ ul { list-style: none; }
 
 .hero__jxj {
   grid-column: 2;
-  justify-self: center;
+  justify-self: stretch;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  max-width: 100%;
   gap: clamp(12px, 2vw, 26px);
+}
+/* Equal flex columns so J–×–J spacing is symmetric (glyph sidebearings no longer skew the gap) */
+.hero__jxj-cell {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.hero__jxj-cell--left {
+  justify-content: flex-end;
+}
+.hero__jxj-cell--right {
+  justify-content: flex-start;
 }
 
 .hero__j {
@@ -416,6 +431,9 @@ ul { list-style: none; }
   color: rgba(255,255,255,0.62);
   line-height: 1;
   flex-shrink: 0;
+  align-self: center;
+  /* Optical vertical center vs Playfair J cap height */
+  transform: translateY(-0.04em);
 }
 
 .hero__names {
@@ -885,6 +903,14 @@ ul { list-style: none; }
   /* transition handled by anime.js */
 }
 
+.gallery__card--photo {
+  background-color: var(--card-bg);
+  background-image: var(--card-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .gallery__card-icon {
   width: 42%;
   max-width: 100px;
@@ -926,12 +952,41 @@ ul { list-style: none; }
     );
 }
 
-.services__pattern-text {
+.services__pattern-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: clamp(10px, 1.4vw, 22px);
+}
+.services__pattern-cell {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+.services__pattern-cell--left {
+  justify-content: flex-end;
+}
+.services__pattern-cell--right {
+  justify-content: flex-start;
+}
+.services__pattern-j {
   font-family: var(--font-display);
   font-size: clamp(120px, 15vw, 200px);
   font-weight: 700;
   color: rgba(242,228,206,0.06);
   letter-spacing: -0.03em;
+  line-height: 1;
+}
+.services__pattern-x {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 7.5vw, 104px);
+  font-weight: 500;
+  color: rgba(242,228,206,0.06);
+  line-height: 1;
+  flex-shrink: 0;
+  transform: translateY(-0.03em);
 }
 
 .services__content {

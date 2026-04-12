@@ -75,9 +75,9 @@
         </div>
 
         <div class="hero__jxj">
-          <span class="hero__j">J</span>
+          <span class="hero__jxj-cell hero__jxj-cell--left"><span class="hero__j">J</span></span>
           <span class="hero__x">×</span>
-          <span class="hero__j">J</span>
+          <span class="hero__jxj-cell hero__jxj-cell--right"><span class="hero__j">J</span></span>
         </div>
 
         <div class="hero__sun hero__sun--spin-reverse" aria-hidden="true">
@@ -215,19 +215,11 @@
   <section class="gallery" id="gallery">
     <div class="gallery__track" id="galleryTrack">
 
-      <!-- Card 0 - Sprints (terra cotta) -->
-      <div class="gallery__card" data-index="0" style="--card-bg:#B34539;">
-        <svg class="gallery__card-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M44 8L18 46h18L32 72l28-40H42L44 8z" fill="#F2E4CE"/>
-        </svg>
-      </div>
+      <!-- Card 0 - Sprints (photo background; no center icon so the image stays unobstructed) -->
+      <div class="gallery__card gallery__card--photo" data-index="0" style="--card-bg:#B34539; --card-image: url('./gallery-photo.png');"></div>
 
-      <!-- Card 1 - Editorial (gold) -->
-      <div class="gallery__card" data-index="1" style="--card-bg:#E8A838;">
-        <svg class="gallery__card-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M40 16c-4-4-10-4-10-4s0 6 4 10 10 4 10 4 0-6-4-10zm0 0c4-4 10-4 10-4s0 6-4 10-10 4-10 4 0-6 4-10zM40 48c-4 4-10 4-10 4s0-6 4-10 10-4 10-4 0 6-4 10zm0 0c4 4 10 4 10 4s0-6-4-10-10-4-10-4 0 6 4 10z" stroke="#162B44" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
+      <!-- Card 1 - Editorial (gold fallback + collage photo) -->
+      <div class="gallery__card gallery__card--photo" data-index="1" style="--card-bg:#E8A838; --card-image: url('./gallery-collage-azul.jpg');"></div>
 
       <!-- Card 2 - Pipeline (teal) -->
       <div class="gallery__card" data-index="2" style="--card-bg:#3A7D6B;">
@@ -269,7 +261,11 @@
       <div class="services__image-inner">
         <!-- Abstract pattern representing team/brand -->
         <div class="services__pattern" aria-hidden="true">
-          <div class="services__pattern-text">JxJ</div>
+          <div class="services__pattern-mark">
+            <span class="services__pattern-cell services__pattern-cell--left"><span class="services__pattern-j">J</span></span>
+            <span class="services__pattern-x">×</span>
+            <span class="services__pattern-cell services__pattern-cell--right"><span class="services__pattern-j">J</span></span>
+          </div>
         </div>
       </div>
     </div>
