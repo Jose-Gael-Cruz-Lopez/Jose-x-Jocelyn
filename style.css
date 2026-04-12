@@ -558,6 +558,14 @@ ul { list-style: none; }
   max-width: 540px;
 }
 
+/* Narrower em dash between Mexican / Americans (full character still in copy for semantics) */
+.intro__emdash {
+  display: inline-block;
+  transform: scaleX(0.52);
+  transform-origin: center;
+  vertical-align: 0.04em;
+}
+
 /* ============================================
    ABOUT — "Who We Are" two-card layout
    ============================================ */
@@ -738,13 +746,61 @@ ul { list-style: none; }
   margin-bottom: clamp(16px, 2vh, 24px);
 }
 
-.about__card-photo {
+.about__card-photo-wrap {
+  position: relative;
   width: clamp(64px, 8vw, 96px);
   height: clamp(64px, 8vw, 96px);
-  border-radius: 50%;
-  object-fit: cover;
   flex-shrink: 0;
+  border-radius: 50%;
   border: 3px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.about__card-photo-wrap .about__card-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: none;
+  border-radius: 50%;
+  transition: opacity 0.35s var(--ease-out);
+}
+
+.about__card-photo-wrap .about__card-photo--base {
+  object-fit: cover;
+}
+
+/* Hover art: show full illustration (no crop); white matte matches typical PNG artboard */
+.about__card-photo-wrap .about__card-photo--alt {
+  opacity: 0;
+  pointer-events: none;
+  object-fit: contain;
+  object-position: center;
+  padding: 10%;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+.about__card-photo-wrap:hover .about__card-photo--base {
+  opacity: 0;
+}
+
+.about__card-photo-wrap:hover .about__card-photo--alt {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about__card-photo-wrap .about__card-photo {
+    transition: none;
+  }
+  .about__card-photo-wrap:hover .about__card-photo--base {
+    opacity: 1;
+  }
+  .about__card-photo-wrap:hover .about__card-photo--alt {
+    opacity: 0;
+  }
 }
 
 .about__card-name {
