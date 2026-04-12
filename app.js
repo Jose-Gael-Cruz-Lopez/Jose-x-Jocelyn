@@ -72,8 +72,188 @@
     initGallery();
     initModal();
     initFooterDots();
+    initPinata();
     initClickConfetti();
     initGSAP();
+  }
+
+  /* === PIÑATA MINI-GAME — click to crack through real artwork stages, explodes confetti === */
+  function initPinata() {
+    const wrap = document.getElementById('pinata');
+    const body = document.getElementById('pinataBody');
+    const img = document.getElementById('pinataImg');
+    const prompt = document.getElementById('pinataPrompt');
+    if (!wrap || !body || !img) return;
+
+    /*
+     * Damage stages — each maps a hit threshold to a new image.
+     * Pinata.png (0 hits) -> step1 (hit 2) -> step2 (hit 4) -> step3 (hit 6) -> break (hit 8)
+     */
+    const STAGES = [
+      { at: 0, src: './pinanta/step1.png' },
+      { at: 3, src: './pinanta/step2.png' },
+      { at: 5, src: './pinanta/step3.png' },
+    ];
+    const HITS_TO_BREAK = 7;
+    let hits = 0;
+    let broken = false;
+
+    // Preload stage images
+    STAGES.forEach(s => { const i = new Image(); i.src = s.src; });
+
+    wrap.classList.add('pinata--idle');
+
+    const CONFETTI_COLORS = [
+      '#E8A838', '#B34539', '#3A7D6B', '#5B8EC2', '#F2E4CE',
+      '#f5c026', '#ff6b6b', '#ff9ff3', '#54a0ff', '#5f27cd',
+      '#01a3a4', '#feca57', '#ff6348', '#7bed9f',
+    ];
+
+    function updateImage() {
+      let best = STAGES[0];
+      for (const s of STAGES) {
+        if (hits >= s.at) best = s;
+      }
+      if (img.src !== best.src) img.src = best.src;
+    }
+
+    function spawnHitStars(x, y, count) {
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'pinata__star';
+        const size = 6 + Math.random() * 12;
+        const color = CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0];
+        star.style.cssText = `
+          left:${x}px; top:${y}px;
+          width:${size}px; height:${size}px;
+          background:${color};
+          border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+          transform: rotate(${Math.random() * 360}deg);
+        `;
+        document.body.appendChild(star);
+
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 40 + Math.random() * 100;
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist - 30;
+
+        if (typeof gsap !== 'undefined') {
+          gsap.to(star, {
+            x: dx, y: dy, opacity: 0,
+            rotation: Math.random() * 720 - 360,
+            duration: 0.6 + Math.random() * 0.4,
+            ease: 'power2.out',
+            onComplete: () => star.remove(),
+          });
+        } else {
+          setTimeout(() => star.remove(), 800);
+        }
+      }
+    }
+
+    function bigConfetti() {
+      const N = 200;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      for (let i = 0; i < N; i++) {
+        const el = document.createElement('div');
+        el.setAttribute('aria-hidden', 'true');
+        const w = 8 + Math.random() * 16;
+        const h = 4 + Math.random() * 10;
+        const color = CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0];
+        const startX = vw * 0.3 + Math.random() * vw * 0.4;
+        const startY = vh * 0.3 + Math.random() * vh * 0.2;
+        el.style.cssText = `
+          position:fixed;
+          left:${startX}px; top:${startY}px;
+          width:${w}px; height:${h}px;
+          background:${color};
+          border-radius:${Math.random() > 0.4 ? '2px' : '50%'};
+          pointer-events:none;
+          z-index:10060;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        `;
+        document.body.appendChild(el);
+
+        if (typeof gsap !== 'undefined') {
+          const dx = (Math.random() - 0.5) * vw * 1.2;
+          const dy = (Math.random() - 0.6) * vh * 1.4;
+          const delay = Math.random() * 0.15;
+          gsap.fromTo(el,
+            { x: 0, y: 0, rotation: 0, scale: 0 },
+            {
+              x: dx, y: dy,
+              rotation: Math.random() * 1080 - 540,
+              scale: 1 + Math.random() * 0.5,
+              opacity: 0,
+              duration: 1.8 + Math.random() * 1.2,
+              delay: delay,
+              ease: 'power2.out',
+              onComplete: () => el.remove(),
+            }
+          );
+        } else {
+          setTimeout(() => el.remove(), 3000);
+        }
+      }
+    }
+
+    body.addEventListener('click', (e) => {
+      if (broken) return;
+      e.stopPropagation();
+      hits++;
+
+      // Swing animation
+      wrap.classList.remove('pinata--idle', 'pinata--hit');
+      void wrap.offsetWidth;
+      wrap.classList.add('pinata--hit');
+
+      // Swap to the correct damage image
+      updateImage();
+
+      // Start shaking at stage 3 (step3.png — heavily cracked)
+      if (hits >= 5) {
+        wrap.classList.add('pinata--shaking');
+      }
+
+      // Particle burst
+      spawnHitStars(e.clientX, e.clientY, 6 + hits * 3);
+
+      if (hits >= HITS_TO_BREAK) {
+        broken = true;
+        prompt?.classList.add('pinata__prompt--hidden');
+        wrap.classList.remove('pinata--shaking');
+
+        setTimeout(() => {
+          wrap.classList.remove('pinata--hit');
+          wrap.classList.add('pinata--break');
+          bigConfetti();
+
+          setTimeout(() => {
+            wrap.style.display = 'none';
+
+            const msg = document.createElement('p');
+            msg.style.cssText = `
+              font-family: var(--font-display);
+              font-size: clamp(22px, 3.5vw, 36px);
+              font-weight: 700;
+              color: var(--color-gold);
+              text-align: center;
+              padding: 20px;
+              animation: fadeIn 0.6s ease-out;
+            `;
+            msg.textContent = 'You broke it!';
+            wrap.parentElement.appendChild(msg);
+          }, 900);
+        }, 150);
+      } else {
+        setTimeout(() => {
+          wrap.classList.remove('pinata--hit');
+          if (hits < 5) wrap.classList.add('pinata--idle');
+        }, 500);
+      }
+    });
   }
 
   /* === FOOTER — dotted grid repelled by cursor (1080×1350-style reference: dense gray dots) === */

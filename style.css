@@ -1009,41 +1009,112 @@ ul { list-style: none; }
     );
 }
 
-.services__pattern-mark {
+/* ---- Piñata mini-game ---- */
+.pinata {
+  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  gap: clamp(10px, 1.4vw, 22px);
+  z-index: 1;
+  transform-origin: center center;
+  user-select: none;
+  -webkit-user-select: none;
 }
-.services__pattern-cell {
-  flex: 1 1 0;
-  display: flex;
-  align-items: center;
-  min-width: 0;
+
+.pinata__body {
+  position: relative;
+  cursor: pointer;
+  transform-origin: center center;
 }
-.services__pattern-cell--left {
-  justify-content: flex-end;
+
+.pinata__img {
+  width: clamp(220px, 32vw, 420px);
+  height: auto;
+  display: block;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35));
+  transition: transform 0.15s ease-out;
 }
-.services__pattern-cell--right {
-  justify-content: flex-start;
-}
-.services__pattern-j {
+
+.pinata__prompt {
+  margin-top: 20px;
   font-family: var(--font-display);
-  font-size: clamp(120px, 15vw, 200px);
-  font-weight: 700;
-  color: rgba(242,228,206,0.06);
-  letter-spacing: -0.03em;
-  line-height: 1;
+  font-size: clamp(14px, 1.8vw, 20px);
+  font-weight: 600;
+  color: var(--color-gold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  animation: pinataPulse 1.6s ease-in-out infinite;
 }
-.services__pattern-x {
-  font-family: var(--font-display);
-  font-size: clamp(56px, 7.5vw, 104px);
-  font-weight: 500;
-  color: rgba(242,228,206,0.06);
-  line-height: 1;
-  flex-shrink: 0;
-  transform: translateY(-0.03em);
+
+.pinata__prompt--hidden {
+  display: none;
+}
+
+@keyframes pinataPulse {
+  0%, 100% { opacity: 0.5; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(-4px); }
+}
+
+/* Idle gentle sway */
+.pinata--idle {
+  animation: pinataIdle 4s ease-in-out infinite;
+}
+@keyframes pinataIdle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg); }
+  75% { transform: rotate(-2deg); }
+}
+
+/* Hit swing */
+.pinata--hit {
+  animation: pinataHit 0.5s ease-out;
+}
+@keyframes pinataHit {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(18deg); }
+  35% { transform: rotate(-14deg); }
+  55% { transform: rotate(8deg); }
+  75% { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Late-stage damage shake */
+.pinata--shaking .pinata__body {
+  animation: pinataDamageShake 0.25s ease-in-out infinite;
+}
+@keyframes pinataDamageShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px) rotate(-1.5deg); }
+  75% { transform: translateX(3px) rotate(1.5deg); }
+}
+
+/* Break: piñata falls apart */
+.pinata--break {
+  animation: pinataBreak 0.8s ease-in forwards;
+}
+@keyframes pinataBreak {
+  0% { transform: rotate(0deg) scale(1); opacity: 1; }
+  30% { transform: rotate(15deg) scale(1.15); opacity: 1; }
+  60% { transform: rotate(-5deg) scale(1.3); opacity: 0.6; }
+  100% { transform: rotate(25deg) scale(1.6) translateY(40px); opacity: 0; }
+}
+
+/* Star burst particles on each hit */
+.pinata__star {
+  position: fixed;
+  pointer-events: none;
+  z-index: 10040;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pinata--idle,
+  .pinata--hit,
+  .pinata--break,
+  .pinata__prompt { animation: none; }
+  .pinata--shaking .pinata__body { animation: none; }
 }
 
 .services__content {
@@ -1106,6 +1177,16 @@ ul { list-style: none; }
   flex-wrap: wrap;
   align-items: baseline;
   gap: clamp(20px, 5vw, 56px);
+}
+
+/* Community: four labels in a 2×2 grid (avoids 3+1 wrap) */
+.services__list-col--grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(24px, 5vw, 48px);
+  row-gap: 14px;
+  max-width: min(100%, 420px);
+  justify-items: start;
 }
 
 .services__list-col span {

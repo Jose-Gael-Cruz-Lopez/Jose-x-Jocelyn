@@ -265,12 +265,13 @@
   <section class="services" id="services">
     <div class="services__image">
       <div class="services__image-inner">
-        <!-- Abstract pattern representing team/brand -->
+        <!-- Piñata mini-game (replaces J×J pattern) -->
         <div class="services__pattern" aria-hidden="true">
-          <div class="services__pattern-mark">
-            <span class="services__pattern-cell services__pattern-cell--left"><span class="services__pattern-j">J</span></span>
-            <span class="services__pattern-x">×</span>
-            <span class="services__pattern-cell services__pattern-cell--right"><span class="services__pattern-j">J</span></span>
+          <div class="pinata" id="pinata">
+            <div class="pinata__body" id="pinataBody">
+              <img src="./pinanta/step1.png" alt="" class="pinata__img" id="pinataImg" draggable="false" />
+            </div>
+            <p class="pinata__prompt" id="pinataPrompt">Click to hit!</p>
           </div>
         </div>
       </div>
@@ -305,10 +306,11 @@
       <div class="services__panel" data-spanel="community">
         <p class="services__body">Community-driven support built on accountability and real connections. Opportunity boards, partnership panels, coffee chat networks, and resume review circles.</p>
         <div class="services__list">
-          <div class="services__list-col services__list-col--inline">
+          <div class="services__list-col services__list-col--grid-2">
             <span>Opportunity Board</span>
-            <span>Resume Reviews</span>
             <span>Partner Panels</span>
+            <span>Coffee Chat Networks</span>
+            <span>Resume Reviews</span>
           </div>
         </div>
       </div>
