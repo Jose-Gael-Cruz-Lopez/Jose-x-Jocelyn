@@ -250,8 +250,36 @@
 
           /* Hide piñata and reveal message after break animation peaks (~600ms) */
           setTimeout(() => {
-            wrap.style.visibility = 'hidden'; /* visibility avoids reflow vs display:none */
+            wrap.style.visibility = 'hidden';
             wrap.parentElement.appendChild(msg);
+
+            /* Reset everything after 6.5s so the user can play again */
+            setTimeout(() => {
+              /* Fade message out */
+              msg.style.transition = 'opacity 0.6s ease';
+              msg.style.opacity = '0';
+
+              setTimeout(() => {
+                /* Remove message */
+                msg.remove();
+
+                /* Reset piñata state */
+                hits = 0;
+                broken = false;
+                wrap.style.visibility = 'visible';
+                wrap.classList.remove('pinata--break', 'pinata--hit', 'pinata--shaking');
+                void wrap.offsetWidth; /* force reflow to restart animation */
+                wrap.classList.add('pinata--idle');
+
+                /* Restore prompt */
+                if (prompt) {
+                  prompt.classList.remove('pinata__prompt--hidden');
+                }
+
+                /* Reset image back to pristine */
+                updateImage();
+              }, 650); /* after fade */
+            }, 6500); /* message display time */
           }, 600);
         });
       } else {
