@@ -73,7 +73,6 @@
     initModal();
     initFooterDots();
     initPinata();
-    initClickConfetti();
     initGSAP();
   }
 
@@ -428,89 +427,6 @@
     resize();
     window.addEventListener('resize', resize);
     loop();
-  }
-
-  /* === CLICK CONFETTI — larger rectangular burst, longer motion (site palette) === */
-  function initClickConfetti() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (typeof gsap === 'undefined') return;
-
-    const COLORS = [
-      '#E8A838', '#B34539', '#3A7D6B', '#5B8EC2', '#162B44', '#F2E4CE', '#1A1916',
-      '#f5c026',
-    ];
-
-    document.addEventListener(
-      'click',
-      (e) => {
-        if (e.target.closest?.('input, textarea, select, [contenteditable="true"]')) return;
-
-        const x = e.clientX;
-        const y = e.clientY;
-        const n = 48;
-
-        for (let i = 0; i < n; i++) {
-          const w = 10 + Math.random() * 18;
-          const h = 4 + Math.random() * 10;
-          const color = COLORS[(Math.random() * COLORS.length) | 0];
-          const el = document.createElement('div');
-          el.setAttribute('aria-hidden', 'true');
-          const edge =
-            color === '#F2E4CE' || color === '#f5c026'
-              ? '0 0 0 1px rgba(26,25,22,0.18)'
-              : '0 2px 6px rgba(0,0,0,0.28)';
-          el.style.cssText = [
-            'position:fixed',
-            `left:${x}px`,
-            `top:${y}px`,
-            `width:${w}px`,
-            `height:${h}px`,
-            `background:${color}`,
-            'border-radius:2px',
-            `box-shadow:${edge}`,
-            'pointer-events:none',
-            'z-index:10050',
-          ].join(';');
-
-          document.body.appendChild(el);
-
-          const angle = Math.random() * Math.PI * 2;
-          const dist = 75 + Math.random() * 185;
-          const dur = 0.95 + Math.random() * 0.75;
-
-          gsap.set(el, { xPercent: -50, yPercent: -50 });
-          const rotEnd = (Math.random() - 0.5) * 620;
-          const s0 = 0.55 + Math.random() * 0.55;
-          const s1 = 0.35 + Math.random() * 0.45;
-          const tl = gsap.timeline({ onComplete: () => el.remove() });
-          tl.fromTo(
-            el,
-            {
-              opacity: 1,
-              scale: s0,
-              rotation: Math.random() * 360,
-              x: 0,
-              y: 0,
-            },
-            {
-              x: Math.cos(angle) * dist,
-              y: Math.sin(angle) * dist,
-              rotation: `+=${rotEnd}`,
-              scale: s1,
-              duration: dur,
-              ease: 'power3.out',
-            }
-          );
-          tl.fromTo(
-            el,
-            { opacity: 1 },
-            { opacity: 0, duration: dur * 0.42, ease: 'power2.in' },
-            dur * 0.58
-          );
-        }
-      },
-      false
-    );
   }
 
   /* === IN-PAGE ANCHORS (native scroll) === */

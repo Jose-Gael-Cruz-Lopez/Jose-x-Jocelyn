@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jose x Jocelyn · From Campus to Career</title>
   <meta name="description" content="From Campus to Career: practical advice and a visible pipeline from first internship search to full-time role for first-generation and underrepresented students in tech and data." />
+  <meta name="view-transition" content="same-origin" />
 
   <!-- Fonts: Clash Display + Satoshi + Playfair + Montserrat (hero names — geometric caps) -->
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
@@ -21,6 +22,31 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
 
   <link rel="stylesheet" href="./style.css" />
+
+  <!-- Eager prefetch: article HTML in cache before first tap (no hover on mobile). -->
+  <link rel="prefetch" href="./articles/late-cycle-internships.html" />
+  <link rel="prefetch" href="./articles/first-90-days.html" />
+  <link rel="prefetch" href="./articles/first-gen-internship-playbook.html" />
+  <link rel="prefetch" href="./articles/coffee-chat-framework.html" />
+  <link rel="prefetch" href="./articles/negotiate-salary.html" />
+  <link rel="prefetch" href="./articles/rejection.html" />
+  <script type="speculationrules">
+  {
+    "prefetch": [
+      {
+        "source": "list",
+        "urls": [
+          "./articles/late-cycle-internships.html",
+          "./articles/first-90-days.html",
+          "./articles/first-gen-internship-playbook.html",
+          "./articles/coffee-chat-framework.html",
+          "./articles/negotiate-salary.html",
+          "./articles/rejection.html"
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -381,40 +407,40 @@
 
     <!-- Article cards (2-up like kobykooba portfolio images) -->
     <div class="editorial__grid">
-      <article class="editorial__card">
+      <a href="./articles/late-cycle-internships.html" class="editorial__card editorial__card--link">
         <div class="editorial__card-tag">Jose</div>
         <h3 class="editorial__card-title">Late-Cycle Internships: Where to Look When Everyone Says It's Over</h3>
         <p class="editorial__card-excerpt">It is April and you still don't have an internship. Here is what to do right now.</p>
-      </article>
-      <article class="editorial__card editorial__card--dark">
+      </a>
+      <a href="./articles/first-90-days.html" class="editorial__card editorial__card--dark editorial__card--link">
         <div class="editorial__card-tag">Jocelyn</div>
         <h3 class="editorial__card-title">Your First 90 Days: A Survival Guide for First-Gen Professionals</h3>
         <p class="editorial__card-excerpt">No one teaches you how to read benefits, navigate office politics, or build a career ladder. Until now.</p>
-      </article>
+      </a>
     </div>
     <div class="editorial__grid">
-      <article class="editorial__card editorial__card--dark">
+      <a href="./articles/first-gen-internship-playbook.html" class="editorial__card editorial__card--dark editorial__card--link">
         <div class="editorial__card-tag">Both</div>
         <h3 class="editorial__card-title">The Complete First-Gen Internship Playbook</h3>
         <p class="editorial__card-excerpt">From discovery to signed offer, with no sugar-coating. Everything we learned.</p>
-      </article>
-      <article class="editorial__card">
+      </a>
+      <a href="./articles/coffee-chat-framework.html" class="editorial__card editorial__card--link">
         <div class="editorial__card-tag">Jose</div>
         <h3 class="editorial__card-title">The Coffee Chat Framework That Actually Gets Responses</h3>
         <p class="editorial__card-excerpt">A step-by-step system for reaching out to professionals and turning conversations into opportunities.</p>
-      </article>
+      </a>
     </div>
     <div class="editorial__grid">
-      <article class="editorial__card">
+      <a href="./articles/negotiate-salary.html" class="editorial__card editorial__card--link">
         <div class="editorial__card-tag">Jocelyn</div>
         <h3 class="editorial__card-title">How to Negotiate When You've Never Seen a Six-Figure Salary</h3>
         <p class="editorial__card-excerpt">Compensation is benefits, equity, signing bonuses, and leverage you didn't know you had.</p>
-      </article>
-      <article class="editorial__card editorial__card--dark">
+      </a>
+      <a href="./articles/rejection.html" class="editorial__card editorial__card--dark editorial__card--link">
         <div class="editorial__card-tag">Both</div>
         <h3 class="editorial__card-title">Rejection Doesn't Mean You Did It Wrong</h3>
         <p class="editorial__card-excerpt">You can do everything right and still get rejected. How to process it and keep moving.</p>
-      </article>
+      </a>
     </div>
   </section>
 
@@ -478,6 +504,8 @@
     </div>
   </div>
 
+  <script src="./nav-prefetch.js" defer></script>
+  <script src="./click-confetti.js" defer></script>
   <script src="./app.js" defer></script>
 </body>
 </html>
