@@ -89,9 +89,9 @@
      * Pinata.png (0 hits) -> step1 (hit 2) -> step2 (hit 4) -> step3 (hit 6) -> break (hit 8)
      */
     const STAGES = [
-      { at: 0, src: './pinanta/step1.png' },
-      { at: 3, src: './pinanta/step2.png' },
-      { at: 5, src: './pinanta/step3.png' },
+      { at: 0, src: '../pinanta/step1.png' },
+      { at: 3, src: '../pinanta/step2.png' },
+      { at: 5, src: '../pinanta/step3.png' },
     ];
     const HITS_TO_BREAK = 7;
     let hits = 0;
