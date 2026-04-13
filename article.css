@@ -1,6 +1,7 @@
 /* ============================================
    LA VOZ DEL DÍA — Article page (Substack-inspired)
    Shared across all article pages
+   Type: matches landing editorial — Clash Display (titles) + Satoshi (body)
    ============================================ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -18,7 +19,6 @@
   --color-navy-light: #1E3A58;
   --color-muted: #8A7E72;
   --font-display: 'Clash Display', 'Helvetica Neue', sans-serif;
-  --font-serif: 'Playfair Display', Georgia, serif;
   --font-body: 'Satoshi', 'Inter', sans-serif;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -26,10 +26,15 @@
 html {
   scroll-behavior: smooth;
   background-color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-padding-top: 5rem;
 }
 
 body {
   font-family: var(--font-body);
+  font-size: 16px;
   background: var(--color-white);
   color: var(--color-dark);
   line-height: 1.7;
@@ -111,10 +116,10 @@ body {
 .art-header__label--both { background: var(--color-navy); }
 
 .art-header__title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(32px, 5.5vw, 48px);
-  font-weight: 700;
-  line-height: 1.15;
+  font-weight: 600;
+  line-height: 1.2;
   color: var(--color-dark);
   margin-bottom: 16px;
 }
@@ -180,7 +185,7 @@ body {
 }
 
 .art-header__author-name {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
   color: var(--color-dark);
@@ -313,7 +318,7 @@ body {
 }
 
 .art-body blockquote p {
-  font-family: var(--font-serif);
+  font-family: var(--font-body);
   font-style: italic;
   font-size: clamp(17px, 2vw, 20px);
   color: var(--color-dark);
@@ -599,7 +604,7 @@ body {
 }
 
 .art-comments__author {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-size: 15px;
   font-weight: 600;
   color: var(--color-dark);
@@ -691,7 +696,7 @@ body {
 }
 
 .art-recs__card-title {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: clamp(15px, 1.8vw, 18px);
   font-weight: 600;
   line-height: 1.35;
