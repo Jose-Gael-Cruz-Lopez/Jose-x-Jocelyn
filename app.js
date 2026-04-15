@@ -262,21 +262,33 @@
                 /* Remove message */
                 msg.remove();
 
-                /* Reset piñata state */
+                /* Reset piñata state — keep wrap hidden until step1 is painted (avoids one frame of broken art). */
                 hits = 0;
                 broken = false;
-                wrap.style.visibility = 'visible';
-                wrap.classList.remove('pinata--break', 'pinata--hit', 'pinata--shaking');
-                void wrap.offsetWidth; /* force reflow to restart animation */
-                wrap.classList.add('pinata--idle');
+                wrap.classList.remove('pinata--break', 'pinata--hit', 'pinata--shaking', 'pinata--idle');
 
-                /* Restore prompt */
-                if (prompt) {
-                  prompt.classList.remove('pinata__prompt--hidden');
+                const cleanSrc = STAGES[0].src;
+                img.src = cleanSrc;
+
+                function revealCleanPinata() {
+                  wrap.style.visibility = 'visible';
+                  void wrap.offsetWidth; /* restart CSS idle animation */
+                  wrap.classList.add('pinata--idle');
+                  if (prompt) {
+                    prompt.classList.remove('pinata__prompt--hidden');
+                  }
                 }
 
-                /* Reset image back to pristine */
-                updateImage();
+                if (typeof img.decode === 'function') {
+                  img
+                    .decode()
+                    .then(revealCleanPinata)
+                    .catch(revealCleanPinata);
+                } else if (img.complete) {
+                  requestAnimationFrame(revealCleanPinata);
+                } else {
+                  img.addEventListener('load', revealCleanPinata, { once: true });
+                }
               }, 650); /* after fade */
             }, 6500); /* message display time */
           }, 600);
