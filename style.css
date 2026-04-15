@@ -1545,6 +1545,38 @@ ul { list-style: none; }
   color: rgba(242,228,206,0.5);
 }
 
+/* "View All Articles" CTA below the editorial grid */
+.editorial__more {
+  display: flex;
+  justify-content: center;
+  padding: 40px 0 8px;
+}
+
+.editorial__more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 36px;
+  background: transparent;
+  border: 2px solid var(--color-dark);
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-dark);
+  text-decoration: none;
+  transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.22s cubic-bezier(0.16,1,0.3,1);
+}
+
+.editorial__more-btn:hover {
+  background: var(--color-dark);
+  color: var(--color-cream);
+  border-color: var(--color-dark);
+  transform: translateY(-2px);
+}
+
 /* ============================================
    FOOTER — Large logo left, rotated CTA right
    (exact kobykooba layout)
