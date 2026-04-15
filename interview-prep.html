@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interview Prep Hub | Jose x Jocelyn</title>
+  <meta name="description" content="Stop guessing what the interviewer wants. A structured system for every stage — organized by grade level, interview type, and practical tools you can use right now." />
+  <meta name="view-transition" content="same-origin" />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/article.css" />
+  <style>
+    html, body { background: var(--color-cream); }
+
+    /* ─── Shared ─── */
+    .ip-wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding-left: clamp(20px,5vw,56px);
+      padding-right: clamp(20px,5vw,56px);
+    }
+    .ip-kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px;
+    }
+    .ip-section-title {
+      font-family: var(--font-display);
+      font-size: clamp(26px,4vw,40px); font-weight: 700;
+      color: var(--color-dark); line-height: 1.15; margin-bottom: 10px;
+    }
+    .ip-section-sub {
+      font-family: var(--font-display);
+      font-size: clamp(16px,2vw,20px); font-weight: 400;
+      color: var(--color-accent); margin-bottom: 18px;
+    }
+    .ip-section-body {
+      font-size: clamp(14px,1.7vw,16px); color: var(--color-muted);
+      line-height: 1.8; max-width: 700px;
+    }
+    .ip-section-body strong { color: var(--color-dark); font-weight: 600; }
+    .ip-divider { border: none; border-top: 1px solid rgba(0,0,0,.08); margin: 0; }
+
+    /* Tag pills (shared) */
+    .ip-tag {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      letter-spacing: .07em; text-transform: uppercase;
+      padding: 3px 9px; border-radius: 4px;
+    }
+    /* Grade tags */
+    .ip-tag--fy    { background: rgba(58,125,107,.1);  color: var(--color-teal); }
+    .ip-tag--jr    { background: rgba(232,168,56,.14); color: #8B6914; }
+    .ip-tag--sr    { background: rgba(22,43,68,.1);    color: var(--color-navy); }
+    .ip-tag--rg    { background: rgba(179,69,57,.1);   color: var(--color-accent); }
+    /* Interview type tags */
+    .ip-tag--rec   { background: rgba(91,142,194,.12); color: var(--color-blue); }
+    .ip-tag--beh   { background: rgba(58,125,107,.1);  color: var(--color-teal); }
+    .ip-tag--tech  { background: rgba(232,168,56,.14); color: #8B6914; }
+    .ip-tag--case  { background: rgba(22,43,68,.1);    color: var(--color-navy); }
+    .ip-tag--ow    { background: rgba(0,0,0,.06);      color: var(--color-muted); }
+    .ip-tag--fin   { background: rgba(179,69,57,.1);   color: var(--color-accent); }
+
+    /* ═══════════════════
+       HERO
+    ═══════════════════ */
+    .ip-hero {
+      max-width: 1040px; margin: 0 auto;
+      padding: 120px clamp(20px,5vw,56px) 64px;
+    }
+    .ip-hero__kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 18px;
+    }
+    .ip-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(42px,7vw,80px); font-weight: 700;
+      line-height: 1.04; color: var(--color-dark); margin-bottom: 14px;
+    }
+    .ip-hero__title em { font-style: normal; color: var(--color-accent); }
+    .ip-hero__sub {
+      font-family: var(--font-display);
+      font-size: clamp(18px,2.5vw,26px); font-weight: 400;
+      color: var(--color-dark); line-height: 1.4;
+      max-width: 680px; margin-bottom: 24px;
+    }
+    .ip-hero__body {
+      font-size: clamp(15px,1.8vw,17px); color: var(--color-muted);
+      line-height: 1.8; max-width: 680px; margin-bottom: 40px;
+    }
+    .ip-hero__body strong { color: var(--color-dark); font-weight: 600; }
+    .ip-jumps { display: flex; flex-direction: column; gap: 10px; }
+    .ip-jump {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: var(--font-display); font-size: 15px; font-weight: 600;
+      color: var(--color-dark); text-decoration: none;
+      transition: color .2s;
+    }
+    .ip-jump::before {
+      content: '→'; color: var(--color-accent); font-weight: 700;
+      transition: transform .2s cubic-bezier(.16,1,.3,1);
+    }
+    .ip-jump:hover { color: var(--color-accent); }
+    .ip-jump:hover::before { transform: translateX(4px); }
+
+    /* ═══════════════════
+       GRADE LEVEL (S1)
+    ═══════════════════ */
+    .ip-grade {
+      max-width: 1040px; margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .ip-grade__head { margin-bottom: 40px; }
+    .ip-grade__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+      gap: 20px;
+    }
+    .ip-grade-card {
+      background: var(--color-white); border: 1px solid rgba(0,0,0,.08);
+      border-radius: 14px; overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s;
+    }
+    .ip-grade-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px rgba(0,0,0,.09);
+    }
+    .ip-grade-card__bar { height: 4px; }
+    .ip-grade-card__bar--fy   { background: var(--color-teal); }
+    .ip-grade-card__bar--jr   { background: var(--color-gold); }
+    .ip-grade-card__bar--sr   { background: var(--color-navy); }
+    .ip-grade-card__bar--rg   { background: var(--color-accent); }
+
+    .ip-grade-card__inner { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+    .ip-grade-card__label {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; padding: 3px 10px; border-radius: 4px;
+      color: white; display: inline-block; align-self: flex-start; margin-bottom: 14px;
+    }
+    .ip-grade-card__label--fy   { background: var(--color-teal); }
+    .ip-grade-card__label--jr   { background: #8B6914; }
+    .ip-grade-card__label--sr   { background: var(--color-navy); }
+    .ip-grade-card__label--rg   { background: var(--color-accent); }
+
+    .ip-grade-card__title {
+      font-family: var(--font-display); font-size: clamp(17px,2vw,20px);
+      font-weight: 700; color: var(--color-dark); margin-bottom: 10px;
+    }
+    .ip-grade-card__body {
+      font-size: 13px; color: var(--color-muted); line-height: 1.7;
+      margin-bottom: 20px; flex: 1;
+    }
+    .ip-grade-card__body strong { color: var(--color-dark); font-weight: 600; }
+    .ip-grade-card__resources {
+      border-top: 1px solid rgba(0,0,0,.06); padding-top: 16px;
+    }
+    .ip-grade-card__res-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 10px;
+    }
+    .ip-grade-card__res-list {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .ip-grade-card__res-item {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 13px; color: var(--color-dark);
+      text-decoration: none; font-weight: 500;
+      transition: color .2s;
+    }
+    .ip-grade-card__res-item::before {
+      content: '→'; font-size: 11px; font-weight: 700;
+      flex-shrink: 0; transition: transform .18s cubic-bezier(.16,1,.3,1);
+    }
+    .ip-grade-card__res-item--fy::before   { color: var(--color-teal); }
+    .ip-grade-card__res-item--jr::before   { color: #8B6914; }
+    .ip-grade-card__res-item--sr::before   { color: var(--color-navy); }
+    .ip-grade-card__res-item--rg::before   { color: var(--color-accent); }
+    .ip-grade-card__res-item:hover { color: var(--color-accent); }
+    .ip-grade-card__res-item:hover::before { transform: translateX(3px); }
+
+    /* ═══════════════════
+       INTERVIEW TYPES (S2)
+    ═══════════════════ */
+    .ip-types {
+      background: var(--color-navy);
+      padding: clamp(64px,8vw,96px) clamp(20px,5vw,56px);
+    }
+    .ip-types__inner { max-width: 1040px; margin: 0 auto; }
+    .ip-types__kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-gold); margin-bottom: 14px;
+    }
+    .ip-types__title {
+      font-family: var(--font-display);
+      font-size: clamp(28px,4.5vw,48px); font-weight: 700;
+      color: var(--color-cream); margin-bottom: 10px;
+    }
+    .ip-types__sub {
+      font-family: var(--font-display); font-size: clamp(16px,2vw,20px);
+      font-weight: 400; color: rgba(232,168,56,.85); margin-bottom: 48px;
+    }
+
+    /* Tab bar */
+    .ip-type-tabs {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 36px;
+    }
+    .ip-type-tab {
+      padding: 8px 18px; border-radius: 999px; font-family: var(--font-body);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      border: 1.5px solid rgba(242,228,206,.2);
+      background: transparent; color: rgba(242,228,206,.6);
+      transition: background .2s, color .2s, border-color .2s;
+    }
+    .ip-type-tab:hover { color: var(--color-cream); border-color: rgba(242,228,206,.45); }
+    .ip-type-tab--active { background: var(--color-cream); color: var(--color-dark); border-color: var(--color-cream); }
+
+    /* Type panels */
+    .ip-type-panel { display: none; }
+    .ip-type-panel--active { display: block; }
+
+    .ip-type-panel__inner {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+      align-items: start;
+    }
+    .ip-type-panel__desc {
+      font-size: clamp(14px,1.7vw,16px); color: rgba(242,228,206,.7);
+      line-height: 1.8;
+    }
+    .ip-type-panel__desc strong { color: var(--color-cream); font-weight: 600; }
+
+    .ip-type-panel__resources {}
+    .ip-type-panel__res-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--color-gold); margin-bottom: 12px;
+    }
+    .ip-type-panel__res-list {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .ip-type-panel__res {
+      display: flex; align-items: center; gap: 10px;
+      padding: 11px 14px; border-radius: 8px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(242,228,206,.1);
+      font-size: 13px; font-weight: 500; color: var(--color-cream);
+      text-decoration: none; transition: background .2s, border-color .2s;
+    }
+    .ip-type-panel__res:hover {
+      background: rgba(255,255,255,.1);
+      border-color: rgba(242,228,206,.25);
+    }
+    .ip-type-panel__res::before {
+      content: '→'; color: var(--color-gold); font-weight: 700;
+      flex-shrink: 0; font-size: 11px;
+      transition: transform .18s cubic-bezier(.16,1,.3,1);
+    }
+    .ip-type-panel__res:hover::before { transform: translateX(3px); }
+
+    @media (max-width: 640px) {
+      .ip-type-panel__inner { grid-template-columns: 1fr; gap: 24px; }
+    }
+
+    /* ═══════════════════
+       RESOURCE LIBRARY (S3)
+    ═══════════════════ */
+    .ip-library {
+      max-width: 1040px; margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .ip-library__head { margin-bottom: 36px; }
+    .ip-library__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px,1fr));
+      gap: 18px;
+    }
+    .ip-res-card {
+      background: var(--color-white); border: 1px solid rgba(0,0,0,.08);
+      border-radius: 14px; padding: 24px;
+      display: flex; flex-direction: column; gap: 12px;
+      transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+    }
+    .ip-res-card:hover {
+      transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.09);
+    }
+    .ip-res-card__name {
+      font-family: var(--font-display); font-size: clamp(15px,1.8vw,18px);
+      font-weight: 600; color: var(--color-dark); line-height: 1.3;
+    }
+    .ip-res-card__desc {
+      font-size: 13px; color: var(--color-muted); line-height: 1.65; flex: 1;
+    }
+    .ip-res-card__tags-group { display: flex; flex-direction: column; gap: 6px; }
+    .ip-res-card__tag-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+    .ip-res-card__tag-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--color-muted); margin-right: 4px;
+      flex-shrink: 0;
+    }
+    .ip-res-card__cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px; border-radius: 8px;
+      background: var(--color-dark); color: var(--color-cream);
+      font-family: var(--font-display); font-size: 12px; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background .2s, transform .18s; align-self: flex-start;
+    }
+    .ip-res-card__cta:hover { background: var(--color-accent); transform: translateY(-1px); }
+
+    /* ═══════════════════
+       PATHS (S4)
+    ═══════════════════ */
+    .ip-paths {
+      max-width: 1040px; margin: 0 auto;
+      padding: 0 clamp(20px,5vw,56px) 80px;
+    }
+    .ip-paths__head { margin-bottom: 36px; }
+    .ip-paths__grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    }
+    .ip-path-card {
+      background: var(--color-white); border: 1px solid rgba(0,0,0,.08);
+      border-radius: 14px; padding: 28px;
+    }
+    .ip-path-card__num {
+      font-family: var(--font-display); font-size: 36px; font-weight: 700;
+      color: rgba(0,0,0,.08); line-height: 1; margin-bottom: 10px;
+    }
+    .ip-path-card__trigger {
+      font-family: var(--font-display); font-size: clamp(15px,1.8vw,17px);
+      font-weight: 600; color: var(--color-muted);
+      border-bottom: 1px solid rgba(0,0,0,.08);
+      padding-bottom: 14px; margin-bottom: 16px; line-height: 1.45;
+      font-style: italic;
+    }
+    .ip-path-card__list {
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .ip-path-card__item {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 14px; color: var(--color-dark);
+      text-decoration: none; font-weight: 500;
+      transition: color .2s;
+    }
+    .ip-path-card__item::before {
+      content: '→'; font-size: 11px; font-weight: 700;
+      color: var(--color-accent); flex-shrink: 0; margin-top: 2px;
+      transition: transform .18s cubic-bezier(.16,1,.3,1);
+    }
+    .ip-path-card__item:hover { color: var(--color-accent); }
+    .ip-path-card__item:hover::before { transform: translateX(3px); }
+
+    @media (max-width: 640px) {
+      .ip-paths__grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════
+       ECOSYSTEM (S5)
+    ═══════════════════ */
+    .ip-eco {
+      background: var(--color-navy);
+      padding: clamp(48px,6vw,80px) clamp(20px,5vw,56px);
+    }
+    .ip-eco__inner {
+      max-width: 1040px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px;
+      align-items: start;
+    }
+    .ip-eco__kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-gold); margin-bottom: 14px;
+    }
+    .ip-eco__title {
+      font-family: var(--font-display); font-size: clamp(22px,3vw,32px);
+      font-weight: 700; color: var(--color-cream); margin-bottom: 16px;
+    }
+    .ip-eco__body {
+      font-size: clamp(14px,1.7vw,16px); color: rgba(242,228,206,.65); line-height: 1.8;
+    }
+    .ip-eco__body strong { color: var(--color-cream); font-weight: 600; }
+    .ip-eco__links { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+    .ip-eco__link {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 16px 18px; border-radius: 10px;
+      background: rgba(255,255,255,.06); border: 1px solid rgba(242,228,206,.1);
+      text-decoration: none;
+      transition: background .2s, border-color .2s;
+    }
+    .ip-eco__link:hover {
+      background: rgba(255,255,255,.1); border-color: rgba(242,228,206,.22);
+    }
+    .ip-eco__link-icon {
+      font-family: var(--font-display); font-size: 20px; font-weight: 700;
+      color: var(--color-gold); flex-shrink: 0; line-height: 1; margin-top: 1px;
+    }
+    .ip-eco__link-title {
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      color: var(--color-cream); margin-bottom: 3px;
+    }
+    .ip-eco__link-desc {
+      font-size: 12px; color: rgba(242,228,206,.55); line-height: 1.5;
+    }
+    @media (max-width: 680px) {
+      .ip-eco__inner { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════
+       REQUEST FORM (S6)
+    ═══════════════════ */
+    .ip-form-wrap {
+      max-width: 1040px; margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px) 100px;
+    }
+    .ip-form-box {
+      background: var(--color-white); border: 1px solid rgba(0,0,0,.07);
+      border-radius: 16px; padding: clamp(32px,4vw,52px); max-width: 680px;
+    }
+    .ip-form-box__kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 12px;
+    }
+    .ip-form-box__title {
+      font-family: var(--font-display); font-size: clamp(22px,3vw,30px);
+      font-weight: 700; color: var(--color-dark); margin-bottom: 8px;
+    }
+    .ip-form-box__sub {
+      font-size: 15px; color: var(--color-muted);
+      line-height: 1.7; margin-bottom: 28px;
+    }
+    .ip-form-row { margin-bottom: 16px; }
+    .ip-form-label {
+      display: block; font-size: 12px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .08em;
+      color: var(--color-muted); margin-bottom: 6px;
+    }
+    .ip-form-input,
+    .ip-form-select,
+    .ip-form-textarea {
+      width: 100%; font-family: var(--font-body); font-size: 15px;
+      padding: 12px 14px; border: 1.5px solid rgba(0,0,0,.12);
+      border-radius: 8px; background: var(--color-white);
+      color: var(--color-dark); outline: none; transition: border-color .2s;
+    }
+    .ip-form-textarea { min-height: 90px; resize: vertical; line-height: 1.55; }
+    .ip-form-input:focus,
+    .ip-form-select:focus,
+    .ip-form-textarea:focus { border-color: var(--color-gold); }
+    .ip-form-select { appearance: none; cursor: pointer; }
+    .ip-form-row-2 {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    }
+    .ip-form-btn {
+      margin-top: 6px; padding: 13px 28px; background: var(--color-dark);
+      color: var(--color-cream); border: none; border-radius: 8px;
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .18s;
+    }
+    .ip-form-btn:hover { background: var(--color-accent); transform: translateY(-1px); }
+
+    @media (max-width: 500px) {
+      .ip-form-row-2 { grid-template-columns: 1fr; }
+      .ip-grade__grid { grid-template-columns: 1fr; }
+      .ip-library__grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="art-nav" id="artNav">
+    <a href="/images/index.html" class="art-nav__brand">Jose × Jocelyn</a>
+    <div class="art-nav__right">
+      <a href="/articles/" class="art-nav__link">La Voz del Día</a>
+      <a href="/career-templates.html" class="art-nav__link">Templates</a>
+      <a href="/bridge-year.html" class="art-nav__link">Bridge Year</a>
+      <a href="/images/index.html#contact" class="art-nav__link">Get in Touch</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════
+       HERO
+  ════════════════════════════════ -->
+  <header class="ip-hero" id="top">
+    <p class="ip-hero__kicker">From Campus to Career · Interview Prep</p>
+    <h1 class="ip-hero__title">Interview Prep <em>Hub</em></h1>
+    <p class="ip-hero__sub">Stop guessing what the interviewer wants. Start preparing with a system.</p>
+    <p class="ip-hero__body">This page is built for students and early-career candidates preparing for internships, apprenticeships, new grad roles, and early full-time opportunities. <strong>Jose brings the student-side view</strong> of what it feels like to prepare in real time, and <strong>Jocelyn brings the early-career view</strong> of what actually stands out once you are in the room. Together, this page gives you practical tools, organized pathways, and interview-specific resources you can use right now.</p>
+    <nav class="ip-jumps" aria-label="Page sections">
+      <a href="#by-grade" class="ip-jump">Start by grade level</a>
+      <a href="#by-type" class="ip-jump">Browse by interview type</a>
+      <a href="#resources" class="ip-jump">Use interview templates</a>
+      <a href="#paths" class="ip-jump">Find your suggested path</a>
+    </nav>
+  </header>
+
+  <hr class="ip-divider" />
+
+  <!-- ═══════════════════════════════
+       S1: BY GRADE LEVEL
+  ════════════════════════════════ -->
+  <section class="ip-grade" id="by-grade">
+    <div class="ip-grade__head">
+      <p class="ip-kicker">Section 01</p>
+      <h2 class="ip-section-title">Start by Grade Level</h2>
+      <p class="ip-section-sub">Different stages. Different needs. Different resources.</p>
+      <p class="ip-section-body">Students at different points in college need completely different preparation. Find your stage, read the paragraph, and work through the recommended resources in order — that is the fastest path to being ready.</p>
+    </div>
+    <div class="ip-grade__grid">
+
+      <!-- First-Year / Sophomore -->
+      <div class="ip-grade-card">
+        <div class="ip-grade-card__bar ip-grade-card__bar--fy"></div>
+        <div class="ip-grade-card__inner">
+          <span class="ip-grade-card__label ip-grade-card__label--fy">First-Year / Sophomore</span>
+          <h3 class="ip-grade-card__title">First Interviews & Early Opportunities</h3>
+          <p class="ip-grade-card__body">If you are early in college, the goal is not to sound "impressive" — it is to show <strong>curiosity, reliability, communication, and proof that you can learn quickly.</strong> You may be interviewing for externships, insight programs, student leadership roles, or freshman/sophomore internships. You do not need a perfect story. You need a clear one.</p>
+          <div class="ip-grade-card__resources">
+            <p class="ip-grade-card__res-label">Recommended resources</p>
+            <div class="ip-grade-card__res-list">
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--fy">Tell Me About Yourself Script</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--fy">First Interview Checklist</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--fy">Common Behavioral Questions for Early Students</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--fy">How to Talk About Class Projects and Club Work</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--fy">Questions to Ask at the End of an Interview</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Junior -->
+      <div class="ip-grade-card">
+        <div class="ip-grade-card__bar ip-grade-card__bar--jr"></div>
+        <div class="ip-grade-card__inner">
+          <span class="ip-grade-card__label ip-grade-card__label--jr">Junior / Internship Recruiting</span>
+          <h3 class="ip-grade-card__title">Internship Interviews & Recruiter Rounds</h3>
+          <p class="ip-grade-card__body">Juniors are usually being tested on <strong>readiness, communication, and whether you can contribute quickly</strong> in an internship environment. You need to know how to talk about projects, coursework, leadership, and prior experience in a structured way — not just describe what you did, but frame what it shows about you.</p>
+          <div class="ip-grade-card__resources">
+            <p class="ip-grade-card__res-label">Recommended resources</p>
+            <div class="ip-grade-card__res-list">
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--jr">STAR Story Bank</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--jr">Resume-to-Interview Translation Guide</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--jr">Recruiter Screen Prep Guide</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--jr">Technical Interview Checklist</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--jr">Behavioral Interview Question Bank</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--jr">Post-Interview Thank You Template</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Senior -->
+      <div class="ip-grade-card">
+        <div class="ip-grade-card__bar ip-grade-card__bar--sr"></div>
+        <div class="ip-grade-card__inner">
+          <span class="ip-grade-card__label ip-grade-card__label--sr">Senior / New Grad</span>
+          <h3 class="ip-grade-card__title">Full-Time Roles, Finals & Late Cycle</h3>
+          <p class="ip-grade-card__body">Senior-level interviews often test <strong>maturity, clarity, decision-making, and whether you seem ready to operate as a full-time employee</strong> rather than just a student. This section also helps seniors still searching late in the cycle — the question is not just how to interview, but how to interview when your search timeline is longer than your peers'.</p>
+          <div class="ip-grade-card__resources">
+            <p class="ip-grade-card__res-label">Recommended resources</p>
+            <div class="ip-grade-card__res-list">
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--sr">Full-Time Tell Me About Yourself Script</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--sr">How to Explain Your Search Timeline</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--sr">Final Round Prep Guide</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--sr">Offer-Stage Interview Questions</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--sr">Questions to Ask Hiring Managers</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--sr">Post-Interview Reflection Doc</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Grad / Bridge Year -->
+      <div class="ip-grade-card">
+        <div class="ip-grade-card__bar ip-grade-card__bar--rg"></div>
+        <div class="ip-grade-card__inner">
+          <span class="ip-grade-card__label ip-grade-card__label--rg">Recent Grad / Bridge Year</span>
+          <h3 class="ip-grade-card__title">Gap Navigation, Apprenticeships & Transitions</h3>
+          <p class="ip-grade-card__body">This stage is less about sounding perfect and more about <strong>explaining your path clearly, showing momentum, and connecting your past experience to where you are trying to go next.</strong> Interviewers will ask about your timeline. The way you answer that question matters more than most candidates realize.</p>
+          <div class="ip-grade-card__resources">
+            <p class="ip-grade-card__res-label">Recommended resources</p>
+            <div class="ip-grade-card__res-list">
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--rg">Gap Narrative Script</a>
+              <a href="/bridge-year.html" class="ip-grade-card__res-item ip-grade-card__res-item--rg">Apprenticeship Interview Guide</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--rg">Career Transition Story Builder</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--rg">Confidence Reframe Worksheet</a>
+              <a href="/career-templates.html" class="ip-grade-card__res-item ip-grade-card__res-item--rg">Interview Tracker + Reflection Tool</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="ip-divider" />
+
+  <!-- ═══════════════════════════════
+       S2: BY INTERVIEW TYPE
+  ════════════════════════════════ -->
+  <section class="ip-types" id="by-type">
+    <div class="ip-types__inner">
+      <p class="ip-types__kicker">Section 02</p>
+      <h2 class="ip-types__title">Browse by Interview Type</h2>
+      <p class="ip-types__sub">I have a [type] interview tomorrow. Here is exactly where to start.</p>
+
+      <!-- Tab bar -->
+      <div class="ip-type-tabs" role="tablist" aria-label="Interview types">
+        <button class="ip-type-tab ip-type-tab--active" data-tab="recruiter"  role="tab">Recruiter Screen</button>
+        <button class="ip-type-tab" data-tab="behavioral" role="tab">Behavioral</button>
+        <button class="ip-type-tab" data-tab="technical"  role="tab">Technical</button>
+        <button class="ip-type-tab" data-tab="case"       role="tab">Case</button>
+        <button class="ip-type-tab" data-tab="oneway"     role="tab">One-Way / Recorded</button>
+        <button class="ip-type-tab" data-tab="final"      role="tab">Final Round</button>
+      </div>
+
+      <!-- Recruiter Screen -->
+      <div class="ip-type-panel ip-type-panel--active" id="panel-recruiter">
+        <div class="ip-type-panel__inner">
+          <div class="ip-type-panel__desc">
+            <p>Recruiter screens are usually the <strong>first filter</strong> and are less about technical depth than about clarity, fit, communication, and whether your story makes sense. The recruiter is not trying to trip you up — they are trying to decide if they should send you further. Your job is to be clear, specific, and easy to advocate for. Practice your "tell me about yourself" and your "why this company" until they are effortless.</p>
+          </div>
+          <div class="ip-type-panel__resources">
+            <p class="ip-type-panel__res-label">Resources for this round</p>
+            <div class="ip-type-panel__res-list">
+              <a href="/career-templates.html" class="ip-type-panel__res">Recruiter Screen Prep Checklist</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">10 Common Recruiter Screen Questions</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Tell Me About Yourself Script</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Why This Role / Why This Company Framework</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Salary Question Guidance for Early-Career</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Behavioral -->
+      <div class="ip-type-panel" id="panel-behavioral">
+        <div class="ip-type-panel__inner">
+          <div class="ip-type-panel__desc">
+            <p>Behavioral interviews are used to <strong>predict future performance based on past actions</strong> — which is why the STAR method matters so much. Every question that starts with "tell me about a time when…" is an invitation to tell a story. The candidates who do well in behavioral rounds are not the ones with the most impressive stories; they are the ones who tell their stories with the most structure and specificity.</p>
+          </div>
+          <div class="ip-type-panel__resources">
+            <p class="ip-type-panel__res-label">Resources for this round</p>
+            <div class="ip-type-panel__res-list">
+              <a href="/career-templates.html" class="ip-type-panel__res">STAR Story Bank</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Behavioral Question Bank (30 questions)</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Story Selection Guide</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">"Weaknesses" Answer Framework</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Leadership / Teamwork / Failure Answer Builder</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical -->
+      <div class="ip-type-panel" id="panel-technical">
+        <div class="ip-type-panel__inner">
+          <div class="ip-type-panel__desc">
+            <p>Technical interviews test <strong>problem-solving, clarity of thought, and communication under pressure</strong> — not just whether you get the perfect answer. Interviewers often care as much about how you think out loud as about what you produce. If you get stuck, narrating your thought process and asking clarifying questions will always serve you better than going silent and hoping.</p>
+          </div>
+          <div class="ip-type-panel__resources">
+            <p class="ip-type-panel__res-label">Resources for this round</p>
+            <div class="ip-type-panel__res-list">
+              <a href="/career-templates.html" class="ip-type-panel__res">Technical Interview Prep Checklist</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">How to Narrate Your Thinking Out Loud</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Project Walkthrough Framework</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">SQL / Coding / Data Question Prep Templates</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">What to Do When You Get Stuck</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Case -->
+      <div class="ip-type-panel" id="panel-case">
+        <div class="ip-type-panel__inner">
+          <div class="ip-type-panel__desc">
+            <p>Case interviews test <strong>structure, logic, prioritization, and communication</strong> rather than memorized knowledge. They are most common in consulting, product, strategy, and business internships. The biggest mistake candidates make is jumping to conclusions before structuring the problem. The interviewers are evaluating your process — how you break down ambiguous problems — more than your final answer.</p>
+          </div>
+          <div class="ip-type-panel__resources">
+            <p class="ip-type-panel__res-label">Resources for this round</p>
+            <div class="ip-type-panel__res-list">
+              <a href="/career-templates.html" class="ip-type-panel__res">Case Interview Framework Sheet</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Profitability / Market Entry / Product Strategy Examples</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">How to Structure Your Answer in Real Time</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Common Mistakes in Case Interviews</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- One-Way / Recorded -->
+      <div class="ip-type-panel" id="panel-oneway">
+        <div class="ip-type-panel__inner">
+          <div class="ip-type-panel__desc">
+            <p>Asynchronous and recorded interviews are increasingly common — and they need their own strategy. <strong>Timing, tone, environment, and on-camera presence matter differently</strong> when there is no human on the other side reacting to you. The biggest traps are reading answers off a script, running over time, and a poor setup that distracts from your answers.</p>
+          </div>
+          <div class="ip-type-panel__resources">
+            <p class="ip-type-panel__res-label">Resources for this round</p>
+            <div class="ip-type-panel__res-list">
+              <a href="/career-templates.html" class="ip-type-panel__res">One-Way Interview Checklist</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Camera / Lighting / Environment Setup Guide</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">How to Sound Natural Without Reading</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Time-Boxed Answer Practice Sheet</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final Round -->
+      <div class="ip-type-panel" id="panel-final">
+        <div class="ip-type-panel__inner">
+          <div class="ip-type-panel__desc">
+            <p>Final round interviews often involve hiring managers, team members, and sometimes senior leadership. They are testing <strong>maturity, team fit, communication style, and readiness for the actual day-to-day work.</strong> The questions are less predictable than earlier rounds — interviewers at this stage want to have a conversation, not run a checklist. The candidates who advance are the ones who seem genuinely ready to show up.</p>
+          </div>
+          <div class="ip-type-panel__resources">
+            <p class="ip-type-panel__res-label">Resources for this round</p>
+            <div class="ip-type-panel__res-list">
+              <a href="/career-templates.html" class="ip-type-panel__res">Final Round Prep Guide</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Questions to Ask a Hiring Manager</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Team-Fit Answer Guide</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Offer-Stage Red Flags and Green Flags</a>
+              <a href="/career-templates.html" class="ip-type-panel__res">Post-Interview Thank You Note</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       S3: RESOURCE LIBRARY
+  ════════════════════════════════ -->
+  <section class="ip-library" id="resources">
+    <div class="ip-library__head">
+      <p class="ip-kicker">Section 03</p>
+      <h2 class="ip-section-title">Core Resource Library</h2>
+      <p class="ip-section-sub">Every tool you need. Organized by who it is for and what interview it fits.</p>
+    </div>
+    <div class="ip-library__grid">
+
+      <div class="ip-res-card">
+        <h3 class="ip-res-card__name">Tell Me About Yourself Script</h3>
+        <p class="ip-res-card__desc">Three versions: student, senior/new grad, and career transition. A 3-part framework — who you are, what you have done, why this role — that turns the most-asked question into a practiced, confident answer.</p>
+        <div class="ip-res-card__tags-group">
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Grade:</span>
+            <span class="ip-tag ip-tag--fy">First-Year</span>
+            <span class="ip-tag ip-tag--jr">Junior</span>
+            <span class="ip-tag ip-tag--sr">Senior</span>
+            <span class="ip-tag ip-tag--rg">Recent Grad</span>
+          </div>
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Round:</span>
+            <span class="ip-tag ip-tag--rec">Recruiter</span>
+            <span class="ip-tag ip-tag--beh">Behavioral</span>
+            <span class="ip-tag ip-tag--fin">Final Round</span>
+          </div>
+        </div>
+        <a href="/career-templates.html" class="ip-res-card__cta">Copy Template →</a>
+      </div>
+
+      <div class="ip-res-card">
+        <h3 class="ip-res-card__name">STAR Story Bank Template</h3>
+        <p class="ip-res-card__desc">A blank document for building 6–8 interview stories organized by teamwork, leadership, challenge, failure, conflict, and initiative — built once, reused in every interview.</p>
+        <div class="ip-res-card__tags-group">
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Grade:</span>
+            <span class="ip-tag ip-tag--jr">Junior</span>
+            <span class="ip-tag ip-tag--sr">Senior</span>
+            <span class="ip-tag ip-tag--rg">Recent Grad</span>
+          </div>
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Round:</span>
+            <span class="ip-tag ip-tag--beh">Behavioral</span>
+            <span class="ip-tag ip-tag--fin">Final Round</span>
+          </div>
+        </div>
+        <a href="/career-templates.html" class="ip-res-card__cta">Open Framework →</a>
+      </div>
+
+      <div class="ip-res-card">
+        <h3 class="ip-res-card__name">Questions to Ask at the End</h3>
+        <p class="ip-res-card__desc">15 specific, non-generic questions organized by who you are talking to: recruiter, engineer, hiring manager, or panel. The questions that actually show you have thought about the role.</p>
+        <div class="ip-res-card__tags-group">
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Grade:</span>
+            <span class="ip-tag ip-tag--fy">First-Year</span>
+            <span class="ip-tag ip-tag--jr">Junior</span>
+            <span class="ip-tag ip-tag--sr">Senior</span>
+            <span class="ip-tag ip-tag--rg">Recent Grad</span>
+          </div>
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Round:</span>
+            <span class="ip-tag ip-tag--rec">Recruiter</span>
+            <span class="ip-tag ip-tag--tech">Technical</span>
+            <span class="ip-tag ip-tag--fin">Final Round</span>
+          </div>
+        </div>
+        <a href="/career-templates.html" class="ip-res-card__cta">Open Framework →</a>
+      </div>
+
+      <div class="ip-res-card">
+        <h3 class="ip-res-card__name">Post-Interview Reflection Doc</h3>
+        <p class="ip-res-card__desc">What happened, what questions you got, where you froze, and what to improve next time. Turns every interview — successful or not — into feedback for the next one.</p>
+        <div class="ip-res-card__tags-group">
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Grade:</span>
+            <span class="ip-tag ip-tag--jr">Junior</span>
+            <span class="ip-tag ip-tag--sr">Senior</span>
+            <span class="ip-tag ip-tag--rg">Recent Grad</span>
+          </div>
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Round:</span>
+            <span class="ip-tag ip-tag--beh">Behavioral</span>
+            <span class="ip-tag ip-tag--tech">Technical</span>
+            <span class="ip-tag ip-tag--fin">Final Round</span>
+          </div>
+        </div>
+        <a href="/career-templates.html" class="ip-res-card__cta">Open Framework →</a>
+      </div>
+
+      <div class="ip-res-card">
+        <h3 class="ip-res-card__name">Mock Answer Builder</h3>
+        <p class="ip-res-card__desc">A worksheet for drafting strong responses to specific questions before practice — so you are building answers from structure, not performing under pressure for the first time in the real interview.</p>
+        <div class="ip-res-card__tags-group">
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Grade:</span>
+            <span class="ip-tag ip-tag--fy">First-Year</span>
+            <span class="ip-tag ip-tag--jr">Junior</span>
+            <span class="ip-tag ip-tag--sr">Senior</span>
+          </div>
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Round:</span>
+            <span class="ip-tag ip-tag--beh">Behavioral</span>
+            <span class="ip-tag ip-tag--tech">Technical</span>
+            <span class="ip-tag ip-tag--case">Case</span>
+          </div>
+        </div>
+        <a href="/career-templates.html" class="ip-res-card__cta">Open Framework →</a>
+      </div>
+
+      <div class="ip-res-card">
+        <h3 class="ip-res-card__name">Interview Day Checklist</h3>
+        <p class="ip-res-card__desc">What to do 24 hours before, 1 hour before, and 10 minutes before — so the day of the interview is about being present, not scrambling. Covers both virtual and in-person formats.</p>
+        <div class="ip-res-card__tags-group">
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Grade:</span>
+            <span class="ip-tag ip-tag--fy">First-Year</span>
+            <span class="ip-tag ip-tag--jr">Junior</span>
+            <span class="ip-tag ip-tag--sr">Senior</span>
+            <span class="ip-tag ip-tag--rg">Recent Grad</span>
+          </div>
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Round:</span>
+            <span class="ip-tag ip-tag--rec">Recruiter</span>
+            <span class="ip-tag ip-tag--beh">Behavioral</span>
+            <span class="ip-tag ip-tag--tech">Technical</span>
+            <span class="ip-tag ip-tag--ow">One-Way</span>
+          </div>
+        </div>
+        <a href="/career-templates.html" class="ip-res-card__cta">Copy Template →</a>
+      </div>
+
+      <div class="ip-res-card">
+        <h3 class="ip-res-card__name">Confidence Reframe Guide</h3>
+        <p class="ip-res-card__desc">Built specifically for first-gen students who tend to undersell their experience. A framework for translating real grit, real responsibility, and real leadership from non-traditional contexts into language that interviewers recognize.</p>
+        <div class="ip-res-card__tags-group">
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Grade:</span>
+            <span class="ip-tag ip-tag--fy">First-Year</span>
+            <span class="ip-tag ip-tag--jr">Junior</span>
+            <span class="ip-tag ip-tag--rg">Recent Grad</span>
+          </div>
+          <div class="ip-res-card__tag-row">
+            <span class="ip-res-card__tag-label">Round:</span>
+            <span class="ip-tag ip-tag--rec">Recruiter</span>
+            <span class="ip-tag ip-tag--beh">Behavioral</span>
+            <span class="ip-tag ip-tag--fin">Final Round</span>
+          </div>
+        </div>
+        <a href="/career-templates.html" class="ip-res-card__cta">Open Framework →</a>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="ip-divider" />
+
+  <!-- ═══════════════════════════════
+       S4: SUGGESTED PATHS
+  ════════════════════════════════ -->
+  <section class="ip-paths" id="paths" style="padding-top:80px;">
+    <div class="ip-paths__head">
+      <p class="ip-kicker">Section 04</p>
+      <h2 class="ip-section-title">Suggested Paths</h2>
+      <p class="ip-section-sub">Find your situation. Follow the path.</p>
+      <p class="ip-section-body">Not sure where to start? Find the sentence that matches your situation and work through the four resources in order. These paths combine grade level and interview type into a single, actionable sequence.</p>
+    </div>
+    <div class="ip-paths__grid">
+
+      <div class="ip-path-card">
+        <div class="ip-path-card__num">01</div>
+        <p class="ip-path-card__trigger">"I'm a sophomore and I have my first interview."</p>
+        <div class="ip-path-card__list">
+          <a href="/career-templates.html" class="ip-path-card__item">Tell Me About Yourself Script</a>
+          <a href="/career-templates.html" class="ip-path-card__item">First Interview Checklist</a>
+          <a href="/career-templates.html" class="ip-path-card__item">Common Behavioral Questions for Early Students</a>
+          <a href="/career-templates.html" class="ip-path-card__item">Questions to Ask at the End of an Interview</a>
+        </div>
+      </div>
+
+      <div class="ip-path-card">
+        <div class="ip-path-card__num">02</div>
+        <p class="ip-path-card__trigger">"I'm a junior interviewing for internships."</p>
+        <div class="ip-path-card__list">
+          <a href="/career-templates.html" class="ip-path-card__item">Recruiter Screen Prep Guide</a>
+          <a href="/career-templates.html" class="ip-path-card__item">STAR Story Bank</a>
+          <a href="/career-templates.html" class="ip-path-card__item">Technical Interview Checklist</a>
+          <a href="/career-templates.html" class="ip-path-card__item">Post-Interview Thank You Note</a>
+        </div>
+      </div>
+
+      <div class="ip-path-card">
+        <div class="ip-path-card__num">03</div>
+        <p class="ip-path-card__trigger">"I'm a senior and I keep reaching final rounds."</p>
+        <div class="ip-path-card__list">
+          <a href="/career-templates.html" class="ip-path-card__item">Final Round Prep Guide</a>
+          <a href="/career-templates.html" class="ip-path-card__item">Team-Fit Answer Builder</a>
+          <a href="/career-templates.html" class="ip-path-card__item">Questions to Ask Hiring Managers</a>
+          <a href="/career-templates.html" class="ip-path-card__item">Post-Interview Reflection Doc</a>
+        </div>
+      </div>
+
+      <div class="ip-path-card">
+        <div class="ip-path-card__num">04</div>
+        <p class="ip-path-card__trigger">"I graduated and I'm trying to break into tech."</p>
+        <div class="ip-path-card__list">
+          <a href="/career-templates.html" class="ip-path-card__item">Gap Narrative Script</a>
+          <a href="/bridge-year.html" class="ip-path-card__item">Apprenticeship Interview Guide</a>
+          <a href="/career-templates.html" class="ip-path-card__item">Career Transition Story Builder</a>
+          <a href="/career-templates.html" class="ip-path-card__item">Confidence Reframe Guide</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       S5: ECOSYSTEM
+  ════════════════════════════════ -->
+  <section class="ip-eco" id="ecosystem">
+    <div class="ip-eco__inner">
+      <div>
+        <p class="ip-eco__kicker">The Ecosystem</p>
+        <h2 class="ip-eco__title">How this hub fits the rest of the site</h2>
+        <p class="ip-eco__body">The Interview Prep Hub helps you <strong>prepare for the room.</strong> But interviewing is only one part of the campus-to-career pipeline — and the other parts are already built out. Use this page for interview readiness, then use the rest of the site for the context and tools around it.</p>
+      </div>
+      <div class="ip-eco__links">
+        <a href="/linkedin-series.html" class="ip-eco__link">
+          <span class="ip-eco__link-icon">01</span>
+          <div>
+            <p class="ip-eco__link-title">LinkedIn Series</p>
+            <p class="ip-eco__link-desc">The broader career context and real-time breakdowns — recruiting timelines, offer anatomy, and first-gen-specific strategy.</p>
+          </div>
+        </a>
+        <a href="/career-templates.html" class="ip-eco__link">
+          <span class="ip-eco__link-icon">02</span>
+          <div>
+            <p class="ip-eco__link-title">Career Templates</p>
+            <p class="ip-eco__link-desc">The scripts and trackers you can copy and use immediately — outreach, applications, offers, and on-the-job tools.</p>
+          </div>
+        </a>
+        <a href="/bridge-year.html" class="ip-eco__link">
+          <span class="ip-eco__link-icon">03</span>
+          <div>
+            <p class="ip-eco__link-title">Bridge Year Hub</p>
+            <p class="ip-eco__link-desc">If the bigger issue is not just interviewing, but figuring out what roles and pathways to pursue — apprenticeships, new grad roles, and a self-guided sprint path.</p>
+          </div>
+        </a>
+        <a href="/articles/" class="ip-eco__link">
+          <span class="ip-eco__link-icon">04</span>
+          <div>
+            <p class="ip-eco__link-title">La Voz del Día</p>
+            <p class="ip-eco__link-desc">Deeper reading on rejection, negotiation, onboarding, and the parts of the process that are harder to fit in a checklist.</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       S6: REQUEST FORM
+  ════════════════════════════════ -->
+  <section class="ip-form-wrap" id="request">
+    <div class="ip-form-box">
+      <p class="ip-form-box__kicker">Shape This Hub</p>
+      <h2 class="ip-form-box__title">What kind of interview do you need help with?</h2>
+      <p class="ip-form-box__sub">If there is a resource, question bank, or guide you wish existed on this page, send it here. Jose and Jocelyn use these requests to decide what templates, explainers, and LinkedIn episodes to make next.</p>
+      <form onsubmit="return false;">
+        <div class="ip-form-row">
+          <label class="ip-form-label" for="ipRole">What role or interview are you preparing for?</label>
+          <input class="ip-form-input" type="text" id="ipRole" placeholder="e.g. SWE internship at Salesforce, data analyst new grad role…" />
+        </div>
+        <div class="ip-form-row-2">
+          <div class="ip-form-row" style="margin-bottom:0;">
+            <label class="ip-form-label" for="ipStage">Your stage</label>
+            <select class="ip-form-select" id="ipStage">
+              <option value="">Select…</option>
+              <option>First-Year / Sophomore</option>
+              <option>Junior</option>
+              <option>Senior / New Grad</option>
+              <option>Recent Grad</option>
+              <option>Career Transition</option>
+            </select>
+          </div>
+          <div class="ip-form-row" style="margin-bottom:0;">
+            <label class="ip-form-label" for="ipType">Interview type</label>
+            <select class="ip-form-select" id="ipType">
+              <option value="">Select…</option>
+              <option>Recruiter Screen</option>
+              <option>Behavioral</option>
+              <option>Technical</option>
+              <option>Case</option>
+              <option>One-Way / Recorded</option>
+              <option>Final Round</option>
+            </select>
+          </div>
+        </div>
+        <div class="ip-form-row" style="margin-top:16px;">
+          <label class="ip-form-label" for="ipNeed">What do you need help with?</label>
+          <textarea class="ip-form-textarea" id="ipNeed" placeholder="e.g. I keep blanking on leadership questions. I don't know how to explain my gap year. I have a case interview in 48 hours and no idea where to start…"></textarea>
+        </div>
+        <div class="ip-form-row">
+          <label class="ip-form-label" for="ipEmail">Email (optional)</label>
+          <input class="ip-form-input" type="email" id="ipEmail" placeholder="you@school.edu" />
+        </div>
+        <button class="ip-form-btn" type="submit">Send Request</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="art-footer" style="max-width:1040px;">
+    <span class="art-footer__copy">Jose x Jocelyn &copy; 2026</span>
+    <div class="art-footer__links">
+      <a href="/images/index.html" class="art-footer__link">Home</a>
+      <a href="/articles/" class="art-footer__link">La Voz del Día</a>
+      <a href="/career-templates.html" class="art-footer__link">Templates</a>
+      <a href="/bridge-year.html" class="art-footer__link">Bridge Year</a>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll shadow
+    const nav = document.getElementById('artNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('art-nav--scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    // Interview type tabs
+    const tabs   = document.querySelectorAll('.ip-type-tab');
+    const panels = document.querySelectorAll('.ip-type-panel');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('ip-type-tab--active'));
+        panels.forEach(p => p.classList.remove('ip-type-panel--active'));
+        tab.classList.add('ip-type-tab--active');
+        const target = document.getElementById('panel-' + tab.dataset.tab);
+        if (target) target.classList.add('ip-type-panel--active');
+      });
+    });
+  </script>
+</body>
+</html>
