@@ -1453,6 +1453,8 @@ ul { list-style: none; }
 
 .editorial__showcase-content {
   max-width: 600px;
+  position: relative;
+  z-index: 1;
 }
 
 .editorial__showcase-label {
@@ -1890,7 +1892,11 @@ ul { list-style: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .mascot { animation: none !important; }
+  .mascot {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* --- Intro section: sun peeking bottom-right of text column --- */
@@ -1905,6 +1911,7 @@ ul { list-style: none; }
   width: clamp(52px, 7vw, 96px);
   top: clamp(24px, 3.2vw, 38px);
   right: clamp(16px, 2.2vw, 28px);
+  z-index: 6;
 }
 
 /* ============================================
@@ -1923,7 +1930,7 @@ ul { list-style: none; }
 @media (prefers-reduced-motion: no-preference) {
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: 0.5s;
+    animation-duration: 0.22s;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
 }

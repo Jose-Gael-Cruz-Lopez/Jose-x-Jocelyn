@@ -1,6 +1,7 @@
 /**
  * Prefetch linked pages: hover/tap targets + idle batch for article URLs.
  * Makes same-origin navigations feel instant (pairs with view transitions in CSS).
+ * Resolves relative hrefs (e.g. ./other.html from /articles/) so article→article is covered.
  */
 (function () {
   'use strict';
@@ -16,25 +17,36 @@
     document.head.appendChild(link);
   }
 
+  function isArticlePath(pathname) {
+    return /\/articles\/[^/]+\.html$/.test(pathname);
+  }
+
+  function isHomePath(pathname) {
+    return (
+      pathname === '/' ||
+      pathname === '/index.html' ||
+      /\/images\/index\.html$/.test(pathname)
+    );
+  }
+
   function maybePrefetchFromAnchor(a) {
     if (!a) return;
     var href = a.getAttribute('href');
-    if (!href || href.startsWith('#') || href.startsWith('mailto:')) return;
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
 
-    var isArticle = href.indexOf('articles/') !== -1 || href.indexOf('/articles/') !== -1;
-    var isHome =
-      /index\.html$/.test(href) ||
-      href === '../' ||
-      href === './' ||
-      href === '/' ||
-      href === '../index.html';
-
-    if (!isArticle && !isHome) return;
-
+    var resolved;
     try {
-      var resolved = new URL(href, window.location.href);
-      prefetchUrl(resolved.origin + resolved.pathname + resolved.search);
-    } catch (_) {}
+      resolved = new URL(href, window.location.href);
+    } catch (_) {
+      return;
+    }
+
+    if (resolved.origin !== window.location.origin) return;
+
+    var pathname = resolved.pathname;
+    if (!isArticlePath(pathname) && !isHomePath(pathname)) return;
+
+    prefetchUrl(resolved.origin + resolved.pathname + resolved.search);
   }
 
   document.addEventListener(
@@ -56,9 +68,9 @@
     true
   );
 
-  /* Warm cache for every article link in the document (idle / after first paint). */
-  function prefetchAllArticleAnchors() {
-    document.querySelectorAll('a[href*="articles/"]').forEach(function (a) {
+  /* Warm cache for every same-origin article/home link in the document (idle / after first paint). */
+  function prefetchAllNavAnchors() {
+    document.querySelectorAll('a[href]').forEach(function (a) {
       maybePrefetchFromAnchor(a);
     });
   }
@@ -73,9 +85,9 @@
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
-      scheduleIdle(prefetchAllArticleAnchors);
+      scheduleIdle(prefetchAllNavAnchors);
     });
   } else {
-    scheduleIdle(prefetchAllArticleAnchors);
+    scheduleIdle(prefetchAllNavAnchors);
   }
 })();

@@ -7,17 +7,35 @@
   <meta name="description" content="Compensation is benefits, equity, signing bonuses, and leverage you didn't know you had." />
   <meta name="view-transition" content="same-origin" />
   <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../article.css" />
+  <link rel="stylesheet" href="/article.css" />
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
+  <script type="speculationrules">
+  {
+    "prefetch": [
+      {
+        "source": "list",
+        "urls": [
+          "/images/index.html",
+          "/articles/late-cycle-internships.html",
+          "/articles/first-90-days.html",
+          "/articles/first-gen-internship-playbook.html",
+          "/articles/coffee-chat-framework.html",
+          "/articles/negotiate-salary.html",
+          "/articles/rejection.html"
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
   <nav class="art-nav" id="artNav">
-    <a href="../index.html" class="art-nav__brand">Jose x Jocelyn</a>
+    <a href="/images/index.html" class="art-nav__brand">Jose x Jocelyn</a>
     <div class="art-nav__right">
-      <a href="../index.html#editorial" class="art-nav__link">La Voz del Día</a>
-      <a href="../index.html#services" class="art-nav__link">Services</a>
-      <a href="../index.html#contact" class="art-nav__link">Get in Touch</a>
+      <a href="/images/index.html#editorial" class="art-nav__link">La Voz del Día</a>
+      <a href="/images/index.html#services" class="art-nav__link">Services</a>
+      <a href="/images/index.html#contact" class="art-nav__link">Get in Touch</a>
     </div>
   </nav>
 
@@ -26,7 +44,7 @@
     <h1 class="art-header__title">How to Negotiate When You've Never Seen a Six-Figure Salary</h1>
     <p class="art-header__subtitle">Compensation is benefits, equity, signing bonuses, and leverage you didn't know you had.</p>
     <div class="art-header__meta">
-      <img src="../jocelyn.jpeg" alt="Jocelyn Vazquez" class="art-header__avatar" />
+      <img src="/images/jocelyn.jpeg" alt="Jocelyn Vazquez" class="art-header__avatar" />
       <div class="art-header__author-info">
         <span class="art-header__author-name">Jocelyn Vazquez</span>
         <span class="art-header__date">February 2026 &middot; 9 min read</span>
@@ -153,14 +171,14 @@
   <footer class="art-footer">
     <span class="art-footer__copy">Jose x Jocelyn &copy; 2026</span>
     <div class="art-footer__links">
-      <a href="../index.html" class="art-footer__link">Home</a>
-      <a href="../index.html#contact" class="art-footer__link">Contact</a>
+      <a href="/images/index.html" class="art-footer__link">Home</a>
+      <a href="/images/index.html#contact" class="art-footer__link">Contact</a>
     </div>
   </footer>
 
-  <script src="../nav-prefetch.js" defer></script>
-  <script src="../click-confetti.js" defer></script>
-  <script src="../article-comments.js" defer></script>
+  <script src="/nav-prefetch.js" defer></script>
+  <script src="/click-confetti.js" defer></script>
+  <script src="/article-comments.js" defer></script>
   <script>
     window.addEventListener('scroll', () => {
       document.getElementById('artNav').classList.toggle('art-nav--scrolled', window.scrollY > 20);

@@ -89,9 +89,9 @@
      * Pinata.png (0 hits) -> step1 (hit 2) -> step2 (hit 4) -> step3 (hit 6) -> break (hit 8)
      */
     const STAGES = [
-      { at: 0, src: '../pinanta/step1.png' },
-      { at: 3, src: '../pinanta/step2.png' },
-      { at: 5, src: '../pinanta/step3.png' },
+      { at: 0, src: '/pinanta/step1.png' },
+      { at: 3, src: '/pinanta/step2.png' },
+      { at: 5, src: '/pinanta/step3.png' },
     ];
     const HITS_TO_BREAK = 7;
     let hits = 0;
@@ -719,20 +719,21 @@
      *   onLeaveBack → reverse (only resets when section fully leaves viewport going up)
      */
     const toggle = 'play none none reverse';
+    const persistToggle = 'play none none none';
 
     /* Intro text reveal */
     gsap.from('.intro__text', {
-      scrollTrigger: { trigger: '.intro__right', start: 'top 80%', toggleActions: toggle },
+      scrollTrigger: { trigger: '.intro__right', start: 'top 80%', toggleActions: persistToggle },
       opacity: 0, y: 40, duration: 0.8, ease: 'power2.out'
     });
     gsap.from('.intro__dot', {
-      scrollTrigger: { trigger: '.intro__right', start: 'top 80%', toggleActions: toggle },
+      scrollTrigger: { trigger: '.intro__right', start: 'top 80%', toggleActions: persistToggle },
       scale: 0, duration: 0.5, ease: 'back.out(1.7)'
     });
 
     /* Intro left — banner grid clip-path reveal */
     gsap.from('.intro__banners', {
-      scrollTrigger: { trigger: '.intro', start: 'top 65%', toggleActions: toggle },
+      scrollTrigger: { trigger: '.intro', start: 'top 65%', toggleActions: persistToggle },
       clipPath: 'inset(0 100% 0 0)', duration: 1, ease: 'power3.inOut'
     });
 
@@ -807,7 +808,7 @@
 
     /* Editorial showcase */
     gsap.from('.editorial__showcase-inner', {
-      scrollTrigger: { trigger: '.editorial__showcase', start: 'top 80%', toggleActions: toggle },
+      scrollTrigger: { trigger: '.editorial__showcase', start: 'top 80%', toggleActions: persistToggle },
       y: 60, opacity: 0, duration: 0.8, ease: 'power2.out'
     });
 
@@ -821,7 +822,7 @@
       });
     });
 
-    /* Mascot reveals — bounce in with scale + rotation when scrolled into view */
+    /* Mascot reveals — stay visible after first play (no reverse on scroll-up) */
     gsap.utils.toArray('.mascot').forEach(mascot => {
       gsap.fromTo(mascot,
         { opacity: 0, scale: 0, rotate: -30 },
@@ -831,27 +832,35 @@
           ease: 'back.out(1.7)',
           scrollTrigger: {
             trigger: mascot.closest('section, footer'),
-            start: 'top 75%',
-            toggleActions: toggle,
+            start: 'top 80%',
+            once: true,
+            toggleActions: persistToggle,
           },
         }
       );
     });
 
     /* Footer reveals */
+    const footerToggle = 'play none none none';
     gsap.from('.footer__logo-svg', {
-      scrollTrigger: { trigger: '.footer', start: 'top 80%', toggleActions: toggle },
+      scrollTrigger: { trigger: '.footer', start: 'top 80%', toggleActions: footerToggle },
       x: -60, opacity: 0, duration: 0.8, ease: 'power2.out'
     });
     gsap.from('.footer__cta', {
-      scrollTrigger: { trigger: '.footer', start: 'top 75%', toggleActions: toggle },
+      scrollTrigger: { trigger: '.footer', start: 'top 75%', toggleActions: footerToggle },
       x: 80, rotation: -15, opacity: 0, duration: 0.8, ease: 'power2.out', delay: 0.15
+    });
+
+    ScrollTrigger.refresh();
+    requestAnimationFrame(function () {
+      ScrollTrigger.refresh();
     });
   }
 
   /* === BOOT === */
   window.history.scrollRestoration = 'manual';
-  window.addEventListener('beforeunload', () => window.scrollTo(0, 0));
+  /* Do not scroll-to-top on beforeunload — that jumped the viewport to the hero for a frame when
+     leaving for an article (looked like a “flash” of the landing page). */
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', runLoader);
   else runLoader();
 })();
