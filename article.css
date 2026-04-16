@@ -18,6 +18,9 @@
   --color-navy: #162B44;
   --color-navy-light: #1E3A58;
   --color-muted: #8A7E72;
+  --color-gold-dark: #8B6914;
+  --color-surface: #F8F6F2;
+  --color-paper: #F0ECE4;
   --font-display: 'Clash Display', 'Helvetica Neue', sans-serif;
   --font-body: 'Satoshi', 'Inter', sans-serif;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -753,5 +756,13 @@ body {
   ::view-transition-new(root) {
     animation-duration: 0.22s;
     animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

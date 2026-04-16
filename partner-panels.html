@@ -50,7 +50,7 @@
     }
     .pp-tag--blue    { background: rgba(91,142,194,.12);  color: var(--color-blue); }
     .pp-tag--teal    { background: rgba(58,125,107,.1);   color: var(--color-teal); }
-    .pp-tag--gold    { background: rgba(232,168,56,.14);  color: #8B6914; }
+    .pp-tag--gold    { background: rgba(232,168,56,.14);  color: var(--color-gold-dark); }
     .pp-tag--accent  { background: rgba(179,69,57,.1);    color: var(--color-accent); }
     .pp-tag--navy    { background: rgba(22,43,68,.1);     color: var(--color-navy); }
     .pp-tag--muted   { background: rgba(0,0,0,.06);       color: var(--color-muted); }
@@ -243,7 +243,7 @@
     }
     .pp-panel-card__date-badge {
       display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(232,168,56,.12); color: #8B6914;
+      background: rgba(232,168,56,.12); color: var(--color-gold-dark);
       font-size: 11px; font-weight: 700;
       padding: 5px 11px; border-radius: 6px;
       align-self: flex-start;
@@ -364,17 +364,20 @@
 
     /* Expandable takeaways */
     .pp-takeaways {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .4s cubic-bezier(.16,1,.3,1);
       border-top: 1px solid rgba(0,0,0,.07);
       background: rgba(242,228,206,.3);
+    }
+    .pp-takeaways.open { grid-template-rows: 1fr; }
+    .pp-takeaways__inner {
       overflow: hidden;
-      max-height: 0;
-      transition: max-height .4s cubic-bezier(.16,1,.3,1), padding .3s;
+      min-height: 0;
       padding: 0 28px;
+      transition: padding .35s cubic-bezier(.16,1,.3,1);
     }
-    .pp-takeaways.open {
-      max-height: 400px;
-      padding: 22px 28px;
-    }
+    .pp-takeaways.open .pp-takeaways__inner { padding: 22px 28px; }
     .pp-takeaways__title {
       font-size: 11px; font-weight: 700; letter-spacing: .1em;
       text-transform: uppercase; color: var(--color-teal); margin-bottom: 12px;
@@ -498,7 +501,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 24px; margin: 0 auto 16px;
     }
-    .pp-form-success__icon--gold { background: rgba(232,168,56,.12); color: #8B6914; }
+    .pp-form-success__icon--gold { background: rgba(232,168,56,.12); color: var(--color-gold-dark); }
     .pp-form-success__icon--teal { background: rgba(58,125,107,.1);  color: var(--color-teal); }
     .pp-form-success__title {
       font-family: var(--font-display); font-size: 22px;
@@ -934,12 +937,14 @@
           </div>
         </div>
         <div class="pp-takeaways" id="takeaways-1">
-          <p class="pp-takeaways__title">Key Takeaways from This Session</p>
-          <div class="pp-takeaways__list">
-            <div class="pp-takeaways__item">Late-cycle recruiting is real, but requires a narrower and more intentional strategy — not more applications.</div>
-            <div class="pp-takeaways__item">Students often need better positioning and a clearer narrative, not just more volume in their search.</div>
-            <div class="pp-takeaways__item">Alternative entry points like apprenticeships and niche fellowships matter more than most people realize late in the cycle.</div>
-            <div class="pp-takeaways__item">Talking about your timeline without shame is a skill — and it is one you can practice and get better at before the interview room.</div>
+          <div class="pp-takeaways__inner">
+            <p class="pp-takeaways__title">Key Takeaways from This Session</p>
+            <div class="pp-takeaways__list">
+              <div class="pp-takeaways__item">Late-cycle recruiting is real, but requires a narrower and more intentional strategy — not more applications.</div>
+              <div class="pp-takeaways__item">Students often need better positioning and a clearer narrative, not just more volume in their search.</div>
+              <div class="pp-takeaways__item">Alternative entry points like apprenticeships and niche fellowships matter more than most people realize late in the cycle.</div>
+              <div class="pp-takeaways__item">Talking about your timeline without shame is a skill — and it is one you can practice and get better at before the interview room.</div>
+            </div>
           </div>
         </div>
       </article>
@@ -968,12 +973,14 @@
           </div>
         </div>
         <div class="pp-takeaways" id="takeaways-2">
-          <p class="pp-takeaways__title">Key Takeaways from This Session</p>
-          <div class="pp-takeaways__list">
-            <div class="pp-takeaways__item">Rejection is data, not a verdict — the way you process it determines whether it becomes information or identity.</div>
-            <div class="pp-takeaways__item">Building a short post-rejection ritual (reflect, document, reset) helps break the spiral faster than pushing straight into more applications.</div>
-            <div class="pp-takeaways__item">First-gen students are statistically more likely to over-personalize rejection — separating performance from worth is a core skill to develop early.</div>
-            <div class="pp-takeaways__item">The students who bounce back quickest usually have one trusted person in their corner who normalizes the experience.</div>
+          <div class="pp-takeaways__inner">
+            <p class="pp-takeaways__title">Key Takeaways from This Session</p>
+            <div class="pp-takeaways__list">
+              <div class="pp-takeaways__item">Rejection is data, not a verdict — the way you process it determines whether it becomes information or identity.</div>
+              <div class="pp-takeaways__item">Building a short post-rejection ritual (reflect, document, reset) helps break the spiral faster than pushing straight into more applications.</div>
+              <div class="pp-takeaways__item">First-gen students are statistically more likely to over-personalize rejection — separating performance from worth is a core skill to develop early.</div>
+              <div class="pp-takeaways__item">The students who bounce back quickest usually have one trusted person in their corner who normalizes the experience.</div>
+            </div>
           </div>
         </div>
       </article>
@@ -1002,12 +1009,14 @@
           </div>
         </div>
         <div class="pp-takeaways" id="takeaways-3">
-          <p class="pp-takeaways__title">Key Takeaways from This Session</p>
-          <div class="pp-takeaways__list">
-            <div class="pp-takeaways__item">The best first messages are specific, short, and show you actually read the other person's profile — not templated.</div>
-            <div class="pp-takeaways__item">Asking "what do you wish someone had told you at my stage?" almost always unlocks the most honest, useful parts of the conversation.</div>
-            <div class="pp-takeaways__item">A coffee chat only "leads somewhere" if you follow up within 48 hours and stay in touch in a non-transactional way after.</div>
-            <div class="pp-takeaways__item">Most people in tech are genuinely willing to talk — the barrier is almost always on the student side, not the professional side.</div>
+          <div class="pp-takeaways__inner">
+            <p class="pp-takeaways__title">Key Takeaways from This Session</p>
+            <div class="pp-takeaways__list">
+              <div class="pp-takeaways__item">The best first messages are specific, short, and show you actually read the other person's profile — not templated.</div>
+              <div class="pp-takeaways__item">Asking "what do you wish someone had told you at my stage?" almost always unlocks the most honest, useful parts of the conversation.</div>
+              <div class="pp-takeaways__item">A coffee chat only "leads somewhere" if you follow up within 48 hours and stay in touch in a non-transactional way after.</div>
+              <div class="pp-takeaways__item">Most people in tech are genuinely willing to talk — the barrier is almost always on the student side, not the professional side.</div>
+            </div>
           </div>
         </div>
       </article>
