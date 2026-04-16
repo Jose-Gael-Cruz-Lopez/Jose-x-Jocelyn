@@ -617,6 +617,23 @@
       .ob-form-row-2 { grid-template-columns: 1fr; }
     }
 
+    /* ─── Mobile ─── */
+    @media (max-width: 768px) {
+      .ob-hero { padding: 88px 20px 48px; }
+      .ob-hero__stats { gap: 18px; }
+      .ob-main, .ob-featured-wrap, .ob-archive-section,
+      .ob-source, .ob-submit { padding-top: 48px; padding-bottom: 48px; }
+      .ob-eco { padding: 48px 20px; }
+      .ob-filter-bar { flex-wrap: wrap; gap: 10px; }
+    }
+    @media (max-width: 480px) {
+      .ob-hero { padding: 80px 16px 40px; }
+      .ob-hero__stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
+      .ob-filter-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 4px; }
+      .ob-filter-tab { flex-shrink: 0; white-space: nowrap; }
+      .ob-card-actions { flex-wrap: wrap; }
+    }
+
     /* ═══════════════════════════
        ECOSYSTEM FOOTER
     ═══════════════════════════ */
@@ -678,7 +695,22 @@
       <a href="/resume-reviews.html" class="art-nav__link">Resumes</a>
       <a href="/images/index.html#contact" class="art-nav__link">Get in Touch</a>
     </div>
+    <button class="art-nav__burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="art-nav__mobile" id="mobileNav">
+    <div class="art-nav__mobile-panel">
+      <a href="/articles/" class="art-nav__mobile-link">La Voz del Día</a>
+      <a href="/career-templates.html" class="art-nav__mobile-link">Templates</a>
+      <a href="/bridge-year.html" class="art-nav__mobile-link">Bridge Year</a>
+      <a href="/coffee-chat.html" class="art-nav__mobile-link">Coffee Chat</a>
+      <a href="/opportunity-board.html" class="art-nav__mobile-link art-nav__mobile-link--active">Opportunities</a>
+      <a href="/partner-panels.html" class="art-nav__mobile-link">Panels</a>
+      <a href="/resume-reviews.html" class="art-nav__mobile-link">Resumes</a>
+      <a href="/images/index.html#contact" class="art-nav__mobile-link">Get in Touch</a>
+    </div>
+  </div>
 
   <!-- ═══════════════════════════════
        HERO
@@ -1339,6 +1371,21 @@
     window.addEventListener('scroll', function() {
       artNav.classList.toggle('art-nav--scrolled', window.scrollY > 10);
     }, { passive: true });
+
+    /* ─── Mobile nav ─── */
+    (function(){
+      var burger = document.querySelector('.art-nav__burger');
+      var nav = document.getElementById('mobileNav');
+      if (!burger || !nav) return;
+      function toggle(open) {
+        nav.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+      burger.addEventListener('click', function() { toggle(!nav.classList.contains('open')); });
+      nav.addEventListener('click', function(e) { if (e.target === nav) toggle(false); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') toggle(false); });
+    })();
 
     /* ─── Tab switching ─── */
     var activeTab = 'all';

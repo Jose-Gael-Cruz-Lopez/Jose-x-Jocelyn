@@ -240,8 +240,12 @@ ul { list-style: none; }
 }
 
 .nav__burger {
-  display: none; flex-direction: column; gap: 5px; padding: 8px;
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  gap: 5px; padding: 10px; width: 44px; height: 44px;
+  background: none; border: none; cursor: pointer; border-radius: 8px;
+  transition: background 0.2s; -webkit-tap-highlight-color: transparent;
 }
+.nav__burger:hover { background: rgba(255,255,255,0.1); }
 .nav__burger span {
   display: block; width: 24px; height: 2px; background: var(--color-dark);
   transition: transform 0.3s var(--ease-out), opacity 0.3s;
@@ -1582,7 +1586,9 @@ ul { list-style: none; }
 
 /* Services content panel — LinkedIn Series & Career Templates buttons */
 .services__list-btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 10px 20px;
   border: 1.5px solid var(--color-dark);
   border-radius: 4px;

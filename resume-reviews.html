@@ -883,6 +883,23 @@
       .rr-grid { grid-template-columns: 1fr; }
       .rr-panel { width: 100vw; }
     }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 768px) {
+      .rr-hero { padding: 88px 20px 48px; }
+      .rr-stats { gap: 20px; }
+      .rr-how, .rr-submit-section { padding-top: 48px; padding-bottom: 48px; }
+      .rr-submit-layout { grid-template-columns: 1fr; gap: 32px; }
+      .rr-hero__ctas { flex-wrap: wrap; }
+    }
+    @media (max-width: 480px) {
+      .rr-hero { padding: 80px 16px 40px; }
+      .rr-hero__ctas { flex-direction: column; }
+      .rr-hero__ctas a { justify-content: center; }
+      .rr-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .rr-panel { top: auto; bottom: 0; right: 0; left: 0; width: 100vw; height: 85vh; border-radius: 16px 16px 0 0; }
+      .rr-sort-bar { flex-direction: column; align-items: flex-start; }
+    }
   </style>
 </head>
 <body>
@@ -899,7 +916,22 @@
       <a href="/partner-panels.html" class="art-nav__link">Panels</a>
       <a href="/resume-reviews.html" class="art-nav__link" style="color:var(--color-dark);font-weight:600;">Resumes</a>
     </div>
+    <button class="art-nav__burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="art-nav__mobile" id="mobileNav">
+    <div class="art-nav__mobile-panel">
+      <a href="/articles/" class="art-nav__mobile-link">La Voz del Día</a>
+      <a href="/career-templates.html" class="art-nav__mobile-link">Templates</a>
+      <a href="/bridge-year.html" class="art-nav__mobile-link">Bridge Year</a>
+      <a href="/coffee-chat.html" class="art-nav__mobile-link">Coffee Chat</a>
+      <a href="/opportunity-board.html" class="art-nav__mobile-link">Opportunities</a>
+      <a href="/partner-panels.html" class="art-nav__mobile-link">Panels</a>
+      <a href="/resume-reviews.html" class="art-nav__mobile-link art-nav__mobile-link--active">Resumes</a>
+      <a href="/images/index.html#contact" class="art-nav__mobile-link">Get in Touch</a>
+    </div>
+  </div>
 
   <!-- ═══════════════════════════════
        HERO
@@ -1610,6 +1642,21 @@
     window.addEventListener('scroll', function() {
       nav.classList.toggle('art-nav--scrolled', window.scrollY > 10);
     }, { passive:true });
+
+    // Mobile nav
+    (function(){
+      var burger = document.querySelector('.art-nav__burger');
+      var mNav = document.getElementById('mobileNav');
+      if (!burger || !mNav) return;
+      function toggle(open) {
+        mNav.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+      burger.addEventListener('click', function() { toggle(!mNav.classList.contains('open')); });
+      mNav.addEventListener('click', function(e) { if (e.target === mNav) toggle(false); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') toggle(false); });
+    })();
 
     // Search
     document.getElementById('searchInput').addEventListener('input', function() {
