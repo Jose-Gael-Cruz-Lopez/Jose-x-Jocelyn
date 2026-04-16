@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Reviews | Jose x Jocelyn</title>
+  <meta name="description" content="A community-built library of real resumes from students and early-career candidates who landed internships, new grad roles, and first jobs in tech and adjacent fields." />
+  <meta name="view-transition" content="same-origin" />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/article.css" />
+  <style>
+    html, body { background: var(--color-cream); }
+
+    /* ─── Shared utilities ─── */
+    .rr-divider { border: none; border-top: 1px solid rgba(0,0,0,.08); margin: 0; }
+
+    .rr-kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px;
+    }
+    .rr-section-title {
+      font-family: var(--font-display);
+      font-size: clamp(26px,4vw,40px); font-weight: 700;
+      color: var(--color-dark); line-height: 1.15; margin-bottom: 10px;
+    }
+    .rr-section-sub {
+      font-family: var(--font-display);
+      font-size: clamp(16px,2vw,20px); font-weight: 400;
+      color: var(--color-accent); margin-bottom: 18px;
+    }
+    .rr-section-body {
+      font-size: clamp(15px,1.8vw,17px); color: var(--color-muted);
+      line-height: 1.75; max-width: 700px;
+    }
+    .rr-section-body strong { color: var(--color-dark); font-weight: 600; }
+
+    /* ─── Shared tag pill ─── */
+    .rr-tag {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px;
+    }
+    .rr-tag--blue   { background: rgba(91,142,194,.12);  color: var(--color-blue); }
+    .rr-tag--teal   { background: rgba(58,125,107,.1);   color: var(--color-teal); }
+    .rr-tag--gold   { background: rgba(232,168,56,.14);  color: #8B6914; }
+    .rr-tag--navy   { background: rgba(22,43,68,.1);     color: var(--color-navy); }
+    .rr-tag--accent { background: rgba(179,69,57,.1);    color: var(--color-accent); }
+    .rr-tag--purple { background: rgba(120,60,180,.1);   color: #7833B4; }
+    .rr-tag--muted  { background: rgba(0,0,0,.06);       color: var(--color-muted); }
+
+    /* ─── Shared buttons ─── */
+    .rr-btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; background: var(--color-dark);
+      color: var(--color-cream); border-radius: 8px;
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      text-decoration: none; border: 1.5px solid var(--color-dark); cursor: pointer;
+      transition: background .2s, transform .18s cubic-bezier(.16,1,.3,1);
+    }
+    .rr-btn-primary:hover { background: var(--color-accent); border-color: var(--color-accent); transform: translateY(-1px); }
+    .rr-btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; background: transparent;
+      color: var(--color-dark); border-radius: 8px;
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      text-decoration: none; border: 1.5px solid rgba(0,0,0,.2); cursor: pointer;
+      transition: border-color .2s, color .2s, transform .18s cubic-bezier(.16,1,.3,1);
+    }
+    .rr-btn-secondary:hover { border-color: var(--color-dark); color: var(--color-accent); transform: translateY(-1px); }
+
+    /* ═══════════════════════════
+       HERO
+    ═══════════════════════════ */
+    .rr-hero {
+      padding: 120px clamp(20px,5vw,56px) 64px;
+      max-width: 1240px; margin: 0 auto;
+    }
+    .rr-hero__kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 18px;
+    }
+    .rr-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(42px,7vw,80px); font-weight: 700;
+      line-height: 1.04; color: var(--color-dark); margin-bottom: 14px;
+    }
+    .rr-hero__title em { font-style: normal; color: var(--color-gold); }
+    .rr-hero__sub {
+      font-family: var(--font-display);
+      font-size: clamp(18px,2.5vw,24px); font-weight: 400;
+      color: var(--color-dark); line-height: 1.4; max-width: 680px; margin-bottom: 20px;
+    }
+    .rr-hero__body {
+      font-size: clamp(15px,1.8vw,17px); color: var(--color-muted);
+      line-height: 1.8; max-width: 680px; margin-bottom: 36px;
+    }
+    .rr-hero__body strong { color: var(--color-dark); font-weight: 600; }
+    .rr-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 48px; }
+
+    /* Stat strip */
+    .rr-stats {
+      display: flex; flex-wrap: wrap; gap: 36px;
+      padding-top: 32px; border-top: 1px solid rgba(0,0,0,.08);
+    }
+    .rr-stat__num {
+      font-family: var(--font-display);
+      font-size: clamp(26px,3.5vw,38px); font-weight: 700;
+      color: var(--color-dark); line-height: 1;
+    }
+    .rr-stat__num em { font-style: normal; color: var(--color-gold); }
+    .rr-stat__label { font-size: 13px; color: var(--color-muted); margin-top: 5px; }
+
+    /* ═══════════════════════════
+       MAIN LAYOUT: sidebar + grid
+    ═══════════════════════════ */
+    .rr-layout {
+      max-width: 1240px; margin: 0 auto;
+      padding: 48px clamp(20px,5vw,56px) 80px;
+      display: grid;
+      grid-template-columns: 256px 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* ─── Filter sidebar ─── */
+    .rr-sidebar {
+      position: sticky;
+      top: 80px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(0,0,0,.1) transparent;
+    }
+    .rr-sidebar::-webkit-scrollbar { width: 4px; }
+    .rr-sidebar::-webkit-scrollbar-thumb { background: rgba(0,0,0,.12); border-radius: 4px; }
+
+    .rr-sidebar__block {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .rr-sidebar__search-wrap {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+    .rr-sidebar__search {
+      width: 100%; font-family: var(--font-body); font-size: 13px;
+      padding: 9px 12px 9px 32px;
+      border: 1.5px solid rgba(0,0,0,.1); border-radius: 8px;
+      background: var(--color-cream) url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='6' cy='6' r='4.5' stroke='%238A7E72' stroke-width='1.5'/%3E%3Cpath d='M9.5 9.5L12 12' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 10px center;
+      color: var(--color-dark); outline: none;
+      transition: border-color .2s;
+    }
+    .rr-sidebar__search:focus { border-color: var(--color-gold); }
+    .rr-sidebar__search::placeholder { color: var(--color-muted); }
+
+    .rr-filter-group {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(0,0,0,.06);
+    }
+    .rr-filter-group:last-child { border-bottom: none; }
+    .rr-filter-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 10px;
+      display: block;
+    }
+    .rr-check-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 7px; cursor: pointer;
+    }
+    .rr-check-row:last-child { margin-bottom: 0; }
+    .rr-check-row input[type="checkbox"] {
+      width: 15px; height: 15px; accent-color: var(--color-dark); cursor: pointer; flex-shrink: 0;
+    }
+    .rr-check-row span {
+      font-size: 13px; color: var(--color-dark); line-height: 1.3; cursor: pointer;
+    }
+
+    /* Company chips in sidebar */
+    .rr-co-chips {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
+    }
+    .rr-co-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 10px; border: 1.5px solid rgba(0,0,0,.1);
+      border-radius: 20px; cursor: pointer;
+      font-size: 11px; font-weight: 600; color: var(--color-muted);
+      transition: border-color .15s, color .15s, background .15s;
+      user-select: none;
+    }
+    .rr-co-chip:hover { border-color: var(--color-dark); color: var(--color-dark); }
+    .rr-co-chip.active { border-color: var(--color-navy); background: var(--color-navy); color: var(--color-cream); }
+    .rr-co-chip img { width: 13px; height: 13px; object-fit: contain; opacity: .7; }
+    .rr-co-chip.active img { filter: brightness(10); opacity: 1; }
+
+    .rr-co-search {
+      width: 100%; font-family: var(--font-body); font-size: 12px;
+      padding: 7px 10px; border: 1.5px solid rgba(0,0,0,.1); border-radius: 7px;
+      background: var(--color-cream); color: var(--color-dark); outline: none;
+      transition: border-color .2s;
+    }
+    .rr-co-search:focus { border-color: var(--color-gold); }
+    .rr-co-search::placeholder { color: var(--color-muted); }
+
+    .rr-sort-select {
+      width: 100%; font-family: var(--font-body); font-size: 13px;
+      padding: 9px 30px 9px 10px; border: 1.5px solid rgba(0,0,0,.1);
+      border-radius: 8px; background: var(--color-cream); color: var(--color-dark);
+      appearance: none; cursor: pointer; outline: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+      transition: border-color .2s;
+    }
+    .rr-sort-select:focus { border-color: var(--color-gold); }
+
+    .rr-filter-reset {
+      display: block; margin-top: 12px; font-size: 12px; font-weight: 600;
+      color: var(--color-accent); cursor: pointer; text-align: center;
+      padding: 8px; background: rgba(179,69,57,.06); border-radius: 7px;
+      border: none; width: 100%; font-family: var(--font-body);
+      transition: background .2s;
+    }
+    .rr-filter-reset:hover { background: rgba(179,69,57,.12); }
+
+    /* Mobile filter button */
+    .rr-mobile-filter-btn {
+      display: none;
+      align-items: center; gap: 8px;
+      padding: 10px 18px; background: var(--color-white);
+      border: 1.5px solid rgba(0,0,0,.12); border-radius: 8px;
+      font-family: var(--font-display); font-size: 13px; font-weight: 600;
+      color: var(--color-dark); cursor: pointer; margin-bottom: 16px;
+      transition: border-color .2s;
+    }
+    .rr-mobile-filter-btn:hover { border-color: var(--color-dark); }
+
+    /* ─── Grid area ─── */
+    .rr-grid-area { min-width: 0; }
+
+    .rr-active-bar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+      margin-bottom: 16px; min-height: 28px;
+    }
+    .rr-active-bar__label {
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--color-muted); flex-shrink: 0;
+    }
+    .rr-active-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; background: rgba(22,43,68,.08);
+      color: var(--color-navy); border-radius: 20px;
+      font-size: 11px; font-weight: 600; cursor: pointer;
+      transition: background .15s;
+    }
+    .rr-active-chip:hover { background: rgba(179,69,57,.1); color: var(--color-accent); }
+    .rr-active-chip__x { font-size: 13px; line-height: 1; margin-left: 1px; }
+    .rr-active-bar__clear {
+      font-size: 11px; font-weight: 600; color: var(--color-accent);
+      cursor: pointer; margin-left: auto; text-decoration: underline;
+      background: none; border: none; font-family: var(--font-body);
+    }
+    .rr-active-bar__clear:hover { color: var(--color-dark); }
+
+    .rr-grid-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 20px; flex-wrap: wrap; gap: 8px;
+    }
+    .rr-grid-count {
+      font-size: 13px; color: var(--color-muted); font-weight: 500;
+    }
+    .rr-grid-count strong { color: var(--color-dark); font-weight: 700; }
+
+    /* Resume grid */
+    .rr-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .rr-grid--empty {
+      grid-column: 1 / -1;
+      text-align: center; padding: 60px 20px;
+      color: var(--color-muted); font-size: 15px; line-height: 1.7;
+    }
+    .rr-grid--empty strong { display: block; font-family: var(--font-display); font-size: 18px; color: var(--color-dark); margin-bottom: 6px; }
+
+    /* ─── Resume card ─── */
+    .rr-card {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s;
+      position: relative;
+    }
+    .rr-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,.1);
+    }
+
+    /* Stage badge overlay on thumbnail */
+    .rr-card__stage-wrap {
+      position: relative;
+    }
+    .rr-card__stage-badge {
+      position: absolute; top: 10px; left: 10px; z-index: 2;
+      font-size: 9px; font-weight: 800; letter-spacing: .1em;
+      text-transform: uppercase; padding: 4px 9px; border-radius: 5px;
+    }
+    .rr-badge--intern     { background: rgba(91,142,194,.18); color: var(--color-blue); }
+    .rr-badge--newgrad    { background: rgba(58,125,107,.14); color: var(--color-teal); }
+    .rr-badge--fulltime   { background: rgba(22,43,68,.12);   color: var(--color-navy); }
+    .rr-badge--apprenticeship { background: rgba(232,168,56,.18); color: #7D5A10; }
+    .rr-badge--pivot      { background: rgba(179,69,57,.12);  color: var(--color-accent); }
+    .rr-badge--contract   { background: rgba(0,0,0,.07);      color: var(--color-muted); }
+
+    /* Featured star */
+    .rr-card__featured-badge {
+      position: absolute; top: 10px; right: 10px; z-index: 2;
+      display: flex; align-items: center; gap: 4px;
+      padding: 4px 9px; border-radius: 5px;
+      background: rgba(232,168,56,.18); color: #7D5A10;
+      font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    }
+
+    /* Resume thumbnail */
+    .rr-card__thumb {
+      width: 100%; aspect-ratio: 8.5 / 11;
+      background: #F8F6F2;
+      position: relative; overflow: hidden;
+    }
+    .rr-card__thumb-paper {
+      position: absolute;
+      inset: 10px 12px;
+      background: #fff;
+      border-radius: 3px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+    /* Fake resume name header */
+    .rr-card__thumb-paper::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 20%;
+      background: linear-gradient(180deg, rgba(0,0,0,.035) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(0,0,0,.04);
+    }
+    /* Fake content lines */
+    .rr-card__thumb-paper::after {
+      content: '';
+      position: absolute;
+      top: 24%; left: 10%; right: 10%; bottom: 8%;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(0,0,0,.055) 0px, rgba(0,0,0,.055) 1.5px,
+        transparent 1.5px, transparent 9px
+      );
+    }
+    /* Simulated name line at top */
+    .rr-card__thumb-name {
+      position: absolute;
+      top: 6%; left: 50%; transform: translateX(-50%);
+      width: 40%; height: 5px; border-radius: 3px;
+      background: rgba(0,0,0,.1);
+    }
+    .rr-card__thumb-subname {
+      position: absolute;
+      top: 13%; left: 50%; transform: translateX(-50%);
+      width: 55%; height: 3px; border-radius: 3px;
+      background: rgba(0,0,0,.06);
+    }
+
+    /* Hover overlay */
+    .rr-card__thumb-overlay {
+      position: absolute; inset: 0; z-index: 3;
+      background: rgba(26,25,22,.6);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: opacity .2s;
+      backdrop-filter: blur(2px);
+    }
+    .rr-card:hover .rr-card__thumb-overlay { opacity: 1; }
+    .rr-card__thumb-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 10px 20px; background: var(--color-cream);
+      color: var(--color-dark); border-radius: 8px;
+      font-family: var(--font-display); font-size: 13px; font-weight: 700;
+      border: none; cursor: pointer;
+      transform: translateY(6px);
+      transition: transform .2s cubic-bezier(.16,1,.3,1);
+    }
+    .rr-card:hover .rr-card__thumb-btn { transform: translateY(0); }
+
+    /* Card info area */
+    .rr-card__info {
+      padding: 12px 14px 14px;
+      border-top: 1px solid rgba(0,0,0,.05);
+    }
+    .rr-card__handle {
+      font-family: var(--font-display); font-size: 14px; font-weight: 700;
+      color: var(--color-dark); margin-bottom: 2px;
+    }
+    .rr-card__role {
+      font-size: 12px; color: var(--color-muted); margin-bottom: 8px;
+    }
+    .rr-card__companies {
+      display: flex; align-items: center; gap: 5px; margin-bottom: 8px; flex-wrap: wrap;
+    }
+    .rr-co-logo {
+      width: 18px; height: 18px; object-fit: contain;
+      border-radius: 3px; flex-shrink: 0;
+    }
+    .rr-co-letter {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 18px; height: 18px; border-radius: 3px;
+      font-size: 8px; font-weight: 800; flex-shrink: 0;
+    }
+    .rr-co-extra {
+      font-size: 10px; font-weight: 700; color: var(--color-muted);
+    }
+    .rr-card__foot {
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 4px;
+    }
+    .rr-card__tags { display: flex; gap: 4px; flex-wrap: wrap; }
+    .rr-card__submitted { font-size: 11px; color: var(--color-muted); }
+
+    /* ═══════════════════════════
+       HOW IT WORKS
+    ═══════════════════════════ */
+    .rr-howto {
+      max-width: 1240px; margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .rr-howto__head { margin-bottom: 36px; }
+    .rr-howto__grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 20px;
+    }
+    .rr-howto__card {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 16px; padding: 28px 26px;
+    }
+    .rr-howto__num {
+      font-family: var(--font-display); font-size: 36px; font-weight: 700;
+      color: rgba(0,0,0,.07); line-height: 1; margin-bottom: 14px;
+    }
+    .rr-howto__title {
+      font-family: var(--font-display); font-size: 17px; font-weight: 700;
+      color: var(--color-dark); margin-bottom: 10px; line-height: 1.3;
+    }
+    .rr-howto__body {
+      font-size: 14px; color: var(--color-muted); line-height: 1.75;
+    }
+
+    @media (max-width: 700px) {
+      .rr-howto__grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════
+       SUBMIT FORM
+    ═══════════════════════════ */
+    .rr-submit {
+      max-width: 1240px; margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .rr-submit__layout {
+      display: grid; grid-template-columns: 1fr 1.6fr; gap: 64px; align-items: flex-start;
+    }
+    .rr-submit__intro-kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 12px;
+    }
+    .rr-submit__intro-title {
+      font-family: var(--font-display);
+      font-size: clamp(22px,3vw,32px); font-weight: 700;
+      color: var(--color-dark); line-height: 1.2; margin-bottom: 16px;
+    }
+    .rr-submit__intro-body {
+      font-size: clamp(14px,1.6vw,15px); color: var(--color-muted); line-height: 1.75;
+    }
+    .rr-submit__intro-body strong { color: var(--color-dark); font-weight: 600; }
+    .rr-submit__bullets { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; }
+    .rr-submit__bullet {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--color-muted); line-height: 1.5;
+    }
+    .rr-submit__bullet::before {
+      content: '→'; color: var(--color-teal); font-weight: 700;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* ─── Form box ─── */
+    .rr-form-box {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,.07);
+      border-radius: 18px;
+      padding: clamp(24px,4vw,44px);
+    }
+    .rr-form-row { margin-bottom: 14px; }
+    .rr-form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .rr-form-label {
+      display: block; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .09em;
+      color: var(--color-muted); margin-bottom: 6px;
+    }
+    .rr-form-label span { color: var(--color-accent); }
+    .rr-form-label em { font-weight: 400; text-transform: none; letter-spacing: 0; font-style: normal; }
+    .rr-form-input,
+    .rr-form-select,
+    .rr-form-textarea {
+      width: 100%; font-family: var(--font-body); font-size: 14px;
+      padding: 10px 13px; border: 1.5px solid rgba(0,0,0,.12);
+      border-radius: 8px; background: var(--color-white);
+      color: var(--color-dark); outline: none; transition: border-color .2s;
+    }
+    .rr-form-input:focus,
+    .rr-form-select:focus,
+    .rr-form-textarea:focus { border-color: var(--color-gold); }
+    .rr-form-textarea { min-height: 72px; resize: vertical; line-height: 1.6; }
+    .rr-form-select {
+      appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+    }
+
+    /* Tag toggle chips for background tags */
+    .rr-tag-toggles { display: flex; flex-wrap: wrap; gap: 7px; }
+    .rr-tag-toggle {
+      display: inline-flex; align-items: center;
+      padding: 6px 13px; border: 1.5px solid rgba(0,0,0,.12);
+      border-radius: 20px; cursor: pointer; user-select: none;
+      font-family: var(--font-body); font-size: 12px; font-weight: 600;
+      color: var(--color-muted); transition: all .15s;
+    }
+    .rr-tag-toggle:hover { border-color: var(--color-dark); color: var(--color-dark); }
+    .rr-tag-toggle.active { border-color: var(--color-navy); background: var(--color-navy); color: var(--color-cream); }
+
+    /* File upload zone */
+    .rr-upload-zone {
+      width: 100%; border: 2px dashed rgba(0,0,0,.14); border-radius: 10px;
+      padding: 24px 16px; text-align: center; cursor: pointer;
+      transition: border-color .2s, background .2s;
+      position: relative;
+    }
+    .rr-upload-zone:hover, .rr-upload-zone.drag-over {
+      border-color: var(--color-gold); background: rgba(232,168,56,.04);
+    }
+    .rr-upload-zone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .rr-upload-icon { font-size: 22px; margin-bottom: 6px; display: block; }
+    .rr-upload-label { font-size: 13px; font-weight: 600; color: var(--color-dark); display: block; margin-bottom: 3px; }
+    .rr-upload-hint { font-size: 11px; color: var(--color-muted); }
+    .rr-upload-filename {
+      display: none; font-size: 12px; color: var(--color-teal); font-weight: 600;
+      margin-top: 8px; align-items: center; gap: 6px; justify-content: center;
+    }
+
+    /* Radio-style toggle */
+    .rr-radio-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .rr-radio-option {
+      display: flex; align-items: center; gap: 7px; cursor: pointer;
+      font-size: 13px; color: var(--color-dark);
+    }
+    .rr-radio-option input[type="radio"] { accent-color: var(--color-dark); cursor: pointer; }
+
+    .rr-form-note {
+      font-size: 11px; color: var(--color-muted); line-height: 1.65;
+      margin-top: 10px; font-style: italic;
+    }
+    .rr-form-btn {
+      width: 100%; padding: 14px 24px; background: var(--color-dark);
+      color: var(--color-cream); border: none; border-radius: 8px;
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .18s; margin-top: 6px;
+    }
+    .rr-form-btn:hover { background: var(--color-teal); transform: translateY(-1px); }
+    .rr-form-success {
+      display: none; text-align: center; padding: 40px 20px;
+    }
+    .rr-form-success__icon {
+      width: 54px; height: 54px; border-radius: 50%;
+      background: rgba(58,125,107,.1); color: var(--color-teal);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin: 0 auto 16px;
+    }
+    .rr-form-success__title {
+      font-family: var(--font-display); font-size: 22px;
+      font-weight: 700; color: var(--color-dark); margin-bottom: 8px;
+    }
+    .rr-form-success__body { font-size: 14px; color: var(--color-muted); line-height: 1.7; }
+
+    @media (max-width: 740px) {
+      .rr-submit__layout { grid-template-columns: 1fr; gap: 36px; }
+      .rr-form-row-2 { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════
+       RESUME DETAIL PANEL (modal)
+    ═══════════════════════════ */
+    .rr-overlay {
+      position: fixed; inset: 0; z-index: 900;
+      background: rgba(26,25,22,.5);
+      backdrop-filter: blur(4px);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
+    }
+    .rr-overlay.open { opacity: 1; pointer-events: all; }
+
+    .rr-panel {
+      position: fixed; top: 0; right: 0; bottom: 0; z-index: 901;
+      width: min(520px, 100vw);
+      background: var(--color-cream);
+      box-shadow: -8px 0 40px rgba(0,0,0,.15);
+      transform: translateX(100%);
+      transition: transform .38s cubic-bezier(.16,1,.3,1);
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .rr-panel.open { transform: translateX(0); }
+
+    .rr-panel__head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 22px 16px;
+      border-bottom: 1px solid rgba(0,0,0,.08);
+      flex-shrink: 0;
+    }
+    .rr-panel__close {
+      display: flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 8px;
+      background: rgba(0,0,0,.06); border: none; cursor: pointer;
+      font-size: 16px; color: var(--color-dark);
+      transition: background .2s;
+    }
+    .rr-panel__close:hover { background: rgba(0,0,0,.1); }
+    .rr-panel__title {
+      font-family: var(--font-display); font-size: 15px; font-weight: 700;
+      color: var(--color-dark);
+    }
+    .rr-panel__body {
+      flex: 1; overflow-y: auto; padding: 22px;
+      scrollbar-width: thin;
+    }
+
+    .rr-panel__thumb {
+      width: 100%; aspect-ratio: 8.5 / 11;
+      background: #F0ECE4;
+      border-radius: 10px; overflow: hidden;
+      border: 1px solid rgba(0,0,0,.08);
+      margin-bottom: 20px; position: relative;
+    }
+    .rr-panel__thumb-paper {
+      position: absolute; inset: 14px 18px;
+      background: #fff; border-radius: 4px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.1);
+      overflow: hidden;
+    }
+    .rr-panel__thumb-paper::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 18%;
+      background: linear-gradient(180deg, rgba(0,0,0,.03) 0%, transparent 100%);
+      border-bottom: 1px solid rgba(0,0,0,.04);
+    }
+    .rr-panel__thumb-paper::after {
+      content: '';
+      position: absolute; top: 22%; left: 8%; right: 8%; bottom: 6%;
+      background: repeating-linear-gradient(
+        180deg,
+        rgba(0,0,0,.05) 0px, rgba(0,0,0,.05) 1.5px,
+        transparent 1.5px, transparent 10px
+      );
+    }
+    .rr-panel__thumb-name {
+      position: absolute; top: 5%; left: 50%; transform: translateX(-50%);
+      width: 38%; height: 6px; background: rgba(0,0,0,.1); border-radius: 3px;
+    }
+    .rr-panel__thumb-sub {
+      position: absolute; top: 11%; left: 50%; transform: translateX(-50%);
+      width: 50%; height: 4px; background: rgba(0,0,0,.06); border-radius: 3px;
+    }
+    .rr-panel__no-preview {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: var(--color-muted); font-size: 14px; gap: 10px;
+    }
+    .rr-panel__no-preview-icon { font-size: 36px; opacity: .4; }
+
+    .rr-panel__meta { display: flex; flex-direction: column; gap: 14px; }
+    .rr-panel__meta-row {
+      display: flex; flex-direction: column; gap: 4px;
+    }
+    .rr-panel__meta-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--color-muted);
+    }
+    .rr-panel__meta-val {
+      font-size: 14px; color: var(--color-dark); font-weight: 600;
+    }
+    .rr-panel__meta-co {
+      display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+    }
+    .rr-panel__meta-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+
+    /* J&J annotation callout */
+    .rr-panel__annotation {
+      margin-top: 16px; padding: 16px 18px;
+      background: rgba(232,168,56,.1);
+      border-left: 3px solid var(--color-gold);
+      border-radius: 0 10px 10px 0;
+    }
+    .rr-panel__annotation-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: #7D5A10; margin-bottom: 6px;
+    }
+    .rr-panel__annotation-text {
+      font-size: 14px; color: var(--color-dark); line-height: 1.7;
+      font-style: italic;
+    }
+
+    /* Panel story */
+    .rr-panel__story {
+      margin-top: 16px; padding: 14px 16px;
+      background: rgba(58,125,107,.07);
+      border-radius: 10px;
+      font-size: 13px; color: var(--color-muted); line-height: 1.7;
+    }
+    .rr-panel__story-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--color-teal); margin-bottom: 5px;
+    }
+
+    .rr-panel__foot {
+      padding: 16px 22px;
+      border-top: 1px solid rgba(0,0,0,.08);
+      display: flex; gap: 10px; flex-shrink: 0;
+    }
+    .rr-panel__dl-btn {
+      flex: 1; padding: 12px; background: var(--color-dark);
+      color: var(--color-cream); border-radius: 8px; border: none; cursor: pointer;
+      font-family: var(--font-display); font-size: 13px; font-weight: 600;
+      transition: background .2s; display: flex; align-items: center; justify-content: center; gap: 7px;
+    }
+    .rr-panel__dl-btn:hover { background: var(--color-teal); }
+    .rr-panel__dl-btn:disabled {
+      background: rgba(0,0,0,.08); color: var(--color-muted); cursor: default;
+    }
+    .rr-panel__share-btn {
+      padding: 12px 16px; background: transparent;
+      border: 1.5px solid rgba(0,0,0,.14); border-radius: 8px; cursor: pointer;
+      font-family: var(--font-display); font-size: 13px; font-weight: 600;
+      color: var(--color-muted); transition: border-color .2s, color .2s;
+    }
+    .rr-panel__share-btn:hover { border-color: var(--color-dark); color: var(--color-dark); }
+
+    /* ═══════════════════════════
+       MOBILE FILTER SHEET
+    ═══════════════════════════ */
+    .rr-sheet-overlay {
+      position: fixed; inset: 0; z-index: 800;
+      background: rgba(26,25,22,.4);
+      opacity: 0; pointer-events: none;
+      transition: opacity .3s;
+    }
+    .rr-sheet-overlay.open { opacity: 1; pointer-events: all; }
+
+    .rr-sheet {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 801;
+      background: var(--color-cream);
+      border-radius: 20px 20px 0 0;
+      max-height: 85vh; overflow-y: auto;
+      padding: 0 0 32px;
+      transform: translateY(100%);
+      transition: transform .38s cubic-bezier(.16,1,.3,1);
+    }
+    .rr-sheet.open { transform: translateY(0); }
+    .rr-sheet__handle {
+      display: flex; align-items: center; justify-content: center;
+      padding: 14px;
+    }
+    .rr-sheet__handle::before {
+      content: ''; width: 36px; height: 4px;
+      background: rgba(0,0,0,.15); border-radius: 2px;
+    }
+    .rr-sheet__head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px 14px;
+      border-bottom: 1px solid rgba(0,0,0,.08);
+    }
+    .rr-sheet__title {
+      font-family: var(--font-display); font-size: 17px; font-weight: 700;
+      color: var(--color-dark);
+    }
+    .rr-sheet__close {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(0,0,0,.06); border: none; cursor: pointer;
+      font-size: 16px; color: var(--color-dark);
+    }
+    .rr-sheet__body { padding: 16px 20px; }
+
+    /* ═══════════════════════════
+       ECOSYSTEM
+    ═══════════════════════════ */
+    .rr-eco {
+      background: var(--color-dark);
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .rr-eco__inner { max-width: 1240px; margin: 0 auto; }
+    .rr-eco__kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: rgba(242,228,206,.4); margin-bottom: 10px;
+    }
+    .rr-eco__title {
+      font-family: var(--font-display);
+      font-size: clamp(20px,3vw,30px); font-weight: 700;
+      color: var(--color-cream); margin-bottom: 8px; line-height: 1.25;
+    }
+    .rr-eco__body {
+      font-size: clamp(14px,1.6vw,15px); color: rgba(242,228,206,.55);
+      line-height: 1.75; max-width: 680px; margin-bottom: 36px;
+    }
+    .rr-eco__grid {
+      display: grid; grid-template-columns: repeat(auto-fill,minmax(190px,1fr)); gap: 14px;
+    }
+    .rr-eco__link {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09);
+      border-radius: 12px; padding: 18px 20px; text-decoration: none;
+      transition: background .2s, transform .2s cubic-bezier(.16,1,.3,1);
+    }
+    .rr-eco__link:hover { background: rgba(255,255,255,.09); transform: translateY(-2px); }
+    .rr-eco__link-title {
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      color: var(--color-cream); margin-bottom: 4px;
+    }
+    .rr-eco__link-desc { font-size: 12px; color: rgba(242,228,206,.45); line-height: 1.5; }
+
+    /* ═══════════════════════════
+       CLOSING STRIP
+    ═══════════════════════════ */
+    .rr-closing {
+      background: var(--color-teal); padding: 64px clamp(20px,5vw,56px);
+      text-align: center;
+    }
+    .rr-closing__inner { max-width: 640px; margin: 0 auto; }
+    .rr-closing__headline {
+      font-family: var(--font-display);
+      font-size: clamp(22px,4vw,34px); font-weight: 700;
+      color: var(--color-cream); line-height: 1.2; margin-bottom: 28px;
+    }
+    .rr-closing__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .rr-closing__btn-p {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; background: var(--color-cream); color: var(--color-teal);
+      border-radius: 8px; font-family: var(--font-display);
+      font-size: 14px; font-weight: 700; text-decoration: none;
+      border: 1.5px solid var(--color-cream);
+      transition: background .2s, color .2s, transform .18s;
+    }
+    .rr-closing__btn-p:hover { background: var(--color-dark); color: var(--color-cream); border-color: var(--color-dark); transform: translateY(-1px); }
+    .rr-closing__btn-s {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; background: transparent; color: var(--color-cream);
+      border-radius: 8px; font-family: var(--font-display);
+      font-size: 14px; font-weight: 700; text-decoration: none;
+      border: 1.5px solid rgba(242,228,206,.5);
+      transition: border-color .2s, background .2s, transform .18s;
+    }
+    .rr-closing__btn-s:hover { border-color: var(--color-cream); background: rgba(255,255,255,.1); transform: translateY(-1px); }
+
+    /* ═══════════════════════════
+       RESPONSIVE
+    ═══════════════════════════ */
+    @media (max-width: 960px) {
+      .rr-layout { grid-template-columns: 1fr; }
+      .rr-sidebar { position: static; max-height: none; display: none; }
+      .rr-mobile-filter-btn { display: inline-flex; }
+      .rr-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .rr-grid { grid-template-columns: 1fr; }
+      .rr-panel { width: 100vw; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="art-nav" id="artNav">
+    <a href="/images/index.html" class="art-nav__brand">Jose × Jocelyn</a>
+    <div class="art-nav__right">
+      <a href="/articles/" class="art-nav__link">La Voz del Día</a>
+      <a href="/career-templates.html" class="art-nav__link">Templates</a>
+      <a href="/bridge-year.html" class="art-nav__link">Bridge Year</a>
+      <a href="/coffee-chat.html" class="art-nav__link">Coffee Chat</a>
+      <a href="/opportunity-board.html" class="art-nav__link">Opportunities</a>
+      <a href="/partner-panels.html" class="art-nav__link">Panels</a>
+      <a href="/resume-reviews.html" class="art-nav__link" style="color:var(--color-dark);font-weight:600;">Resumes</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════
+       HERO
+  ════════════════════════════════ -->
+  <header class="rr-hero" id="top">
+    <p class="rr-hero__kicker">Community · Resume Library</p>
+    <h1 class="rr-hero__title">Resume <em>Reviews</em></h1>
+    <p class="rr-hero__sub">Real resumes. Real outcomes. See what actually works.</p>
+    <p class="rr-hero__body">
+      This is a community-built library of resumes submitted by students and early-career candidates who have used them to land internships, new grad roles, apprenticeships, and first full-time positions in tech and adjacent fields. Browse by role, experience level, company, and background to see what <strong>strong resumes look like in practice — not theory.</strong>
+    </p>
+    <div class="rr-hero__ctas">
+      <a href="#browse" class="rr-btn-primary">Browse Resumes</a>
+      <a href="#submit" class="rr-btn-secondary">Submit Your Resume</a>
+    </div>
+    <div class="rr-stats">
+      <div>
+        <div class="rr-stat__num">9<em>+</em></div>
+        <div class="rr-stat__label">Resumes submitted</div>
+      </div>
+      <div>
+        <div class="rr-stat__num">12<em>+</em></div>
+        <div class="rr-stat__label">Companies represented</div>
+      </div>
+      <div>
+        <div class="rr-stat__num">5<em>+</em></div>
+        <div class="rr-stat__label">Role types covered</div>
+      </div>
+      <div>
+        <div class="rr-stat__num">↗</div>
+        <div class="rr-stat__label">Updated weekly</div>
+      </div>
+    </div>
+  </header>
+
+  <hr class="rr-divider" />
+
+  <!-- ═══════════════════════════════
+       MAIN LAYOUT
+  ════════════════════════════════ -->
+  <div class="rr-layout" id="browse">
+
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="rr-sidebar" id="sidebar">
+      <div class="rr-sidebar__block">
+
+        <!-- Search -->
+        <div class="rr-sidebar__search-wrap">
+          <input class="rr-sidebar__search" type="text" id="searchInput" placeholder="Search by company, role, or keyword…" autocomplete="off" />
+        </div>
+
+        <!-- Role type -->
+        <div class="rr-filter-group">
+          <span class="rr-filter-label">Role Type</span>
+          <label class="rr-check-row"><input type="checkbox" value="swe" data-filter="role" /><span>Software Engineer</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="data" data-filter="role" /><span>Data Analyst / Data Scientist</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="pm" data-filter="role" /><span>Product Manager</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="biz" data-filter="role" /><span>Business / Operations</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="design" data-filter="role" /><span>Design</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="research" data-filter="role" /><span>Research</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="other" data-filter="role" /><span>Other</span></label>
+        </div>
+
+        <!-- Stage -->
+        <div class="rr-filter-group">
+          <span class="rr-filter-label">Stage</span>
+          <label class="rr-check-row"><input type="checkbox" value="intern" data-filter="stage" /><span>Intern</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="newgrad" data-filter="stage" /><span>New Grad</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="fulltime" data-filter="stage" /><span>1–2 Years Experience</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="pivot" data-filter="stage" /><span>Career Pivot / Transition</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="contract" data-filter="stage" /><span>Contract / Other</span></label>
+        </div>
+
+        <!-- Companies -->
+        <div class="rr-filter-group">
+          <span class="rr-filter-label">Companies</span>
+          <div class="rr-co-chips" id="coChips">
+            <span class="rr-co-chip" data-co="google"><img src="https://cdn.simpleicons.org/google/8A7E72" alt="Google" onerror="this.parentNode.innerHTML='G'" />Google</span>
+            <span class="rr-co-chip" data-co="microsoft"><img src="https://cdn.simpleicons.org/microsoft/8A7E72" alt="Microsoft" onerror="this.parentNode.innerHTML='MS'" />Microsoft</span>
+            <span class="rr-co-chip" data-co="meta"><img src="https://cdn.simpleicons.org/meta/8A7E72" alt="Meta" onerror="this.parentNode.innerHTML='M'" />Meta</span>
+            <span class="rr-co-chip" data-co="apple"><img src="https://cdn.simpleicons.org/apple/8A7E72" alt="Apple" onerror="this.parentNode.innerHTML='A'" />Apple</span>
+            <span class="rr-co-chip" data-co="amazon"><img src="https://cdn.simpleicons.org/amazon/8A7E72" alt="Amazon" onerror="this.parentNode.innerHTML='A'" />Amazon</span>
+            <span class="rr-co-chip" data-co="stripe"><img src="https://cdn.simpleicons.org/stripe/8A7E72" alt="Stripe" onerror="this.parentNode.innerHTML='S'" />Stripe</span>
+            <span class="rr-co-chip" data-co="pinterest"><img src="https://cdn.simpleicons.org/pinterest/8A7E72" alt="Pinterest" onerror="this.parentNode.innerHTML='P'" />Pinterest</span>
+            <span class="rr-co-chip" data-co="reddit"><img src="https://cdn.simpleicons.org/reddit/8A7E72" alt="Reddit" onerror="this.parentNode.innerHTML='R'" />Reddit</span>
+            <span class="rr-co-chip" data-co="dropbox"><img src="https://cdn.simpleicons.org/dropbox/8A7E72" alt="Dropbox" onerror="this.parentNode.innerHTML='D'" />Dropbox</span>
+            <span class="rr-co-chip" data-co="fidelity">Fidelity</span>
+            <span class="rr-co-chip" data-co="jpmorgan">JPMorgan</span>
+            <span class="rr-co-chip" data-co="anthropic">Anthropic</span>
+          </div>
+          <input class="rr-co-search" type="text" placeholder="Search for a company…" id="coSearchInput" autocomplete="off" />
+        </div>
+
+        <!-- Background tags -->
+        <div class="rr-filter-group">
+          <span class="rr-filter-label">Background</span>
+          <label class="rr-check-row"><input type="checkbox" value="first-gen" data-filter="tag" /><span>First-Gen</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="non-cs" data-filter="tag" /><span>Non-CS Major</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="nontraditional" data-filter="tag" /><span>Nontraditional Path</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="transfer" data-filter="tag" /><span>Transfer Student</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="career-changer" data-filter="tag" /><span>Career Changer</span></label>
+          <label class="rr-check-row"><input type="checkbox" value="community-college" data-filter="tag" /><span>Community College</span></label>
+        </div>
+
+        <!-- Sort -->
+        <div class="rr-filter-group">
+          <span class="rr-filter-label">Sort By</span>
+          <select class="rr-sort-select" id="sortSelect">
+            <option value="newest">Newly Added</option>
+            <option value="featured">Featured by J&amp;J</option>
+            <option value="intern">Intern Roles</option>
+            <option value="newgrad">New Grad Roles</option>
+          </select>
+        </div>
+
+        <div style="padding:12px 16px;">
+          <button class="rr-filter-reset" id="resetFilters">Clear all filters</button>
+        </div>
+
+      </div>
+    </aside><!-- /sidebar -->
+
+    <!-- ─── GRID AREA ─── -->
+    <div class="rr-grid-area">
+
+      <!-- Mobile filter btn -->
+      <button class="rr-mobile-filter-btn" id="openFilterSheet">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3h12M3 7h8M5 11h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Filters
+      </button>
+
+      <!-- Active filter chips -->
+      <div class="rr-active-bar" id="activeBar" style="display:none;">
+        <span class="rr-active-bar__label">Active:</span>
+        <div id="activeChips" style="display:flex;flex-wrap:wrap;gap:7px;"></div>
+        <button class="rr-active-bar__clear" id="clearAllFilters">Clear all</button>
+      </div>
+
+      <!-- Count + sort desktop label -->
+      <div class="rr-grid-meta">
+        <p class="rr-grid-count" id="gridCount"><strong>9</strong> resumes</p>
+      </div>
+
+      <!-- GRID (rendered by JS) -->
+      <div class="rr-grid" id="resumeGrid"></div>
+
+    </div><!-- /grid area -->
+  </div><!-- /layout -->
+
+  <hr class="rr-divider" />
+
+  <!-- ═══════════════════════════════
+       HOW IT WORKS
+  ════════════════════════════════ -->
+  <section class="rr-howto">
+    <div class="rr-howto__head">
+      <p class="rr-kicker">Section 02 · How It Works</p>
+      <h2 class="rr-section-title">How the Resume Library Works</h2>
+      <p class="rr-section-sub">Community-sourced. Outcome-verified. Completely free.</p>
+    </div>
+    <div class="rr-howto__grid">
+      <div class="rr-howto__card">
+        <div class="rr-howto__num">01</div>
+        <div class="rr-howto__title">Browse real submissions</div>
+        <p class="rr-howto__body">Every resume in this library was submitted by a real student or early-career candidate who used it to get a response. Filter by role, company, background, and stage to find examples that match where you are in the process.</p>
+      </div>
+      <div class="rr-howto__card">
+        <div class="rr-howto__num">02</div>
+        <div class="rr-howto__title">Learn what works</div>
+        <p class="rr-howto__body">Seeing real resumes is more useful than a template. You can look at formatting, bullet structure, experience framing, and project descriptions from people who were recently in your exact position.</p>
+      </div>
+      <div class="rr-howto__card">
+        <div class="rr-howto__num">03</div>
+        <div class="rr-howto__title">Submit yours</div>
+        <p class="rr-howto__body">If your resume helped you land an interview, an offer, or a callback, you can contribute it to the library so others can learn from it. You control your name visibility and whether downloads are allowed.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rr-divider" />
+
+  <!-- ═══════════════════════════════
+       SUBMIT FORM
+  ════════════════════════════════ -->
+  <section class="rr-submit" id="submit">
+    <div class="rr-submit__layout">
+
+      <!-- Intro -->
+      <div>
+        <p class="rr-submit__intro-kicker">Section 03 · Contribute</p>
+        <h2 class="rr-submit__intro-title">Submit Your Resume to the Library</h2>
+        <p class="rr-submit__intro-body">
+          Did your resume help you land an interview, a callback, or an offer? Submit it here and become part of the community resource. <strong>You can stay anonymous if you prefer.</strong> Every submission helps another student see what is actually possible.
+        </p>
+        <div class="rr-submit__bullets">
+          <div class="rr-submit__bullet">You control your name visibility — use a handle like "J.C." or a username</div>
+          <div class="rr-submit__bullet">You decide whether others can download your resume or view only</div>
+          <div class="rr-submit__bullet">Jose or Jocelyn may add a short annotation if your resume is featured</div>
+          <div class="rr-submit__bullet">Redact personal contact info before uploading — we don't verify it</div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="rr-form-box" id="submitFormBox">
+        <div id="submitFormContent">
+
+          <div class="rr-form-row rr-form-row-2">
+            <div>
+              <label class="rr-form-label" for="sfHandle">Handle / Display Name <span>*</span></label>
+              <input class="rr-form-input" type="text" id="sfHandle" placeholder="e.g. j.cruz, anonymous22" />
+            </div>
+            <div>
+              <label class="rr-form-label" for="sfEmail">Email <span>*</span> <em>(internal only)</em></label>
+              <input class="rr-form-input" type="email" id="sfEmail" placeholder="your@email.com" />
+            </div>
+          </div>
+
+          <div class="rr-form-row">
+            <label class="rr-form-label" for="sfLinkedIn">LinkedIn Profile <em>(optional — shown publicly if included)</em></label>
+            <input class="rr-form-input" type="url" id="sfLinkedIn" placeholder="linkedin.com/in/yourhandle" />
+          </div>
+
+          <div class="rr-form-row rr-form-row-2">
+            <div>
+              <label class="rr-form-label" for="sfRoleTitle">Role Title <span>*</span></label>
+              <input class="rr-form-input" type="text" id="sfRoleTitle" placeholder="e.g. SWE Intern, Data Analyst" />
+            </div>
+            <div>
+              <label class="rr-form-label" for="sfRoleType">Role Type <span>*</span></label>
+              <select class="rr-form-select" id="sfRoleType">
+                <option value="">Select…</option>
+                <option value="swe">Software Engineer</option>
+                <option value="data">Data / Analytics</option>
+                <option value="pm">Product Management</option>
+                <option value="design">Design</option>
+                <option value="research">Research</option>
+                <option value="biz">Business / Operations</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="rr-form-row">
+            <label class="rr-form-label" for="sfStage">Stage <span>*</span></label>
+            <select class="rr-form-select" id="sfStage">
+              <option value="">Select your stage…</option>
+              <option value="intern">Intern</option>
+              <option value="newgrad">New Grad</option>
+              <option value="fulltime">1–2 Years Experience</option>
+              <option value="pivot">Career Pivot / Transition</option>
+              <option value="contract">Bridge Year / Contract</option>
+            </select>
+          </div>
+
+          <div class="rr-form-row">
+            <label class="rr-form-label" for="sfCompanies">Companies where this resume got traction <span>*</span></label>
+            <input class="rr-form-input" type="text" id="sfCompanies" placeholder="e.g. Google, Fidelity, JPMorgan (comma-separated)" />
+          </div>
+
+          <div class="rr-form-row">
+            <label class="rr-form-label" style="margin-bottom:10px;">Background Tags <em>(optional — select all that apply)</em></label>
+            <div class="rr-tag-toggles" id="bgTagToggles">
+              <span class="rr-tag-toggle" data-tag="first-gen">First-Gen</span>
+              <span class="rr-tag-toggle" data-tag="non-cs">Non-CS Major</span>
+              <span class="rr-tag-toggle" data-tag="nontraditional">Nontraditional Path</span>
+              <span class="rr-tag-toggle" data-tag="transfer">Transfer Student</span>
+              <span class="rr-tag-toggle" data-tag="career-changer">Career Changer</span>
+              <span class="rr-tag-toggle" data-tag="community-college">Community College</span>
+            </div>
+          </div>
+
+          <div class="rr-form-row">
+            <label class="rr-form-label">Resume File <span>*</span> <em>(PDF only, max 5MB)</em></label>
+            <div class="rr-upload-zone" id="uploadZone">
+              <input type="file" id="sfFile" accept=".pdf" />
+              <span class="rr-upload-icon">📄</span>
+              <span class="rr-upload-label">Drop your PDF here or click to browse</span>
+              <span class="rr-upload-hint">PDF only · Max 5MB</span>
+              <div class="rr-upload-filename" id="uploadFilename">
+                <span>✓</span><span id="uploadFilenameTxt"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rr-form-row">
+            <label class="rr-form-label">Allow others to download? <span>*</span></label>
+            <div class="rr-radio-row">
+              <label class="rr-radio-option">
+                <input type="radio" name="sfDownload" value="yes" /> Yes, downloads allowed
+              </label>
+              <label class="rr-radio-option">
+                <input type="radio" name="sfDownload" value="no" checked /> View only
+              </label>
+            </div>
+          </div>
+
+          <div class="rr-form-row">
+            <label class="rr-form-label" for="sfStory">Your story in 1–2 sentences <em>(optional)</em></label>
+            <textarea class="rr-form-textarea" id="sfStory" placeholder="What did this resume help you land? What was your situation at the time?"></textarea>
+          </div>
+
+          <div class="rr-form-row">
+            <label class="rr-form-label">Want J&amp;J to review and annotate your resume? <em>(optional)</em></label>
+            <div class="rr-radio-row">
+              <label class="rr-radio-option">
+                <input type="radio" name="sfAnnotate" value="yes" /> Yes — feature and annotate it
+              </label>
+              <label class="rr-radio-option">
+                <input type="radio" name="sfAnnotate" value="no" checked /> No thanks, just add it
+              </label>
+            </div>
+          </div>
+
+          <button class="rr-form-btn" onclick="submitResumeForm()">Add My Resume to the Library</button>
+          <p class="rr-form-note">By submitting, you agree to have your resume displayed publicly on this page. Personal contact information visible on the resume is your responsibility to redact before uploading. We do not display full names unless you explicitly include them in your handle field.</p>
+
+        </div>
+        <div class="rr-form-success" id="submitFormSuccess">
+          <div class="rr-form-success__icon">✓</div>
+          <div class="rr-form-success__title">Submitted — thank you.</div>
+          <p class="rr-form-success__body">Your resume is under review and will be added to the library shortly. If you opted in for annotation, Jose or Jocelyn will review it and may feature it with a note. Keep an eye on the library.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       ECOSYSTEM
+  ════════════════════════════════ -->
+  <section class="rr-eco">
+    <div class="rr-eco__inner">
+      <p class="rr-eco__kicker">The J&amp;J Ecosystem</p>
+      <h2 class="rr-eco__title">Resume Reviews is one part of the bigger picture.</h2>
+      <p class="rr-eco__body">The Resume Library helps you see what real resumes look like. The Career Templates page gives you the scripts, trackers, and outreach tools to act on what you learn. The Interview Prep Hub gets you ready for the room once you land the interview. Partner Panels let you hear the full story from people who have been in your seat. The Opportunity Board shows you what's open right now.</p>
+      <div class="rr-eco__grid">
+        <a href="/career-templates.html" class="rr-eco__link">
+          <div class="rr-eco__link-title">Career Templates</div>
+          <div class="rr-eco__link-desc">Scripts, trackers, and outreach tools</div>
+        </a>
+        <a href="/interview-prep.html" class="rr-eco__link">
+          <div class="rr-eco__link-title">Interview Prep Hub</div>
+          <div class="rr-eco__link-desc">Structured prep for every stage and type</div>
+        </a>
+        <a href="/opportunity-board.html" class="rr-eco__link">
+          <div class="rr-eco__link-title">Opportunity Board</div>
+          <div class="rr-eco__link-desc">Curated internships, apprenticeships &amp; roles</div>
+        </a>
+        <a href="/coffee-chat.html" class="rr-eco__link">
+          <div class="rr-eco__link-title">Coffee Chat Network</div>
+          <div class="rr-eco__link-desc">Meet people who've walked this path</div>
+        </a>
+        <a href="/partner-panels.html" class="rr-eco__link">
+          <div class="rr-eco__link-title">Partner Panels</div>
+          <div class="rr-eco__link-desc">Live conversations with practitioners</div>
+        </a>
+        <a href="/bridge-year.html" class="rr-eco__link">
+          <div class="rr-eco__link-title">Bridge Year Hub</div>
+          <div class="rr-eco__link-desc">Your path when the offer didn't come yet</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       CLOSING STRIP
+  ════════════════════════════════ -->
+  <section class="rr-closing">
+    <div class="rr-closing__inner">
+      <h2 class="rr-closing__headline">See what a strong resume actually looks like. Then build yours.</h2>
+      <div class="rr-closing__btns">
+        <a href="#browse" class="rr-closing__btn-p">Browse the Library</a>
+        <a href="#submit" class="rr-closing__btn-s">Submit Your Resume</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       RESUME DETAIL PANEL
+  ════════════════════════════════ -->
+  <div class="rr-overlay" id="rrOverlay" onclick="closePanel()"></div>
+  <div class="rr-panel" id="rrPanel" role="dialog" aria-modal="true" aria-label="Resume detail">
+    <div class="rr-panel__head">
+      <span class="rr-panel__title">Resume Preview</span>
+      <button class="rr-panel__close" onclick="closePanel()" aria-label="Close">✕</button>
+    </div>
+    <div class="rr-panel__body" id="panelBody">
+      <!-- Content injected by JS -->
+    </div>
+    <div class="rr-panel__foot" id="panelFoot">
+      <button class="rr-panel__dl-btn" id="panelDlBtn">⬇ Download Resume</button>
+      <button class="rr-panel__share-btn" onclick="closePanel()">← Back</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════
+       MOBILE FILTER SHEET
+  ════════════════════════════════ -->
+  <div class="rr-sheet-overlay" id="sheetOverlay" onclick="closeFilterSheet()"></div>
+  <div class="rr-sheet" id="filterSheet">
+    <div class="rr-sheet__handle"></div>
+    <div class="rr-sheet__head">
+      <span class="rr-sheet__title">Filter Resumes</span>
+      <button class="rr-sheet__close" onclick="closeFilterSheet()">✕</button>
+    </div>
+    <div class="rr-sheet__body" id="sheetBody">
+      <!-- Cloned from sidebar by JS -->
+    </div>
+  </div>
+
+  <script src="/nav-prefetch.js"></script>
+  <script>
+  /* ════════════════════════════════
+     DATA
+  ════════════════════════════════ */
+  const COMPANIES = {
+    google:    { name:'Google',    slug:'google',    hex:'4285F4' },
+    apple:     { name:'Apple',     slug:'apple',     hex:'555555' },
+    microsoft: { name:'Microsoft', slug:'microsoft', hex:'5E5E5E' },
+    meta:      { name:'Meta',      slug:'meta',      hex:'0082FB' },
+    amazon:    { name:'Amazon',    slug:'amazon',    hex:'FF9900' },
+    tiktok:    { name:'TikTok',    slug:'tiktok',    hex:'010101' },
+    pinterest: { name:'Pinterest', slug:'pinterest', hex:'E60023' },
+    reddit:    { name:'Reddit',    slug:'reddit',    hex:'FF4500' },
+    discord:   { name:'Discord',   slug:'discord',   hex:'5865F2' },
+    stripe:    { name:'Stripe',    slug:'stripe',    hex:'635BFF' },
+    figma:     { name:'Figma',     slug:'figma',     hex:'F24E1E' },
+    dropbox:   { name:'Dropbox',   slug:'dropbox',   hex:'0061FF' },
+    ibm:       { name:'IBM',       slug:'ibm',       hex:'052FAD' },
+    airbnb:    { name:'Airbnb',    slug:'airbnb',    hex:'FF5A5F' },
+    fidelity:  { name:'Fidelity',  slug:null,        letter:'F',  color:'#006633', bg:'rgba(0,102,51,.1)' },
+    jpmorgan:  { name:'JPMorgan',  slug:null,        letter:'JP', color:'#003087', bg:'rgba(0,48,135,.1)' },
+    anthropic: { name:'Anthropic', slug:null,        letter:'A',  color:'#C4602D', bg:'rgba(196,96,45,.1)' },
+  };
+
+  const STAGE_META = {
+    intern:     { label:'INTERN',       cls:'intern',     tagCls:'rr-tag--blue' },
+    newgrad:    { label:'NEW GRAD',     cls:'newgrad',    tagCls:'rr-tag--teal' },
+    fulltime:   { label:'FULL-TIME',    cls:'fulltime',   tagCls:'rr-tag--navy' },
+    pivot:      { label:'CAREER PIVOT', cls:'pivot',      tagCls:'rr-tag--accent' },
+    contract:   { label:'CONTRACT',     cls:'contract',   tagCls:'rr-tag--muted' },
+    apprenticeship: { label:'APPRENTICESHIP', cls:'apprenticeship', tagCls:'rr-tag--gold' },
+  };
+
+  const TAG_LABELS = {
+    'first-gen':       'First-Gen',
+    'non-cs':          'Non-CS Major',
+    'nontraditional':  'Nontraditional',
+    'transfer':        'Transfer Student',
+    'career-changer':  'Career Changer',
+    'community-college':'Community College',
+  };
+
+  const RESUMES = [
+    {
+      id:1, handle:'jorellp', role:'Software Engineer', roleType:'swe', stage:'intern',
+      companies:['apple','google'], companyExtra:3, tags:['first-gen'],
+      submitted:'1 hour ago', featured:null, allowDownload:true, story:null,
+      appliedRole:'Software Engineering Intern',
+    },
+    {
+      id:2, handle:'fearzyn', role:'Software Engineer', roleType:'swe', stage:'fulltime',
+      companies:['google','meta','microsoft'], companyExtra:5, tags:[],
+      submitted:'2 hours ago', featured:null, allowDownload:false, story:null,
+      appliedRole:'Software Engineer (Full-Time)',
+    },
+    {
+      id:3, handle:'left', role:'Software Engineer', roleType:'swe', stage:'newgrad',
+      companies:['anthropic'], companyExtra:3, tags:[],
+      submitted:'1 day ago', featured:null, allowDownload:true, story:null,
+      appliedRole:'Software Engineer — New Grad',
+    },
+    {
+      id:4, handle:'jcruiz', role:'Data Analyst', roleType:'data', stage:'intern',
+      companies:['fidelity','jpmorgan'], companyExtra:0, tags:['first-gen','non-cs'],
+      submitted:'2 days ago',
+      featured:{ annotation:'Strong use of impact numbers on every bullet. This is what a project-heavy resume looks like done right.' },
+      allowDownload:true,
+      story:'Helped me land interviews at Fidelity and JPMorgan for their data internship programs.',
+      appliedRole:'Data Analyst Intern',
+    },
+    {
+      id:5, handle:'v.jocelyn', role:'Data Analyst', roleType:'data', stage:'newgrad',
+      companies:['fidelity'], companyExtra:0, tags:['first-gen'],
+      submitted:'3 days ago',
+      featured:{ annotation:'This resume shows career readiness without relying on brand names. The framing is clean and every line earns its place.' },
+      allowDownload:true,
+      story:'Landed my first full-time offer at Fidelity six months after graduating.',
+      appliedRole:'Data Analyst (New Grad)',
+    },
+    {
+      id:6, handle:'kantor', role:'Software Engineer', roleType:'swe', stage:'intern',
+      companies:['pinterest','reddit'], companyExtra:1, tags:[],
+      submitted:'09/29/2025', featured:null, allowDownload:false, story:null,
+      appliedRole:'Software Engineering Intern',
+    },
+    {
+      id:7, handle:'ashijob', role:'Software Engineer', roleType:'swe', stage:'contract',
+      companies:['apple','meta','microsoft'], companyExtra:2, tags:['nontraditional'],
+      submitted:'09/30/2025', featured:null, allowDownload:true, story:null,
+      appliedRole:'Contract Software Engineer',
+    },
+    {
+      id:8, handle:'go_edward', role:'Data Scientist', roleType:'data', stage:'fulltime',
+      companies:['dropbox','pinterest'], companyExtra:4, tags:[],
+      submitted:'09/29/2025', featured:null, allowDownload:false, story:null,
+      appliedRole:'Data Scientist (Full-Time)',
+    },
+    {
+      id:9, handle:'richer', role:'Software Engineer', roleType:'swe', stage:'pivot',
+      companies:['dropbox','pinterest'], companyExtra:7, tags:['career-changer'],
+      submitted:'09/30/2025', featured:null, allowDownload:true,
+      story:'Made a full pivot from finance into software engineering. This resume helped me land interviews at 3 top companies.',
+      appliedRole:'Software Engineer (Career Pivot)',
+    },
+  ];
+
+  /* ════════════════════════════════
+     FILTER STATE
+  ════════════════════════════════ */
+  const state = {
+    search: '',
+    roles: [],
+    stages: [],
+    companies: [],
+    tags: [],
+    sort: 'newest',
+  };
+
+  /* ════════════════════════════════
+     RENDER HELPERS
+  ════════════════════════════════ */
+  function coLogoHTML(key, size) {
+    var c = COMPANIES[key];
+    if (!c) return '<span class="rr-co-letter" style="background:rgba(0,0,0,.08);color:var(--color-muted);font-size:8px;width:' + size + 'px;height:' + size + 'px;">' + (key[0]||'?').toUpperCase() + '</span>';
+    if (c.slug) {
+      return '<img class="rr-co-logo" src="https://cdn.simpleicons.org/' + c.slug + '/8A7E72" alt="' + c.name + '" width="' + size + '" height="' + size + '" onerror="this.outerHTML=\'<span class=rr-co-letter style=\\\'background:rgba(0,0,0,.08);color:var(--color-muted);font-size:8px;width:' + size + 'px;height:' + size + 'px;\\\'>' + c.name[0] + '</span>\'" />';
+    }
+    return '<span class="rr-co-letter" style="background:' + c.bg + ';color:' + c.color + ';font-size:' + Math.round(size * 0.44) + 'px;width:' + size + 'px;height:' + size + 'px;">' + c.letter + '</span>';
+  }
+
+  function tagHTML(key, small) {
+    var map = {
+      'first-gen':       'rr-tag--teal',
+      'non-cs':          'rr-tag--blue',
+      'nontraditional':  'rr-tag--accent',
+      'transfer':        'rr-tag--gold',
+      'career-changer':  'rr-tag--navy',
+      'community-college':'rr-tag--muted',
+    };
+    return '<span class="rr-tag ' + (map[key]||'rr-tag--muted') + '" style="font-size:' + (small?'9':'10') + 'px;">' + (TAG_LABELS[key]||key) + '</span>';
+  }
+
+  function cardHTML(r) {
+    var sm = STAGE_META[r.stage] || { label: r.stage.toUpperCase(), cls: 'contract', tagCls: 'rr-tag--muted' };
+    var coHtml = r.companies.slice(0,3).map(function(k){ return coLogoHTML(k, 18); }).join('');
+    var extraHtml = (r.companies.length + r.companyExtra > r.companies.length)
+      ? '<span class="rr-co-extra">+' + r.companyExtra + '</span>' : '';
+    var tagsHtml = r.tags.map(function(t){ return tagHTML(t, true); }).join('');
+    var featuredBadge = r.featured ? '<span class="rr-card__featured-badge">★ J&amp;J Pick</span>' : '';
+    return [
+      '<article class="rr-card" onclick="openPanel(' + r.id + ')" tabindex="0" role="button" aria-label="View resume by ' + r.handle + '">',
+        '<div class="rr-card__stage-wrap">',
+          '<span class="rr-card__stage-badge rr-badge--' + sm.cls + '">' + sm.label + '</span>',
+          featuredBadge,
+          '<div class="rr-card__thumb">',
+            '<div class="rr-card__thumb-paper">',
+              '<div class="rr-card__thumb-name"></div>',
+              '<div class="rr-card__thumb-subname"></div>',
+            '</div>',
+            '<div class="rr-card__thumb-overlay">',
+              '<button class="rr-card__thumb-btn">View Resume</button>',
+            '</div>',
+          '</div>',
+        '</div>',
+        '<div class="rr-card__info">',
+          '<div class="rr-card__handle">@' + r.handle + '</div>',
+          '<div class="rr-card__role">' + r.role + '</div>',
+          '<div class="rr-card__companies">' + coHtml + extraHtml + '</div>',
+          '<div class="rr-card__foot">',
+            '<div class="rr-card__tags">' + tagsHtml + '</div>',
+            '<span class="rr-card__submitted">' + r.submitted + '</span>',
+          '</div>',
+        '</div>',
+      '</article>',
+    ].join('');
+  }
+
+  /* ════════════════════════════════
+     FILTER + RENDER
+  ════════════════════════════════ */
+  function filtered() {
+    var result = RESUMES.filter(function(r) {
+      var searchQ = state.search.toLowerCase();
+      if (searchQ) {
+        var searchTarget = (r.handle + ' ' + r.role + ' ' + r.companies.join(' ')).toLowerCase();
+        if (!searchTarget.includes(searchQ)) return false;
+      }
+      if (state.roles.length && !state.roles.includes(r.roleType)) return false;
+      if (state.stages.length && !state.stages.includes(r.stage)) return false;
+      if (state.companies.length) {
+        var hasAny = state.companies.some(function(c){ return r.companies.includes(c); });
+        if (!hasAny) return false;
+      }
+      if (state.tags.length) {
+        var hasTag = state.tags.every(function(t){ return r.tags.includes(t); });
+        if (!hasTag) return false;
+      }
+      return true;
+    });
+
+    // Sort
+    if (state.sort === 'featured') {
+      result = result.sort(function(a,b){ return (b.featured?1:0) - (a.featured?1:0); });
+    } else if (state.sort === 'intern') {
+      result = result.filter(function(r){ return r.stage === 'intern'; });
+    } else if (state.sort === 'newgrad') {
+      result = result.filter(function(r){ return r.stage === 'newgrad'; });
+    }
+    return result;
+  }
+
+  function renderGrid() {
+    var grid = document.getElementById('resumeGrid');
+    var list = filtered();
+    var count = document.getElementById('gridCount');
+
+    if (!list.length) {
+      grid.innerHTML = '<div class="rr-grid--empty"><strong>No resumes match your filters.</strong>Try adjusting your selections — or be the first to submit one in this category.</div>';
+    } else {
+      grid.innerHTML = list.map(cardHTML).join('');
+    }
+
+    count.innerHTML = '<strong>' + list.length + '</strong> of <strong>' + RESUMES.length + '</strong> resumes';
+    renderActiveBar();
+  }
+
+  /* ════════════════════════════════
+     ACTIVE FILTER BAR
+  ════════════════════════════════ */
+  var ROLE_LABELS = { swe:'Software Engineer', data:'Data / DS', pm:'Product', biz:'Business', design:'Design', research:'Research', other:'Other' };
+  var STAGE_LABELS = { intern:'Intern', newgrad:'New Grad', fulltime:'Full-Time', pivot:'Career Pivot', contract:'Contract' };
+
+  function renderActiveBar() {
+    var bar = document.getElementById('activeBar');
+    var chips = document.getElementById('activeChips');
+    var all = [];
+
+    state.roles.forEach(function(v){ all.push({ type:'role', val:v, label: ROLE_LABELS[v]||v }); });
+    state.stages.forEach(function(v){ all.push({ type:'stage', val:v, label: STAGE_LABELS[v]||v }); });
+    state.companies.forEach(function(v){ all.push({ type:'company', val:v, label: COMPANIES[v]?COMPANIES[v].name:v }); });
+    state.tags.forEach(function(v){ all.push({ type:'tag', val:v, label: TAG_LABELS[v]||v }); });
+    if (state.search) all.push({ type:'search', val:state.search, label:'"'+state.search+'"' });
+
+    if (!all.length) { bar.style.display = 'none'; return; }
+    bar.style.display = 'flex';
+    chips.innerHTML = all.map(function(item) {
+      return '<span class="rr-active-chip" onclick="removeFilter(\'' + item.type + '\',\'' + item.val + '\')">' + item.label + ' <span class="rr-active-chip__x">×</span></span>';
+    }).join('');
+  }
+
+  function removeFilter(type, val) {
+    if (type === 'role') state.roles = state.roles.filter(function(v){ return v !== val; });
+    if (type === 'stage') state.stages = state.stages.filter(function(v){ return v !== val; });
+    if (type === 'company') { state.companies = state.companies.filter(function(v){ return v !== val; }); updateCoChips(); }
+    if (type === 'tag') state.tags = state.tags.filter(function(v){ return v !== val; });
+    if (type === 'search') { state.search = ''; document.getElementById('searchInput').value = ''; }
+    syncCheckboxes();
+    renderGrid();
+  }
+
+  function clearAll() {
+    state.roles = []; state.stages = []; state.companies = []; state.tags = []; state.search = '';
+    document.getElementById('searchInput').value = '';
+    updateCoChips();
+    syncCheckboxes();
+    renderGrid();
+  }
+
+  function syncCheckboxes() {
+    document.querySelectorAll('input[data-filter="role"]').forEach(function(cb) {
+      cb.checked = state.roles.includes(cb.value);
+    });
+    document.querySelectorAll('input[data-filter="stage"]').forEach(function(cb) {
+      cb.checked = state.stages.includes(cb.value);
+    });
+    document.querySelectorAll('input[data-filter="tag"]').forEach(function(cb) {
+      cb.checked = state.tags.includes(cb.value);
+    });
+  }
+
+  function updateCoChips() {
+    document.querySelectorAll('.rr-co-chip').forEach(function(chip) {
+      chip.classList.toggle('active', state.companies.includes(chip.dataset.co));
+    });
+  }
+
+  /* ════════════════════════════════
+     EVENT LISTENERS
+  ════════════════════════════════ */
+  document.addEventListener('DOMContentLoaded', function() {
+
+    // Initial render
+    renderGrid();
+
+    // Nav scroll shadow
+    var nav = document.getElementById('artNav');
+    window.addEventListener('scroll', function() {
+      nav.classList.toggle('art-nav--scrolled', window.scrollY > 10);
+    }, { passive:true });
+
+    // Search
+    document.getElementById('searchInput').addEventListener('input', function() {
+      state.search = this.value.trim();
+      renderGrid();
+    });
+
+    // Company co-search (filter displayed chips)
+    document.getElementById('coSearchInput').addEventListener('input', function() {
+      var q = this.value.toLowerCase();
+      document.querySelectorAll('.rr-co-chip').forEach(function(chip) {
+        chip.style.display = chip.dataset.co.includes(q) || chip.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+
+    // Checkboxes
+    document.querySelectorAll('input[data-filter]').forEach(function(cb) {
+      cb.addEventListener('change', function() {
+        var filter = cb.dataset.filter;
+        var val = cb.value;
+        if (filter === 'role') {
+          if (cb.checked) state.roles.push(val); else state.roles = state.roles.filter(function(v){ return v !== val; });
+        } else if (filter === 'stage') {
+          if (cb.checked) state.stages.push(val); else state.stages = state.stages.filter(function(v){ return v !== val; });
+        } else if (filter === 'tag') {
+          if (cb.checked) state.tags.push(val); else state.tags = state.tags.filter(function(v){ return v !== val; });
+        }
+        renderGrid();
+      });
+    });
+
+    // Company chips
+    document.querySelectorAll('.rr-co-chip').forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        var co = chip.dataset.co;
+        if (state.companies.includes(co)) {
+          state.companies = state.companies.filter(function(c){ return c !== co; });
+          chip.classList.remove('active');
+        } else {
+          state.companies.push(co);
+          chip.classList.add('active');
+        }
+        renderGrid();
+      });
+    });
+
+    // Sort
+    document.getElementById('sortSelect').addEventListener('change', function() {
+      state.sort = this.value;
+      renderGrid();
+    });
+
+    // Reset
+    document.getElementById('resetFilters').addEventListener('click', clearAll);
+    document.getElementById('clearAllFilters').addEventListener('click', clearAll);
+
+    // Mobile filter sheet
+    document.getElementById('openFilterSheet').addEventListener('click', openFilterSheet);
+
+    // Tag toggles in submit form
+    document.querySelectorAll('.rr-tag-toggle').forEach(function(tog) {
+      tog.addEventListener('click', function() {
+        tog.classList.toggle('active');
+      });
+    });
+
+    // File upload zone
+    var zone = document.getElementById('uploadZone');
+    var fileInput = document.getElementById('sfFile');
+    fileInput.addEventListener('change', function() {
+      if (fileInput.files && fileInput.files[0]) {
+        var fn = document.getElementById('uploadFilename');
+        document.getElementById('uploadFilenameTxt').textContent = fileInput.files[0].name;
+        fn.style.display = 'flex';
+      }
+    });
+    zone.addEventListener('dragover', function(e) { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', function() { zone.classList.remove('drag-over'); });
+    zone.addEventListener('drop', function(e) {
+      e.preventDefault(); zone.classList.remove('drag-over');
+      var f = e.dataTransfer.files[0];
+      if (f && f.type === 'application/pdf') {
+        fileInput.files = e.dataTransfer.files;
+        document.getElementById('uploadFilenameTxt').textContent = f.name;
+        document.getElementById('uploadFilename').style.display = 'flex';
+      }
+    });
+
+    // Keyboard: open panel on Enter
+    document.getElementById('resumeGrid').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && e.target.classList.contains('rr-card')) {
+        var id = parseInt(e.target.getAttribute('onclick').match(/\d+/)[0]);
+        openPanel(id);
+      }
+    });
+
+    // Close panel on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { closePanel(); closeFilterSheet(); }
+    });
+  });
+
+  /* ════════════════════════════════
+     PANEL (resume detail)
+  ════════════════════════════════ */
+  function openPanel(id) {
+    var r = RESUMES.find(function(x){ return x.id === id; });
+    if (!r) return;
+    var sm = STAGE_META[r.stage] || { label:r.stage.toUpperCase(), tagCls:'rr-tag--muted' };
+    var coHTML = r.companies.map(function(k){ return coLogoHTML(k, 22); }).join('');
+    var extraHTML = r.companyExtra > 0 ? '<span class="rr-co-extra">+' + r.companyExtra + '</span>' : '';
+    var tagsHTML = r.tags.map(function(t){ return tagHTML(t, false); }).join('');
+
+    var annotationHTML = r.featured ? [
+      '<div class="rr-panel__annotation">',
+        '<div class="rr-panel__annotation-label">★ J&amp;J Annotation</div>',
+        '<div class="rr-panel__annotation-text">"' + r.featured.annotation + '"</div>',
+      '</div>',
+    ].join('') : '';
+
+    var storyHTML = r.story ? [
+      '<div class="rr-panel__story">',
+        '<div class="rr-panel__story-label">Their Story</div>',
+        r.story,
+      '</div>',
+    ].join('') : '';
+
+    document.getElementById('panelBody').innerHTML = [
+      '<div class="rr-panel__thumb">',
+        '<div class="rr-panel__thumb-paper">',
+          '<div class="rr-panel__thumb-name"></div>',
+          '<div class="rr-panel__thumb-sub"></div>',
+        '</div>',
+        '<div class="rr-panel__no-preview">',
+          '<span class="rr-panel__no-preview-icon">📄</span>',
+          '<span>Resume preview placeholder</span>',
+          '<span style="font-size:11px;opacity:.6;">Real PDF will display here</span>',
+        '</div>',
+      '</div>',
+      '<div class="rr-panel__meta">',
+        '<div class="rr-panel__meta-row">',
+          '<span class="rr-panel__meta-label">Submitted by</span>',
+          '<span class="rr-panel__meta-val">@' + r.handle + '</span>',
+        '</div>',
+        '<div class="rr-panel__meta-row">',
+          '<span class="rr-panel__meta-label">Applied Role</span>',
+          '<span class="rr-panel__meta-val">' + r.appliedRole + '</span>',
+        '</div>',
+        '<div class="rr-panel__meta-row">',
+          '<span class="rr-panel__meta-label">Stage</span>',
+          '<span class="rr-tag ' + sm.tagCls + '">' + sm.label + '</span>',
+        '</div>',
+        '<div class="rr-panel__meta-row">',
+          '<span class="rr-panel__meta-label">Got traction at</span>',
+          '<div class="rr-panel__meta-co">' + coHTML + extraHTML + '</div>',
+        '</div>',
+        (tagsHTML ? '<div class="rr-panel__meta-row"><span class="rr-panel__meta-label">Background</span><div class="rr-panel__meta-tags">' + tagsHTML + '</div></div>' : ''),
+        '<div class="rr-panel__meta-row">',
+          '<span class="rr-panel__meta-label">Submitted</span>',
+          '<span class="rr-panel__meta-val">' + r.submitted + '</span>',
+        '</div>',
+      '</div>',
+      annotationHTML,
+      storyHTML,
+    ].join('');
+
+    var dlBtn = document.getElementById('panelDlBtn');
+    if (r.allowDownload) {
+      dlBtn.disabled = false;
+      dlBtn.textContent = '⬇ Download Resume';
+    } else {
+      dlBtn.disabled = true;
+      dlBtn.textContent = 'Download disabled by submitter';
+    }
+
+    document.getElementById('rrOverlay').classList.add('open');
+    document.getElementById('rrPanel').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePanel() {
+    document.getElementById('rrOverlay').classList.remove('open');
+    document.getElementById('rrPanel').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ════════════════════════════════
+     MOBILE FILTER SHEET
+  ════════════════════════════════ */
+  function openFilterSheet() {
+    // Clone sidebar content into sheet
+    var sidebarContent = document.getElementById('sidebar').innerHTML;
+    document.getElementById('sheetBody').innerHTML = sidebarContent;
+
+    // Re-wire checkboxes in sheet
+    document.querySelectorAll('#sheetBody input[data-filter]').forEach(function(cb) {
+      var filter = cb.dataset.filter;
+      var val = cb.value;
+      if (filter === 'role') cb.checked = state.roles.includes(val);
+      if (filter === 'stage') cb.checked = state.stages.includes(val);
+      if (filter === 'tag') cb.checked = state.tags.includes(val);
+      cb.addEventListener('change', function() {
+        if (filter === 'role') {
+          if (cb.checked) { if (!state.roles.includes(val)) state.roles.push(val); }
+          else state.roles = state.roles.filter(function(v){ return v !== val; });
+        } else if (filter === 'stage') {
+          if (cb.checked) { if (!state.stages.includes(val)) state.stages.push(val); }
+          else state.stages = state.stages.filter(function(v){ return v !== val; });
+        } else if (filter === 'tag') {
+          if (cb.checked) { if (!state.tags.includes(val)) state.tags.push(val); }
+          else state.tags = state.tags.filter(function(v){ return v !== val; });
+        }
+        renderGrid();
+      });
+    });
+
+    document.getElementById('sheetOverlay').classList.add('open');
+    document.getElementById('filterSheet').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeFilterSheet() {
+    document.getElementById('sheetOverlay').classList.remove('open');
+    document.getElementById('filterSheet').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  /* ════════════════════════════════
+     SUBMIT FORM
+  ════════════════════════════════ */
+  function submitResumeForm() {
+    var handle   = document.getElementById('sfHandle').value.trim();
+    var email    = document.getElementById('sfEmail').value.trim();
+    var roleType = document.getElementById('sfRoleType').value;
+    var stage    = document.getElementById('sfStage').value;
+    var companies = document.getElementById('sfCompanies').value.trim();
+    var file     = document.getElementById('sfFile').files[0];
+
+    if (!handle || !email || !roleType || !stage || !companies || !file) {
+      alert('Please fill in all required fields and upload your resume PDF before submitting.');
+      return;
+    }
+    if (file && file.type !== 'application/pdf') {
+      alert('Please upload a PDF file only.');
+      return;
+    }
+    if (file && file.size > 5 * 1024 * 1024) {
+      alert('Your file exceeds the 5MB limit. Please compress your PDF and try again.');
+      return;
+    }
+
+    document.getElementById('submitFormContent').style.display = 'none';
+    document.getElementById('submitFormSuccess').style.display = 'block';
+    document.getElementById('submitFormBox').scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+  </script>
+</body>
+</html>
