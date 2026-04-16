@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Opportunity Board | Jose x Jocelyn</title>
+  <meta name="description" content="A living board of internships, apprenticeships, new grad roles, and programs curated by J&J. Filtered for first-gen and early-career students." />
+  <meta name="view-transition" content="same-origin" />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/article.css" />
+  <style>
+    html, body { background: var(--color-cream); }
+
+    /* ─── Shared layout shell ─── */
+    .ob-wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding-left:  clamp(20px,5vw,56px);
+      padding-right: clamp(20px,5vw,56px);
+    }
+
+    /* ─── Section kicker / heading pattern ─── */
+    .ob-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 14px;
+    }
+    .ob-section-title {
+      font-family: var(--font-display);
+      font-size: clamp(26px,4vw,40px);
+      font-weight: 700;
+      color: var(--color-dark);
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+    .ob-section-sub {
+      font-family: var(--font-display);
+      font-size: clamp(16px,2vw,20px);
+      font-weight: 400;
+      color: var(--color-accent);
+      margin-bottom: 20px;
+    }
+    .ob-section-body {
+      font-size: clamp(15px,1.8vw,17px);
+      color: var(--color-muted);
+      line-height: 1.75;
+      max-width: 700px;
+    }
+    .ob-section-body strong { color: var(--color-dark); font-weight: 600; }
+
+    /* ─── Section divider ─── */
+    .ob-divider {
+      border: none;
+      border-top: 1px solid rgba(0,0,0,.08);
+      margin: 0;
+    }
+
+    /* ═══════════════════════════
+       HERO
+    ═══════════════════════════ */
+    .ob-hero {
+      padding: 120px clamp(20px,5vw,56px) 64px;
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .ob-hero__kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 18px;
+    }
+    .ob-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(42px,7vw,80px);
+      font-weight: 700;
+      line-height: 1.04;
+      color: var(--color-dark);
+      margin-bottom: 14px;
+    }
+    .ob-hero__title em { font-style: normal; color: var(--color-gold); }
+    .ob-hero__sub {
+      font-family: var(--font-display);
+      font-size: clamp(18px,2.5vw,26px);
+      font-weight: 400;
+      color: var(--color-dark);
+      line-height: 1.4;
+      max-width: 720px;
+      margin-bottom: 24px;
+    }
+    .ob-hero__body {
+      font-size: clamp(15px,1.8vw,17px);
+      color: var(--color-muted);
+      line-height: 1.8;
+      max-width: 680px;
+      margin-bottom: 40px;
+    }
+    .ob-hero__body strong { color: var(--color-dark); font-weight: 600; }
+    .ob-hero__stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 28px;
+    }
+    .ob-hero__stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(28px,4vw,40px);
+      font-weight: 700;
+      color: var(--color-dark);
+      line-height: 1;
+    }
+    .ob-hero__stat-num em { font-style: normal; color: var(--color-gold); }
+    .ob-hero__stat-label {
+      font-size: 12px;
+      color: var(--color-muted);
+      margin-top: 4px;
+      letter-spacing: .02em;
+    }
+
+    /* ═══════════════════════════
+       BOARD SECTION
+    ═══════════════════════════ */
+    .ob-board {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 72px clamp(20px,5vw,56px) 80px;
+    }
+    .ob-board__head { margin-bottom: 32px; }
+
+    /* ─── Tabs ─── */
+    .ob-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(0,0,0,.08);
+    }
+    .ob-tab {
+      padding: 9px 18px;
+      border-radius: 20px;
+      border: 1.5px solid rgba(0,0,0,.1);
+      background: transparent;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-muted);
+      cursor: pointer;
+      transition: background .18s, border-color .18s, color .18s;
+    }
+    .ob-tab:hover { border-color: var(--color-dark); color: var(--color-dark); }
+    .ob-tab.active {
+      background: var(--color-dark);
+      border-color: var(--color-dark);
+      color: var(--color-cream);
+    }
+
+    /* ─── Search + filter bar ─── */
+    .ob-filter-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+      align-items: center;
+    }
+    .ob-search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 220px;
+    }
+    .ob-search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .ob-search {
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: 15px;
+      padding: 11px 14px 11px 42px;
+      border: 1.5px solid rgba(0,0,0,.12);
+      border-radius: 10px;
+      background: var(--color-white);
+      color: var(--color-dark);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .ob-search:focus { border-color: var(--color-gold); }
+    .ob-search::placeholder { color: var(--color-muted); }
+    .ob-filter-select {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 11px 32px 11px 12px;
+      border: 1.5px solid rgba(0,0,0,.12);
+      border-radius: 8px;
+      background: var(--color-white);
+      color: var(--color-dark);
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      transition: border-color .2s;
+      flex-shrink: 0;
+    }
+    .ob-filter-select:focus { border-color: var(--color-gold); }
+
+    /* ─── Results count ─── */
+    .ob-results-count {
+      font-size: 13px;
+      color: var(--color-muted);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ob-results-count span { font-weight: 600; color: var(--color-dark); }
+
+    /* ═══════════════════════════
+       FEATURED STRIP
+    ═══════════════════════════ */
+    .ob-featured-strip {
+      margin-bottom: 40px;
+    }
+    .ob-featured-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ob-featured-label::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 2px;
+      background: var(--color-gold);
+      border-radius: 1px;
+    }
+    .ob-featured-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px,1fr));
+      gap: 16px;
+    }
+
+    /* ═══════════════════════════
+       OPPORTUNITY CARD
+    ═══════════════════════════ */
+    .ob-card {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 16px;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+      position: relative;
+    }
+    .ob-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0,0,0,.09);
+    }
+    .ob-card.featured {
+      border-color: rgba(232,168,56,.3);
+      background: linear-gradient(135deg, rgba(232,168,56,.03) 0%, var(--color-white) 60%);
+    }
+    .ob-card.archived {
+      opacity: .55;
+      pointer-events: none;
+    }
+
+    /* Featured badge */
+    .ob-card__featured-badge {
+      position: absolute;
+      top: -1px; right: 18px;
+      background: var(--color-gold);
+      color: var(--color-dark);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 0 0 6px 6px;
+    }
+
+    .ob-card__top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .ob-card__company-logo {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,.07);
+      background: var(--color-cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--color-dark);
+      flex-shrink: 0;
+    }
+    .ob-card__deadline {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-muted);
+      letter-spacing: .04em;
+      flex-shrink: 0;
+    }
+    .ob-card__deadline.urgent { color: var(--color-accent); }
+    .ob-card__deadline.rolling { color: var(--color-teal); }
+
+    .ob-card__title {
+      font-family: var(--font-display);
+      font-size: clamp(14px,1.7vw,16px);
+      font-weight: 700;
+      color: var(--color-dark);
+      line-height: 1.3;
+    }
+    .ob-card__company {
+      font-size: 13px;
+      color: var(--color-muted);
+      font-weight: 500;
+    }
+
+    /* Tag row */
+    .ob-card__tags { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+    .ob-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .ob-tag--intern    { background: rgba(91,142,194,.12);  color: var(--color-blue); }
+    .ob-tag--apprent   { background: rgba(58,125,107,.1);   color: var(--color-teal); }
+    .ob-tag--newgrad   { background: rgba(232,168,56,.14);  color: #8B6914; }
+    .ob-tag--fellowship{ background: rgba(22,43,68,.1);     color: var(--color-navy); }
+    .ob-tag--program   { background: rgba(179,69,57,.1);    color: var(--color-accent); }
+    .ob-tag--scholar   { background: rgba(232,168,56,.14);  color: #8B6914; }
+    .ob-tag--muted     { background: rgba(0,0,0,.06);       color: var(--color-muted); }
+    .ob-tag--bridge    { background: rgba(58,125,107,.1);   color: var(--color-teal); }
+
+    .ob-card__meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .ob-card__meta-item {
+      font-size: 12px;
+      color: var(--color-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .ob-card__desc {
+      font-size: 13px;
+      color: var(--color-muted);
+      line-height: 1.65;
+    }
+    .ob-card__desc strong { color: var(--color-dark); font-weight: 600; }
+
+    .ob-card__source {
+      font-size: 11px;
+      color: var(--color-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .ob-card__source-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--color-gold);
+      flex-shrink: 0;
+    }
+
+    .ob-card__actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .ob-card__cta-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 16px;
+      background: var(--color-dark);
+      color: var(--color-cream);
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      flex: 1;
+      justify-content: center;
+    }
+    .ob-card__cta-primary:hover { background: var(--color-accent); transform: translateY(-1px); }
+    .ob-card__cta-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      background: transparent;
+      color: var(--color-muted);
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      border: 1.5px solid rgba(0,0,0,.12);
+      cursor: pointer;
+      transition: border-color .2s, color .2s;
+      flex-shrink: 0;
+    }
+    .ob-card__cta-secondary:hover { border-color: var(--color-dark); color: var(--color-dark); }
+
+    /* Main grid */
+    .ob-main-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px,1fr));
+      gap: 16px;
+    }
+    .ob-no-results {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--color-muted);
+      font-size: 15px;
+    }
+
+    /* Archive strip */
+    .ob-archive-strip { margin-top: 52px; }
+    .ob-archive-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ob-archive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(310px,1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 560px) {
+      .ob-featured-grid,
+      .ob-main-grid,
+      .ob-archive-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════
+       WHERE OPPORTUNITIES COME FROM
+    ═══════════════════════════ */
+    .ob-source {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .ob-source__layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: flex-start;
+      margin-top: 32px;
+    }
+    .ob-source__body {
+      font-size: clamp(14px,1.6vw,15px);
+      color: var(--color-muted);
+      line-height: 1.8;
+    }
+    .ob-source__body strong { color: var(--color-dark); font-weight: 600; }
+    .ob-source__body + .ob-source__body { margin-top: 16px; }
+    .ob-source__list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .ob-source__item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .ob-source__item-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      background: rgba(58,125,107,.1);
+      color: var(--color-teal);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700;
+      flex-shrink: 0;
+    }
+    .ob-source__item-title {
+      font-family: var(--font-display);
+      font-size: 14px; font-weight: 700;
+      color: var(--color-dark); margin-bottom: 2px;
+    }
+    .ob-source__item-desc {
+      font-size: 13px; color: var(--color-muted); line-height: 1.55;
+    }
+    @media (max-width: 680px) {
+      .ob-source__layout { grid-template-columns: 1fr; gap: 32px; }
+    }
+
+    /* ═══════════════════════════
+       SUBMIT FORM
+    ═══════════════════════════ */
+    .ob-submit {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .ob-submit__layout {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 60px;
+      align-items: flex-start;
+    }
+    .ob-submit__intro-kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 12px;
+    }
+    .ob-submit__intro-title {
+      font-family: var(--font-display);
+      font-size: clamp(22px,3vw,32px); font-weight: 700;
+      color: var(--color-dark); line-height: 1.2; margin-bottom: 16px;
+    }
+    .ob-submit__intro-body {
+      font-size: clamp(14px,1.6vw,15px); color: var(--color-muted); line-height: 1.75;
+    }
+    .ob-submit__intro-body strong { color: var(--color-dark); font-weight: 600; }
+
+    /* Form box */
+    .ob-form-box {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,.07);
+      border-radius: 16px;
+      padding: clamp(28px,4vw,44px);
+    }
+    .ob-form-row { margin-bottom: 16px; }
+    .ob-form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .ob-form-label {
+      display: block; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .09em;
+      color: var(--color-muted); margin-bottom: 6px;
+    }
+    .ob-form-label span { color: var(--color-accent); }
+    .ob-form-input,
+    .ob-form-select,
+    .ob-form-textarea {
+      width: 100%; font-family: var(--font-body); font-size: 15px;
+      padding: 11px 14px; border: 1.5px solid rgba(0,0,0,.12);
+      border-radius: 8px; background: var(--color-white);
+      color: var(--color-dark); outline: none; transition: border-color .2s;
+    }
+    .ob-form-input:focus,
+    .ob-form-select:focus,
+    .ob-form-textarea:focus { border-color: var(--color-gold); }
+    .ob-form-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
+    .ob-form-select {
+      appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+    }
+    .ob-form-btn {
+      width: 100%; padding: 14px 24px;
+      background: var(--color-dark); color: var(--color-cream);
+      border: none; border-radius: 8px;
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .18s; margin-top: 6px;
+    }
+    .ob-form-btn:hover { background: var(--color-accent); transform: translateY(-1px); }
+    .ob-form-success {
+      display: none; text-align: center; padding: 40px 20px;
+    }
+    .ob-form-success__icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: rgba(232,168,56,.12); color: #8B6914;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin: 0 auto 16px;
+    }
+    .ob-form-success__title {
+      font-family: var(--font-display); font-size: 22px;
+      font-weight: 700; color: var(--color-dark); margin-bottom: 8px;
+    }
+    .ob-form-success__body {
+      font-size: 14px; color: var(--color-muted); line-height: 1.7;
+    }
+    @media (max-width: 740px) {
+      .ob-submit__layout { grid-template-columns: 1fr; gap: 36px; }
+      .ob-form-row-2 { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════
+       ECOSYSTEM FOOTER
+    ═══════════════════════════ */
+    .ob-eco {
+      background: var(--color-dark);
+      padding: 72px clamp(20px,5vw,56px);
+    }
+    .ob-eco__inner {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .ob-eco__kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: rgba(242,228,206,.4); margin-bottom: 10px;
+    }
+    .ob-eco__title {
+      font-family: var(--font-display);
+      font-size: clamp(20px,3vw,28px); font-weight: 700;
+      color: var(--color-cream); margin-bottom: 8px; line-height: 1.25;
+    }
+    .ob-eco__body {
+      font-size: clamp(14px,1.6vw,15px); color: rgba(242,228,206,.55);
+      line-height: 1.75; max-width: 680px; margin-bottom: 36px;
+    }
+    .ob-eco__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+      gap: 14px;
+    }
+    .ob-eco__link {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 12px; padding: 18px 20px;
+      text-decoration: none;
+      transition: background .2s, transform .2s cubic-bezier(.16,1,.3,1);
+    }
+    .ob-eco__link:hover { background: rgba(255,255,255,.09); transform: translateY(-2px); }
+    .ob-eco__link-title {
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      color: var(--color-cream); margin-bottom: 4px;
+    }
+    .ob-eco__link-desc {
+      font-size: 12px; color: rgba(242,228,206,.45); line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="art-nav" id="artNav">
+    <a href="/images/index.html" class="art-nav__brand">Jose × Jocelyn</a>
+    <div class="art-nav__right">
+      <a href="/articles/" class="art-nav__link">La Voz del Día</a>
+      <a href="/career-templates.html" class="art-nav__link">Templates</a>
+      <a href="/bridge-year.html" class="art-nav__link">Bridge Year</a>
+      <a href="/coffee-chat.html" class="art-nav__link">Coffee Chat</a>
+      <a href="/opportunity-board.html" class="art-nav__link" style="color:var(--color-dark);font-weight:600;">Opportunities</a>
+      <a href="/images/index.html#contact" class="art-nav__link">Get in Touch</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════
+       HERO
+  ════════════════════════════════ -->
+  <header class="ob-hero" id="top">
+    <p class="ob-hero__kicker">From Campus to Career · Curated Roles</p>
+    <h1 class="ob-hero__title">Opportunity <em>Board</em></h1>
+    <p class="ob-hero__sub">A living board of internships, apprenticeships, new grad roles, and programs curated by J&amp;J.</p>
+    <p class="ob-hero__body">
+      Every week, Jose and Jocelyn surface roles, programs, and apprenticeships on LinkedIn — from TikTok internship alerts to Pinterest apprenticeships to local research fellowships. The Opportunity Board pulls those into one place, with filters that actually make sense for students and early-career talent: stage, role type, eligibility, and timeline. <strong>This is where you go when you want to stop scrolling random feeds</strong> and start seeing concrete options that match where you are in the campus-to-career journey.
+    </p>
+    <div class="ob-hero__stats">
+      <div>
+        <div class="ob-hero__stat-num">10<em>+</em></div>
+        <div class="ob-hero__stat-label">Live opportunities</div>
+      </div>
+      <div>
+        <div class="ob-hero__stat-num">5</div>
+        <div class="ob-hero__stat-label">Categories</div>
+      </div>
+      <div>
+        <div class="ob-hero__stat-num">100<em>%</em></div>
+        <div class="ob-hero__stat-label">Curated by J&amp;J</div>
+      </div>
+    </div>
+  </header>
+
+  <hr class="ob-divider" />
+
+  <!-- ═══════════════════════════════
+       BOARD — TABS + FILTERS + CARDS
+  ════════════════════════════════ -->
+  <section class="ob-board" id="board">
+    <div class="ob-board__head">
+      <p class="ob-kicker">Section 01</p>
+      <h2 class="ob-section-title">Browse Opportunities</h2>
+      <p class="ob-section-sub">Filter by type, stage, eligibility, or just search.</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="ob-tabs" role="tablist">
+      <button class="ob-tab active" data-tab="all" role="tab">All</button>
+      <button class="ob-tab" data-tab="internship" role="tab">Internships</button>
+      <button class="ob-tab" data-tab="apprenticeship" role="tab">Apprenticeships &amp; Fellowships</button>
+      <button class="ob-tab" data-tab="new-grad" role="tab">New Grad / Early Career</button>
+      <button class="ob-tab" data-tab="program" role="tab">Campus Programs &amp; Scholarships</button>
+      <button class="ob-tab" data-tab="bridge" role="tab">Bridge Year Friendly</button>
+    </div>
+
+    <!-- Search + filters -->
+    <div class="ob-filter-bar">
+      <div class="ob-search-wrap">
+        <svg class="ob-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="6.5" cy="6.5" r="5" stroke="#8A7E72" stroke-width="1.5"/>
+          <path d="M10 10L14 14" stroke="#8A7E72" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <input type="text" class="ob-search" id="obSearch" placeholder="Search opportunities, companies, or keywords…" autocomplete="off" />
+      </div>
+      <select class="ob-filter-select" id="obFilterStage" aria-label="Stage">
+        <option value="">All Stages</option>
+        <option value="first-second">First / Second Year</option>
+        <option value="junior">Junior</option>
+        <option value="senior">Senior</option>
+        <option value="recent-grad">Recent Grad</option>
+        <option value="transition">Career Transition</option>
+        <option value="phd">PhD</option>
+      </select>
+      <select class="ob-filter-select" id="obFilterLocation" aria-label="Location">
+        <option value="">All Locations</option>
+        <option value="remote">Remote</option>
+        <option value="us">US</option>
+        <option value="canada">Canada</option>
+        <option value="international">International</option>
+      </select>
+      <select class="ob-filter-select" id="obFilterDeadline" aria-label="Deadline">
+        <option value="">Any Deadline</option>
+        <option value="this-week">This Week</option>
+        <option value="this-month">This Month</option>
+        <option value="rolling">Rolling</option>
+      </select>
+    </div>
+
+    <div class="ob-results-count">
+      <span id="obCount">10</span>&nbsp;opportunities shown
+    </div>
+
+    <!-- ─── Featured Strip ─── -->
+    <div class="ob-featured-strip" id="obFeaturedStrip">
+      <p class="ob-featured-label">Featured — closing soon or especially strong for first-gen students</p>
+      <div class="ob-featured-grid" id="obFeaturedGrid">
+
+        <!-- Featured 1 -->
+        <article class="ob-card featured"
+          data-type="internship"
+          data-stage="phd"
+          data-location="us"
+          data-deadline="this-month"
+          data-keywords="tiktok gpu ai intern phd ml systems server platform"
+          data-featured="true"
+          data-bridge="false"
+        >
+          <span class="ob-card__featured-badge">Featured</span>
+          <div class="ob-card__top">
+            <div class="ob-card__company-logo">TT</div>
+            <span class="ob-card__deadline urgent">Closes May 15</span>
+          </div>
+          <div>
+            <div class="ob-card__title">GPU/AI Application Platform Engineer Intern</div>
+            <div class="ob-card__company">TikTok &nbsp;·&nbsp; Server Platform</div>
+          </div>
+          <div class="ob-card__tags">
+            <span class="ob-tag ob-tag--intern">Internship</span>
+            <span class="ob-tag ob-tag--muted">PhD</span>
+            <span class="ob-tag ob-tag--muted">AI/ML</span>
+            <span class="ob-tag ob-tag--muted">Fall 2026</span>
+          </div>
+          <div class="ob-card__meta">
+            <span class="ob-card__meta-item">📍 Remote / US</span>
+            <span class="ob-card__meta-item">💰 Competitive salary</span>
+          </div>
+          <div class="ob-card__desc">Fall 2026 PhD-level GPU/AI internship focused on server platform applications. <strong>Strong fit for students doing research in systems, ML infra, or high-performance computing.</strong></div>
+          <div class="ob-card__source"><span class="ob-card__source-dot"></span> J&amp;J LinkedIn post</div>
+          <div class="ob-card__actions">
+            <a href="#" class="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+            <a href="https://www.linkedin.com/in/josegaelcruzlopez" class="ob-card__cta-secondary" target="_blank" rel="noopener">View post ↗</a>
+          </div>
+        </article>
+
+        <!-- Featured 2 -->
+        <article class="ob-card featured"
+          data-type="apprenticeship"
+          data-stage="recent-grad transition"
+          data-location="us"
+          data-deadline="rolling"
+          data-keywords="pinterest apprenticeship software engineering swe early career"
+          data-featured="true"
+          data-bridge="true"
+        >
+          <span class="ob-card__featured-badge">Featured</span>
+          <div class="ob-card__top">
+            <div class="ob-card__company-logo" style="background:rgba(179,69,57,.08);color:var(--color-accent);">Pi</div>
+            <span class="ob-card__deadline rolling">Rolling</span>
+          </div>
+          <div>
+            <div class="ob-card__title">Apprenticeship Program — Software Engineering</div>
+            <div class="ob-card__company">Pinterest</div>
+          </div>
+          <div class="ob-card__tags">
+            <span class="ob-tag ob-tag--apprent">Apprenticeship</span>
+            <span class="ob-tag ob-tag--bridge">Bridge Year Friendly</span>
+            <span class="ob-tag ob-tag--muted">No Degree Required</span>
+          </div>
+          <div class="ob-card__meta">
+            <span class="ob-card__meta-item">📍 Remote / US</span>
+            <span class="ob-card__meta-item">💰 Paid, competitive</span>
+          </div>
+          <div class="ob-card__desc">Pinterest's apprenticeship is one of the best entry points in tech for candidates without a traditional CS degree. <strong>Especially strong for career changers and nontraditional students.</strong></div>
+          <div class="ob-card__source"><span class="ob-card__source-dot"></span> Bridge Year Hub</div>
+          <div class="ob-card__actions">
+            <a href="#" class="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+            <a href="/bridge-year.html" class="ob-card__cta-secondary">Bridge Year Hub</a>
+          </div>
+        </article>
+
+        <!-- Featured 3 -->
+        <article class="ob-card featured"
+          data-type="apprenticeship"
+          data-stage="recent-grad transition"
+          data-location="us"
+          data-deadline="rolling"
+          data-keywords="microsoft leap apprenticeship software engineering career change"
+          data-featured="true"
+          data-bridge="true"
+        >
+          <span class="ob-card__featured-badge">Featured</span>
+          <div class="ob-card__top">
+            <div class="ob-card__company-logo" style="background:rgba(91,142,194,.12);color:var(--color-blue);">Ms</div>
+            <span class="ob-card__deadline rolling">Rolling</span>
+          </div>
+          <div>
+            <div class="ob-card__title">LEAP Apprenticeship Program</div>
+            <div class="ob-card__company">Microsoft</div>
+          </div>
+          <div class="ob-card__tags">
+            <span class="ob-tag ob-tag--apprent">Apprenticeship</span>
+            <span class="ob-tag ob-tag--bridge">Bridge Year Friendly</span>
+            <span class="ob-tag ob-tag--muted">Open to Non-CS</span>
+          </div>
+          <div class="ob-card__meta">
+            <span class="ob-card__meta-item">📍 US (various)</span>
+            <span class="ob-card__meta-item">💰 Paid + benefits</span>
+          </div>
+          <div class="ob-card__desc">LEAP is Microsoft's flagship apprenticeship for people transitioning into tech. <strong>Open to people without a CS degree, including career changers and self-taught developers.</strong></div>
+          <div class="ob-card__source"><span class="ob-card__source-dot"></span> Bridge Year Hub</div>
+          <div class="ob-card__actions">
+            <a href="#" class="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+            <a href="/bridge-year.html" class="ob-card__cta-secondary">Bridge Year Hub</a>
+          </div>
+        </article>
+
+      </div><!-- /ob-featured-grid -->
+    </div><!-- /ob-featured-strip -->
+
+    <!-- ─── Main Board ─── -->
+    <div class="ob-main-grid" id="obMainGrid">
+
+      <!-- Card 4 -->
+      <article class="ob-card"
+        data-type="internship"
+        data-stage="first-second junior"
+        data-location="us"
+        data-deadline="this-month"
+        data-keywords="google step internship sophomore first year cs early experience"
+        data-featured="false"
+        data-bridge="false"
+      >
+        <div class="ob-card__top">
+          <div class="ob-card__company-logo" style="background:rgba(58,125,107,.1);color:var(--color-teal);">G</div>
+          <span class="ob-card__deadline urgent">Closes May 1</span>
+        </div>
+        <div>
+          <div class="ob-card__title">STEP Internship — Software Engineering</div>
+          <div class="ob-card__company">Google</div>
+        </div>
+        <div class="ob-card__tags">
+          <span class="ob-tag ob-tag--intern">Internship</span>
+          <span class="ob-tag ob-tag--muted">Sophomore / First Year</span>
+          <span class="ob-tag ob-tag--muted">Summer 2026</span>
+        </div>
+        <div class="ob-card__meta">
+          <span class="ob-card__meta-item">📍 US (various)</span>
+          <span class="ob-card__meta-item">💰 $7,000–$8,000/mo</span>
+        </div>
+        <div class="ob-card__desc">Google's STEP program is built for first- and second-year CS students. <strong>One of the most competitive early-stage internships in tech — apply early.</strong></div>
+        <div class="ob-card__source"><span class="ob-card__source-dot"></span> J&amp;J LinkedIn post</div>
+        <div class="ob-card__actions">
+          <a href="#" class="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+          <a href="https://www.linkedin.com/in/josegaelcruzlopez" class="ob-card__cta-secondary" target="_blank" rel="noopener">View post ↗</a>
+        </div>
+      </article>
+
+      <!-- Card 5 -->
+      <article class="ob-card"
+        data-type="internship"
+        data-stage="junior senior"
+        data-location="us"
+        data-deadline="this-month"
+        data-keywords="salesforce futureforce intern summer software engineering early career"
+        data-featured="false"
+        data-bridge="false"
+      >
+        <div class="ob-card__top">
+          <div class="ob-card__company-logo" style="background:rgba(91,142,194,.12);color:var(--color-blue);">Sf</div>
+          <span class="ob-card__deadline urgent">Closes May 10</span>
+        </div>
+        <div>
+          <div class="ob-card__title">Futureforce Summer Internship — SWE</div>
+          <div class="ob-card__company">Salesforce</div>
+        </div>
+        <div class="ob-card__tags">
+          <span class="ob-tag ob-tag--intern">Internship</span>
+          <span class="ob-tag ob-tag--muted">Junior / Senior</span>
+          <span class="ob-tag ob-tag--muted">Summer 2026</span>
+        </div>
+        <div class="ob-card__meta">
+          <span class="ob-card__meta-item">📍 San Francisco / Remote</span>
+          <span class="ob-card__meta-item">💰 $50/hr</span>
+        </div>
+        <div class="ob-card__desc">Salesforce Futureforce is a great pipeline into full-time roles. <strong>Strong return offer rate and well-regarded rotational program post-internship.</strong></div>
+        <div class="ob-card__source"><span class="ob-card__source-dot"></span> J&amp;J LinkedIn post</div>
+        <div class="ob-card__actions">
+          <a href="#" class="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+          <a href="https://www.linkedin.com/in/josegaelcruzlopez" class="ob-card__cta-secondary" target="_blank" rel="noopener">View post ↗</a>
+        </div>
+      </article>
+
+      <!-- Card 6 -->
+      <article class="ob-card"
+        data-type="new-grad"
+        data-stage="recent-grad"
+        data-location="us"
+        data-deadline="rolling"
+        data-keywords="stripe new grad software engineer full-time early career fintech"
+        data-featured="false"
+        data-bridge="false"
+      >
+        <div class="ob-card__top">
+          <div class="ob-card__company-logo" style="background:rgba(22,43,68,.08);color:var(--color-navy);">St</div>
+          <span class="ob-card__deadline rolling">Rolling</span>
+        </div>
+        <div>
+          <div class="ob-card__title">New Grad — Software Engineer</div>
+          <div class="ob-card__company">Stripe</div>
+        </div>
+        <div class="ob-card__tags">
+          <span class="ob-tag ob-tag--newgrad">New Grad</span>
+          <span class="ob-tag ob-tag--muted">Recent Grad</span>
+          <span class="ob-tag ob-tag--muted">Full-Time</span>
+        </div>
+        <div class="ob-card__meta">
+          <span class="ob-card__meta-item">📍 Remote / US</span>
+          <span class="ob-card__meta-item">💰 $180k–$220k TC</span>
+        </div>
+        <div class="ob-card__desc">Stripe's new grad SWE role is highly competitive but worth the prep. <strong>Strong culture, high bar for writing and systems thinking — not just leetcode.</strong></div>
+        <div class="ob-card__source"><span class="ob-card__source-dot"></span> J&amp;J LinkedIn post</div>
+        <div class="ob-card__actions">
+          <a href="#" class="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+          <a href="https://www.linkedin.com/in/josegaelcruzlopez" class="ob-card__cta-secondary" target="_blank" rel="noopener">View post ↗</a>
+        </div>
+      </article>
+
+      <!-- Card 7 -->
+      <article class="ob-card"
+        data-type="apprenticeship"
+        data-stage="recent-grad transition"
+        data-location="us"
+        data-deadline="rolling"
+        data-keywords="spotify tech fellowship apprenticeship music early career non-traditional"
+        data-featured="false"
+        data-bridge="true"
+      >
+        <div class="ob-card__top">
+          <div class="ob-card__company-logo" style="background:rgba(58,125,107,.1);color:var(--color-teal);">Sp</div>
+          <span class="ob-card__deadline rolling">Rolling</span>
+        </div>
+        <div>
+          <div class="ob-card__title">Tech Fellowship — Early Career Engineering</div>
+          <div class="ob-card__company">Spotify</div>
+        </div>
+        <div class="ob-card__tags">
+          <span class="ob-tag ob-tag--fellowship">Fellowship</span>
+          <span class="ob-tag ob-tag--bridge">Bridge Year Friendly</span>
+          <span class="ob-tag ob-tag--muted">Non-Traditional Welcome</span>
+        </div>
+        <div class="ob-card__meta">
+          <span class="ob-card__meta-item">📍 Remote / Stockholm</span>
+          <span class="ob-card__meta-item">💰 Paid</span>
+        </div>
+        <div class="ob-card__desc">Spotify's early-career fellowship welcomes engineers from nontraditional backgrounds. <strong>Good option for bridge year candidates still building their portfolio.</strong></div>
+        <div class="ob-card__source"><span class="ob-card__source-dot"></span> Bridge Year Hub</div>
+        <div class="ob-card__actions">
+          <a href="#" class="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+          <a href="/bridge-year.html" class="ob-card__cta-secondary">Bridge Year Hub</a>
+        </div>
+      </article>
+
+      <!-- Card 8 -->
+      <article class="ob-card"
+        data-type="program"
+        data-stage="junior senior"
+        data-location="us"
+        data-deadline="this-month"
+        data-keywords="meta university research program undergraduate first-gen underrepresented"
+        data-featured="false"
+        data-bridge="false"
+      >
+        <div class="ob-card__top">
+          <div class="ob-card__company-logo" style="background:rgba(91,142,194,.12);color:var(--color-blue);">Me</div>
+          <span class="ob-card__deadline urgent">Closes Apr 30</span>
+        </div>
+        <div>
+          <div class="ob-card__title">Meta University Research Program</div>
+          <div class="ob-card__company">Meta</div>
+        </div>
+        <div class="ob-card__tags">
+          <span class="ob-tag ob-tag--program">Program</span>
+          <span class="ob-tag ob-tag--muted">Undergraduate</span>
+          <span class="ob-tag ob-tag--muted">Underrepresented Students</span>
+        </div>
+        <div class="ob-card__meta">
+          <span class="ob-card__meta-item">📍 Menlo Park / Remote</span>
+          <span class="ob-card__meta-item">💰 $7,500/mo + housing</span>
+        </div>
+        <div class="ob-card__desc">Meta University is specifically designed for underrepresented undergrads. <strong>Pairing research mentorship with SWE/PM internship tracks — exceptional for first-gen students.</strong></div>
+        <div class="ob-card__source"><span class="ob-card__source-dot"></span> J&amp;J LinkedIn post</div>
+        <div class="ob-card__actions">
+          <a href="#" class="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+          <a href="https://www.linkedin.com/in/josegaelcruzlopez" class="ob-card__cta-secondary" target="_blank" rel="noopener">View post ↗</a>
+        </div>
+      </article>
+
+      <!-- Card 9 -->
+      <article class="ob-card"
+        data-type="internship"
+        data-stage="junior senior"
+        data-location="us"
+        data-deadline="this-month"
+        data-keywords="ibm data science intern summer undergraduate analytics"
+        data-featured="false"
+        data-bridge="false"
+      >
+        <div class="ob-card__top">
+          <div class="ob-card__company-logo" style="background:rgba(22,43,68,.08);color:var(--color-navy);">IB</div>
+          <span class="ob-card__deadline">Closes May 20</span>
+        </div>
+        <div>
+          <div class="ob-card__title">Data Science Summer Intern</div>
+          <div class="ob-card__company">IBM</div>
+        </div>
+        <div class="ob-card__tags">
+          <span class="ob-tag ob-tag--intern">Internship</span>
+          <span class="ob-tag ob-tag--muted">Data</span>
+          <span class="ob-tag ob-tag--muted">Junior / Senior</span>
+          <span class="ob-tag ob-tag--muted">Open to Non-CS</span>
+        </div>
+        <div class="ob-card__meta">
+          <span class="ob-card__meta-item">📍 Austin, TX / Hybrid</span>
+          <span class="ob-card__meta-item">💰 $38/hr</span>
+        </div>
+        <div class="ob-card__desc">IBM's data science intern track is one of the more accessible pipelines for non-CS students in STEM. <strong>Statistics, math, and econ majors encouraged to apply.</strong></div>
+        <div class="ob-card__source"><span class="ob-card__source-dot"></span> J&amp;J LinkedIn post</div>
+        <div class="ob-card__actions">
+          <a href="#" class="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+          <a href="https://www.linkedin.com/in/josegaelcruzlopez" class="ob-card__cta-secondary" target="_blank" rel="noopener">View post ↗</a>
+        </div>
+      </article>
+
+      <!-- Card 10 -->
+      <article class="ob-card"
+        data-type="program"
+        data-stage="junior senior recent-grad"
+        data-location="us"
+        data-deadline="rolling"
+        data-keywords="figma research fellowship design product research underrepresented"
+        data-featured="false"
+        data-bridge="true"
+      >
+        <div class="ob-card__top">
+          <div class="ob-card__company-logo" style="background:rgba(179,69,57,.08);color:var(--color-accent);">Fi</div>
+          <span class="ob-card__deadline rolling">Rolling</span>
+        </div>
+        <div>
+          <div class="ob-card__title">Research Fellowship — Design &amp; Product</div>
+          <div class="ob-card__company">Figma</div>
+        </div>
+        <div class="ob-card__tags">
+          <span class="ob-tag ob-tag--fellowship">Fellowship</span>
+          <span class="ob-tag ob-tag--bridge">Bridge Year Friendly</span>
+          <span class="ob-tag ob-tag--muted">Design / PM</span>
+        </div>
+        <div class="ob-card__meta">
+          <span class="ob-card__meta-item">📍 San Francisco / Remote</span>
+          <span class="ob-card__meta-item">💰 Paid, competitive</span>
+        </div>
+        <div class="ob-card__desc">Figma's research fellowship is a great stepping stone for students pursuing design or PM. <strong>Especially strong for underrepresented designers without traditional portfolios yet.</strong></div>
+        <div class="ob-card__source"><span class="ob-card__source-dot"></span> Bridge Year Hub</div>
+        <div class="ob-card__actions">
+          <a href="#" class="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+          <a href="/bridge-year.html" class="ob-card__cta-secondary">Bridge Year Hub</a>
+        </div>
+      </article>
+
+    </div><!-- /ob-main-grid -->
+
+    <!-- ─── Archive Strip ─── -->
+    <div class="ob-archive-strip" id="obArchiveStrip">
+      <p class="ob-archive-label">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0"><rect x="1" y="4" width="12" height="9" rx="1.5" stroke="#8A7E72" stroke-width="1.3"/><path d="M5 4V3a2 2 0 1 1 4 0v1" stroke="#8A7E72" stroke-width="1.3"/></svg>
+        Just closed — keep an eye out next cycle
+      </p>
+      <div class="ob-archive-grid">
+        <article class="ob-card archived">
+          <div class="ob-card__top">
+            <div class="ob-card__company-logo" style="background:rgba(0,0,0,.05);color:var(--color-muted);">Am</div>
+            <span class="ob-card__deadline" style="color:var(--color-muted);">Closed Apr 1</span>
+          </div>
+          <div>
+            <div class="ob-card__title">SWE Internship — Early Career (SDE I)</div>
+            <div class="ob-card__company">Amazon</div>
+          </div>
+          <div class="ob-card__tags">
+            <span class="ob-tag ob-tag--muted">Internship</span>
+            <span class="ob-tag ob-tag--muted">SWE</span>
+            <span class="ob-tag ob-tag--muted">Summer 2026</span>
+          </div>
+          <div class="ob-card__desc">Typically opens again in September for the following summer. Set a calendar reminder for August 15.</div>
+          <div class="ob-card__source"><span class="ob-card__source-dot" style="background:var(--color-muted)"></span> J&amp;J LinkedIn post</div>
+        </article>
+
+        <article class="ob-card archived">
+          <div class="ob-card__top">
+            <div class="ob-card__company-logo" style="background:rgba(0,0,0,.05);color:var(--color-muted);">As</div>
+            <span class="ob-card__deadline" style="color:var(--color-muted);">Closed Mar 20</span>
+          </div>
+          <div>
+            <div class="ob-card__title">Diversity &amp; Inclusion Scholarship</div>
+            <div class="ob-card__company">Asana</div>
+          </div>
+          <div class="ob-card__tags">
+            <span class="ob-tag ob-tag--muted">Scholarship</span>
+            <span class="ob-tag ob-tag--muted">Underrepresented Students</span>
+          </div>
+          <div class="ob-card__desc">Usually reopens each fall. Watch for the announcement in October — often tied to Grace Hopper / NSBE / SHPE season.</div>
+          <div class="ob-card__source"><span class="ob-card__source-dot" style="background:var(--color-muted)"></span> J&amp;J LinkedIn post</div>
+        </article>
+      </div>
+    </div><!-- /ob-archive-strip -->
+
+  </section><!-- /ob-board -->
+
+  <hr class="ob-divider" />
+
+  <!-- ═══════════════════════════════
+       WHERE OPPORTUNITIES COME FROM
+  ════════════════════════════════ -->
+  <section class="ob-source" id="source">
+    <p class="ob-kicker">Section 02</p>
+    <h2 class="ob-section-title">Where these opportunities come from</h2>
+    <p class="ob-section-sub">Not scraped, not auto-filled. Every listing starts with a human decision.</p>
+    <div class="ob-source__layout">
+      <div>
+        <p class="ob-source__body">
+          The board is not scraped from the internet or auto-filled from job APIs. <strong>Every listing begins as a role Jose or Jocelyn has found, vetted, and shared</strong> — usually on LinkedIn — or as a program surfaced on the Bridge Year Hub. That includes tech apprenticeships like Pinterest, Google, and Microsoft LEAP, early-career rotational programs like Salesforce Futureforce, and niche fellowships or research roles that are especially strong for first-gen and underrepresented students.
+        </p>
+        <p class="ob-source__body" style="margin-top:16px;">
+          When you see something here, you know it has already passed a basic <strong>"would we send this to our own friends?"</strong> filter. We don't post roles we wouldn't apply to ourselves or recommend to a first-gen student still figuring things out.
+        </p>
+      </div>
+      <div class="ob-source__list">
+        <div class="ob-source__item">
+          <span class="ob-source__item-icon">📣</span>
+          <div>
+            <div class="ob-source__item-title">J&amp;J LinkedIn posts</div>
+            <div class="ob-source__item-desc">Jose and Jocelyn post roles weekly. The board pulls those into one searchable place so nothing gets buried in the feed.</div>
+          </div>
+        </div>
+        <div class="ob-source__item">
+          <span class="ob-source__item-icon" style="background:rgba(22,43,68,.1);color:var(--color-navy);">🌉</span>
+          <div>
+            <div class="ob-source__item-title">Bridge Year Hub</div>
+            <div class="ob-source__item-desc">Apprenticeships and programs from the Bridge Year Hub are cross-listed here, tagged as Bridge Year Friendly.</div>
+          </div>
+        </div>
+        <div class="ob-source__item">
+          <span class="ob-source__item-icon" style="background:rgba(232,168,56,.12);color:#8B6914;">👥</span>
+          <div>
+            <div class="ob-source__item-title">Community submissions</div>
+            <div class="ob-source__item-desc">Roles submitted by the community that pass our review filter. Use the form below to suggest something we should add.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ob-divider" />
+
+  <!-- ═══════════════════════════════
+       SUBMIT AN OPPORTUNITY
+  ════════════════════════════════ -->
+  <section class="ob-submit" id="submit">
+    <div class="ob-submit__layout">
+      <!-- Intro -->
+      <div>
+        <p class="ob-submit__intro-kicker">Section 03</p>
+        <h2 class="ob-submit__intro-title">Know an opportunity we should add?</h2>
+        <p class="ob-submit__intro-body">
+          We don't see everything. If you come across an internship, apprenticeship, new grad role, fellowship, or campus program that would be <strong>especially helpful for first-gen and early-career students</strong>, send it our way. We review submissions and add the strongest fits to the board so more people can see them.
+        </p>
+      </div>
+
+      <!-- Form -->
+      <div class="ob-form-box" id="obFormBox">
+        <div id="obFormContent">
+          <div class="ob-form-row">
+            <label class="ob-form-label" for="obRoleName">Role / Program Name <span>*</span></label>
+            <input class="ob-form-input" type="text" id="obRoleName" placeholder="e.g. STEP Internship — Software Engineering" />
+          </div>
+          <div class="ob-form-row ob-form-row-2">
+            <div>
+              <label class="ob-form-label" for="obCompany">Company / Organization <span>*</span></label>
+              <input class="ob-form-input" type="text" id="obCompany" placeholder="e.g. Google" />
+            </div>
+            <div>
+              <label class="ob-form-label" for="obRoleType">Role Type <span>*</span></label>
+              <select class="ob-form-select" id="obRoleType">
+                <option value="">Select type…</option>
+                <option>Internship</option>
+                <option>Apprenticeship</option>
+                <option>New Grad</option>
+                <option>Fellowship</option>
+                <option>Program</option>
+                <option>Scholarship</option>
+              </select>
+            </div>
+          </div>
+          <div class="ob-form-row">
+            <label class="ob-form-label" for="obLink">Link to Job Description / Program Page <span>*</span></label>
+            <input class="ob-form-input" type="url" id="obLink" placeholder="https://…" />
+          </div>
+          <div class="ob-form-row ob-form-row-2">
+            <div>
+              <label class="ob-form-label" for="obDeadline">Application Deadline</label>
+              <input class="ob-form-input" type="text" id="obDeadline" placeholder="e.g. May 15, or Rolling" />
+            </div>
+            <div>
+              <label class="ob-form-label" for="obEligibility">Eligibility Notes</label>
+              <input class="ob-form-input" type="text" id="obEligibility" placeholder="e.g. Open to non-CS, US only" />
+            </div>
+          </div>
+          <div class="ob-form-row">
+            <label class="ob-form-label" for="obWhy">Why does it belong here? <span>*</span></label>
+            <textarea class="ob-form-textarea" id="obWhy" placeholder="Who is it especially good for? What makes it worth highlighting for first-gen or early-career students?"></textarea>
+          </div>
+          <div class="ob-form-row">
+            <label class="ob-form-label" for="obSubmitterEmail">Your Email <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional, for follow-up)</span></label>
+            <input class="ob-form-input" type="email" id="obSubmitterEmail" placeholder="your@email.com" />
+          </div>
+          <button class="ob-form-btn" onclick="submitObForm()">Submit this opportunity</button>
+        </div>
+        <div class="ob-form-success" id="obFormSuccess">
+          <div class="ob-form-success__icon">✓</div>
+          <div class="ob-form-success__title">Received — thank you!</div>
+          <p class="ob-form-success__body">We'll review your submission and reach out if we add it to the board. Community submissions are how the board stays current.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="ob-divider" />
+
+  <!-- ═══════════════════════════════
+       ECOSYSTEM FOOTER
+  ════════════════════════════════ -->
+  <section class="ob-eco">
+    <div class="ob-eco__inner">
+      <p class="ob-eco__kicker">The J&amp;J Ecosystem</p>
+      <h2 class="ob-eco__title">The board tells you what's open. The rest of the system helps you get there.</h2>
+      <p class="ob-eco__body">The Opportunity Board tells you what is open. The Bridge Year Hub helps you figure out which options make sense for your timeline. The Career Templates page gives you the scripts and trackers to actually apply. The Interview Prep Hub helps you show up prepared. The Coffee Chat Network connects you with real people who have walked into similar roles before you.</p>
+      <div class="ob-eco__grid">
+        <a href="/bridge-year.html" class="ob-eco__link">
+          <div class="ob-eco__link-title">Bridge Year Hub</div>
+          <div class="ob-eco__link-desc">Your path when the offer didn't come yet</div>
+        </a>
+        <a href="/career-templates.html" class="ob-eco__link">
+          <div class="ob-eco__link-title">Career Templates</div>
+          <div class="ob-eco__link-desc">Scripts &amp; trackers for outreach &amp; applications</div>
+        </a>
+        <a href="/interview-prep.html" class="ob-eco__link">
+          <div class="ob-eco__link-title">Interview Prep Hub</div>
+          <div class="ob-eco__link-desc">Structured prep for every stage and interview type</div>
+        </a>
+        <a href="/coffee-chat.html" class="ob-eco__link">
+          <div class="ob-eco__link-title">Coffee Chat Network</div>
+          <div class="ob-eco__link-desc">Connect with people who've walked this path</div>
+        </a>
+        <a href="/articles/" class="ob-eco__link">
+          <div class="ob-eco__link-title">La Voz del Día</div>
+          <div class="ob-eco__link-desc">Weekly essays on careers, identity &amp; early-career life</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script src="/nav-prefetch.js"></script>
+  <script>
+    /* ─── Nav scroll shadow ─── */
+    var artNav = document.getElementById('artNav');
+    window.addEventListener('scroll', function() {
+      artNav.classList.toggle('art-nav--scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    /* ─── Tab switching ─── */
+    var activeTab = 'all';
+    document.querySelectorAll('.ob-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.ob-tab').forEach(function(t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        activeTab = tab.dataset.tab;
+        runFilter();
+      });
+    });
+
+    /* ─── Filter + search ─── */
+    var obSearch        = document.getElementById('obSearch');
+    var obFilterStage   = document.getElementById('obFilterStage');
+    var obFilterLoc     = document.getElementById('obFilterLocation');
+    var obFilterDeadline = document.getElementById('obFilterDeadline');
+    var obCount         = document.getElementById('obCount');
+
+    function getAllCards() {
+      var cards = [];
+      document.querySelectorAll('#obFeaturedGrid .ob-card, #obMainGrid .ob-card').forEach(function(c) { cards.push(c); });
+      return cards;
+    }
+
+    function runFilter() {
+      var query    = obSearch.value.toLowerCase().trim();
+      var stage    = obFilterStage.value;
+      var loc      = obFilterLoc.value;
+      var deadline = obFilterDeadline.value;
+      var cards    = getAllCards();
+      var visible  = 0;
+
+      cards.forEach(function(card) {
+        var match = true;
+
+        // Tab filter
+        if (activeTab !== 'all') {
+          if (activeTab === 'bridge') {
+            if (card.dataset.bridge !== 'true') match = false;
+          } else {
+            if (!(card.dataset.type || '').includes(activeTab)) match = false;
+          }
+        }
+
+        // Text search
+        if (match && query) {
+          var haystack = (card.dataset.keywords || '') + ' ' +
+                         (card.querySelector('.ob-card__title') ? card.querySelector('.ob-card__title').textContent : '') + ' ' +
+                         (card.querySelector('.ob-card__company') ? card.querySelector('.ob-card__company').textContent : '');
+          if (!haystack.toLowerCase().includes(query)) match = false;
+        }
+
+        // Stage
+        if (match && stage && !(card.dataset.stage || '').includes(stage)) match = false;
+        // Location
+        if (match && loc && !(card.dataset.location || '').includes(loc)) match = false;
+        // Deadline
+        if (match && deadline && !(card.dataset.deadline || '').includes(deadline)) match = false;
+
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+
+      obCount.textContent = visible;
+
+      // Show/hide featured strip based on visible featured cards
+      var featuredVisible = 0;
+      document.querySelectorAll('#obFeaturedGrid .ob-card').forEach(function(c) {
+        if (c.style.display !== 'none') featuredVisible++;
+      });
+      document.getElementById('obFeaturedStrip').style.display = featuredVisible > 0 ? '' : 'none';
+
+      // Empty state
+      var mainGrid = document.getElementById('obMainGrid');
+      var noRes = mainGrid.querySelector('.ob-no-results');
+      var mainVisible = 0;
+      mainGrid.querySelectorAll('.ob-card').forEach(function(c) { if (c.style.display !== 'none') mainVisible++; });
+      if (mainVisible === 0 && featuredVisible === 0) {
+        if (!noRes) {
+          var el = document.createElement('p');
+          el.className = 'ob-no-results';
+          el.textContent = 'No opportunities match your filters. Try adjusting your search or tab.';
+          mainGrid.appendChild(el);
+        }
+      } else {
+        if (noRes) noRes.remove();
+      }
+    }
+
+    [obSearch, obFilterStage, obFilterLoc, obFilterDeadline].forEach(function(el) {
+      el.addEventListener('input', runFilter);
+    });
+
+    /* ─── Form submit mock ─── */
+    function submitObForm() {
+      var role    = document.getElementById('obRoleName').value.trim();
+      var company = document.getElementById('obCompany').value.trim();
+      var type    = document.getElementById('obRoleType').value;
+      var link    = document.getElementById('obLink').value.trim();
+      var why     = document.getElementById('obWhy').value.trim();
+
+      if (!role || !company || !type || !link || !why) {
+        alert('Please fill in all required fields before submitting.');
+        return;
+      }
+
+      document.getElementById('obFormContent').style.display = 'none';
+      document.getElementById('obFormSuccess').style.display = 'block';
+      document.getElementById('obFormBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+</html>
