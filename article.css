@@ -830,7 +830,7 @@ body {
 
 /* ---- Responsive ---- */
 @media (max-width: 960px) {
-  html { overflow-x: clip; }
+  body { overflow-x: hidden; }
   .art-nav { padding: 13px 20px; }
   .art-nav__right { display: none; }
   .art-nav__burger { display: flex; }
@@ -841,19 +841,6 @@ body {
   .art-subscribe__form { flex-direction: column; }
   .art-engage { flex-direction: column; gap: 12px; align-items: flex-start; }
   .art-footer { flex-direction: column; gap: 12px; align-items: flex-start; }
-}
-
-/* Cross-document view transitions (Chromium; no-op elsewhere) */
-@view-transition {
-  navigation: auto;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: 0.22s;
-    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
