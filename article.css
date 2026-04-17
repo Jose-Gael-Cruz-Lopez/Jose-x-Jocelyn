@@ -830,7 +830,7 @@ body {
 
 /* ---- Responsive ---- */
 @media (max-width: 960px) {
-  body { overflow-x: hidden; }
+  html { overflow-x: clip; }
   .art-nav { padding: 13px 20px; }
   .art-nav__right { display: none; }
   .art-nav__burger { display: flex; }
