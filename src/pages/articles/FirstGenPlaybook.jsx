@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../../components/ArticleLayout'
+import ArticleSubscribe from '../../components/ArticleSubscribe'
 
 export default function FirstGenPlaybook() {
   const handleShare = () => {
@@ -129,16 +130,7 @@ export default function FirstGenPlaybook() {
         <p>The complete journey from first application to signed offer is messy, nonlinear, and exhausting. But it is also completely doable. We are proof. And soon, you will be too.</p>
       </article>
 
-      <div className="art-subscribe">
-        <div className="art-subscribe__box">
-          <h3 className="art-subscribe__title">Stay in the loop</h3>
-          <p className="art-subscribe__desc">Get new articles from La Voz del Día delivered to your inbox.</p>
-          <form className="art-subscribe__form" onSubmit={e => e.preventDefault()}>
-            <input type="email" className="art-subscribe__input" placeholder="your@email.com" />
-            <button className="art-subscribe__btn" type="submit">Subscribe</button>
-          </form>
-        </div>
-      </div>
+      <ArticleSubscribe source="article_first_gen_playbook" />
 
       <section className="art-recs">
         <h3 className="art-recs__title">Recommended reading</h3>

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
+import { supabase } from '../lib/supabase'
 
 const FEATURED = [
   {
@@ -171,6 +172,8 @@ export default function OpportunityBoard() {
   const [location, setLocation] = useState('')
   const [deadline, setDeadline] = useState('')
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [formLoading, setFormLoading] = useState(false)
+  const [formError, setFormError] = useState('')
   const [form, setForm] = useState({ role: '', company: '', type: '', link: '', deadline: '', eligibility: '', why: '', email: '' })
 
   const filters = { tab, query: search.toLowerCase().trim(), stage, location, deadline }
@@ -179,14 +182,31 @@ export default function OpportunityBoard() {
   const visibleMain = MAIN_CARDS.filter(c => matchCard(c, filters))
   const totalVisible = visibleFeatured.length + visibleMain.length
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const { role, company, type, link, why } = form
     if (!role || !company || !type || !link || !why) {
-      alert('Please fill in all required fields before submitting.')
+      setFormError('Please fill in all required fields before submitting.')
       return
     }
-    setFormSubmitted(true)
+    setFormLoading(true)
+    setFormError('')
+    const { error } = await supabase.from('opportunities').insert({
+      role: form.role,
+      company: form.company,
+      role_type: form.type,
+      link: form.link,
+      deadline: form.deadline || null,
+      eligibility: form.eligibility || null,
+      why: form.why,
+      submitted_by: form.email || null,
+    })
+    setFormLoading(false)
+    if (error) {
+      setFormError('Something went wrong. Please try again.')
+    } else {
+      setFormSubmitted(true)
+    }
   }
 
   return (
@@ -517,7 +537,10 @@ export default function OpportunityBoard() {
                   <label className="ob-form-label" htmlFor="obEmail">Your Email <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
                   <input className="ob-form-input" type="email" id="obEmail" placeholder="your@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
                 </div>
-                <button className="ob-form-btn" type="submit">Submit this opportunity</button>
+                {formError && <p style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{formError}</p>}
+                <button className="ob-form-btn" type="submit" disabled={formLoading}>
+                  {formLoading ? 'Submitting…' : 'Submit this opportunity'}
+                </button>
               </form>
             )}
           </div>

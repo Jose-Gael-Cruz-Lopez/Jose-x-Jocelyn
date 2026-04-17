@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../../components/ArticleLayout'
+import ArticleSubscribe from '../../components/ArticleSubscribe'
 
 export default function NegotiateSalary() {
   const handleShare = () => {
@@ -107,16 +108,7 @@ export default function NegotiateSalary() {
         <p>Start now. Your future self will thank you.</p>
       </article>
 
-      <div className="art-subscribe">
-        <div className="art-subscribe__box">
-          <h3 className="art-subscribe__title">Stay in the loop</h3>
-          <p className="art-subscribe__desc">Get new articles from La Voz del Día delivered to your inbox.</p>
-          <form className="art-subscribe__form" onSubmit={e => e.preventDefault()}>
-            <input type="email" className="art-subscribe__input" placeholder="your@email.com" />
-            <button className="art-subscribe__btn" type="submit">Subscribe</button>
-          </form>
-        </div>
-      </div>
+      <ArticleSubscribe source="article_negotiate_salary" />
 
       <section className="art-recs">
         <h3 className="art-recs__title">Recommended reading</h3>
