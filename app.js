@@ -930,6 +930,7 @@
      leaving for an article (looked like a “flash” of the landing page). */
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
+  window.addEventListener('load', () => window.scrollTo(0, 0));
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', runLoader);
   else runLoader();
