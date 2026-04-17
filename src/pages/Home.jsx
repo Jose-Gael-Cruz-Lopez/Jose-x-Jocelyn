@@ -19,6 +19,7 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [navOnHero, setNavOnHero] = useState(true)
   const [navHidden, setNavHidden] = useState(false)
+  const [loaderDone, setLoaderDone] = useState(false)
 
   const pinataRef = useRef(null)
   const pinataImgRef = useRef(null)
@@ -345,13 +346,13 @@ export default function Home() {
     }
 
     if (!loader || !fill || !panels?.length) {
-      loader?.remove()
+      setLoaderDone(true)
       afterLoader()
     } else {
       const wipeEase = 'power3.inOut'
       const wipeDur = 0.88
 
-      tl = gsap.timeline({ onComplete: () => { loader.remove(); afterLoader() } })
+      tl = gsap.timeline()
       tl.to(fill, { width: '35%', duration: 0.35, ease: 'power2.out' })
         .to(fill, { width: '72%', duration: 0.32, ease: 'power2.out' })
         .to(fill, { width: '100%', duration: 0.28, ease: 'power2.out' })
@@ -359,6 +360,7 @@ export default function Home() {
         .to(panels[0], { xPercent: -100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe')
         .to(panels[1], { xPercent: 100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe+=0.08')
         .to(panels[2], { xPercent: -100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe+=0.16')
+        .call(() => { setLoaderDone(true); afterLoader() })
         .fromTo('.hero__sun',     { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.75, ease: 'power2.out', stagger: 0.1 }, 'wipe')
         .fromTo('.hero__j',       { y: 80, opacity: 0 },       { y: 0, opacity: 1, duration: 1.0, ease: 'power3.out', stagger: 0.13 }, 'wipe+=0.05')
         .fromTo('.hero__x',       { scale: 0, opacity: 0 },    { scale: 1, opacity: 1, duration: 0.7, ease: 'back.out(1.7)' }, 'wipe+=0.2')
@@ -477,16 +479,18 @@ export default function Home() {
   return (
     <>
       {/* LOADER */}
-      <div className="loader" id="loader" ref={loaderRef}>
-        <div className="loader__bands">
-          <div className="loader__panel loader__panel--1" />
-          <div className="loader__panel loader__panel--2" />
-          <div className="loader__panel loader__panel--3" />
+      {!loaderDone && (
+        <div className="loader" id="loader" ref={loaderRef}>
+          <div className="loader__bands">
+            <div className="loader__panel loader__panel--1" />
+            <div className="loader__panel loader__panel--2" />
+            <div className="loader__panel loader__panel--3" />
+          </div>
+          <div className="loader__progress">
+            <div className="loader__fill" id="loaderFill" ref={loaderFillRef} />
+          </div>
         </div>
-        <div className="loader__progress">
-          <div className="loader__fill" id="loaderFill" ref={loaderFillRef} />
-        </div>
-      </div>
+      )}
 
       {/* NAV */}
       <nav className={navClass} id="nav">
