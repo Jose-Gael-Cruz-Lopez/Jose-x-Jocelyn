@@ -18,14 +18,17 @@ import NegotiateSalary from './pages/articles/NegotiateSalary'
 import Rejection from './pages/articles/Rejection'
 
 function ScrollToTop() {
-  const { pathname } = useLocation()
+  const { pathname, hash } = useLocation()
   useEffect(() => {
-    if (pathname === '/') {
-      window.scrollTo(0, 0)
+    if (hash) {
+      setTimeout(() => {
+        const el = document.querySelector(hash)
+        if (el) el.scrollIntoView({ behavior: 'smooth' })
+      }, 50)
     } else {
       window.scrollTo(0, 0)
     }
-  }, [pathname])
+  }, [pathname, hash])
   return null
 }
 

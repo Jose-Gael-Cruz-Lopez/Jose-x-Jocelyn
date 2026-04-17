@@ -144,7 +144,7 @@ export default function Rejection() {
         <span className="art-footer__copy">Jose x Jocelyn © 2026</span>
         <div className="art-footer__links">
           <Link to="/" className="art-footer__link">Home</Link>
-          <a href="/#contact" className="art-footer__link">Contact</a>
+          <Link to="/#contact" className="art-footer__link">Contact</Link>
         </div>
       </footer>
     </ArticleLayout>
