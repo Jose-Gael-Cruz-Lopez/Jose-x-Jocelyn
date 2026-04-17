@@ -120,6 +120,7 @@
       for (let i = 0; i < count; i++) {
         const star = document.createElement('div');
         star.className = 'pinata__star';
+        star.setAttribute('aria-hidden', 'true');
         const size = 6 + Math.random() * 12;
         const color = CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0];
         star.style.cssText = `
@@ -460,14 +461,38 @@
 
   /* === ABOUT TABS === */
   function initAboutTabs() {
+    const tablist = document.querySelector('.about__tabs');
     const tabs = document.querySelectorAll('.about__tab');
     const panels = document.querySelectorAll('.about__panel');
-    tabs.forEach(tab => tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('about__tab--active'));
-      panels.forEach(p => p.classList.remove('about__panel--active'));
-      tab.classList.add('about__tab--active');
-      document.querySelector(`[data-panel="${tab.dataset.tab}"]`)?.classList.add('about__panel--active');
-    }));
+    if (tablist) tablist.setAttribute('role', 'tablist');
+    tabs.forEach(tab => {
+      const key = tab.dataset.tab;
+      const tabId = `about-tab-${key}`;
+      const panelId = `about-panel-${key}`;
+      tab.id = tabId;
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-controls', panelId);
+      tab.setAttribute('aria-selected', tab.classList.contains('about__tab--active') ? 'true' : 'false');
+      tab.setAttribute('tabindex', tab.classList.contains('about__tab--active') ? '0' : '-1');
+      const panel = document.querySelector(`[data-panel="${key}"]`);
+      if (panel) {
+        panel.id = panelId;
+        panel.setAttribute('role', 'tabpanel');
+        panel.setAttribute('aria-labelledby', tabId);
+      }
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('about__tab--active');
+          t.setAttribute('aria-selected', 'false');
+          t.setAttribute('tabindex', '-1');
+        });
+        panels.forEach(p => p.classList.remove('about__panel--active'));
+        tab.classList.add('about__tab--active');
+        tab.setAttribute('aria-selected', 'true');
+        tab.setAttribute('tabindex', '0');
+        document.querySelector(`[data-panel="${key}"]`)?.classList.add('about__panel--active');
+      });
+    });
   }
 
   /* === NAV hide on scroll === */
@@ -487,15 +512,20 @@
     const btn = document.getElementById('navBurger');
     const menu = document.getElementById('mobileNav');
     if (!btn || !menu) return;
+    btn.setAttribute('aria-expanded', 'false');
     btn.addEventListener('click', () => {
-      btn.classList.toggle('nav__burger--open');
-      menu.classList.toggle('mobile-nav--open');
-      document.body.style.overflow = menu.classList.contains('mobile-nav--open') ? 'hidden' : '';
+      const isOpen = btn.classList.toggle('nav__burger--open');
+      menu.classList.toggle('mobile-nav--open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      btn.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
     });
     menu.querySelectorAll('.mobile-nav__link').forEach(l => l.addEventListener('click', () => {
       btn.classList.remove('nav__burger--open');
       menu.classList.remove('mobile-nav--open');
       document.body.style.overflow = '';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'Open menu');
     }));
   }
 
@@ -577,6 +607,7 @@
         const slot = slots[slotIdx] || slots[slots.length - 1];
 
         card.style.zIndex = slot.z;
+        card.setAttribute('aria-hidden', slot.opacity === 0 ? 'true' : 'false');
 
         const props = {
           left: slot.x - slot.w / 2,
@@ -639,14 +670,38 @@
 
   /* === SERVICES TABS === */
   function initServicesTabs() {
+    const tablist = document.querySelector('.services__tabs');
     const tabs = document.querySelectorAll('.services__tab');
     const panels = document.querySelectorAll('.services__panel');
-    tabs.forEach(tab => tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('services__tab--active'));
-      panels.forEach(p => p.classList.remove('services__panel--active'));
-      tab.classList.add('services__tab--active');
-      document.querySelector(`[data-spanel="${tab.dataset.stab}"]`)?.classList.add('services__panel--active');
-    }));
+    if (tablist) tablist.setAttribute('role', 'tablist');
+    tabs.forEach(tab => {
+      const key = tab.dataset.stab;
+      const tabId = `services-tab-${key}`;
+      const panelId = `services-panel-${key}`;
+      tab.id = tabId;
+      tab.setAttribute('role', 'tab');
+      tab.setAttribute('aria-controls', panelId);
+      tab.setAttribute('aria-selected', tab.classList.contains('services__tab--active') ? 'true' : 'false');
+      tab.setAttribute('tabindex', tab.classList.contains('services__tab--active') ? '0' : '-1');
+      const panel = document.querySelector(`[data-spanel="${key}"]`);
+      if (panel) {
+        panel.id = panelId;
+        panel.setAttribute('role', 'tabpanel');
+        panel.setAttribute('aria-labelledby', tabId);
+      }
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => {
+          t.classList.remove('services__tab--active');
+          t.setAttribute('aria-selected', 'false');
+          t.setAttribute('tabindex', '-1');
+        });
+        panels.forEach(p => p.classList.remove('services__panel--active'));
+        tab.classList.add('services__tab--active');
+        tab.setAttribute('aria-selected', 'true');
+        tab.setAttribute('tabindex', '0');
+        document.querySelector(`[data-spanel="${key}"]`)?.classList.add('services__panel--active');
+      });
+    });
   }
 
   /* === MODAL === */

@@ -243,7 +243,7 @@
       outline: none;
       cursor: pointer;
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B5E52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 10px center;
       transition: border-color .2s;
@@ -334,11 +334,10 @@
     }
     .cc-card__headline {
       font-size: 13px;
-      color: var(--color-dark);
+      color: var(--color-teal);
       font-weight: 500;
+      font-style: italic;
       line-height: 1.5;
-      border-left: 2px solid var(--color-teal);
-      padding-left: 10px;
     }
     .cc-card__topics-label {
       font-size: 10px;
@@ -610,7 +609,7 @@
     .cc-form-select {
       appearance: none;
       cursor: pointer;
-      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B5E52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 12px center;
     }
@@ -715,8 +714,7 @@
       .cc-hero { padding: 88px 20px 48px; }
       .cc-how, .cc-browse, .cc-apply, .cc-safety { padding-top: 48px; padding-bottom: 48px; }
       .cc-eco { padding: 48px 20px; }
-      .cc-filter-row { flex-wrap: wrap; gap: 10px; }
-      .cc-filter-row select { flex: 1 1 calc(50% - 5px); min-width: 0; }
+      .cc-filters .cc-filter-select { flex: 1 1 calc(50% - 5px); min-width: 0; }
       .cc-cards { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 480px) {
@@ -1013,8 +1011,8 @@
     <div class="cc-filter-bar">
       <div class="cc-search-wrap">
         <svg class="cc-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-          <circle cx="6.5" cy="6.5" r="5" stroke="#8A7E72" stroke-width="1.5"/>
-          <path d="M10 10L14 14" stroke="#8A7E72" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="6.5" cy="6.5" r="5" stroke="#6B5E52" stroke-width="1.5"/>
+          <path d="M10 10L14 14" stroke="#6B5E52" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         <input
           type="text"

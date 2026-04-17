@@ -75,7 +75,7 @@
       </a>
     </div>
     <!-- Mobile hamburger -->
-    <button class="nav__burger" id="navBurger" aria-label="Menu">
+    <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
       <span></span><span></span><span></span>
     </button>
   </nav>
@@ -330,9 +330,9 @@
         <!-- Piñata mini-game (replaces J×J pattern) -->
         <div class="services__pattern" aria-hidden="true">
           <div class="pinata" id="pinata">
-            <div class="pinata__body" id="pinataBody">
+            <button class="pinata__body" id="pinataBody" aria-label="Hit the piñata">
               <img src="/pinanta/step1.png" alt="" class="pinata__img" id="pinataImg" draggable="false" />
-            </div>
+            </button>
             <p class="pinata__prompt" id="pinataPrompt">Click to hit!</p>
           </div>
         </div>
