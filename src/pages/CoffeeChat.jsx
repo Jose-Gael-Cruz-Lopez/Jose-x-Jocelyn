@@ -232,7 +232,7 @@ export default function CoffeeChat() {
       pronouns: formData.pronouns || null,
       email: formData.email,
       linkedin_url: formData.linkedin,
-      current_role: formData.role,
+      role_title: formData.role,
       location: formData.location || null,
       role_function: funcChips,
       identity_tags: identityChips,

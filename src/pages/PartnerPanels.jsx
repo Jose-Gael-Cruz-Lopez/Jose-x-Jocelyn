@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
+import { supabase } from '../lib/supabase'
 
 const UPCOMING_PANELS = [
   {
@@ -139,7 +140,11 @@ export default function PartnerPanels() {
   const [openTakeaway, setOpenTakeaway] = useState(null)
   const [activeTopic, setActiveTopic] = useState('all')
   const [suggestSubmitted, setSuggestSubmitted] = useState(false)
+  const [suggestLoading, setSuggestLoading] = useState(false)
+  const [suggestError, setSuggestError] = useState('')
   const [panelistSubmitted, setPanelistSubmitted] = useState(false)
+  const [panelistLoading, setPanelistLoading] = useState(false)
+  const [panelistError, setPanelistError] = useState('')
   const [suggestForm, setSuggestForm] = useState({ topic: '', why: '', stage: '', category: '', email: '' })
   const [panelistForm, setPanelistForm] = useState({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '', notes: '' })
 
@@ -147,22 +152,52 @@ export default function PartnerPanels() {
     setOpenTakeaway(prev => prev === id ? null : id)
   }
 
-  function submitSuggest(e) {
+  async function submitSuggest(e) {
     e.preventDefault()
     if (!suggestForm.topic || !suggestForm.why || !suggestForm.stage || !suggestForm.category) {
-      alert('Please fill in all required fields before submitting.')
+      setSuggestError('Please fill in all required fields before submitting.')
       return
     }
-    setSuggestSubmitted(true)
+    setSuggestLoading(true)
+    setSuggestError('')
+    const { error } = await supabase.from('panel_suggestions').insert({
+      topic: suggestForm.topic,
+      why_helpful: suggestForm.why,
+      stage: suggestForm.stage,
+      category: suggestForm.category,
+      email: suggestForm.email || null,
+    })
+    setSuggestLoading(false)
+    if (error) {
+      setSuggestError('Something went wrong. Please try again.')
+    } else {
+      setSuggestSubmitted(true)
+    }
   }
 
-  function submitPanelist(e) {
+  async function submitPanelist(e) {
     e.preventDefault()
     if (!panelistForm.name || !panelistForm.email || !panelistForm.linkedin || !panelistForm.role || !panelistForm.topic || !panelistForm.interest) {
-      alert('Please fill in all required fields before submitting.')
+      setPanelistError('Please fill in all required fields before submitting.')
       return
     }
-    setPanelistSubmitted(true)
+    setPanelistLoading(true)
+    setPanelistError('')
+    const { error } = await supabase.from('panelists').insert({
+      name: panelistForm.name,
+      email: panelistForm.email,
+      linkedin_url: panelistForm.linkedin,
+      role_title: panelistForm.role,
+      topic: panelistForm.topic,
+      interested_in: panelistForm.interest,
+      notes: panelistForm.notes || null,
+    })
+    setPanelistLoading(false)
+    if (error) {
+      setPanelistError('Something went wrong. Please try again.')
+    } else {
+      setPanelistSubmitted(true)
+    }
   }
 
   return (
@@ -1033,7 +1068,8 @@ export default function PartnerPanels() {
                   <label className="pp-form-label" htmlFor="suggestEmail">Email <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional - if you want a heads-up when we host it)</span></label>
                   <input className="pp-form-input" type="email" id="suggestEmail" placeholder="your@email.com" value={suggestForm.email} onChange={e => setSuggestForm(f => ({ ...f, email: e.target.value }))} />
                 </div>
-                <button className="pp-form-btn" type="submit">Send Topic Suggestion</button>
+                {suggestError && <p style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{suggestError}</p>}
+                <button className="pp-form-btn" type="submit" disabled={suggestLoading}>{suggestLoading ? 'Submitting…' : 'Send Topic Suggestion'}</button>
                 <p className="pp-form-note">Not every idea becomes a panel immediately, but every submission helps shape what we build next.</p>
               </form>
             )}
@@ -1117,7 +1153,8 @@ export default function PartnerPanels() {
                   <label className="pp-form-label" htmlFor="plNotes">Anything else we should know?</label>
                   <textarea className="pp-form-textarea" id="plNotes" placeholder="Optional - any context that helps us understand your interest or background" value={panelistForm.notes} onChange={e => setPanelistForm(f => ({ ...f, notes: e.target.value }))} />
                 </div>
-                <button className="pp-form-btn" type="submit">Express Interest</button>
+                {panelistError && <p style={{ color: 'var(--color-cream)', fontSize: 13, marginBottom: 10, opacity: 0.85 }}>{panelistError}</p>}
+                <button className="pp-form-btn" type="submit" disabled={panelistLoading}>{panelistLoading ? 'Submitting…' : 'Express Interest'}</button>
               </form>
             )}
           </div>
