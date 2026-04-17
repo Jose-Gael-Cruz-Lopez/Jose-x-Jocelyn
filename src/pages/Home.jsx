@@ -39,12 +39,10 @@ export default function Home() {
     e?.preventDefault()
     setModalOpen(true)
     setModalStep(1)
-    document.body.style.overflow = 'hidden'
   }, [])
 
   const closeModal = useCallback(() => {
     setModalOpen(false)
-    document.body.style.overflow = ''
     setTimeout(() => setModalStep(1), 400)
   }, [])
 
@@ -57,11 +55,13 @@ export default function Home() {
   }, [modalOpen, closeModal])
 
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
+    document.body.style.overflow = modalOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [modalOpen])
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
   }, [menuOpen])
 
   /* ── Gallery carousel ── */
@@ -304,37 +304,17 @@ export default function Home() {
     window.scrollTo(0, 0)
     history.scrollRestoration = 'manual'
 
+    let cleanupScroll = null
+    let cleanupGallery = null
+    let cleanupDots = null
+    let cleanupConfetti = null
+    let tl = null
+
     const loader = loaderRef.current
     const fill = loaderFillRef.current
     const panels = loader?.querySelectorAll('.loader__panel')
 
-    if (!loader || !fill || !panels?.length) {
-      loader?.remove()
-      afterLoader()
-      return
-    }
-
-    const wipeEase = 'power3.inOut'
-    const wipeDur = 0.88
-
-    const tl = gsap.timeline({ onComplete: () => { loader.remove(); afterLoader() } })
-    tl.to(fill, { width: '35%', duration: 0.35, ease: 'power2.out' })
-      .to(fill, { width: '72%', duration: 0.32, ease: 'power2.out' })
-      .to(fill, { width: '100%', duration: 0.28, ease: 'power2.out' })
-      .add('wipe')
-      .to(panels[0], { xPercent: -100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe')
-      .to(panels[1], { xPercent: 100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe+=0.08')
-      .to(panels[2], { xPercent: -100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe+=0.16')
-      .fromTo('.hero__sun',     { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.75, ease: 'power2.out', stagger: 0.1 }, 'wipe')
-      .fromTo('.hero__j',       { y: 80, opacity: 0 },       { y: 0, opacity: 1, duration: 1.0, ease: 'power3.out', stagger: 0.13 }, 'wipe+=0.05')
-      .fromTo('.hero__x',       { scale: 0, opacity: 0 },    { scale: 1, opacity: 1, duration: 0.7, ease: 'back.out(1.7)' }, 'wipe+=0.2')
-      .fromTo('.hero__names',   { y: 20, opacity: 0 },       { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 'wipe+=0.3')
-      .fromTo('.hero__tagline', { y: 16, opacity: 0 },       { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' }, 'wipe+=0.4')
-      .fromTo('.hero__rule',    { scaleX: 0, opacity: 0 },   { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.out', transformOrigin: 'center center' }, 'wipe+=0.48')
-      .fromTo('.hero__foot',    { y: 12, opacity: 0 },       { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, 'wipe+=0.55')
-
     function afterLoader() {
-      // Nav scroll behavior
       let last = 0
       const onScroll = () => {
         const cur = window.scrollY
@@ -342,8 +322,8 @@ export default function Home() {
         last = cur
       }
       window.addEventListener('scroll', onScroll, { passive: true })
+      cleanupScroll = () => window.removeEventListener('scroll', onScroll)
 
-      // Anchor scroll
       const navOffset = 80
       const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
       document.querySelectorAll('a[href^="#"]').forEach(a => {
@@ -358,14 +338,43 @@ export default function Home() {
         })
       })
 
-      const cleanupGallery = initGallery()
-      const cleanupDots = initFooterDots()
-      const cleanupConfetti = initClickConfetti()
+      cleanupGallery = initGallery()
+      cleanupDots = initFooterDots()
+      cleanupConfetti = initClickConfetti()
       initGSAP()
     }
 
+    if (!loader || !fill || !panels?.length) {
+      loader?.remove()
+      afterLoader()
+    } else {
+      const wipeEase = 'power3.inOut'
+      const wipeDur = 0.88
+
+      tl = gsap.timeline({ onComplete: () => { loader.remove(); afterLoader() } })
+      tl.to(fill, { width: '35%', duration: 0.35, ease: 'power2.out' })
+        .to(fill, { width: '72%', duration: 0.32, ease: 'power2.out' })
+        .to(fill, { width: '100%', duration: 0.28, ease: 'power2.out' })
+        .add('wipe')
+        .to(panels[0], { xPercent: -100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe')
+        .to(panels[1], { xPercent: 100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe+=0.08')
+        .to(panels[2], { xPercent: -100, duration: wipeDur, ease: wipeEase, force3D: true }, 'wipe+=0.16')
+        .fromTo('.hero__sun',     { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.75, ease: 'power2.out', stagger: 0.1 }, 'wipe')
+        .fromTo('.hero__j',       { y: 80, opacity: 0 },       { y: 0, opacity: 1, duration: 1.0, ease: 'power3.out', stagger: 0.13 }, 'wipe+=0.05')
+        .fromTo('.hero__x',       { scale: 0, opacity: 0 },    { scale: 1, opacity: 1, duration: 0.7, ease: 'back.out(1.7)' }, 'wipe+=0.2')
+        .fromTo('.hero__names',   { y: 20, opacity: 0 },       { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 'wipe+=0.3')
+        .fromTo('.hero__tagline', { y: 16, opacity: 0 },       { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' }, 'wipe+=0.4')
+        .fromTo('.hero__rule',    { scaleX: 0, opacity: 0 },   { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.out', transformOrigin: 'center center' }, 'wipe+=0.48')
+        .fromTo('.hero__foot',    { y: 12, opacity: 0 },       { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' }, 'wipe+=0.55')
+    }
+
     return () => {
+      tl?.kill()
       ScrollTrigger.getAll().forEach(t => t.kill())
+      cleanupScroll?.()
+      cleanupGallery?.()
+      cleanupDots?.()
+      cleanupConfetti?.()
     }
   }, [])
 

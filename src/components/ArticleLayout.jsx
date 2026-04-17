@@ -3,10 +3,12 @@ import { Link, useLocation } from 'react-router-dom'
 
 const NAV_LINKS = [
   { to: '/articles', label: 'La Voz del Día' },
+  { to: '/linkedin-series', label: 'LinkedIn Series' },
   { to: '/career-templates', label: 'Templates' },
   { to: '/bridge-year', label: 'Bridge Year' },
   { to: '/coffee-chat', label: 'Coffee Chat' },
   { to: '/opportunity-board', label: 'Opportunities' },
+  { to: '/interview-prep', label: 'Interview Prep' },
   { to: '/partner-panels', label: 'Panels' },
   { to: '/resume-reviews', label: 'Resumes' },
 ]
