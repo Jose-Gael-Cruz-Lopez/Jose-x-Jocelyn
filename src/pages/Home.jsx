@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
+import { supabase } from '../lib/supabase'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import anime from 'animejs/lib/anime.es.js'
 
@@ -16,6 +17,11 @@ export default function Home() {
   const [servicesTab, setServicesTab] = useState('content')
   const [modalOpen, setModalOpen] = useState(false)
   const [modalStep, setModalStep] = useState(1)
+  const [modalName, setModalName] = useState('')
+  const [modalEmail, setModalEmail] = useState('')
+  const [modalInterests, setModalInterests] = useState([])
+  const [modalLoading, setModalLoading] = useState(false)
+  const [modalError, setModalError] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
   const [navOnHero, setNavOnHero] = useState(true)
   const [navHidden, setNavHidden] = useState(false)
@@ -44,7 +50,13 @@ export default function Home() {
 
   const closeModal = useCallback(() => {
     setModalOpen(false)
-    setTimeout(() => setModalStep(1), 400)
+    setTimeout(() => {
+      setModalStep(1)
+      setModalName('')
+      setModalEmail('')
+      setModalInterests([])
+      setModalError('')
+    }, 400)
   }, [])
 
   useEffect(() => {
@@ -905,17 +917,32 @@ export default function Home() {
           <button className="modal__close" id="modalClose" onClick={closeModal}>&times;</button>
           <div className={`modal__step${modalStep === 1 ? ' modal__step--active' : ''}`}>
             <h3 className="modal__title">Tell us about you</h3>
-            <input type="text" className="modal__input" placeholder="Your full name" />
-            <input type="email" className="modal__input" placeholder="Your email" />
-            <button className="modal__btn" onClick={() => setModalStep(2)}>Next &rarr;</button>
+            <input type="text" className="modal__input" placeholder="Your full name" value={modalName} onChange={e => setModalName(e.target.value)} />
+            <input type="email" className="modal__input" placeholder="Your email" value={modalEmail} onChange={e => setModalEmail(e.target.value)} />
+            <button className="modal__btn" onClick={() => { if (!modalEmail.trim()) return; setModalStep(2) }}>Next &rarr;</button>
           </div>
           <div className={`modal__step${modalStep === 2 ? ' modal__step--active' : ''}`}>
             <h3 className="modal__title">What interests you?</h3>
-            <label className="modal__check"><input type="checkbox" /> Sprint cohorts</label>
-            <label className="modal__check"><input type="checkbox" /> La Voz del Día content</label>
-            <label className="modal__check"><input type="checkbox" /> Opportunity board</label>
-            <label className="modal__check"><input type="checkbox" /> Mentorship</label>
-            <button className="modal__btn" onClick={() => setModalStep(3)}>Next &rarr;</button>
+            {['Sprint cohorts', 'La Voz del Día content', 'Opportunity board', 'Mentorship'].map(interest => (
+              <label key={interest} className="modal__check">
+                <input type="checkbox" checked={modalInterests.includes(interest)} onChange={e => setModalInterests(prev => e.target.checked ? [...prev, interest] : prev.filter(i => i !== interest))} />
+                {' '}{interest}
+              </label>
+            ))}
+            {modalError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginTop: '8px' }}>{modalError}</p>}
+            <button className="modal__btn" disabled={modalLoading} onClick={async () => {
+              setModalLoading(true)
+              setModalError('')
+              const { error } = await supabase.from('subscribers').insert({
+                name: modalName.trim() || null,
+                email: modalEmail.trim(),
+                interests: modalInterests,
+                source: 'home_modal',
+              })
+              setModalLoading(false)
+              if (error && error.code !== '23505') { setModalError('Something went wrong. Please try again.') }
+              else { setModalStep(3) }
+            }}>{modalLoading ? 'Saving…' : 'Next →'}</button>
           </div>
           <div className={`modal__step${modalStep === 3 ? ' modal__step--active' : ''}`}>
             <h3 className="modal__title">You're in.</h3>

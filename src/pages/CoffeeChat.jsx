@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
+import { supabase } from '../lib/supabase'
 
 const PROFILES = [
   {
@@ -157,6 +158,8 @@ export default function CoffeeChat() {
   const [copied, setCopied] = useState(false)
 
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [formLoading, setFormLoading] = useState(false)
+  const [formError, setFormError] = useState('')
   const [funcChips, setFuncChips] = useState([])
   const [identityChips, setIdentityChips] = useState([])
   const [formData, setFormData] = useState({
@@ -211,18 +214,38 @@ export default function CoffeeChat() {
     setArr(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val])
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const { name, email, linkedin, role, topics, capacity, consent1, consent2 } = formData
     if (!name || !email || !linkedin || !role || !topics || !capacity) {
-      alert('Please fill in all required fields before submitting.')
+      setFormError('Please fill in all required fields before submitting.')
       return
     }
     if (!consent1 || !consent2) {
-      alert('Please check both consent boxes before submitting.')
+      setFormError('Please check both consent boxes before submitting.')
       return
     }
-    setFormSubmitted(true)
+    setFormLoading(true)
+    setFormError('')
+    const { error } = await supabase.from('coffee_chat_profiles').insert({
+      name: formData.name,
+      pronouns: formData.pronouns || null,
+      email: formData.email,
+      linkedin_url: formData.linkedin,
+      current_role: formData.role,
+      location: formData.location || null,
+      role_function: funcChips,
+      identity_tags: identityChips,
+      topics: formData.topics,
+      capacity: formData.capacity,
+      consented_at: new Date().toISOString(),
+    })
+    setFormLoading(false)
+    if (error) {
+      setFormError('Something went wrong. Please try again.')
+    } else {
+      setFormSubmitted(true)
+    }
   }
 
   return (
@@ -670,7 +693,8 @@ export default function CoffeeChat() {
                     <label className="cc-form-check-label" htmlFor="ccConsent2">I understand this is not a job placement service and I am not required to say yes to every request.</label>
                   </div>
                 </div>
-                <button className="cc-form-btn" type="submit">Submit my profile</button>
+                {formError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+                <button className="cc-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit my profile'}</button>
               </form>
             )}
           </div>

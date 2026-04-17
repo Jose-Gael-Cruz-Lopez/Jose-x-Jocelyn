@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
+import { supabase } from '../lib/supabase'
 
 const COMPANIES = {
   google:    { name: 'Google',    slug: 'google',    hex: '4285F4' },
@@ -162,6 +163,8 @@ export default function ResumeReviews() {
   const [panelId, setPanelId] = useState(null)
   const [sheetOpen, setSheetOpen] = useState(false)
   const [submitSubmitted, setSubmitSubmitted] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [submitForm, setSubmitForm] = useState({ handle: '', email: '', linkedin: '', roleTitle: '', roleType: '', stage: '', companies: '', bgTags: [], download: 'no', story: '', annotate: 'no' })
   const [fileName, setFileName] = useState('')
   const fileRef = useRef(null)
@@ -224,13 +227,31 @@ export default function ResumeReviews() {
     return () => document.removeEventListener('keydown', onKey)
   }, [])
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    if (!submitForm.handle || !submitForm.email || !submitForm.roleType || !submitForm.stage || !submitForm.companies || !fileName) {
-      alert('Please fill in all required fields and upload your resume PDF before submitting.')
+    if (!submitForm.handle || !submitForm.email || !submitForm.roleType || !submitForm.stage || !submitForm.companies) {
+      setSubmitError('Please fill in all required fields before submitting.')
       return
     }
-    setSubmitSubmitted(true)
+    setSubmitLoading(true)
+    setSubmitError('')
+    const { error } = await supabase.from('resume_submissions').insert({
+      handle: submitForm.handle,
+      email: submitForm.email,
+      linkedin_url: submitForm.linkedin || null,
+      role_title: submitForm.roleTitle || null,
+      role_type: submitForm.roleType,
+      stage: submitForm.stage,
+      target_companies: submitForm.companies,
+      background_tags: submitForm.bgTags,
+      allow_download: submitForm.download === 'yes',
+      story: submitForm.story || null,
+      allow_annotation: submitForm.annotate === 'yes',
+      file_name: fileName || null,
+    })
+    setSubmitLoading(false)
+    if (error) { setSubmitError('Something went wrong. Please try again.') }
+    else { setSubmitSubmitted(true) }
   }
 
   function toggleBgTag(tag) {
@@ -736,7 +757,8 @@ export default function ResumeReviews() {
                     <label className="rr-radio-option"><input type="radio" name="sfAnnotate" value="no" checked={submitForm.annotate === 'no'} onChange={() => setSubmitForm(f => ({ ...f, annotate: 'no' }))} /> No thanks, just add it</label>
                   </div>
                 </div>
-                <button className="rr-form-btn" type="submit">Add My Resume to the Library</button>
+                {submitError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{submitError}</p>}
+                <button className="rr-form-btn" type="submit" disabled={submitLoading}>{submitLoading ? 'Submitting…' : 'Add My Resume to the Library'}</button>
                 <p className="rr-form-note">By submitting, you agree to have your resume displayed publicly on this page. Personal contact information visible on the resume is your responsibility to redact before uploading. We do not display full names unless you explicitly include them in your handle field.</p>
               </form>
             )}

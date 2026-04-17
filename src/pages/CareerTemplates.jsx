@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
+import { supabase } from '../lib/supabase'
 
 const TEMPLATES = [
   {
@@ -135,6 +136,27 @@ const ExternalIcon = () => (
 
 export default function CareerTemplates() {
   const [activeFilter, setActiveFilter] = useState('all')
+  const [request, setRequest] = useState('')
+  const [reqEmail, setReqEmail] = useState('')
+  const [reqCategory, setReqCategory] = useState('')
+  const [formLoading, setFormLoading] = useState(false)
+  const [formError, setFormError] = useState('')
+  const [formSubmitted, setFormSubmitted] = useState(false)
+
+  const handleSubmit = async e => {
+    e.preventDefault()
+    if (!request.trim()) { setFormError('Please describe the template you need.'); return }
+    setFormLoading(true)
+    setFormError('')
+    const { error } = await supabase.from('template_requests').insert({
+      request: request.trim(),
+      email: reqEmail.trim() || null,
+      category: reqCategory || null,
+    })
+    setFormLoading(false)
+    if (error) { setFormError('Something went wrong. Please try again.') }
+    else { setFormSubmitted(true) }
+  }
 
   const visible = activeFilter === 'all'
     ? TEMPLATES
@@ -533,28 +555,37 @@ export default function CareerTemplates() {
             <p className="ct-form-copy__sub">Every template on this page started with a question someone couldn't find a good answer to. Tell us where you're stuck and we'll build the tool for it.</p>
           </div>
           <div className="ct-form-box">
-            <form onSubmit={e => e.preventDefault()}>
-              <div className="ct-form-row">
-                <label className="ct-form-label" htmlFor="reqField">What template do you wish existed?</label>
-                <textarea className="ct-form-textarea" id="reqField" placeholder="e.g. A script for asking for a deadline extension on an offer…"></textarea>
+            {formSubmitted ? (
+              <div style={{ padding: '32px 0', textAlign: 'center' }}>
+                <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(58,125,107,.1)', color: 'var(--color-teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, margin: '0 auto 14px' }}>✓</div>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--color-dark)', marginBottom: 6 }}>Request submitted!</p>
+                <p style={{ fontSize: 14, color: 'var(--color-muted)' }}>Thanks — we'll build it if enough people ask for the same thing.</p>
               </div>
-              <div className="ct-form-row">
-                <label className="ct-form-label" htmlFor="reqEmail">Your email</label>
-                <input className="ct-form-input" type="email" id="reqEmail" placeholder="you@school.edu" />
-              </div>
-              <div className="ct-form-row">
-                <label className="ct-form-label" htmlFor="reqCat">Pipeline stage (optional)</label>
-                <select className="ct-form-select" id="reqCat">
-                  <option value="">Select a stage…</option>
-                  <option>Internship search</option>
-                  <option>Networking &amp; outreach</option>
-                  <option>Interview prep</option>
-                  <option>Offers &amp; negotiation</option>
-                  <option>First job &amp; onboarding</option>
-                </select>
-              </div>
-              <button className="ct-form-btn" type="submit">Submit Request</button>
-            </form>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <div className="ct-form-row">
+                  <label className="ct-form-label" htmlFor="reqField">What template do you wish existed?</label>
+                  <textarea className="ct-form-textarea" id="reqField" placeholder="e.g. A script for asking for a deadline extension on an offer…" value={request} onChange={e => setRequest(e.target.value)}></textarea>
+                </div>
+                <div className="ct-form-row">
+                  <label className="ct-form-label" htmlFor="reqEmailField">Your email</label>
+                  <input className="ct-form-input" type="email" id="reqEmailField" placeholder="you@school.edu" value={reqEmail} onChange={e => setReqEmail(e.target.value)} />
+                </div>
+                <div className="ct-form-row">
+                  <label className="ct-form-label" htmlFor="reqCat">Pipeline stage (optional)</label>
+                  <select className="ct-form-select" id="reqCat" value={reqCategory} onChange={e => setReqCategory(e.target.value)}>
+                    <option value="">Select a stage…</option>
+                    <option>Internship search</option>
+                    <option>Networking &amp; outreach</option>
+                    <option>Interview prep</option>
+                    <option>Offers &amp; negotiation</option>
+                    <option>First job &amp; onboarding</option>
+                  </select>
+                </div>
+                {formError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+                <button className="ct-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit Request'}</button>
+              </form>
+            )}
           </div>
         </div>
       </section>

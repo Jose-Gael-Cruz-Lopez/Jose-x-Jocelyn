@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
+import { supabase } from '../lib/supabase'
 
 const GRADE_CARDS = [
   {
@@ -316,10 +317,33 @@ const ECO_LINKS = [
 export default function InterviewPrep() {
   const [activeTab, setActiveTab] = useState('recruiter')
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [formLoading, setFormLoading] = useState(false)
+  const [formError, setFormError] = useState('')
   const [form, setForm] = useState({ role: '', stage: '', type: '', need: '', email: '' })
 
   const setField = (k, v) => setForm(f => ({ ...f, [k]: v }))
-  const handleSubmit = e => { e.preventDefault(); setFormSubmitted(true) }
+  const handleSubmit = async e => {
+    e.preventDefault()
+    if (!form.role) {
+      setFormError('Please describe your role or interview situation.')
+      return
+    }
+    setFormLoading(true)
+    setFormError('')
+    const { error } = await supabase.from('interview_prep_requests').insert({
+      description: form.role,
+      stage: form.stage || null,
+      interview_type: form.type || null,
+      help_needed: form.need || null,
+      email: form.email || null,
+    })
+    setFormLoading(false)
+    if (error) {
+      setFormError('Something went wrong. Please try again.')
+    } else {
+      setFormSubmitted(true)
+    }
+  }
 
   const activePanel = INTERVIEW_TYPES.find(t => t.key === activeTab)
 
@@ -929,7 +953,8 @@ export default function InterviewPrep() {
                 <label className="ip-form-label" htmlFor="ipEmail">Email (optional)</label>
                 <input className="ip-form-input" type="email" id="ipEmail" placeholder="you@school.edu" value={form.email} onChange={e => setField('email', e.target.value)} />
               </div>
-              <button className="ip-form-btn" type="submit">Send Request</button>
+              {formError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+              <button className="ip-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Sending…' : 'Send Request'}</button>
             </form>
           )}
         </div>

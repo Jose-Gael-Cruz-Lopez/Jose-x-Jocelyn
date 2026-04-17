@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
+import { supabase } from '../lib/supabase'
 
 const PROGRAMS = [
   {
@@ -223,15 +224,35 @@ function ExtIcon() {
 export default function BridgeYear() {
   const [roleFilter, setRoleFilter] = useState('all')
   const [formSubmitted, setFormSubmitted] = useState(false)
+  const [formLoading, setFormLoading] = useState(false)
+  const [formError, setFormError] = useState('')
   const [form, setForm] = useState({ program: '', company: '', link: '', why: '', email: '' })
 
   const visibleRoles = roleFilter === 'all'
     ? ROLE_CARDS
     : ROLE_CARDS.filter(c => c.rtags.includes(roleFilter))
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault()
-    setFormSubmitted(true)
+    if (!form.program || !form.company) {
+      setFormError('Program name and company are required.')
+      return
+    }
+    setFormLoading(true)
+    setFormError('')
+    const { error } = await supabase.from('bridge_year_suggestions').insert({
+      program_name: form.program,
+      company: form.company,
+      link: form.link || null,
+      why: form.why || null,
+      email: form.email || null,
+    })
+    setFormLoading(false)
+    if (error) {
+      setFormError('Something went wrong. Please try again.')
+    } else {
+      setFormSubmitted(true)
+    }
   }
 
   const setField = (k, v) => setForm(f => ({ ...f, [k]: v }))
@@ -1056,7 +1077,8 @@ export default function BridgeYear() {
                 <label className="by-suggest__label" htmlFor="sgEmail">Your email (optional)</label>
                 <input className="by-suggest__input" type="email" id="sgEmail" placeholder="you@school.edu" value={form.email} onChange={e => setField('email', e.target.value)} />
               </div>
-              <button className="by-suggest__btn" type="submit">Submit Program</button>
+              {formError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+              <button className="by-suggest__btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit Program'}</button>
             </form>
           )}
         </div>

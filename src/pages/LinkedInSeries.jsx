@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
+import { supabase } from '../lib/supabase'
 
 const EPISODES = [
   { num:'01', lens:'both', topics:'internships rejection', lensLabel:'Both', tags:['Internships','Rejection'], title:'Still Recruiting in April', summary:'Jose covers where to find late-cycle roles and how to move fast when everyone says it\'s too late. Jocelyn explains how hiring teams view late applicants and how to frame "still searching" in interviews.', why:'Late-cycle recruiting is where most first-gen students lose momentum - this episode reframes it as a real strategy, not a fallback.', posts:[{type:'Announcement',title:'Kicking off Ep. 01 - Still Recruiting in April',preview:'Series launch post introducing the episode premise and what\'s coming from both lenses.',author:'both',status:'Coming Soon'},{type:'Student Lens',title:'Where the late-cycle roles actually are (and how to find them fast)',preview:'The exact search process Jose uses - company career pages, Handshake filters, outreach-first applications, and why LinkedIn is the last place to look.',author:'jose',status:'Coming Soon'},{type:'Post-Grad Lens',title:'How hiring teams actually see late applicants',preview:'What Jocelyn learned being on the inside - reneges open seats, budget comes in late, and late applicants can actually move faster than early ones.',author:'jocelyn',status:'Coming Soon'},{type:'Recap & CTA',title:'Ep. 01 Recap - The late-cycle playbook in one post',preview:'Full episode summary, key takeaways from both lenses, and links to the related article and application tracker template.',author:'both',status:'Coming Soon'}]},
@@ -110,6 +111,27 @@ const PAGE_CSS = `
 
 export default function LinkedInSeries() {
   const [activeFilter, setActiveFilter] = useState('all')
+  const [topic, setTopic] = useState('')
+  const [email, setEmail] = useState('')
+  const [category, setCategory] = useState('')
+  const [formLoading, setFormLoading] = useState(false)
+  const [formError, setFormError] = useState('')
+  const [formSubmitted, setFormSubmitted] = useState(false)
+
+  const handleSubmit = async e => {
+    e.preventDefault()
+    if (!topic.trim()) { setFormError('Please enter a topic or question.'); return }
+    setFormLoading(true)
+    setFormError('')
+    const { error } = await supabase.from('linkedin_episode_requests').insert({
+      topic: topic.trim(),
+      email: email.trim() || null,
+      category: category || null,
+    })
+    setFormLoading(false)
+    if (error) { setFormError('Something went wrong. Please try again.') }
+    else { setFormSubmitted(true) }
+  }
 
   const visibleEps = EPISODES.filter(ep => {
     if (activeFilter === 'all') return true
@@ -200,15 +222,24 @@ export default function LinkedInSeries() {
           <p className="ls-form-box__kicker">Shape the Series</p>
           <h2 className="ls-form-box__title">What do you want us to cover?</h2>
           <p className="ls-form-box__sub">We source episode topics directly from the people reading this. Tell us where you're stuck and we'll build an episode around it.</p>
-          <form onSubmit={e => e.preventDefault()}>
-            <div className="ls-form-row"><label className="ls-form-label" htmlFor="topicField">Your topic or question</label><textarea className="ls-form-textarea" id="topicField" placeholder="e.g. How do I handle a gap in my resume? What do I do after I get ghosted by a recruiter?" /></div>
-            <div className="ls-form-row"><label className="ls-form-label" htmlFor="emailField">Your email</label><input className="ls-form-input" type="email" id="emailField" placeholder="you@school.edu" /></div>
-            <div className="ls-form-row">
-              <label className="ls-form-label" htmlFor="topicCat">Topic area (optional)</label>
-              <select className="ls-form-select" id="topicCat"><option value="">Select a category…</option><option>Internship search</option><option>Offers &amp; negotiation</option><option>Recruiting &amp; outreach</option><option>Workplace &amp; onboarding</option><option>Mindset &amp; rejection</option></select>
+          {formSubmitted ? (
+            <div style={{ padding: '32px 0', textAlign: 'center' }}>
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(58,125,107,.1)', color: 'var(--color-teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, margin: '0 auto 14px' }}>✓</div>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--color-dark)', marginBottom: 6 }}>Topic submitted!</p>
+              <p style={{ fontSize: 14, color: 'var(--color-muted)' }}>Thanks — we'll consider it for an upcoming episode.</p>
             </div>
-            <button className="ls-form-btn" type="submit">Submit Topic</button>
-          </form>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <div className="ls-form-row"><label className="ls-form-label" htmlFor="topicField">Your topic or question</label><textarea className="ls-form-textarea" id="topicField" placeholder="e.g. How do I handle a gap in my resume? What do I do after I get ghosted by a recruiter?" value={topic} onChange={e => setTopic(e.target.value)} /></div>
+              <div className="ls-form-row"><label className="ls-form-label" htmlFor="emailField">Your email</label><input className="ls-form-input" type="email" id="emailField" placeholder="you@school.edu" value={email} onChange={e => setEmail(e.target.value)} /></div>
+              <div className="ls-form-row">
+                <label className="ls-form-label" htmlFor="topicCat">Topic area (optional)</label>
+                <select className="ls-form-select" id="topicCat" value={category} onChange={e => setCategory(e.target.value)}><option value="">Select a category…</option><option>Internship search</option><option>Offers &amp; negotiation</option><option>Recruiting &amp; outreach</option><option>Workplace &amp; onboarding</option><option>Mindset &amp; rejection</option></select>
+              </div>
+              {formError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+              <button className="ls-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit Topic'}</button>
+            </form>
+          )}
         </div>
       </div>
 
