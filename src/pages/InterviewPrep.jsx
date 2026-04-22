@@ -380,12 +380,12 @@ export default function InterviewPrep() {
           padding: 3px 9px; border-radius: 4px;
         }
         .ip-tag--fy   { background: rgba(58,125,107,.1);  color: var(--color-teal); }
-        .ip-tag--jr   { background: rgba(232,168,56,.14); color: #a07820; }
+        .ip-tag--jr   { background: rgba(232,168,56,.14); color: var(--color-gold-dark); }
         .ip-tag--sr   { background: rgba(22,43,68,.1);    color: var(--color-navy); }
         .ip-tag--rg   { background: rgba(179,69,57,.1);   color: var(--color-accent); }
         .ip-tag--rec  { background: rgba(91,142,194,.12); color: var(--color-blue); }
         .ip-tag--beh  { background: rgba(58,125,107,.1);  color: var(--color-teal); }
-        .ip-tag--tech { background: rgba(232,168,56,.14); color: #a07820; }
+        .ip-tag--tech { background: rgba(232,168,56,.14); color: var(--color-gold-dark); }
         .ip-tag--case { background: rgba(22,43,68,.1);    color: var(--color-navy); }
         .ip-tag--ow   { background: rgba(0,0,0,.06);      color: var(--color-muted); }
         .ip-tag--fin  { background: rgba(179,69,57,.1);   color: var(--color-accent); }
@@ -456,10 +456,10 @@ export default function InterviewPrep() {
         .ip-grade-card__label {
           font-size: 11px; font-weight: 700; letter-spacing: .1em;
           text-transform: uppercase; padding: 3px 10px; border-radius: 4px;
-          color: white; display: inline-block; align-self: flex-start; margin-bottom: 14px;
+          color: var(--color-cream); display: inline-block; align-self: flex-start; margin-bottom: 14px;
         }
         .ip-grade-card__label--fy  { background: var(--color-teal); }
-        .ip-grade-card__label--jr  { background: #a07820; }
+        .ip-grade-card__label--jr  { background: var(--color-gold-dark); }
         .ip-grade-card__label--sr  { background: var(--color-navy); }
         .ip-grade-card__label--rg  { background: var(--color-accent); }
         .ip-grade-card__title {
@@ -471,7 +471,7 @@ export default function InterviewPrep() {
           margin-bottom: 20px; flex: 1;
         }
         .ip-grade-card__body strong { color: var(--color-dark); font-weight: 600; }
-        .ip-grade-card__resources { border-top: 1px solid rgba(0,0,0,.06); padding-top: 16px; }
+        .ip-grade-card__resources { border-top: 1px solid rgba(0,0,0,.08); padding-top: 16px; }
         .ip-grade-card__res-label {
           font-size: 10px; font-weight: 700; letter-spacing: .1em;
           text-transform: uppercase; color: var(--color-muted); margin-bottom: 10px;
@@ -487,7 +487,7 @@ export default function InterviewPrep() {
           flex-shrink: 0; transition: transform .18s cubic-bezier(.16,1,.3,1);
         }
         .ip-grade-card__res-item--fy::before  { color: var(--color-teal); }
-        .ip-grade-card__res-item--jr::before  { color: #a07820; }
+        .ip-grade-card__res-item--jr::before  { color: var(--color-gold); }
         .ip-grade-card__res-item--sr::before  { color: var(--color-navy); }
         .ip-grade-card__res-item--rg::before  { color: var(--color-accent); }
         .ip-grade-card__res-item:hover { color: var(--color-accent); }
@@ -514,7 +514,7 @@ export default function InterviewPrep() {
         }
         .ip-type-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 36px; }
         .ip-type-tab {
-          padding: 8px 18px; border-radius: 999px; font-family: var(--font-body);
+          padding: 13px 18px; border-radius: 999px; font-family: var(--font-body);
           font-size: 13px; font-weight: 600; cursor: pointer;
           border: 1.5px solid rgba(242,228,206,.2);
           background: transparent; color: rgba(242,228,206,.6);
@@ -522,6 +522,7 @@ export default function InterviewPrep() {
         }
         .ip-type-tab:hover { color: var(--color-cream); border-color: rgba(242,228,206,.45); }
         .ip-type-tab--active { background: var(--color-cream); color: var(--color-dark); border-color: var(--color-cream); }
+        .ip-type-tab:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 999px; }
         .ip-type-panel__inner {
           display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;
         }
@@ -566,7 +567,7 @@ export default function InterviewPrep() {
           display: flex; flex-direction: column; gap: 12px;
           transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
         }
-        .ip-res-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.09); }
+        .ip-res-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
         .ip-res-card__name {
           font-family: var(--font-display); font-size: clamp(15px,1.8vw,18px);
           font-weight: 600; color: var(--color-dark); line-height: 1.3;
@@ -601,7 +602,7 @@ export default function InterviewPrep() {
         }
         .ip-path-card__num {
           font-family: var(--font-display); font-size: 36px; font-weight: 700;
-          color: rgba(0,0,0,.08); line-height: 1; margin-bottom: 10px;
+          color: rgba(0,0,0,.07); line-height: 1; margin-bottom: 10px;
         }
         .ip-path-card__trigger {
           font-family: var(--font-display); font-size: clamp(15px,1.8vw,17px);
@@ -668,7 +669,7 @@ export default function InterviewPrep() {
           padding: 80px clamp(20px,5vw,56px) 100px;
         }
         .ip-form-box {
-          background: var(--color-white); border: 1px solid rgba(0,0,0,.07);
+          background: var(--color-white); border: 1px solid rgba(0,0,0,.08);
           border-radius: 16px; padding: clamp(32px,4vw,52px); max-width: 680px;
         }
         .ip-form-box__kicker {
@@ -793,13 +794,24 @@ export default function InterviewPrep() {
           <h2 className="ip-types__title">Browse by Interview Type</h2>
           <p className="ip-types__sub">I have a [type] interview tomorrow. Here is exactly where to start.</p>
 
-          <div className="ip-type-tabs" role="tablist" aria-label="Interview types">
+          <div className="ip-type-tabs" role="tablist" aria-label="Interview types" onKeyDown={e => {
+            const KEYS = INTERVIEW_TYPES.map(t => t.key)
+            const idx = KEYS.indexOf(activeTab)
+            let next = null
+            if (e.key === 'ArrowRight') { e.preventDefault(); next = KEYS[(idx + 1) % KEYS.length] }
+            if (e.key === 'ArrowLeft')  { e.preventDefault(); next = KEYS[(idx - 1 + KEYS.length) % KEYS.length] }
+            if (e.key === 'Home')       { e.preventDefault(); next = KEYS[0] }
+            if (e.key === 'End')        { e.preventDefault(); next = KEYS[KEYS.length - 1] }
+            if (next) { setActiveTab(next); setTimeout(() => document.getElementById(`ip-tab-${next}`)?.focus(), 0) }
+          }}>
             {INTERVIEW_TYPES.map(t => (
               <button
                 key={t.key}
+                id={`ip-tab-${t.key}`}
                 className={`ip-type-tab${activeTab === t.key ? ' ip-type-tab--active' : ''}`}
                 role="tab"
                 aria-selected={activeTab === t.key}
+                tabIndex={activeTab === t.key ? 0 : -1}
                 onClick={() => setActiveTab(t.key)}
               >
                 {t.label}
@@ -953,7 +965,7 @@ export default function InterviewPrep() {
                 <label className="ip-form-label" htmlFor="ipEmail">Email (optional)</label>
                 <input className="ip-form-input" type="email" id="ipEmail" placeholder="you@school.edu" value={form.email} onChange={e => setField('email', e.target.value)} />
               </div>
-              {formError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+              {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
               <button className="ip-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Sending…' : 'Send Request'}</button>
             </form>
           )}

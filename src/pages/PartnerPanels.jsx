@@ -321,7 +321,7 @@ export default function PartnerPanels() {
         .pp-featured-card__body {
           padding: clamp(28px,4vw,52px);
           display: flex; flex-direction: column; gap: 18px;
-          border-right: 1px solid rgba(0,0,0,.07);
+          border-right: 1px solid rgba(0,0,0,.08);
         }
         .pp-featured-card__eyebrow {
           display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
@@ -358,7 +358,7 @@ export default function PartnerPanels() {
           text-transform: uppercase; color: var(--color-muted); margin-bottom: 4px;
         }
         .pp-featured-card__panelist {
-          font-size: 13px; color: var(--color-dark); line-height: 1.5;
+          font-size: 13px; color: var(--color-muted); line-height: 1.5;
           display: flex; align-items: flex-start; gap: 8px;
         }
         .pp-featured-card__panelist::before {
@@ -371,7 +371,7 @@ export default function PartnerPanels() {
         }
         .pp-featured-card__sidebar {
           padding: clamp(24px,3vw,40px);
-          background: rgba(242,228,206,.35);
+          background: rgba(0,0,0,.02);
           display: flex; flex-direction: column; gap: 22px;
         }
         .pp-featured-card__detail-label {
@@ -406,10 +406,10 @@ export default function PartnerPanels() {
           display: flex; flex-direction: column; gap: 14px;
           transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
         }
-        .pp-panel-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,.09); }
+        .pp-panel-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
         .pp-panel-card__date-badge {
           display: inline-flex; align-items: center; gap: 6px;
-          background: rgba(232,168,56,.12); color: var(--color-gold-dark);
+          background: rgba(232,168,56,.12); color: var(--color-gold);
           font-size: 11px; font-weight: 700;
           padding: 5px 11px; border-radius: 6px; align-self: flex-start;
         }
@@ -432,7 +432,7 @@ export default function PartnerPanels() {
         .pp-panel-card__actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
         .pp-panel-card__cta-primary {
           display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-          padding: 10px 16px; background: var(--color-dark); color: var(--color-cream);
+          padding: 13px 16px; background: var(--color-dark); color: var(--color-cream);
           border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600;
           text-decoration: none; border: none; cursor: pointer; flex: 1;
           transition: background .2s, transform .15s;
@@ -440,7 +440,7 @@ export default function PartnerPanels() {
         .pp-panel-card__cta-primary:hover { background: var(--color-accent); transform: translateY(-1px); }
         .pp-panel-card__cta-sm {
           display: inline-flex; align-items: center; gap: 5px;
-          padding: 10px 12px; background: transparent;
+          padding: 13px 12px; background: transparent;
           color: var(--color-muted); border-radius: 8px;
           font-family: var(--font-display); font-size: 11px; font-weight: 600;
           text-decoration: none; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; flex-shrink: 0;
@@ -461,9 +461,9 @@ export default function PartnerPanels() {
           background: var(--color-white);
           border: 1px solid rgba(0,0,0,.08);
           border-radius: 16px; overflow: hidden;
-          transition: box-shadow .2s;
+          transition: border-color .2s, box-shadow .2s;
         }
-        .pp-archive-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+        .pp-archive-card:hover { border-color: rgba(0,0,0,.15); box-shadow: 0 8px 24px rgba(0,0,0,.07); }
         .pp-archive-card__main {
           padding: 26px 28px;
           display: grid; grid-template-columns: 1fr auto;
@@ -489,18 +489,18 @@ export default function PartnerPanels() {
         .pp-archive-card__tags { display: flex; flex-wrap: wrap; gap: 5px; }
         .pp-archive-card__actions {
           display: flex; flex-direction: column; gap: 8px;
-          flex-shrink: 0; min-width: 150px; align-items: stretch;
+          flex-shrink: 0; min-width: min(150px, 100%); align-items: stretch;
         }
         .pp-archive-card__cta {
           display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-          padding: 10px 14px; border-radius: 8px;
+          padding: 13px 14px; border-radius: 8px;
           font-family: var(--font-display); font-size: 12px; font-weight: 600;
           text-decoration: none; border: 1.5px solid; cursor: pointer;
           transition: background .2s, color .2s, border-color .2s, transform .15s;
           text-align: center; background: none;
         }
-        .pp-archive-card__cta--watch { background: var(--color-dark); color: var(--color-cream); border-color: var(--color-dark); }
-        .pp-archive-card__cta--watch:hover { background: var(--color-accent); border-color: var(--color-accent); transform: translateY(-1px); }
+        .pp-archive-card__cta--watch { background: var(--color-accent); color: var(--color-cream); border-color: var(--color-accent); }
+        .pp-archive-card__cta--watch:hover { background: oklch(from var(--color-accent) calc(l - 0.05) c h); border-color: transparent; transform: translateY(-1px); }
         .pp-archive-card__cta--flyer { color: var(--color-muted); border-color: rgba(0,0,0,.12); }
         .pp-archive-card__cta--flyer:hover { border-color: var(--color-dark); color: var(--color-dark); }
         .pp-archive-card__cta--takeaways { color: var(--color-teal); border-color: rgba(58,125,107,.25); }
@@ -509,8 +509,8 @@ export default function PartnerPanels() {
         .pp-takeaways {
           display: grid; grid-template-rows: 0fr;
           transition: grid-template-rows .4s cubic-bezier(.16,1,.3,1);
-          border-top: 1px solid rgba(0,0,0,.07);
-          background: rgba(242,228,206,.3);
+          border-top: 1px solid rgba(0,0,0,.08);
+          background: rgba(0,0,0,.02);
         }
         .pp-takeaways.open { grid-template-rows: 1fr; }
         .pp-takeaways__inner {
@@ -546,7 +546,7 @@ export default function PartnerPanels() {
         .pp-topics__chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
         .pp-topic-chip {
           display: inline-flex; align-items: center; gap: 6px;
-          padding: 10px 18px;
+          padding: 16px 18px;
           border: 1.5px solid rgba(0,0,0,.1);
           border-radius: 24px;
           font-family: var(--font-body); font-size: 13px; font-weight: 600;
@@ -581,7 +581,7 @@ export default function PartnerPanels() {
 
         .pp-form-box {
           background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.07);
+          border: 1px solid rgba(0,0,0,.08);
           border-radius: 16px;
           padding: clamp(26px,4vw,44px);
         }
@@ -689,7 +689,7 @@ export default function PartnerPanels() {
           color-scheme: dark;
         }
         .pp-form-box--dark .pp-form-btn { background: var(--color-gold); color: var(--color-dark); }
-        .pp-form-box--dark .pp-form-btn:hover { background: #CF952F; }
+        .pp-form-box--dark .pp-form-btn:hover { background: var(--color-gold); }
         .pp-form-box--dark .pp-form-success__title { color: var(--color-cream); }
         .pp-form-box--dark .pp-form-success__body { color: rgba(242,228,206,.65); }
 
@@ -755,6 +755,17 @@ export default function PartnerPanels() {
         }
         .pp-closing__btn-secondary:hover { border-color: var(--color-cream); background: rgba(255,255,255,.08); transform: translateY(-1px); }
 
+        .pp-btn-primary:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+        .pp-btn-secondary:focus-visible { outline: 2px solid var(--color-dark); outline-offset: 2px; }
+        .pp-panel-card__cta-primary:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+        .pp-panel-card__cta-sm:focus-visible { outline: 2px solid var(--color-dark); outline-offset: 2px; }
+        .pp-archive-card__cta:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; }
+        .pp-topic-chip:focus-visible { outline: 2px solid var(--color-navy); outline-offset: 2px; }
+        .pp-form-btn:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 8px; }
+        .pp-eco__link:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+        .pp-closing__btn-primary:focus-visible { outline: 2px solid var(--color-dark); outline-offset: 2px; }
+        .pp-closing__btn-secondary:focus-visible { outline: 2px solid var(--color-cream); outline-offset: 2px; }
+
         @media (max-width: 768px) {
           .pp-hero { padding: 88px 20px 48px; }
           .pp-stats { gap: 20px; }
@@ -771,7 +782,7 @@ export default function PartnerPanels() {
           .pp-hero__ctas { flex-direction: column; }
           .pp-hero__ctas a { text-align: center; justify-content: center; }
           .pp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
-          .pp-archive-card__cta { padding: 9px 14px; font-size: 11px; }
+          .pp-archive-card__cta { padding: 13px 14px; font-size: 11px; }
           .pp-archive-card__actions { gap: 8px; }
         }
       `}</style>
@@ -956,6 +967,7 @@ export default function PartnerPanels() {
                   <a href="#" className="pp-archive-card__cta pp-archive-card__cta--flyer">🗒 View Flyer</a>
                   <button
                     className="pp-archive-card__cta pp-archive-card__cta--takeaways"
+                    aria-expanded={openTakeaway === card.id}
                     onClick={() => toggleTakeaway(card.id)}
                   >
                     ✦ {openTakeaway === card.id ? 'Hide Takeaways' : 'Key Takeaways'}
@@ -989,13 +1001,15 @@ export default function PartnerPanels() {
         </div>
         <div className="pp-topics__chips">
           {TOPIC_CHIPS.map(chip => (
-            <span
+            <button
               key={chip.key}
+              type="button"
               className={`pp-topic-chip${activeTopic === chip.key ? ' active' : ''}`}
+              aria-pressed={activeTopic === chip.key}
               onClick={() => setActiveTopic(chip.key)}
             >
               {chip.label}
-            </span>
+            </button>
           ))}
         </div>
         <p className="pp-topics__note">Whether you are preparing for your first internship, trying to land your first full-time role, or figuring out how to keep going after a hard recruiting season - there is a panel path here for you.</p>
@@ -1068,7 +1082,7 @@ export default function PartnerPanels() {
                   <label className="pp-form-label" htmlFor="suggestEmail">Email <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional - if you want a heads-up when we host it)</span></label>
                   <input className="pp-form-input" type="email" id="suggestEmail" placeholder="your@email.com" value={suggestForm.email} onChange={e => setSuggestForm(f => ({ ...f, email: e.target.value }))} />
                 </div>
-                {suggestError && <p style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{suggestError}</p>}
+                {suggestError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{suggestError}</p>}
                 <button className="pp-form-btn" type="submit" disabled={suggestLoading}>{suggestLoading ? 'Submitting…' : 'Send Topic Suggestion'}</button>
                 <p className="pp-form-note">Not every idea becomes a panel immediately, but every submission helps shape what we build next.</p>
               </form>
@@ -1153,7 +1167,7 @@ export default function PartnerPanels() {
                   <label className="pp-form-label" htmlFor="plNotes">Anything else we should know?</label>
                   <textarea className="pp-form-textarea" id="plNotes" placeholder="Optional - any context that helps us understand your interest or background" value={panelistForm.notes} onChange={e => setPanelistForm(f => ({ ...f, notes: e.target.value }))} />
                 </div>
-                {panelistError && <p style={{ color: 'var(--color-cream)', fontSize: 13, marginBottom: 10, opacity: 0.85 }}>{panelistError}</p>}
+                {panelistError && <p role="alert" style={{ color: 'var(--color-cream)', fontSize: 13, marginBottom: 10, opacity: 0.85 }}>{panelistError}</p>}
                 <button className="pp-form-btn" type="submit" disabled={panelistLoading}>{panelistLoading ? 'Submitting…' : 'Express Interest'}</button>
               </form>
             )}

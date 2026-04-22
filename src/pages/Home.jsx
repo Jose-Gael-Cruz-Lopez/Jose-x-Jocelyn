@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { supabase } from '../lib/supabase'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import anime from 'animejs/lib/anime.es.js'
-
 gsap.registerPlugin(ScrollTrigger)
 
 const CONFETTI_COLORS = ['#E8A838','#B34539','#3A7D6B','#5B8EC2','#F2E4CE','#f5c026','#ff6b6b','#ff9ff3','#54a0ff','#5f27cd','#01a3a4','#feca57','#ff6348','#7bed9f']
@@ -41,6 +39,7 @@ export default function Home() {
   const loaderRef = useRef(null)
   const loaderFillRef = useRef(null)
   const gsapCtxRef = useRef(null)
+  const modalRef = useRef(null)
 
   const openModal = useCallback((e) => {
     e?.preventDefault()
@@ -59,8 +58,26 @@ export default function Home() {
     }, 400)
   }, [])
 
+  const handleModalKeyDown = useCallback((e) => {
+    if (e.key !== 'Tab' || !modalRef.current) return
+    const focusable = Array.from(
+      modalRef.current.querySelectorAll('input, button:not([disabled]), [tabindex]:not([tabindex="-1"])')
+    ).filter(el => !el.closest('[aria-hidden="true"]'))
+    if (!focusable.length) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus() }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus() }
+    }
+  }, [])
+
   useEffect(() => {
     if (modalOpen) {
+      setTimeout(() => {
+        modalRef.current?.querySelector('input, button:not([disabled])')?.focus()
+      }, 50)
       const onKey = (e) => { if (e.key === 'Escape') closeModal() }
       document.addEventListener('keydown', onKey)
       return () => document.removeEventListener('keydown', onKey)
@@ -87,6 +104,11 @@ export default function Home() {
     const N = cards.length
     let activeIdx = 0
     const CARD_ASPECT = 1350 / 1080
+    const BASE_W = 280
+    const BASE_H = Math.round(BASE_W * CARD_ASPECT)
+
+    // Set static dimensions once — all subsequent layout calls only mutate transforms
+    cards.forEach(card => gsap.set(card, { width: BASE_W, height: BASE_H, left: 0, top: 0 }))
 
     function getTrackW() { return track.offsetWidth || 1200 }
     function getTrackH() {
@@ -94,7 +116,6 @@ export default function Home() {
       return window.innerWidth < 768 ? 320 : 480
     }
     function isMob() { return window.innerWidth < 768 }
-    function cardH(w) { return w * CARD_ASPECT }
 
     function getSlots() {
       const tw = getTrackW()
@@ -104,38 +125,52 @@ export default function Home() {
       const smallW = mob ? tw * 0.22 : tw * 0.16
       const cx = tw / 2
       const cy = getTrackH() / 2
-      return [
-        { x: cx - tw * 0.37, y: cy, w: bigW, h: cardH(bigW), rotate: 0, z: 3, opacity: 1 },
-        { x: cx - tw * 0.17, y: cy, w: smallW, h: cardH(smallW), rotate: 12, z: 2, opacity: 1 },
-        { x: cx, y: cy, w: centerW, h: cardH(centerW), rotate: 0, z: 5, opacity: 1 },
-        { x: cx + tw * 0.17, y: cy, w: smallW, h: cardH(smallW), rotate: -10, z: 2, opacity: 1 },
-        { x: cx + tw * 0.37, y: cy, w: bigW, h: cardH(bigW), rotate: 0, z: 3, opacity: 1 },
-        { x: cx + tw * 0.58, y: cy, w: bigW, h: cardH(bigW), rotate: 0, z: 0, opacity: 0 },
-      ]
+      return {
+        cy,
+        slots: [
+          { x: cx - tw * 0.37, w: bigW,    rotate:   0, z: 3, opacity: 1 },
+          { x: cx - tw * 0.17, w: smallW,  rotate:  12, z: 2, opacity: 1 },
+          { x: cx,             w: centerW, rotate:   0, z: 5, opacity: 1 },
+          { x: cx + tw * 0.17, w: smallW,  rotate: -10, z: 2, opacity: 1 },
+          { x: cx + tw * 0.37, w: bigW,    rotate:   0, z: 3, opacity: 1 },
+          { x: cx + tw * 0.58, w: bigW,    rotate:   0, z: 0, opacity: 0 },
+        ],
+      }
     }
 
     function layout(animate) {
-      const slots = getSlots()
+      const { cy, slots } = getSlots()
       cards.forEach((card, i) => {
         const si = ((i - activeIdx) % N + N) % N
         const slot = slots[si] || slots[slots.length - 1]
         card.style.zIndex = slot.z
         card.setAttribute('aria-hidden', slot.opacity === 0 ? 'true' : 'false')
-        const props = { left: slot.x - slot.w / 2, top: slot.y - slot.h / 2, width: slot.w, height: slot.h, rotate: `${slot.rotate}deg`, opacity: slot.opacity }
+        const props = {
+          x: slot.x - BASE_W / 2,
+          y: cy - BASE_H / 2,
+          scale: slot.w / BASE_W,
+          rotation: slot.rotate,
+          opacity: slot.opacity,
+        }
         if (animate) {
-          anime({ targets: card, ...props, duration: 800, easing: 'cubicBezier(0.16, 1, 0.3, 1)' })
+          gsap.to(card, { ...props, duration: 0.8, ease: 'cubic-bezier(0.16, 1, 0.3, 1)', overwrite: 'auto' })
         } else {
-          anime.set(card, props)
+          gsap.set(card, props)
         }
       })
     }
 
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     layout(false)
-    anime({ targets: cards, opacity: (el, i) => { const si = ((i - activeIdx) % N + N) % N; return si < 5 ? 1 : 0 }, duration: 600, easing: 'easeOutQuad', delay: anime.stagger(60) })
+    if (reducedMotion) {
+      gsap.set(cards, { opacity: (i) => { const si = ((i - activeIdx) % N + N) % N; return si < 5 ? 1 : 0 } })
+    } else {
+      gsap.to(cards, { opacity: (i) => { const si = ((i - activeIdx) % N + N) % N; return si < 5 ? 1 : 0 }, duration: 0.6, ease: 'power2.out', stagger: 0.06, overwrite: 'auto' })
+    }
 
     cards.forEach((card, i) => card.addEventListener('click', () => { activeIdx = i; layout(true) }))
 
-    const interval = setInterval(() => { activeIdx = (activeIdx + 1) % N; layout(true) }, 3000)
+    const interval = reducedMotion ? null : setInterval(() => { activeIdx = (activeIdx + 1) % N; layout(true) }, 3000)
     let resizeTimer
     const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => layout(false), 150) }
     window.addEventListener('resize', onResize)
@@ -269,7 +304,7 @@ export default function Home() {
     const persistToggle = 'play none none none'
 
     gsap.from('.intro__text', { scrollTrigger: { trigger: '.intro__right', start: 'top 80%', toggleActions: persistToggle }, opacity: 0, y: 40, duration: 0.8, ease: 'power2.out' })
-    gsap.from('.intro__dot', { scrollTrigger: { trigger: '.intro__right', start: 'top 80%', toggleActions: persistToggle }, scale: 0, duration: 0.5, ease: 'back.out(1.7)' })
+    gsap.from('.intro__dot', { scrollTrigger: { trigger: '.intro__right', start: 'top 80%', toggleActions: persistToggle }, scale: 0, duration: 0.5, ease: 'power3.out' })
     gsap.from('.intro__banners', { scrollTrigger: { trigger: '.intro', start: 'top 65%', toggleActions: persistToggle }, clipPath: 'inset(0 100% 0 0)', duration: 1, ease: 'power3.inOut' })
     gsap.from('.about__header', { scrollTrigger: { trigger: '.about', start: 'top 78%', toggleActions: toggle }, y: 30, opacity: 0, duration: 0.7, ease: 'power2.out' })
     gsap.from('.about__intro', { scrollTrigger: { trigger: '.about', start: 'top 70%', toggleActions: toggle }, y: 30, opacity: 0, duration: 0.7, ease: 'power2.out', delay: 0.1 })
@@ -292,7 +327,7 @@ export default function Home() {
       gsap.from(card, { scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: toggle }, clipPath: 'inset(0 0 100% 0)', duration: 0.7, ease: 'power3.out', delay: (i % 2) * 0.1 })
     })
     gsap.utils.toArray('.mascot').forEach(mascot => {
-      gsap.fromTo(mascot, { opacity: 0, scale: 0, rotate: -30 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.9, ease: 'back.out(1.7)', scrollTrigger: { trigger: mascot.closest('section, footer') || mascot, start: 'top 80%', once: true, toggleActions: persistToggle } })
+      gsap.fromTo(mascot, { opacity: 0, scale: 0, rotate: -30 }, { opacity: 1, scale: 1, rotate: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: mascot.closest('section, footer') || mascot, start: 'top 80%', once: true, toggleActions: persistToggle } })
     })
     gsap.from('.footer__logo-svg', { scrollTrigger: { trigger: '.footer', start: 'top 80%', toggleActions: 'play none none none' }, x: -60, opacity: 0, duration: 0.8, ease: 'power2.out' })
     gsap.from('.footer__cta', { scrollTrigger: { trigger: '.footer', start: 'top 75%', toggleActions: 'play none none none' }, x: 80, rotation: -15, opacity: 0, duration: 0.8, ease: 'power2.out', delay: 0.15 })
@@ -354,7 +389,9 @@ export default function Home() {
       cleanupGallery = initGallery()
       cleanupDots = initFooterDots()
       cleanupConfetti = initClickConfetti()
-      initGSAP()
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        initGSAP()
+      }
     }
 
     if (!loader || !fill || !panels?.length) {
@@ -375,7 +412,7 @@ export default function Home() {
         .call(() => { setLoaderDone(true); afterLoader() })
         .fromTo('.hero__sun',     { scale: 0.85, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.75, ease: 'power2.out', stagger: 0.1 }, 'wipe')
         .fromTo('.hero__j',       { y: 80, opacity: 0 },       { y: 0, opacity: 1, duration: 1.0, ease: 'power3.out', stagger: 0.13 }, 'wipe+=0.05')
-        .fromTo('.hero__x',       { scale: 0, opacity: 0 },    { scale: 1, opacity: 1, duration: 0.7, ease: 'back.out(1.7)' }, 'wipe+=0.2')
+        .fromTo('.hero__x',       { scale: 0, opacity: 0 },    { scale: 1, opacity: 1, duration: 0.7, ease: 'power2.out' }, 'wipe+=0.2')
         .fromTo('.hero__names',   { y: 20, opacity: 0 },       { y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 'wipe+=0.3')
         .fromTo('.hero__tagline', { y: 16, opacity: 0 },       { y: 0, opacity: 1, duration: 0.7, ease: 'power2.out' }, 'wipe+=0.4')
         .fromTo('.hero__rule',    { scaleX: 0, opacity: 0 },   { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.out', transformOrigin: 'center center' }, 'wipe+=0.48')
@@ -528,12 +565,14 @@ export default function Home() {
       </nav>
 
       {/* MOBILE NAV */}
-      <div className={`mobile-nav${menuOpen ? ' mobile-nav--open' : ''}`} id="mobileNav">
+      <div className={`mobile-nav${menuOpen ? ' mobile-nav--open' : ''}`} id="mobileNav" role="navigation" aria-label="Mobile navigation" aria-hidden={!menuOpen}>
         <a href="#about" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>About</a>
         <a href="#services" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>Services</a>
         <a href="#editorial" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>La Voz del Día</a>
         <button className="mobile-nav__link" onClick={() => { setMenuOpen(false); openModal() }}>Get in Touch</button>
       </div>
+
+      <main>
 
       {/* HERO */}
       <section className="hero" id="hero">
@@ -597,7 +636,16 @@ export default function Home() {
           <span className="about__number">02</span>
           <h2 className="about__title">Who We Are</h2>
         </div>
-        <div className="about__tabs" role="tablist">
+        <div className="about__tabs" role="tablist" onKeyDown={e => {
+          const KEYS = ['who-we-are', 'mission', 'vision']
+          const idx = KEYS.indexOf(aboutTab)
+          let next = null
+          if (e.key === 'ArrowRight') { e.preventDefault(); next = KEYS[(idx + 1) % KEYS.length] }
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); next = KEYS[(idx - 1 + KEYS.length) % KEYS.length] }
+          if (e.key === 'Home')       { e.preventDefault(); next = KEYS[0] }
+          if (e.key === 'End')        { e.preventDefault(); next = KEYS[KEYS.length - 1] }
+          if (next) { setAboutTab(next); setTimeout(() => document.getElementById(`about-tab-${next}`)?.focus(), 0) }
+        }}>
           {['who-we-are', 'mission', 'vision'].map((tab, i) => (
             <>
               {i > 0 && <span key={`sep-${tab}`} className="about__tab-sep" aria-hidden="true">|</span>}
@@ -634,10 +682,10 @@ export default function Home() {
                     <p className="about__card-role">Breaking in</p>
                     <div className="about__card-socials">
                       <a href="https://www.linkedin.com/in/cjxsez/" className="about__card-social about__card-social--linkedin" target="_blank" rel="noopener noreferrer" aria-label="Jose G. Cruz-Lopez on LinkedIn">
-                        <img src="/images/linkedin_logo.png" alt="" decoding="async" />
+                        <img src="/images/linkedin_logo.png" alt="" decoding="async" loading="lazy" />
                       </a>
                       <a href="https://www.instagram.com/cjxsez/" className="about__card-social about__card-social--instagram" target="_blank" rel="noopener noreferrer" aria-label="Jose G. Cruz-Lopez on Instagram">
-                        <img src="/images/instagram_logo.png" alt="" decoding="async" />
+                        <img src="/images/instagram_logo.png" alt="" decoding="async" loading="lazy" />
                       </a>
                     </div>
                   </div>
@@ -661,10 +709,10 @@ export default function Home() {
                     <p className="about__card-role">Leveling up</p>
                     <div className="about__card-socials">
                       <a href="https://www.linkedin.com/in/jocelyn-vazquez/?skipRedirect=true" className="about__card-social about__card-social--linkedin" target="_blank" rel="noopener noreferrer" aria-label="Jocelyn Vazquez on LinkedIn">
-                        <img src="/images/linkedin_logo.png" alt="" decoding="async" />
+                        <img src="/images/linkedin_logo.png" alt="" decoding="async" loading="lazy" />
                       </a>
                       <a href="https://www.instagram.com/beautyengineered/" className="about__card-social about__card-social--instagram" target="_blank" rel="noopener noreferrer" aria-label="Jocelyn Vazquez on Instagram">
-                        <img src="/images/instagram_logo.png" alt="" decoding="async" />
+                        <img src="/images/instagram_logo.png" alt="" decoding="async" loading="lazy" />
                       </a>
                     </div>
                   </div>
@@ -719,7 +767,7 @@ export default function Home() {
       </section>
 
       {/* GALLERY */}
-      <section className="gallery" id="gallery">
+      <section className="gallery" id="gallery" aria-label="Photo gallery">
         <div className="gallery__track" id="galleryTrack" ref={galleryRef}>
           <div className="gallery__card gallery__card--photo" data-index="0" style={{ '--card-bg': '#B34539', '--card-image': "url('/images/gallery-photo.png')" }} />
           <div className="gallery__card gallery__card--photo" data-index="1" style={{ '--card-bg': '#E8A838', '--card-image': "url('/images/gallery-collage-azul.jpg')" }} />
@@ -762,7 +810,16 @@ export default function Home() {
           </div>
         </div>
         <div className="services__content">
-          <div className="services__tabs" role="tablist">
+          <div className="services__tabs" role="tablist" onKeyDown={e => {
+            const KEYS = ['content', 'sprints', 'community']
+            const idx = KEYS.indexOf(servicesTab)
+            let next = null
+            if (e.key === 'ArrowRight') { e.preventDefault(); next = KEYS[(idx + 1) % KEYS.length] }
+            if (e.key === 'ArrowLeft')  { e.preventDefault(); next = KEYS[(idx - 1 + KEYS.length) % KEYS.length] }
+            if (e.key === 'Home')       { e.preventDefault(); next = KEYS[0] }
+            if (e.key === 'End')        { e.preventDefault(); next = KEYS[KEYS.length - 1] }
+            if (next) { setServicesTab(next); setTimeout(() => document.getElementById(`services-tab-${next}`)?.focus(), 0) }
+          }}>
             {[['content','Content'],['sprints','Sprints'],['community','Community']].map(([key, label], i) => (
               <>
                 {i > 0 && <span key={`sep-${key}`} className="services__tab-sep" aria-hidden="true">|</span>}
@@ -886,6 +943,8 @@ export default function Home() {
         </div>
       </section>
 
+      </main>
+
       {/* FOOTER */}
       <footer className="footer" id="contact" ref={footerRef}>
         <canvas className="footer__dots-canvas" aria-hidden="true" ref={canvasRef} />
@@ -913,23 +972,25 @@ export default function Home() {
       {/* MODAL */}
       <div className={`modal${modalOpen ? ' modal--open' : ''}`} id="modal">
         <div className="modal__bg" onClick={closeModal} />
-        <div className="modal__box">
-          <button className="modal__close" id="modalClose" onClick={closeModal}>&times;</button>
+        <div className="modal__box" role="dialog" aria-modal="true" aria-labelledby={`modal-step-${modalStep}-title`} ref={modalRef} onKeyDown={handleModalKeyDown}>
+          <button className="modal__close" id="modalClose" onClick={closeModal} aria-label="Close dialog">&times;</button>
           <div className={`modal__step${modalStep === 1 ? ' modal__step--active' : ''}`}>
-            <h3 className="modal__title">Tell us about you</h3>
-            <input type="text" className="modal__input" placeholder="Your full name" value={modalName} onChange={e => setModalName(e.target.value)} />
-            <input type="email" className="modal__input" placeholder="Your email" value={modalEmail} onChange={e => setModalEmail(e.target.value)} />
+            <h3 className="modal__title" id="modal-step-1-title">Tell us about you</h3>
+            <label className="sr-only" htmlFor="modalName">Full name</label>
+            <input type="text" id="modalName" className="modal__input" placeholder="Your full name" value={modalName} onChange={e => setModalName(e.target.value)} />
+            <label className="sr-only" htmlFor="modalEmail">Email address</label>
+            <input type="email" id="modalEmail" className="modal__input" placeholder="Your email" value={modalEmail} onChange={e => setModalEmail(e.target.value)} />
             <button className="modal__btn" onClick={() => { if (!modalEmail.trim()) return; setModalStep(2) }}>Next &rarr;</button>
           </div>
           <div className={`modal__step${modalStep === 2 ? ' modal__step--active' : ''}`}>
-            <h3 className="modal__title">What interests you?</h3>
+            <h3 className="modal__title" id="modal-step-2-title">What interests you?</h3>
             {['Sprint cohorts', 'La Voz del Día content', 'Opportunity board', 'Mentorship'].map(interest => (
               <label key={interest} className="modal__check">
                 <input type="checkbox" checked={modalInterests.includes(interest)} onChange={e => setModalInterests(prev => e.target.checked ? [...prev, interest] : prev.filter(i => i !== interest))} />
                 {' '}{interest}
               </label>
             ))}
-            {modalError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginTop: '8px' }}>{modalError}</p>}
+            {modalError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginTop: '8px' }}>{modalError}</p>}
             <button className="modal__btn" disabled={modalLoading} onClick={async () => {
               setModalLoading(true)
               setModalError('')
@@ -945,7 +1006,7 @@ export default function Home() {
             }}>{modalLoading ? 'Saving…' : 'Next →'}</button>
           </div>
           <div className={`modal__step${modalStep === 3 ? ' modal__step--active' : ''}`}>
-            <h3 className="modal__title">You're in.</h3>
+            <h3 className="modal__title" id="modal-step-3-title">You're in.</h3>
             <p className="modal__msg">Welcome to From Campus to Career. We will reach out with next steps.</p>
             <button className="modal__btn modal__btn--done" onClick={closeModal}>Close</button>
           </div>

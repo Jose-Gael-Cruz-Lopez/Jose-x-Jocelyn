@@ -54,9 +54,10 @@ const PAGE_CSS = `
   .ls-stat__label { font-size:12px;color:var(--color-muted);line-height:1.4; }
   .ls-controls { max-width:1040px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 40px; }
   .ls-filters { display:flex;flex-wrap:wrap;gap:8px; }
-  .ls-filter { padding:9px 18px;border-radius:999px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid rgba(0,0,0,.12);background:var(--color-white);color:var(--color-muted);transition:background .2s,color .2s,border-color .2s; }
+  .ls-filter { padding:13px 18px;border-radius:999px;font-family:var(--font-body);font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid rgba(0,0,0,.12);background:var(--color-white);color:var(--color-muted);transition:background .2s,color .2s,border-color .2s; }
   .ls-filter:hover { color:var(--color-dark);border-color:rgba(0,0,0,.25); }
   .ls-filter--active { background:var(--color-dark);color:var(--color-cream);border-color:var(--color-dark); }
+  .ls-filter:focus-visible { outline: 2px solid var(--color-dark); outline-offset: 2px; border-radius: 999px; }
   .ls-divider { max-width:1040px;margin:0 auto 48px;padding:0 clamp(20px,5vw,56px); }
   .ls-divider hr { border:none;border-top:1px solid rgba(0,0,0,.08); }
   .ls-episodes { max-width:1040px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 80px;display:flex;flex-direction:column;gap:56px; }
@@ -166,7 +167,7 @@ export default function LinkedInSeries() {
 
       <div className="ls-divider"><hr /></div>
 
-      <main className="ls-episodes">
+      <div className="ls-episodes">
         {visibleEps.length === 0
           ? <div className="ls-no-results" aria-live="polite"><p>No episodes match that filter.</p></div>
           : visibleEps.map(ep => (
@@ -199,7 +200,7 @@ export default function LinkedInSeries() {
             </div>
           ))
         }
-      </main>
+      </div>
 
       <section className="ls-how">
         <div className="ls-how__inner">
@@ -236,7 +237,7 @@ export default function LinkedInSeries() {
                 <label className="ls-form-label" htmlFor="topicCat">Topic area (optional)</label>
                 <select className="ls-form-select" id="topicCat" value={category} onChange={e => setCategory(e.target.value)}><option value="">Select a category…</option><option>Internship search</option><option>Offers &amp; negotiation</option><option>Recruiting &amp; outreach</option><option>Workplace &amp; onboarding</option><option>Mindset &amp; rejection</option></select>
               </div>
-              {formError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+              {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
               <button className="ls-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit Topic'}</button>
             </form>
           )}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
@@ -145,6 +145,43 @@ No worries at all if your schedule is full. Thank you either way!`
 const FUNCTION_CHIPS = ['Software Engineering', 'Data', 'Product', 'Design', 'Research', 'Business / Ops', 'Recruiting']
 const IDENTITY_CHIPS = ['First-Gen', 'Low-Income', 'Transfer', 'Community College', 'International', 'Nontraditional Path']
 
+function dbProfileToCard(row) {
+  const funcColorMap = {
+    'Software Engineering': 'cc-tag--blue', 'Data': 'cc-tag--teal',
+    'Product': 'cc-tag--gold', 'Design': 'cc-tag--navy',
+    'Business / Ops': 'cc-tag--muted', 'Recruiting': 'cc-tag--accent', 'Research': 'cc-tag--navy',
+  }
+  const identityColorMap = {
+    'First-Gen': 'cc-tag--teal', 'Transfer': 'cc-tag--blue',
+    'Community College': 'cc-tag--blue', 'International': 'cc-tag--navy',
+    'Nontraditional Path': 'cc-tag--gold', 'Low-Income': 'cc-tag--accent',
+  }
+  const funcs = row.role_function || []
+  const identities = row.identity_tags || []
+  const tags = [
+    ...identities.map(id => ({ label: id, cls: identityColorMap[id] || 'cc-tag--muted' })),
+    ...funcs.map(f => ({ label: f, cls: funcColorMap[f] || 'cc-tag--muted' })),
+    ...(row.location ? [{ label: row.location, cls: 'cc-tag--muted' }] : []),
+  ]
+  const capacityMap = { '1-2': 'Open to 1–2 chats / month', '3-5': 'Open to 3–5 chats / month', '6+': 'Open to 6+ chats / month' }
+  const updated = new Date(row.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  return {
+    id: row.id,
+    initial: (row.name || '?')[0].toUpperCase(),
+    name: row.name, badge: 'Active',
+    role: `${row.role_title}${row.location ? ' · ' + row.location : ''}`,
+    headline: funcs.length ? `${funcs[0]} professional` : row.role_title,
+    topics: row.topics || '',
+    tags, capacity: capacityMap[row.capacity] || row.capacity || 'Open',
+    updated: `Last updated ${updated}`,
+    linkedIn: row.linkedin_url, avatarStyle: {},
+    dataRole: '', dataFunc: funcs.join(' ').toLowerCase(),
+    dataStage: '', dataIdentity: identities.join(' ').toLowerCase(),
+    dataAvail: 'coffee-chats',
+    dataKeywords: `${row.name} ${row.role_title} ${row.topics || ''} ${funcs.join(' ')} ${identities.join(' ')} ${row.location || ''}`.toLowerCase(),
+  }
+}
+
 export default function CoffeeChat() {
   const [search, setSearch] = useState('')
   const [filterRole, setFilterRole] = useState('')
@@ -156,6 +193,7 @@ export default function CoffeeChat() {
   const [modalOpen, setModalOpen] = useState(false)
   const [modalName, setModalName] = useState('')
   const [copied, setCopied] = useState(false)
+  const [copiedId, setCopiedId] = useState(null)
 
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
@@ -168,16 +206,39 @@ export default function CoffeeChat() {
     consent1: false, consent2: false,
   })
 
+  const [dbProfiles, setDbProfiles] = useState([])
+  const ccModalRef = useRef(null)
+
+  useEffect(() => {
+    supabase.from('coffee_chat_profiles')
+      .select('*')
+      .eq('status', 'approved')
+      .eq('public_profile', true)
+      .order('created_at', { ascending: false })
+      .then(({ data }) => {
+        if (data?.length) setDbProfiles(data.map(dbProfileToCard))
+      })
+  }, [])
+
   useEffect(() => {
     if (modalOpen) {
       document.body.style.overflow = 'hidden'
+      setTimeout(() => {
+        ccModalRef.current?.querySelector('button:not([disabled])')?.focus()
+      }, 50)
+      const onKey = (e) => { if (e.key === 'Escape') setModalOpen(false) }
+      document.addEventListener('keydown', onKey)
+      return () => {
+        document.body.style.overflow = ''
+        document.removeEventListener('keydown', onKey)
+      }
     } else {
       document.body.style.overflow = ''
     }
-    return () => { document.body.style.overflow = '' }
   }, [modalOpen])
 
-  const visibleProfiles = PROFILES.filter(p => {
+  const allProfiles = [...PROFILES, ...dbProfiles]
+  const visibleProfiles = allProfiles.filter(p => {
     const q = search.toLowerCase().trim()
     if (q) {
       const haystack = [p.dataKeywords, p.name.toLowerCase(), p.dataRole, p.dataFunc, p.dataStage, p.dataIdentity].join(' ')
@@ -202,6 +263,21 @@ export default function CoffeeChat() {
     setCopied(false)
   }
 
+  const handleCcModalKeyDown = useCallback((e) => {
+    if (e.key !== 'Tab' || !ccModalRef.current) return
+    const focusable = Array.from(
+      ccModalRef.current.querySelectorAll('button:not([disabled])')
+    )
+    if (!focusable.length) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus() }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus() }
+    }
+  }, [])
+
   const copyTemplate = () => {
     const text = TEMPLATE_TEXT.replace('[Name]', modalName)
     navigator.clipboard.writeText(text).then(() => {
@@ -210,9 +286,17 @@ export default function CoffeeChat() {
     })
   }
 
-  const toggleChip = (arr, setArr, val) => {
-    setArr(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val])
+  const directCopy = (id, name) => {
+    const text = TEMPLATE_TEXT.replace('[Name]', name)
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedId(id)
+      setTimeout(() => setCopiedId(null), 2000)
+    })
   }
+
+  const toggleChip = useCallback((arr, setArr, val) => {
+    setArr(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val])
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -302,11 +386,11 @@ export default function CoffeeChat() {
         .cc-no-results { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--color-muted); font-size: 15px; }
 
         .cc-card { background: var(--color-white); border: 1px solid rgba(0,0,0,.08); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 14px; transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s; }
-        .cc-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,.09); }
+        .cc-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
         .cc-card__top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
-        .cc-card__avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--color-cream); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--color-dark); flex-shrink: 0; border: 2px solid rgba(0,0,0,.06); }
+        .cc-card__avatar { width: 48px; height: 48px; border-radius: 50%; background: rgba(58,125,107,.1); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--color-teal); flex-shrink: 0; border: 1.5px solid rgba(58,125,107,.15); }
         .cc-card__badge { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; background: rgba(58,125,107,.1); color: var(--color-teal); flex-shrink: 0; }
-        .cc-card__badge--new { background: rgba(232,168,56,.15); color: var(--color-gold-dark); }
+        .cc-card__badge--new { background: rgba(232,168,56,.12); color: var(--color-gold-dark); }
         .cc-card__name { font-family: var(--font-display); font-size: clamp(16px,1.8vw,18px); font-weight: 700; color: var(--color-dark); line-height: 1.2; }
         .cc-card__role { font-size: 13px; color: var(--color-muted); line-height: 1.4; }
         .cc-card__headline { font-size: 13px; color: var(--color-teal); font-weight: 500; font-style: italic; line-height: 1.5; }
@@ -315,19 +399,20 @@ export default function CoffeeChat() {
         .cc-card__tags { display: flex; flex-wrap: wrap; gap: 5px; }
         .cc-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
         .cc-tag--teal   { background: rgba(58,125,107,.1);  color: var(--color-teal); }
-        .cc-tag--blue   { background: rgba(91,142,194,.12); color: var(--color-blue); }
-        .cc-tag--gold   { background: rgba(232,168,56,.14); color: var(--color-gold-dark); }
-        .cc-tag--accent { background: rgba(179,69,57,.1);   color: var(--color-accent); }
-        .cc-tag--navy   { background: rgba(22,43,68,.1);    color: var(--color-navy); }
-        .cc-tag--muted  { background: rgba(0,0,0,.06);      color: var(--color-muted); }
+        .cc-tag--blue   { background: rgba(91,142,194,.12); color: var(--color-navy); }
+        .cc-tag--gold   { background: rgba(232,168,56,.12); color: var(--color-gold-dark); }
+        .cc-tag--accent { background: rgba(179,69,57,.08);  color: var(--color-accent); }
+        .cc-tag--navy   { background: rgba(22,43,68,.08);   color: var(--color-navy); }
+        .cc-tag--muted  { background: rgba(0,0,0,.05);      color: var(--color-muted); }
         .cc-card__capacity { font-size: 12px; color: var(--color-muted); display: flex; align-items: center; gap: 5px; }
         .cc-card__capacity::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-teal); flex-shrink: 0; }
-        .cc-card__updated { font-size: 11px; color: rgba(138,126,114,.6); }
+        .cc-card__updated { font-size: 11px; color: rgba(0,0,0,.3); }
         .cc-card__actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
-        .cc-card__cta-primary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: var(--color-dark); color: var(--color-cream); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: background .2s, transform .15s; flex: 1; justify-content: center; }
+        .cc-card__cta-primary { display: inline-flex; align-items: center; gap: 6px; padding: 13px 16px; background: var(--color-dark); color: var(--color-cream); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: background .2s, transform .15s; flex: 1; justify-content: center; }
         .cc-card__cta-primary:hover { background: var(--color-teal); transform: translateY(-1px); }
-        .cc-card__cta-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; background: transparent; color: var(--color-muted); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; transition: border-color .2s, color .2s; flex-shrink: 0; }
+        .cc-card__cta-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 13px 14px; background: transparent; color: var(--color-muted); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; transition: border-color .2s, color .2s; flex-shrink: 0; }
         .cc-card__cta-secondary:hover { border-color: var(--color-dark); color: var(--color-dark); }
+        .cc-card__cta-secondary.copied { border-color: var(--color-teal); color: var(--color-teal); }
 
         .cc-reach { max-width: 1040px; margin: 0 auto; padding: 80px clamp(20px,5vw,56px); }
         .cc-reach__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 32px; }
@@ -364,9 +449,10 @@ export default function CoffeeChat() {
         .cc-form-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
         .cc-form-select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B5E52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
         .cc-multiselect-group { display: flex; flex-wrap: wrap; gap: 8px; }
-        .cc-ms-chip { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--color-muted); cursor: pointer; transition: border-color .15s, color .15s, background .15s; user-select: none; }
+        .cc-ms-chip { display: inline-flex; align-items: center; gap: 6px; padding: 13px 16px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--color-muted); cursor: pointer; transition: border-color .15s, color .15s, background .15s; }
         .cc-ms-chip:hover { border-color: var(--color-dark); color: var(--color-dark); }
-        .cc-ms-chip.active { border-color: var(--color-teal); background: rgba(58,125,107,.08); color: var(--color-teal); }
+        .cc-ms-chip.active, .cc-ms-chip[aria-pressed="true"] { border-color: var(--color-teal); background: rgba(58,125,107,.08); color: var(--color-teal); }
+        .cc-ms-chip:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; border-radius: 20px; }
         .cc-form-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
         .cc-form-check input[type="checkbox"] { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-teal); cursor: pointer; }
         .cc-form-check-label { font-size: 13px; color: var(--color-muted); line-height: 1.6; }
@@ -398,7 +484,7 @@ export default function CoffeeChat() {
         .cc-modal-overlay.open { opacity: 1; pointer-events: all; }
         .cc-modal { background: var(--color-white); border-radius: 16px; padding: 36px; max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; transform: translateY(12px); transition: transform .25s cubic-bezier(.16,1,.3,1); position: relative; }
         .cc-modal-overlay.open .cc-modal { transform: translateY(0); }
-        .cc-modal__close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(0,0,0,.06); color: var(--color-muted); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
+        .cc-modal__close { position: absolute; top: 12px; right: 12px; min-width: 44px; min-height: 44px; border-radius: 50%; border: none; background: rgba(0,0,0,.06); color: var(--color-muted); font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background .15s; }
         .cc-modal__close:hover { background: rgba(0,0,0,.12); }
         .cc-modal__kicker { font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--color-teal); margin-bottom: 8px; }
         .cc-modal__title { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--color-dark); margin-bottom: 6px; }
@@ -406,6 +492,10 @@ export default function CoffeeChat() {
         .cc-modal__template { background: var(--color-cream); border-radius: 10px; padding: 20px 22px; font-size: 14px; line-height: 1.75; color: var(--color-dark); margin-bottom: 16px; white-space: pre-wrap; font-family: var(--font-body); }
         .cc-modal__copy-btn { width: 100%; padding: 13px; background: var(--color-dark); color: var(--color-cream); border: none; border-radius: 8px; font-family: var(--font-display); font-size: 13px; font-weight: 600; cursor: pointer; transition: background .2s; }
         .cc-modal__copy-btn:hover, .cc-modal__copy-btn.copied { background: var(--color-teal); }
+        .cc-modal__close:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+        .cc-modal__copy-btn:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 8px; }
+        .cc-card__cta-primary:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 8px; }
+        .cc-card__cta-secondary:focus-visible { outline: 2px solid var(--color-dark); outline-offset: 2px; border-radius: 8px; }
 
         @media (max-width: 640px) { .cc-how__grid { grid-template-columns: 1fr; gap: 28px; } }
         @media (max-width: 640px) { .cc-reach__grid { grid-template-columns: 1fr; gap: 32px; } }
@@ -470,13 +560,14 @@ export default function CoffeeChat() {
         <div className="cc-filter-bar">
           <div className="cc-search-wrap">
             <svg className="cc-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <circle cx="6.5" cy="6.5" r="5" stroke="#6B5E52" strokeWidth="1.5"/>
-              <path d="M10 10L14 14" stroke="#6B5E52" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M10 10L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
             <input
               type="text"
               className="cc-search"
               placeholder="Search by name, role, company, school, or keyword…"
+              aria-label="Search profiles"
               autoComplete="off"
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -554,7 +645,7 @@ export default function CoffeeChat() {
               <div className="cc-card__updated">{p.updated}</div>
               <div className="cc-card__actions">
                 <a href={p.linkedIn} target="_blank" rel="noopener noreferrer" className="cc-card__cta-primary">Connect on LinkedIn ↗</a>
-                <button className="cc-card__cta-secondary" onClick={() => openModal(p.name.split(' ')[0])}>Copy template</button>
+                <button className={`cc-card__cta-secondary${copiedId === p.id ? ' copied' : ''}`} onClick={() => directCopy(p.id, p.name.split(' ')[0])}>{copiedId === p.id ? '✓ Copied' : 'Copy template'}</button>
               </div>
             </article>
           ))}
@@ -656,17 +747,17 @@ export default function CoffeeChat() {
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label">Role / Function <span>*</span></label>
-                  <div className="cc-multiselect-group">
+                  <div className="cc-multiselect-group" role="group" aria-label="Select role or function">
                     {FUNCTION_CHIPS.map(chip => (
-                      <span key={chip} className={`cc-ms-chip${funcChips.includes(chip) ? ' active' : ''}`} onClick={() => toggleChip(funcChips, setFuncChips, chip)}>{chip}</span>
+                      <button key={chip} type="button" className={`cc-ms-chip${funcChips.includes(chip) ? ' active' : ''}`} aria-pressed={funcChips.includes(chip)} onClick={() => toggleChip(funcChips, setFuncChips, chip)}>{chip}</button>
                     ))}
                   </div>
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label">Identity Tags <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
-                  <div className="cc-multiselect-group">
+                  <div className="cc-multiselect-group" role="group" aria-label="Select identity tags">
                     {IDENTITY_CHIPS.map(chip => (
-                      <span key={chip} className={`cc-ms-chip${identityChips.includes(chip) ? ' active' : ''}`} onClick={() => toggleChip(identityChips, setIdentityChips, chip)}>{chip}</span>
+                      <button key={chip} type="button" className={`cc-ms-chip${identityChips.includes(chip) ? ' active' : ''}`} aria-pressed={identityChips.includes(chip)} onClick={() => toggleChip(identityChips, setIdentityChips, chip)}>{chip}</button>
                     ))}
                   </div>
                 </div>
@@ -693,7 +784,7 @@ export default function CoffeeChat() {
                     <label className="cc-form-check-label" htmlFor="ccConsent2">I understand this is not a job placement service and I am not required to say yes to every request.</label>
                   </div>
                 </div>
-                {formError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+                {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
                 <button className="cc-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit my profile'}</button>
               </form>
             )}
@@ -738,10 +829,10 @@ export default function CoffeeChat() {
 
       {/* Template Modal */}
       <div className={`cc-modal-overlay${modalOpen ? ' open' : ''}`} onClick={e => { if (e.target === e.currentTarget) closeModal() }}>
-        <div className="cc-modal" role="dialog" aria-modal="true">
+        <div className="cc-modal" role="dialog" aria-modal="true" aria-labelledby="cc-modal-title" ref={ccModalRef} onKeyDown={handleCcModalKeyDown}>
           <button className="cc-modal__close" onClick={closeModal} aria-label="Close">✕</button>
           <p className="cc-modal__kicker">Coffee Chat Templates</p>
-          <h2 className="cc-modal__title">Coffee Chat Request - Reaching out to {modalName}</h2>
+          <h2 id="cc-modal-title" className="cc-modal__title">Coffee Chat Request - Reaching out to {modalName}</h2>
           <p className="cc-modal__sub">Personalize the bracketed fields before sending. Keep your final message under 80 words.</p>
           <div className="cc-modal__template">{TEMPLATE_TEXT.replace('[Name]', modalName)}</div>
           <button className={`cc-modal__copy-btn${copied ? ' copied' : ''}`} onClick={copyTemplate}>

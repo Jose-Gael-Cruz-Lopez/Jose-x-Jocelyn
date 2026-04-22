@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
@@ -143,6 +143,8 @@ export default function CareerTemplates() {
   const [formError, setFormError] = useState('')
   const [formSubmitted, setFormSubmitted] = useState(false)
 
+  const handleFilterClick = useCallback(e => setActiveFilter(e.currentTarget.dataset.key), [])
+
   const handleSubmit = async e => {
     e.preventDefault()
     if (!request.trim()) { setFormError('Please describe the template you need.'); return }
@@ -214,7 +216,7 @@ export default function CareerTemplates() {
           gap: 8px;
         }
         .ct-filter {
-          padding: 9px 20px;
+          padding: 13px 20px;
           border-radius: 8px;
           font-family: var(--font-body);
           font-size: 13px;
@@ -226,6 +228,7 @@ export default function CareerTemplates() {
           transition: background 0.2s, color 0.2s, border-color 0.2s;
         }
         .ct-filter:hover { color: var(--color-dark); border-color: rgba(0,0,0,0.25); }
+        .ct-filter:focus-visible { outline: 2px solid var(--color-dark); outline-offset: 2px; }
         .ct-filter--active { background: var(--color-dark); color: var(--color-cream); border-color: var(--color-dark); }
         .ct-filter--outreach.ct-filter--active { background: var(--color-teal);  border-color: var(--color-teal); }
         .ct-filter--apply.ct-filter--active    { background: var(--color-blue);  border-color: var(--color-blue); }
@@ -255,7 +258,7 @@ export default function CareerTemplates() {
 
         .ct-card {
           background: var(--color-white);
-          border: 1px solid rgba(0,0,0,0.08);
+          border: 1px solid rgba(0,0,0,.08);
           border-radius: 14px;
           padding: 28px;
           display: flex;
@@ -265,7 +268,7 @@ export default function CareerTemplates() {
         }
         .ct-card:hover {
           transform: translateY(-3px);
-          box-shadow: 0 10px 32px rgba(0,0,0,0.09);
+          box-shadow: 0 10px 32px rgba(0,0,0,.09);
         }
 
         .ct-card__bar {
@@ -290,7 +293,7 @@ export default function CareerTemplates() {
           font-family: var(--font-display);
           font-size: 12px;
           font-weight: 700;
-          color: rgba(0,0,0,0.2);
+          color: rgba(0,0,0,.2);
           flex-shrink: 0;
           margin-top: 2px;
         }
@@ -305,9 +308,9 @@ export default function CareerTemplates() {
         }
         .ct-card__stage--outreach  { background: rgba(58,125,107,0.12); color: var(--color-teal); }
         .ct-card__stage--apply     { background: rgba(91,142,194,0.12); color: var(--color-blue); }
-        .ct-card__stage--interview { background: rgba(232,168,56,0.15); color: var(--color-gold-dark); }
+        .ct-card__stage--interview { background: rgba(232,168,56,0.15); color: var(--color-gold); }
         .ct-card__stage--offers    { background: rgba(179,69,57,0.1);   color: var(--color-accent); }
-        .ct-card__stage--job       { background: rgba(22,43,68,0.1);    color: var(--color-navy); }
+        .ct-card__stage--job       { background: rgba(91,142,194,0.15); color: var(--color-blue-light); }
 
         .ct-card__author {
           font-size: 10px;
@@ -352,16 +355,16 @@ export default function CareerTemplates() {
           transition: background 0.2s, color 0.2s, transform 0.18s;
           align-self: flex-start;
         }
-        .ct-card__cta--outreach  { background: transparent; color: var(--color-teal);   border-color: var(--color-teal); }
-        .ct-card__cta--apply     { background: transparent; color: var(--color-blue);   border-color: var(--color-blue); }
-        .ct-card__cta--interview { background: transparent; color: var(--color-gold-dark); border-color: var(--color-gold); }
-        .ct-card__cta--offers    { background: transparent; color: var(--color-accent); border-color: var(--color-accent); }
-        .ct-card__cta--job       { background: transparent; color: var(--color-navy);   border-color: var(--color-navy); }
+        .ct-card__cta--outreach  { background: transparent; color: var(--color-teal);      border-color: var(--color-teal); }
+        .ct-card__cta--apply     { background: transparent; color: var(--color-blue);      border-color: var(--color-blue); }
+        .ct-card__cta--interview { background: transparent; color: var(--color-gold);      border-color: var(--color-gold); }
+        .ct-card__cta--offers    { background: transparent; color: var(--color-accent);    border-color: var(--color-accent); }
+        .ct-card__cta--job       { background: transparent; color: var(--color-blue-light); border-color: var(--color-blue-light); }
         .ct-card__cta:hover { transform: translateY(-1px); }
-        .ct-card__cta--outreach:hover  { background: var(--color-teal);   color: white; }
-        .ct-card__cta--apply:hover     { background: var(--color-blue);   color: white; }
+        .ct-card__cta--outreach:hover  { background: var(--color-teal);   color: var(--color-cream); }
+        .ct-card__cta--apply:hover     { background: var(--color-blue);   color: var(--color-cream); }
         .ct-card__cta--interview:hover { background: var(--color-gold);   color: var(--color-dark); }
-        .ct-card__cta--offers:hover    { background: var(--color-accent); color: white; }
+        .ct-card__cta--offers:hover    { background: var(--color-accent); color: var(--color-cream); }
         .ct-card__cta--job:hover       { background: var(--color-navy);   color: var(--color-cream); }
 
         .ct-empty {
@@ -498,8 +501,9 @@ export default function CareerTemplates() {
           ].map(({ key, label }) => (
             <button
               key={key}
+              data-key={key}
               className={`ct-filter${key !== 'all' ? ` ct-filter--${key}` : ''}${activeFilter === key ? ' ct-filter--active' : ''}`}
-              onClick={() => setActiveFilter(key)}
+              onClick={handleFilterClick}
             >
               {label}
             </button>
@@ -520,7 +524,7 @@ export default function CareerTemplates() {
         <p className="ct-count">{visible.length === 1 ? '1 template' : `${visible.length} templates`}</p>
       </div>
 
-      <main className="ct-grid" aria-label="Template library">
+      <div className="ct-grid" aria-label="Template library">
         {visible.length === 0 ? (
           <div className="ct-empty" aria-live="polite">No templates in this category yet.</div>
         ) : (
@@ -545,7 +549,7 @@ export default function CareerTemplates() {
             </div>
           ))
         )}
-      </main>
+      </div>
 
       <section className="ct-form-wrap">
         <div className="ct-form-inner">
@@ -582,7 +586,7 @@ export default function CareerTemplates() {
                     <option>First job &amp; onboarding</option>
                   </select>
                 </div>
-                {formError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+                {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
                 <button className="ct-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit Request'}</button>
               </form>
             )}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
@@ -133,6 +133,37 @@ function matchCard(card, { tab, query, stage, location, deadline }) {
   return true
 }
 
+function dbOpportunityToCard(row) {
+  const abbr = row.company.replace(/\s+/g, '').slice(0, 2).toUpperCase() || '??'
+  const typeKey = (row.role_type || '').toLowerCase()
+  const tagTypeMap = {
+    internship: 'ob-tag--intern', apprenticeship: 'ob-tag--apprent',
+    'new grad': 'ob-tag--newgrad', fellowship: 'ob-tag--fellowship',
+    program: 'ob-tag--program', scholarship: 'ob-tag--program',
+  }
+  let deadlineLabel = 'Rolling', deadlineCls = 'rolling', deadlineFilter = 'rolling'
+  if (row.deadline) {
+    const d = new Date(row.deadline)
+    const diffDays = (d - new Date()) / 86400000
+    deadlineLabel = `Closes ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+    deadlineCls = diffDays < 30 ? 'urgent' : ''
+    deadlineFilter = diffDays < 30 ? 'this-month' : 'rolling'
+  }
+  const tags = [{ l: row.role_type || 'Opportunity', c: tagTypeMap[typeKey] || 'ob-tag--muted' }]
+  if (row.eligibility) tags.push({ l: row.eligibility, c: 'ob-tag--muted' })
+  return {
+    id: row.id, logo: abbr, logoStyle: {},
+    deadlineLabel, deadlineCls,
+    title: row.role, company: row.company,
+    tags, meta: [], desc: row.why || '',
+    source: 'Community submission',
+    viewLink: row.link, postLink: row.link, postLabel: 'View role ↗',
+    type: typeKey, stage: '', location: '', deadline: deadlineFilter, bridge: false,
+    keywords: `${row.role} ${row.company} ${row.eligibility || ''}`.toLowerCase(),
+    _featured: row.status === 'featured',
+  }
+}
+
 function OBCard({ card, featured }) {
   const isExternal = card.postLink.startsWith('http')
   return (
@@ -150,7 +181,7 @@ function OBCard({ card, featured }) {
         {card.tags.map(t => <span key={t.l} className={`ob-tag ${t.c}`}>{t.l}</span>)}
       </div>
       <div className="ob-card__meta">
-        {card.meta.map(m => <span key={m} className="ob-card__meta-item">{m}</span>)}
+        {card.meta.map(m => { const chars = [...m]; return <span key={m} className="ob-card__meta-item"><span aria-hidden="true">{chars[0]}</span>{chars.slice(1).join('')}</span> })}
       </div>
       <div className="ob-card__desc">{card.desc}</div>
       <div className="ob-card__source"><span className="ob-card__source-dot"></span> {card.source}</div>
@@ -176,10 +207,24 @@ export default function OpportunityBoard() {
   const [formError, setFormError] = useState('')
   const [form, setForm] = useState({ role: '', company: '', type: '', link: '', deadline: '', eligibility: '', why: '', email: '' })
 
+  const [dbOpportunities, setDbOpportunities] = useState([])
+
+  useEffect(() => {
+    supabase.from('opportunities')
+      .select('*')
+      .in('status', ['approved', 'featured'])
+      .order('created_at', { ascending: false })
+      .then(({ data }) => {
+        if (data?.length) setDbOpportunities(data.map(dbOpportunityToCard))
+      })
+  }, [])
+
   const filters = { tab, query: search.toLowerCase().trim(), stage, location, deadline }
 
-  const visibleFeatured = FEATURED.filter(c => matchCard(c, filters))
-  const visibleMain = MAIN_CARDS.filter(c => matchCard(c, filters))
+  const allFeatured = [...FEATURED, ...dbOpportunities.filter(c => c._featured)]
+  const allMain = [...MAIN_CARDS, ...dbOpportunities.filter(c => !c._featured)]
+  const visibleFeatured = allFeatured.filter(c => matchCard(c, filters))
+  const visibleMain = allMain.filter(c => matchCard(c, filters))
   const totalVisible = visibleFeatured.length + visibleMain.length
 
   const handleSubmit = async (e) => {
@@ -235,16 +280,17 @@ export default function OpportunityBoard() {
         .ob-board { max-width: 1040px; margin: 0 auto; padding: 72px clamp(20px,5vw,56px) 80px; }
         .ob-board__head { margin-bottom: 32px; }
         .ob-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(0,0,0,.08); }
-        .ob-tab { padding: 9px 18px; border-radius: 20px; border: 1.5px solid rgba(0,0,0,.1); background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-muted); cursor: pointer; transition: background .18s, border-color .18s, color .18s; }
+        .ob-tab { padding: 13px 18px; border-radius: 20px; border: 1.5px solid rgba(0,0,0,.1); background: transparent; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--color-muted); cursor: pointer; transition: background .18s, border-color .18s, color .18s; }
         .ob-tab:hover { border-color: var(--color-dark); color: var(--color-dark); }
         .ob-tab.active { background: var(--color-dark); border-color: var(--color-dark); color: var(--color-cream); }
+        .ob-tab:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 6px; }
         .ob-filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; align-items: center; }
         .ob-search-wrap { position: relative; flex: 1; min-width: 220px; }
-        .ob-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+        .ob-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--color-muted); }
         .ob-search { width: 100%; font-family: var(--font-body); font-size: 15px; padding: 11px 14px 11px 42px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 10px; background: var(--color-white); color: var(--color-dark); outline: none; transition: border-color .2s; }
         .ob-search:focus { border-color: var(--color-gold); }
         .ob-search::placeholder { color: var(--color-muted); }
-        .ob-filter-select { font-family: var(--font-body); font-size: 13px; font-weight: 500; padding: 11px 32px 11px 12px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 8px; background: var(--color-white); color: var(--color-dark); outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; transition: border-color .2s; flex-shrink: 0; }
+        .ob-filter-select { font-family: var(--font-body); font-size: 13px; font-weight: 500; padding: 11px 32px 11px 12px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 8px; background: var(--color-white); color: var(--color-dark); outline: none; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B5E52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; transition: border-color .2s; flex-shrink: 0; }
         .ob-filter-select:focus { border-color: var(--color-gold); }
         .ob-results-count { font-size: 13px; color: var(--color-muted); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
         .ob-results-count span { font-weight: 600; color: var(--color-dark); }
@@ -255,12 +301,12 @@ export default function OpportunityBoard() {
         .ob-featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px,1fr)); gap: 16px; }
 
         .ob-card { background: var(--color-white); border: 1px solid rgba(0,0,0,.08); border-radius: 16px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s; position: relative; }
-        .ob-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,.09); }
-        .ob-card.featured { border-color: rgba(232,168,56,.3); background: linear-gradient(135deg, rgba(232,168,56,.03) 0%, var(--color-white) 60%); }
+        .ob-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
+        .ob-card.featured { border-color: rgba(232,168,56,.35); }
         .ob-card.archived { opacity: .55; pointer-events: none; }
         .ob-card__featured-badge { position: absolute; top: -1px; right: 18px; background: var(--color-gold); color: var(--color-dark); font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 0 0 6px 6px; }
         .ob-card__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-        .ob-card__company-logo { width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgba(0,0,0,.07); background: var(--color-cream); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--color-dark); flex-shrink: 0; }
+        .ob-card__company-logo { width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgba(0,0,0,.08); background: rgba(0,0,0,.04); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--color-dark); flex-shrink: 0; }
         .ob-card__deadline { font-size: 11px; font-weight: 700; color: var(--color-muted); letter-spacing: .04em; flex-shrink: 0; }
         .ob-card__deadline.urgent { color: var(--color-accent); }
         .ob-card__deadline.rolling { color: var(--color-teal); }
@@ -268,24 +314,26 @@ export default function OpportunityBoard() {
         .ob-card__company { font-size: 13px; color: var(--color-muted); font-weight: 500; }
         .ob-card__tags { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
         .ob-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
-        .ob-tag--intern    { background: rgba(91,142,194,.12);  color: var(--color-blue); }
+        .ob-tag--intern    { background: rgba(22,43,68,.08);    color: var(--color-navy); }
         .ob-tag--apprent   { background: rgba(58,125,107,.1);   color: var(--color-teal); }
-        .ob-tag--newgrad   { background: rgba(232,168,56,.14);  color: var(--color-gold-dark); }
-        .ob-tag--fellowship{ background: rgba(22,43,68,.1);     color: var(--color-navy); }
-        .ob-tag--program   { background: rgba(179,69,57,.1);    color: var(--color-accent); }
-        .ob-tag--muted     { background: rgba(0,0,0,.06);       color: var(--color-muted); }
+        .ob-tag--newgrad   { background: rgba(232,168,56,.12);  color: var(--color-gold-dark); }
+        .ob-tag--fellowship{ background: rgba(22,43,68,.08);    color: var(--color-navy); }
+        .ob-tag--program   { background: rgba(179,69,57,.08);   color: var(--color-accent); }
+        .ob-tag--muted     { background: rgba(0,0,0,.05);       color: var(--color-muted); }
         .ob-tag--bridge    { background: rgba(58,125,107,.1);   color: var(--color-teal); }
         .ob-card__meta { display: flex; flex-wrap: wrap; gap: 12px; }
         .ob-card__meta-item { font-size: 12px; color: var(--color-muted); display: flex; align-items: center; gap: 4px; }
         .ob-card__desc { font-size: 13px; color: var(--color-muted); line-height: 1.65; }
         .ob-card__desc strong { color: var(--color-dark); font-weight: 600; }
-        .ob-card__source { font-size: 11px; color: var(--color-muted); display: flex; align-items: center; gap: 5px; }
-        .ob-card__source-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--color-gold); flex-shrink: 0; }
+        .ob-card__source { font-size: 11px; color: rgba(0,0,0,.35); display: flex; align-items: center; gap: 5px; }
+        .ob-card__source-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--color-gold-dark); flex-shrink: 0; }
         .ob-card__actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
-        .ob-card__cta-primary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: var(--color-dark); color: var(--color-cream); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: background .2s, transform .15s; flex: 1; justify-content: center; }
-        .ob-card__cta-primary:hover { background: var(--color-accent); transform: translateY(-1px); }
-        .ob-card__cta-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; background: transparent; color: var(--color-muted); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; transition: border-color .2s, color .2s; flex-shrink: 0; }
+        .ob-card__cta-primary { display: inline-flex; align-items: center; gap: 6px; padding: 13px 16px; background: var(--color-dark); color: var(--color-cream); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: background .2s, transform .15s; flex: 1; justify-content: center; }
+        .ob-card__cta-primary:hover { background: var(--color-teal); transform: translateY(-1px); }
+        .ob-card__cta-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 13px 14px; background: transparent; color: var(--color-muted); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; transition: border-color .2s, color .2s; flex-shrink: 0; }
         .ob-card__cta-secondary:hover { border-color: var(--color-dark); color: var(--color-dark); }
+        .ob-card__cta-primary:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 8px; }
+        .ob-card__cta-secondary:focus-visible { outline: 2px solid var(--color-dark); outline-offset: 2px; border-radius: 8px; }
         .ob-main-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px,1fr)); gap: 16px; }
         .ob-no-results { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--color-muted); font-size: 15px; }
         .ob-archive-strip { margin-top: 52px; }
@@ -317,9 +365,10 @@ export default function OpportunityBoard() {
         .ob-form-input, .ob-form-select, .ob-form-textarea { width: 100%; font-family: var(--font-body); font-size: 15px; padding: 11px 14px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 8px; background: var(--color-white); color: var(--color-dark); outline: none; transition: border-color .2s; }
         .ob-form-input:focus, .ob-form-select:focus, .ob-form-textarea:focus { border-color: var(--color-gold); }
         .ob-form-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
-        .ob-form-select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+        .ob-form-select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B5E52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
         .ob-form-btn { width: 100%; padding: 14px 24px; background: var(--color-dark); color: var(--color-cream); border: none; border-radius: 8px; font-family: var(--font-display); font-size: 14px; font-weight: 600; cursor: pointer; transition: background .2s, transform .18s; margin-top: 6px; }
         .ob-form-btn:hover { background: var(--color-accent); transform: translateY(-1px); }
+        .ob-form-btn:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
         .ob-form-success { text-align: center; padding: 40px 20px; }
         .ob-form-success__icon { width: 56px; height: 56px; border-radius: 50%; background: rgba(232,168,56,.12); color: var(--color-gold-dark); display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 16px; }
         .ob-form-success__title { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--color-dark); margin-bottom: 8px; }
@@ -366,19 +415,19 @@ export default function OpportunityBoard() {
           <p className="ob-section-sub">Filter by type, stage, eligibility, or just search.</p>
         </div>
 
-        <div className="ob-tabs" role="tablist">
+        <div className="ob-tabs" role="group" aria-label="Filter by type">
           {TABS.map(t => (
-            <button key={t.key} className={`ob-tab${tab === t.key ? ' active' : ''}`} role="tab" onClick={() => setTab(t.key)}>{t.label}</button>
+            <button key={t.key} id={`ob-tab-${t.key}`} className={`ob-tab${tab === t.key ? ' active' : ''}`} aria-pressed={tab === t.key} onClick={() => setTab(t.key)}>{t.label}</button>
           ))}
         </div>
 
         <div className="ob-filter-bar">
           <div className="ob-search-wrap">
             <svg className="ob-search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <circle cx="6.5" cy="6.5" r="5" stroke="#6B5E52" strokeWidth="1.5"/>
-              <path d="M10 10L14 14" stroke="#6B5E52" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M10 10L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
-            <input type="text" className="ob-search" placeholder="Search opportunities, companies, or keywords…" autoComplete="off" value={search} onChange={e => setSearch(e.target.value)} />
+            <input type="text" className="ob-search" placeholder="Search opportunities, companies, or keywords…" aria-label="Search opportunities" autoComplete="off" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <select className="ob-filter-select" aria-label="Stage" value={stage} onChange={e => setStage(e.target.value)}>
             <option value="">All Stages</option>
@@ -424,7 +473,7 @@ export default function OpportunityBoard() {
 
         <div className="ob-archive-strip">
           <p className="ob-archive-label">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0 }}><rect x="1" y="4" width="12" height="9" rx="1.5" stroke="#6B5E52" strokeWidth="1.3"/><path d="M5 4V3a2 2 0 1 1 4 0v1" stroke="#6B5E52" strokeWidth="1.3"/></svg>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0, color: 'var(--color-muted)' }}><rect x="1" y="4" width="12" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M5 4V3a2 2 0 1 1 4 0v1" stroke="currentColor" strokeWidth="1.3"/></svg>
             Just closed - keep an eye out next cycle
           </p>
           <div className="ob-archive-grid">
@@ -537,7 +586,7 @@ export default function OpportunityBoard() {
                   <label className="ob-form-label" htmlFor="obEmail">Your Email <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
                   <input className="ob-form-input" type="email" id="obEmail" placeholder="your@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
                 </div>
-                {formError && <p style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{formError}</p>}
+                {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{formError}</p>}
                 <button className="ob-form-btn" type="submit" disabled={formLoading}>
                   {formLoading ? 'Submitting…' : 'Submit this opportunity'}
                 </button>

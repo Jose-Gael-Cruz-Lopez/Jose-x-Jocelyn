@@ -143,7 +143,7 @@ export default function ArticlesIndex() {
         }
         .arc-filters { display: flex; gap: 8px; flex-wrap: wrap; }
         .arc-filter-btn {
-          padding: 10px 18px; border-radius: 8px; font-family: var(--font-body);
+          padding: 13px 18px; border-radius: 8px; font-family: var(--font-body);
           font-size: 13px; font-weight: 600; cursor: pointer;
           border: 1.5px solid rgba(0,0,0,0.12); background: var(--color-white);
           color: var(--color-muted); transition: background 0.2s, color 0.2s, border-color 0.2s;
@@ -152,6 +152,7 @@ export default function ArticlesIndex() {
         .arc-filter-btn--active {
           background: var(--color-navy); color: var(--color-cream); border-color: var(--color-navy);
         }
+        .arc-filter-btn:focus-visible { outline: 2px solid var(--color-navy); outline-offset: 2px; border-radius: 8px; }
         .arc-count {
           max-width: 900px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 48px) 24px;
           font-size: 13px; color: var(--color-muted); font-family: var(--font-body);
@@ -250,7 +251,7 @@ export default function ArticlesIndex() {
 
       <p className="arc-count" aria-live="polite">{countText}</p>
 
-      <main className="arc-list" aria-label="Article list">
+      <div className="arc-list" aria-label="Article list">
         {visible.length === 0 ? (
           <div className="arc-empty" aria-live="polite">
             <div className="arc-empty__icon">—</div>
@@ -284,7 +285,7 @@ export default function ArticlesIndex() {
             )
           })
         )}
-      </main>
+      </div>
 
       <footer className="art-footer--wide" style={{ maxWidth: 900 }}>
         <span className="art-footer__copy">Jose x Jocelyn © 2026</span>

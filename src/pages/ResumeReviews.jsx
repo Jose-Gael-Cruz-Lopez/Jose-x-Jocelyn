@@ -79,7 +79,7 @@ const ECO_LINKS = [
 function CoLogo({ coKey, size = 18 }) {
   const c = COMPANIES[coKey]
   if (!c) return <span className="rr-co-letter" style={{ background: 'rgba(0,0,0,.08)', color: 'var(--color-muted)', fontSize: '8px', width: size, height: size }}>{(coKey[0] || '?').toUpperCase()}</span>
-  if (c.slug) return <img className="rr-co-logo" src={`https://cdn.simpleicons.org/${c.slug}/8A7E72`} alt={c.name} width={size} height={size} onError={e => { e.target.outerHTML = `<span class="rr-co-letter" style="background:rgba(0,0,0,.08);color:var(--color-muted);font-size:8px;width:${size}px;height:${size}px;">${c.name[0]}</span>` }} />
+  if (c.slug) return <img className="rr-co-logo" src={`https://cdn.simpleicons.org/${c.slug}/8A7E72`} alt={c.name} width={size} height={size} loading="lazy" onError={e => { e.target.outerHTML = `<span class="rr-co-letter" style="background:rgba(0,0,0,.08);color:var(--color-muted);font-size:8px;width:${size}px;height:${size}px;">${c.name[0]}</span>` }} />
   return <span className="rr-co-letter" style={{ background: c.bg, color: c.color, fontSize: Math.round(size * 0.44), width: size, height: size }}>{c.letter}</span>
 }
 
@@ -122,13 +122,13 @@ function SidebarFilters({ filter, onFilter }) {
         <span className="rr-filter-label">Companies</span>
         <div className="rr-co-chips">
           {visibleCos.map(co => (
-            <span key={co} className={`rr-co-chip${filter.companies.includes(co) ? ' active' : ''}`} onClick={() => onFilter(f => ({ ...f, companies: toggle(f.companies, co) }))}>
+            <button key={co} type="button" className={`rr-co-chip${filter.companies.includes(co) ? ' active' : ''}`} aria-pressed={filter.companies.includes(co)} onClick={() => onFilter(f => ({ ...f, companies: toggle(f.companies, co) }))}>
               {COMPANIES[co]?.slug
-                ? <img src={`https://cdn.simpleicons.org/${COMPANIES[co].slug}/8A7E72`} alt={COMPANIES[co]?.name || co} width="13" height="13" />
+                ? <img src={`https://cdn.simpleicons.org/${COMPANIES[co].slug}/8A7E72`} alt={COMPANIES[co]?.name || co} width="13" height="13" loading="lazy" />
                 : null
               }
               {COMPANIES[co]?.name || co}
-            </span>
+            </button>
           ))}
         </div>
         <input className="rr-co-search" type="text" placeholder="Search for a company…" autoComplete="off" value={coSearch} onChange={e => setCoSearch(e.target.value)} />
@@ -158,7 +158,33 @@ function SidebarFilters({ filter, onFilter }) {
   )
 }
 
+function dbResumeToCard(row) {
+  const companyKeys = (row.target_companies || '').split(',')
+    .map(s => s.trim().toLowerCase().replace(/\s+/g, ''))
+    .filter(Boolean)
+  const knownCompanies = companyKeys.filter(c => COMPANIES[c]).slice(0, 3)
+  const companyExtra = Math.max(0, companyKeys.length - 3)
+  const submitted = new Date(row.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return {
+    id: row.id,
+    handle: row.handle,
+    role: row.role_title || row.role_type || 'Unknown Role',
+    roleType: row.role_type || 'other',
+    stage: row.stage || 'intern',
+    companies: knownCompanies,
+    companyExtra,
+    tags: row.background_tags || [],
+    submitted,
+    featured: row.status === 'featured' ? { annotation: null } : null,
+    allowDownload: row.allow_download || false,
+    story: row.story || null,
+    appliedRole: row.role_title || row.role_type || '',
+    _storagePath: row.file_name || null,
+  }
+}
+
 export default function ResumeReviews() {
+  const [dbResumes, setDbResumes] = useState([])
   const [filter, setFilter] = useState({ search: '', roles: [], stages: [], companies: [], tags: [], sort: 'newest' })
   const [panelId, setPanelId] = useState(null)
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -168,9 +194,13 @@ export default function ResumeReviews() {
   const [submitForm, setSubmitForm] = useState({ handle: '', email: '', linkedin: '', roleTitle: '', roleType: '', stage: '', companies: '', bgTags: [], download: 'no', story: '', annotate: 'no' })
   const [fileName, setFileName] = useState('')
   const fileRef = useRef(null)
+  const panelRef = useRef(null)
+  const panelTriggerRef = useRef(null)
+
+  const allResumes = useMemo(() => [...RESUMES, ...dbResumes], [dbResumes])
 
   const visibleResumes = useMemo(() => {
-    let result = RESUMES.filter(r => {
+    let result = allResumes.filter(r => {
       if (filter.search) {
         const q = filter.search.toLowerCase()
         if (!(r.handle + ' ' + r.role + ' ' + r.companies.join(' ')).toLowerCase().includes(q)) return false
@@ -185,7 +215,7 @@ export default function ResumeReviews() {
     if (filter.sort === 'intern') result = result.filter(r => r.stage === 'intern')
     if (filter.sort === 'newgrad') result = result.filter(r => r.stage === 'newgrad')
     return result
-  }, [filter])
+  }, [filter, allResumes])
 
   const activeFilters = useMemo(() => {
     const all = []
@@ -208,7 +238,17 @@ export default function ResumeReviews() {
     })
   }
 
-  const panelResume = panelId ? RESUMES.find(r => r.id === panelId) : null
+  const panelResume = panelId ? allResumes.find(r => r.id === panelId) : null
+
+  useEffect(() => {
+    supabase.from('resume_submissions')
+      .select('*')
+      .in('status', ['approved', 'featured'])
+      .order('created_at', { ascending: false })
+      .then(({ data }) => {
+        if (data?.length) setDbResumes(data.map(dbResumeToCard))
+      })
+  }, [])
 
   useEffect(() => {
     if (panelId || sheetOpen) {
@@ -227,14 +267,49 @@ export default function ResumeReviews() {
     return () => document.removeEventListener('keydown', onKey)
   }, [])
 
+  useEffect(() => {
+    if (panelId) {
+      const firstFocusable = panelRef.current?.querySelector('a, button, [tabindex]:not([tabindex="-1"])')
+      firstFocusable?.focus()
+    } else if (panelTriggerRef.current) {
+      panelTriggerRef.current.focus()
+      panelTriggerRef.current = null
+    }
+  }, [panelId])
+
+  const handlePanelKeyDown = (e) => {
+    if (e.key !== 'Tab') return
+    const focusable = Array.from(panelRef.current?.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])') ?? [])
+    if (!focusable.length) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
+    const file = fileRef.current?.files?.[0]
     if (!submitForm.handle || !submitForm.email || !submitForm.roleType || !submitForm.stage || !submitForm.companies) {
       setSubmitError('Please fill in all required fields before submitting.')
       return
     }
+    if (!file) {
+      setSubmitError('Please select your resume PDF before submitting.')
+      return
+    }
     setSubmitLoading(true)
     setSubmitError('')
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_')
+    const storagePath = `pending/${Date.now()}-${safeName}`
+    const { error: uploadError } = await supabase.storage
+      .from('resumes')
+      .upload(storagePath, file, { contentType: 'application/pdf', upsert: false })
+    if (uploadError) {
+      setSubmitLoading(false)
+      setSubmitError('File upload failed. Please try again.')
+      return
+    }
     const { error } = await supabase.from('resume_submissions').insert({
       handle: submitForm.handle,
       email: submitForm.email,
@@ -247,7 +322,7 @@ export default function ResumeReviews() {
       allow_download: submitForm.download === 'yes',
       story: submitForm.story || null,
       allow_annotation: submitForm.annotate === 'yes',
-      file_name: fileName || null,
+      file_name: storagePath,
     })
     setSubmitLoading(false)
     if (error) { setSubmitError('Something went wrong. Please try again.') }
@@ -279,7 +354,7 @@ export default function ResumeReviews() {
         .rr-tag--gold   { background: rgba(232,168,56,.14);  color: var(--color-gold-dark); }
         .rr-tag--navy   { background: rgba(22,43,68,.1);     color: var(--color-navy); }
         .rr-tag--accent { background: rgba(179,69,57,.1);    color: var(--color-accent); }
-        .rr-tag--purple { background: rgba(120,60,180,.1);   color: #7833B4; }
+
         .rr-tag--muted  { background: rgba(0,0,0,.06);       color: var(--color-muted); }
 
         .rr-btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; background: var(--color-dark); color: var(--color-cream); border-radius: 8px; font-family: var(--font-display); font-size: 14px; font-weight: 600; text-decoration: none; border: 1.5px solid var(--color-dark); cursor: pointer; transition: background .2s, transform .18s cubic-bezier(.16,1,.3,1); }
@@ -319,11 +394,12 @@ export default function ResumeReviews() {
         .rr-check-row input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--color-dark); cursor: pointer; flex-shrink: 0; }
         .rr-check-row span { font-size: 13px; color: var(--color-dark); line-height: 1.3; cursor: pointer; }
         .rr-co-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
-        .rr-co-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; border: 1.5px solid rgba(0,0,0,.1); border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 600; color: var(--color-muted); transition: border-color .15s, color .15s, background .15s; user-select: none; }
+        .rr-co-chip { display: inline-flex; align-items: center; gap: 5px; padding: 16px 10px; border: 1.5px solid rgba(0,0,0,.1); border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 600; color: var(--color-muted); transition: border-color .15s, color .15s, background .15s; user-select: none; }
         .rr-co-chip:hover { border-color: var(--color-dark); color: var(--color-dark); }
         .rr-co-chip.active { border-color: var(--color-navy); background: var(--color-navy); color: var(--color-cream); }
         .rr-co-chip img { width: 13px; height: 13px; object-fit: contain; opacity: .7; }
         .rr-co-chip.active img { filter: brightness(10); opacity: 1; }
+        .rr-co-chip:focus-visible { outline: 2px solid var(--color-navy); outline-offset: 2px; border-radius: 20px; }
         .rr-co-search { width: 100%; font-family: var(--font-body); font-size: 12px; padding: 7px 10px; border: 1.5px solid rgba(0,0,0,.1); border-radius: 7px; background: var(--color-cream); color: var(--color-dark); outline: none; transition: border-color .2s; box-sizing: border-box; }
         .rr-co-search:focus { border-color: var(--color-gold); }
         .rr-co-search::placeholder { color: var(--color-muted); }
@@ -352,17 +428,17 @@ export default function ResumeReviews() {
 
         /* RESUME CARD */
         .rr-card { background: var(--color-white); border: 1px solid rgba(0,0,0,.08); border-radius: 14px; overflow: hidden; cursor: pointer; transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s; position: relative; }
-        .rr-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,.1); }
+        .rr-card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
         .rr-card__stage-wrap { position: relative; }
         .rr-card__stage-badge { position: absolute; top: 10px; left: 10px; z-index: 2; font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; padding: 4px 9px; border-radius: 5px; }
-        .rr-badge--intern     { background: rgba(91,142,194,.18); color: var(--color-blue); }
-        .rr-badge--newgrad    { background: rgba(58,125,107,.14); color: var(--color-teal); }
-        .rr-badge--fulltime   { background: rgba(22,43,68,.12);   color: var(--color-navy); }
-        .rr-badge--apprenticeship { background: rgba(232,168,56,.18); color: #7D5A10; }
-        .rr-badge--pivot      { background: rgba(179,69,57,.12);  color: var(--color-accent); }
-        .rr-badge--contract   { background: rgba(0,0,0,.07);      color: var(--color-muted); }
-        .rr-card__featured-badge { position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; align-items: center; gap: 4px; padding: 4px 9px; border-radius: 5px; background: rgba(232,168,56,.18); color: #7D5A10; font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-        .rr-card__thumb { width: 100%; aspect-ratio: 8.5 / 11; background: var(--color-surface); position: relative; overflow: hidden; }
+        .rr-badge--intern     { background: rgba(22,43,68,.1);    color: var(--color-navy); }
+        .rr-badge--newgrad    { background: rgba(58,125,107,.1);  color: var(--color-teal); }
+        .rr-badge--fulltime   { background: rgba(22,43,68,.08);   color: var(--color-navy); }
+        .rr-badge--apprenticeship { background: rgba(232,168,56,.12); color: var(--color-gold-dark); }
+        .rr-badge--pivot      { background: rgba(179,69,57,.08);  color: var(--color-accent); }
+        .rr-badge--contract   { background: rgba(0,0,0,.06);      color: var(--color-muted); }
+        .rr-card__featured-badge { position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; align-items: center; gap: 4px; padding: 4px 9px; border-radius: 5px; background: rgba(232,168,56,.12); color: var(--color-gold-dark); font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+        .rr-card__thumb { width: 100%; aspect-ratio: 8.5 / 11; background: rgba(0,0,0,.03); position: relative; overflow: hidden; }
         .rr-card__thumb-paper { position: absolute; inset: 10px 12px; background: var(--color-white); border-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden; }
         .rr-card__thumb-paper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 20%; background: linear-gradient(180deg, rgba(0,0,0,.035) 0%, transparent 100%); border-bottom: 1px solid rgba(0,0,0,.04); }
         .rr-card__thumb-paper::after { content: ''; position: absolute; top: 24%; left: 10%; right: 10%; bottom: 8%; background: repeating-linear-gradient(180deg, rgba(0,0,0,.055) 0px, rgba(0,0,0,.055) 1.5px, transparent 1.5px, transparent 9px); }
@@ -372,7 +448,7 @@ export default function ResumeReviews() {
         .rr-card:hover .rr-card__thumb-overlay { opacity: 1; }
         .rr-card__thumb-btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px; background: var(--color-cream); color: var(--color-dark); border-radius: 8px; font-family: var(--font-display); font-size: 13px; font-weight: 700; border: none; cursor: pointer; transform: translateY(6px); transition: transform .2s cubic-bezier(.16,1,.3,1); }
         .rr-card:hover .rr-card__thumb-btn { transform: translateY(0); }
-        .rr-card__info { padding: 12px 14px 14px; border-top: 1px solid rgba(0,0,0,.05); }
+        .rr-card__info { padding: 12px 14px 14px; border-top: 1px solid rgba(0,0,0,.07); }
         .rr-card__handle { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--color-dark); margin-bottom: 2px; }
         .rr-card__role { font-size: 12px; color: var(--color-muted); margin-bottom: 8px; }
         .rr-card__companies { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
@@ -388,7 +464,7 @@ export default function ResumeReviews() {
         .rr-howto__head { margin-bottom: 36px; }
         .rr-howto__grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
         .rr-howto__card { background: var(--color-white); border: 1px solid rgba(0,0,0,.08); border-radius: 16px; padding: 28px 26px; }
-        .rr-howto__num { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: rgba(0,0,0,.07); line-height: 1; margin-bottom: 14px; }
+        .rr-howto__num { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: rgba(0,0,0,.06); line-height: 1; margin-bottom: 14px; }
         .rr-howto__title { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--color-dark); margin-bottom: 10px; line-height: 1.3; }
         .rr-howto__body { font-size: 14px; color: var(--color-muted); line-height: 1.75; }
         @media (max-width: 700px) { .rr-howto__grid { grid-template-columns: 1fr; } }
@@ -414,9 +490,10 @@ export default function ResumeReviews() {
         .rr-form-textarea { min-height: 72px; resize: vertical; line-height: 1.6; }
         .rr-form-select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
         .rr-tag-toggles { display: flex; flex-wrap: wrap; gap: 7px; }
-        .rr-tag-toggle { display: inline-flex; align-items: center; padding: 6px 13px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 20px; cursor: pointer; user-select: none; font-family: var(--font-body); font-size: 12px; font-weight: 600; color: var(--color-muted); transition: all .15s; }
+        .rr-tag-toggle { display: inline-flex; align-items: center; padding: 16px 13px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 20px; cursor: pointer; user-select: none; font-family: var(--font-body); font-size: 12px; font-weight: 600; color: var(--color-muted); transition: all .15s; }
         .rr-tag-toggle:hover { border-color: var(--color-dark); color: var(--color-dark); }
         .rr-tag-toggle.active { border-color: var(--color-navy); background: var(--color-navy); color: var(--color-cream); }
+        .rr-tag-toggle:focus-visible { outline: 2px solid var(--color-navy); outline-offset: 2px; border-radius: 20px; }
         .rr-upload-zone { width: 100%; border: 2px dashed rgba(0,0,0,.14); border-radius: 10px; padding: 24px 16px; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; position: relative; }
         .rr-upload-zone:hover { border-color: var(--color-gold); background: rgba(232,168,56,.04); }
         .rr-upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
@@ -442,11 +519,12 @@ export default function ResumeReviews() {
         .rr-panel { position: fixed; top: 0; right: 0; bottom: 0; z-index: 901; width: min(520px, 100vw); background: var(--color-cream); box-shadow: -8px 0 40px rgba(0,0,0,.15); transform: translateX(100%); transition: transform .38s cubic-bezier(.16,1,.3,1); display: flex; flex-direction: column; overflow: hidden; }
         .rr-panel.open { transform: translateX(0); }
         .rr-panel__head { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px 16px; border-bottom: 1px solid rgba(0,0,0,.08); flex-shrink: 0; }
-        .rr-panel__close { display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 8px; background: rgba(0,0,0,.06); border: none; cursor: pointer; font-size: 16px; color: var(--color-dark); transition: background .2s; }
+        .rr-panel__close { display: flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; border-radius: 8px; background: rgba(0,0,0,.06); border: none; cursor: pointer; font-size: 16px; color: var(--color-dark); transition: background .2s; }
         .rr-panel__close:hover { background: rgba(0,0,0,.1); }
+        .rr-panel__close:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 8px; }
         .rr-panel__title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--color-dark); }
         .rr-panel__body { flex: 1; overflow-y: auto; padding: 22px; scrollbar-width: thin; }
-        .rr-panel__thumb { width: 100%; aspect-ratio: 8.5 / 11; background: var(--color-paper, #F5F0E8); border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,.08); margin-bottom: 20px; position: relative; }
+        .rr-panel__thumb { width: 100%; aspect-ratio: 8.5 / 11; background: var(--color-paper); border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,.08); margin-bottom: 20px; position: relative; }
         .rr-panel__thumb-paper { position: absolute; inset: 14px 18px; background: var(--color-white); border-radius: 4px; box-shadow: 0 4px 16px rgba(0,0,0,.1); overflow: hidden; }
         .rr-panel__thumb-paper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 18%; background: linear-gradient(180deg, rgba(0,0,0,.03) 0%, transparent 100%); border-bottom: 1px solid rgba(0,0,0,.04); }
         .rr-panel__thumb-paper::after { content: ''; position: absolute; top: 22%; left: 8%; right: 8%; bottom: 6%; background: repeating-linear-gradient(180deg, rgba(0,0,0,.05) 0px, rgba(0,0,0,.05) 1.5px, transparent 1.5px, transparent 10px); }
@@ -461,7 +539,7 @@ export default function ResumeReviews() {
         .rr-panel__meta-co { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
         .rr-panel__meta-tags { display: flex; gap: 5px; flex-wrap: wrap; }
         .rr-panel__annotation { margin-top: 16px; padding: 16px 18px; background: rgba(232,168,56,.1); border-radius: 10px; }
-        .rr-panel__annotation-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #7D5A10; margin-bottom: 6px; }
+        .rr-panel__annotation-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--color-gold-dark); margin-bottom: 6px; }
         .rr-panel__annotation-text { font-size: 14px; color: var(--color-dark); line-height: 1.7; font-style: italic; }
         .rr-panel__story { margin-top: 16px; padding: 14px 16px; background: rgba(58,125,107,.07); border-radius: 10px; font-size: 13px; color: var(--color-muted); line-height: 1.7; }
         .rr-panel__story-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--color-teal); margin-bottom: 5px; }
@@ -573,7 +651,7 @@ export default function ResumeReviews() {
           )}
 
           <div className="rr-grid-meta">
-            <p className="rr-grid-count"><strong>{visibleResumes.length}</strong> of <strong>{RESUMES.length}</strong> resumes</p>
+            <p className="rr-grid-count"><strong>{visibleResumes.length}</strong> of <strong>{allResumes.length}</strong> resumes</p>
           </div>
 
           <div className="rr-grid">
@@ -585,7 +663,7 @@ export default function ResumeReviews() {
             ) : visibleResumes.map(r => {
               const sm = STAGE_META[r.stage] || { label: r.stage.toUpperCase(), cls: 'contract', tagCls: 'rr-tag--muted' }
               return (
-                <article key={r.id} className="rr-card" onClick={() => setPanelId(r.id)} tabIndex={0} role="button" aria-label={`View resume by ${r.handle}`} onKeyDown={e => e.key === 'Enter' && setPanelId(r.id)}>
+                <article key={r.id} className="rr-card" onClick={() => { panelTriggerRef.current = document.activeElement; setPanelId(r.id) }} tabIndex={0} role="button" aria-label={`View resume by ${r.handle}`} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { panelTriggerRef.current = e.currentTarget; setPanelId(r.id) } }}>
                   <div className="rr-card__stage-wrap">
                     <span className={`rr-card__stage-badge rr-badge--${sm.cls}`}>{sm.label}</span>
                     {r.featured && <span className="rr-card__featured-badge">★ J&J Pick</span>}
@@ -725,7 +803,7 @@ export default function ResumeReviews() {
                   <label className="rr-form-label" style={{ marginBottom: '10px' }}>Background Tags <em>(optional - select all that apply)</em></label>
                   <div className="rr-tag-toggles">
                     {[['first-gen','First-Gen'],['non-cs','Non-CS Major'],['nontraditional','Nontraditional Path'],['transfer','Transfer Student'],['career-changer','Career Changer'],['community-college','Community College']].map(([tag, label]) => (
-                      <span key={tag} className={`rr-tag-toggle${submitForm.bgTags.includes(tag) ? ' active' : ''}`} onClick={() => toggleBgTag(tag)}>{label}</span>
+                      <button key={tag} type="button" className={`rr-tag-toggle${submitForm.bgTags.includes(tag) ? ' active' : ''}`} aria-pressed={submitForm.bgTags.includes(tag)} onClick={() => toggleBgTag(tag)}>{label}</button>
                     ))}
                   </div>
                 </div>
@@ -757,7 +835,7 @@ export default function ResumeReviews() {
                     <label className="rr-radio-option"><input type="radio" name="sfAnnotate" value="no" checked={submitForm.annotate === 'no'} onChange={() => setSubmitForm(f => ({ ...f, annotate: 'no' }))} /> No thanks, just add it</label>
                   </div>
                 </div>
-                {submitError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{submitError}</p>}
+                {submitError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{submitError}</p>}
                 <button className="rr-form-btn" type="submit" disabled={submitLoading}>{submitLoading ? 'Submitting…' : 'Add My Resume to the Library'}</button>
                 <p className="rr-form-note">By submitting, you agree to have your resume displayed publicly on this page. Personal contact information visible on the resume is your responsibility to redact before uploading. We do not display full names unless you explicitly include them in your handle field.</p>
               </form>
@@ -796,7 +874,7 @@ export default function ResumeReviews() {
 
       {/* RESUME DETAIL PANEL */}
       <div className={`rr-overlay${panelId ? ' open' : ''}`} onClick={() => setPanelId(null)} />
-      <div className={`rr-panel${panelId ? ' open' : ''}`} role="dialog" aria-modal="true" aria-label="Resume detail">
+      <div className={`rr-panel${panelId ? ' open' : ''}`} role="dialog" aria-modal="true" aria-label="Resume detail" ref={panelRef} onKeyDown={handlePanelKeyDown}>
         <div className="rr-panel__head">
           <span className="rr-panel__title">Resume Preview</span>
           <button className="rr-panel__close" onClick={() => setPanelId(null)} aria-label="Close">✕</button>

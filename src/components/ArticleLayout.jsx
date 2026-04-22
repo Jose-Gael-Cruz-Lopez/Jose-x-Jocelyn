@@ -17,6 +17,8 @@ export default function ArticleLayout({ children, title }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { pathname } = useLocation()
+  const panelRef = useRef(null)
+  const burgerRef = useRef(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10)
@@ -31,11 +33,40 @@ export default function ArticleLayout({ children, title }) {
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = 'hidden'
+      const firstFocusable = panelRef.current?.querySelector('a, button, [tabindex]:not([tabindex="-1"])')
+      firstFocusable?.focus()
     } else {
       document.body.style.overflow = ''
     }
     return () => { document.body.style.overflow = '' }
   }, [menuOpen])
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        burgerRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [menuOpen])
+
+  const handlePanelKeyDown = (e) => {
+    if (e.key !== 'Tab') return
+    const focusable = Array.from(panelRef.current?.querySelectorAll('a, button, [tabindex]:not([tabindex="-1"])') ?? [])
+    if (!focusable.length) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault()
+      last.focus()
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault()
+      first.focus()
+    }
+  }
 
   const closeMenu = () => setMenuOpen(false)
 
@@ -57,17 +88,19 @@ export default function ArticleLayout({ children, title }) {
           <Link to="/#contact" className="art-nav__link">Get in Touch</Link>
         </div>
         <button
+          ref={burgerRef}
           className={`art-nav__burger${menuOpen ? ' art-nav__burger--open' : ''}`}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={menuOpen}
+          aria-controls="mobileNav"
           onClick={() => setMenuOpen(o => !o)}
         >
           <span /><span /><span />
         </button>
       </nav>
 
-      <div className={`art-nav__mobile${menuOpen ? ' art-nav__mobile--open' : ''}`} id="mobileNav">
-        <div className="art-nav__mobile-panel">
+      <div className={`art-nav__mobile${menuOpen ? ' art-nav__mobile--open' : ''}`} id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden={!menuOpen}>
+        <div className="art-nav__mobile-panel" ref={panelRef} onKeyDown={handlePanelKeyDown}>
           {NAV_LINKS.map(({ to, label }) => (
             <Link
               key={to}
@@ -82,7 +115,7 @@ export default function ArticleLayout({ children, title }) {
         </div>
       </div>
 
-      {children}
+      <main>{children}</main>
     </>
   )
 }

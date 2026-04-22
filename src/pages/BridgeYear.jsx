@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
@@ -232,6 +232,8 @@ export default function BridgeYear() {
     ? ROLE_CARDS
     : ROLE_CARDS.filter(c => c.rtags.includes(roleFilter))
 
+  const handleRoleFilter = useCallback(e => setRoleFilter(e.currentTarget.dataset.key), [])
+
   const handleSubmit = async e => {
     e.preventDefault()
     if (!form.program || !form.company) {
@@ -422,9 +424,8 @@ export default function BridgeYear() {
         }
         .by-prog:hover {
           transform: translateY(-3px);
-          box-shadow: 0 12px 36px rgba(0,0,0,.1);
+          box-shadow: 0 10px 32px rgba(0,0,0,.09);
         }
-        .by-prog__bar { height: 4px; background: var(--color-gold); }
         .by-prog__inner { padding: 24px 24px 20px; flex: 1; display: flex; flex-direction: column; }
         .by-prog__company {
           font-size: 11px;
@@ -449,14 +450,14 @@ export default function BridgeYear() {
           padding: 4px 10px;
           border-radius: 999px;
           background: rgba(0,0,0,.05);
-          color: var(--color-dark);
+          color: var(--color-muted);
         }
-        .by-prog__pill--urgent { background: rgba(179,69,57,.1); color: var(--color-accent); }
-        .by-prog__pill--pay    { background: rgba(58,125,107,.1); color: var(--color-teal); }
+        .by-prog__pill--urgent { background: rgba(179,69,57,.08); color: var(--color-accent); }
+        .by-prog__pill--pay    { background: rgba(58,125,107,.1);  color: var(--color-teal); }
         .by-prog__note {
-          background: rgba(232,168,56,.08);
-          border-left: 3px solid var(--color-gold);
-          border-radius: 0 8px 8px 0;
+          background: rgba(232,168,56,.07);
+          border: 1px solid rgba(232,168,56,.22);
+          border-radius: 8px;
           padding: 12px 14px;
           margin-bottom: 20px;
           flex: 1;
@@ -469,12 +470,12 @@ export default function BridgeYear() {
           color: var(--color-gold);
           margin-bottom: 5px;
         }
-        .by-prog__note-text { font-size: 13px; color: var(--color-dark); line-height: 1.6; }
+        .by-prog__note-text { font-size: 13px; color: var(--color-muted); line-height: 1.6; }
         .by-prog__cta {
           display: inline-flex;
           align-items: center;
           gap: 7px;
-          padding: 11px 20px;
+          padding: 13px 20px;
           border-radius: 8px;
           background: var(--color-dark);
           color: var(--color-cream);
@@ -493,7 +494,7 @@ export default function BridgeYear() {
           padding: 20px 24px;
           background: var(--color-white);
           border-radius: 10px;
-          border: 1px solid rgba(0,0,0,.06);
+          border: 1px solid rgba(0,0,0,.08);
           font-size: 14px;
           color: var(--color-muted);
           line-height: 1.65;
@@ -510,7 +511,7 @@ export default function BridgeYear() {
         .by-roles__head { margin-bottom: 28px; }
         .by-roles__filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
         .by-roles__filter {
-          padding: 7px 16px;
+          padding: 13px 16px;
           border-radius: 999px;
           font-family: var(--font-body);
           font-size: 12px;
@@ -522,7 +523,8 @@ export default function BridgeYear() {
           transition: background .2s, color .2s, border-color .2s;
         }
         .by-roles__filter:hover { color: var(--color-dark); border-color: rgba(0,0,0,.22); }
-        .by-roles__filter--active { background: var(--color-teal); color: white; border-color: var(--color-teal); }
+        .by-roles__filter:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; }
+        .by-roles__filter--active { background: var(--color-teal); color: var(--color-cream); border-color: var(--color-teal); }
         .by-roles__list { display: flex; flex-direction: column; gap: 14px; }
         .by-role-card {
           background: var(--color-white);
@@ -535,7 +537,7 @@ export default function BridgeYear() {
           gap: 20px;
           transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
         }
-        .by-role-card:hover { transform: translateX(4px); box-shadow: 0 4px 20px rgba(0,0,0,.07); }
+        .by-role-card:hover { transform: translateX(4px); box-shadow: 4px 4px 20px rgba(0,0,0,.07); }
         .by-role-card__left { flex: 1; min-width: 0; }
         .by-role-card__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
         .by-role-card__tag {
@@ -548,9 +550,9 @@ export default function BridgeYear() {
           background: rgba(58,125,107,.1);
           color: var(--color-teal);
         }
-        .by-role-card__tag--remote { background: rgba(91,142,194,.1); color: var(--color-blue); }
-        .by-role-card__tag--rota   { background: rgba(22,43,68,.08);  color: var(--color-navy); }
-        .by-role-card__tag--data   { background: rgba(232,168,56,.12); color: #a07820; }
+        .by-role-card__tag--remote { background: rgba(91,142,194,.12);  color: var(--color-blue); }
+        .by-role-card__tag--rota   { background: rgba(91,142,194,.12);  color: var(--color-blue-light); }
+        .by-role-card__tag--data   { background: rgba(232,168,56,.15);  color: var(--color-gold); }
         .by-role-card__title {
           font-family: var(--font-display);
           font-size: clamp(15px,1.8vw,18px);
@@ -563,7 +565,7 @@ export default function BridgeYear() {
         .by-role-card__why strong { color: var(--color-dark); font-weight: 600; }
         .by-role-card__cta {
           flex-shrink: 0;
-          padding: 10px 18px;
+          padding: 13px 18px;
           border-radius: 8px;
           background: transparent;
           border: 1.5px solid var(--color-teal);
@@ -575,7 +577,7 @@ export default function BridgeYear() {
           transition: background .2s, color .2s;
           white-space: nowrap;
         }
-        .by-role-card__cta:hover { background: var(--color-teal); color: white; }
+        .by-role-card__cta:hover { background: var(--color-teal); color: var(--color-cream); }
 
         /* SPRINT PATH */
         .by-sprint {
@@ -726,7 +728,7 @@ export default function BridgeYear() {
           text-transform: uppercase;
           padding: 3px 10px;
           border-radius: 4px;
-          color: white;
+          color: var(--color-cream);
           display: inline-block;
           margin-bottom: 14px;
         }
@@ -753,8 +755,8 @@ export default function BridgeYear() {
           transition: transform .18s, opacity .2s;
         }
         .by-follow-card__cta:hover { opacity: .85; transform: translateY(-1px); }
-        .by-follow-card__cta--jose    { background: var(--color-teal);   color: white; }
-        .by-follow-card__cta--jocelyn { background: var(--color-accent); color: white; }
+        .by-follow-card__cta--jose    { background: var(--color-teal);   color: var(--color-cream); }
+        .by-follow-card__cta--jocelyn { background: var(--color-accent); color: var(--color-cream); }
 
         /* SUGGEST FORM */
         .by-suggest {
@@ -764,7 +766,7 @@ export default function BridgeYear() {
         }
         .by-suggest__box {
           background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.07);
+          border: 1px solid rgba(0,0,0,.08);
           border-radius: 16px;
           padding: clamp(32px,4vw,52px);
           max-width: 680px;
@@ -826,6 +828,12 @@ export default function BridgeYear() {
           transition: background .2s, transform .18s;
         }
         .by-suggest__btn:hover { background: var(--color-accent); transform: translateY(-1px); }
+        .by-jump:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 3px; }
+        .by-prog__cta:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+        .by-role-card__cta:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; }
+        .by-step__tool:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; border-radius: 3px; }
+        .by-follow-card__cta:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+        .by-suggest__btn:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
         .by-suggest__success {
           text-align: center;
           padding: 32px 0;
@@ -898,7 +906,6 @@ export default function BridgeYear() {
         <div className="by-apprentice__grid">
           {PROGRAMS.map(prog => (
             <div className="by-prog" key={prog.name}>
-              <div className="by-prog__bar" />
               <div className="by-prog__inner">
                 <p className="by-prog__company">{prog.company}</p>
                 <h3 className="by-prog__name">{prog.name}</h3>
@@ -940,8 +947,9 @@ export default function BridgeYear() {
           {ROLE_FILTERS.map(f => (
             <button
               key={f.key}
+              data-key={f.key}
               className={`by-roles__filter${roleFilter === f.key ? ' by-roles__filter--active' : ''}`}
-              onClick={() => setRoleFilter(f.key)}
+              onClick={handleRoleFilter}
             >
               {f.label}
             </button>
@@ -1077,7 +1085,7 @@ export default function BridgeYear() {
                 <label className="by-suggest__label" htmlFor="sgEmail">Your email (optional)</label>
                 <input className="by-suggest__input" type="email" id="sgEmail" placeholder="you@school.edu" value={form.email} onChange={e => setField('email', e.target.value)} />
               </div>
-              {formError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+              {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
               <button className="by-suggest__btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit Program'}</button>
             </form>
           )}

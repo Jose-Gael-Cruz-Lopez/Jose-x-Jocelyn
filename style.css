@@ -25,6 +25,9 @@
 
   --color-muted: #6B5E52;
   --color-gold-dark: #8B6914;
+  --color-teal-light: #5EC4A4;
+  --color-blue-light: #8BB8E0;
+  --color-accent-light: #E87060;
   --color-light-text: #F2E4CE;
   --color-surface: #F8F6F2;
   --color-paper: #F0ECE4;
@@ -174,10 +177,12 @@ ul { list-style: none; }
   justify-content: center;
 }
 .nav__link:hover { color: var(--color-accent); }
+.nav__link:focus-visible { outline: 2px solid var(--color-dark); outline-offset: 3px; border-radius: 3px; }
 
 /* Light nav on terracotta hero */
 .nav--on-hero .nav__link { color: #ffffff; }
 .nav--on-hero .nav__link:hover { color: var(--hero-gold); }
+.nav--on-hero .nav__link:focus-visible { outline-color: var(--hero-gold); }
 .nav--on-hero .nav__burger span { background: #ffffff; }
 /* CTA: gold bar + white label (same as other hero nav links) */
 .nav--on-hero .nav__link--cta .nav__link-label {
@@ -270,6 +275,7 @@ ul { list-style: none; }
   font-weight: 600; color: var(--color-cream);
 }
 .mobile-nav__link:hover { color: var(--color-accent); }
+.mobile-nav__link:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; border-radius: 3px; }
 
 /* ============================================
    HERO — Terracotta landing (red hero, pre–exact mockup pass)
@@ -604,7 +610,7 @@ ul { list-style: none; }
   font-size: 16px;
   font-weight: 500;
   color: var(--color-dark);
-  padding: 8px 20px;
+  padding: 13px 20px;
   transition: background 0.3s, color 0.3s;
   border-radius: 0;
 }
@@ -1321,7 +1327,7 @@ ul { list-style: none; }
   font-family: var(--font-body);
   font-size: 16px; font-weight: 500;
   color: var(--color-dark);
-  padding: 4px 16px;
+  padding: 12px 16px;
   transition: color 0.2s;
 }
 
@@ -1625,7 +1631,7 @@ ul { list-style: none; }
 .footer {
   position: relative;
   background: var(--color-cream);
-  padding: 80px 48px 0;
+  padding: 80px 48px 48px;
   min-height: 60vh;
   overflow: hidden;
 }
@@ -1736,7 +1742,7 @@ ul { list-style: none; }
 .modal__close {
   position: absolute; top: 16px; right: 16px;
   font-size: 24px; color: rgba(242,228,206,0.4);
-  transition: color 0.2s;
+  transition: color 0.2s; padding: 10px; margin: -10px;
 }
 .modal__close:hover { color: var(--color-cream); }
 
@@ -1827,7 +1833,7 @@ ul { list-style: none; }
   .editorial__showcase { padding: 0 32px; }
   .editorial__card { min-height: 260px; }
 
-  .footer { padding: 60px 32px 0; min-height: auto; }
+  .footer { padding: 60px 32px 40px; min-height: auto; }
   .footer__cta { padding: clamp(24px, 3vw, 40px) clamp(36px, 6vw, 80px); }
   .footer__cta-text { font-size: clamp(36px, 6vw, 72px); }
 }
@@ -1881,7 +1887,7 @@ ul { list-style: none; }
   .editorial__card-title { font-size: clamp(18px, 4.5vw, 22px); }
   .editorial__card-excerpt { font-size: 14px; }
 
-  .footer { padding: 40px 20px 0; min-height: auto; }
+  .footer { padding: 40px 24px 36px; min-height: auto; }
   .footer__logo-svg { width: clamp(160px, 40vw, 220px); }
   .footer__cta {
     position: relative; right: auto; top: auto;
