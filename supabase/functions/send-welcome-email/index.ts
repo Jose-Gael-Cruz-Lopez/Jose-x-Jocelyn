@@ -1,8 +1,8 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
-const FROM_EMAIL = 'Jose & Jocelyn <newsletter@fromcampustocareeer.com>'
-const REPLY_TO = 'jose@fromcampustocareeer.com'
+const FROM_EMAIL = 'Jose & Jocelyn <newsletter@fromcampuscareer.com>'
+const REPLY_TO = 'jose@fromcampuscareer.com'
 
 serve(async (req) => {
   // Supabase database webhooks send a POST with the record payload
@@ -98,19 +98,19 @@ function buildEmailHtml(firstName: string): string {
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
                 <tr>
                   <td style="padding:12px 0;border-bottom:1px solid rgba(0,0,0,.06);">
-                    <a href="https://fromcampustocareeer.com/coffee-chat" style="text-decoration:none;color:#2A2117;font-size:14px;font-weight:600;">☕ Coffee Chat Network</a>
+                    <a href="https://fromcampuscareer.com/coffee-chat" style="text-decoration:none;color:#2A2117;font-size:14px;font-weight:600;">☕ Coffee Chat Network</a>
                     <p style="margin:2px 0 0;font-size:13px;color:#8A7E72;">Find people who want to be reached out to.</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:12px 0;border-bottom:1px solid rgba(0,0,0,.06);">
-                    <a href="https://fromcampustocareeer.com/opportunity-board" style="text-decoration:none;color:#2A2117;font-size:14px;font-weight:600;">📋 Opportunity Board</a>
+                    <a href="https://fromcampuscareer.com/opportunity-board" style="text-decoration:none;color:#2A2117;font-size:14px;font-weight:600;">📋 Opportunity Board</a>
                     <p style="margin:2px 0 0;font-size:13px;color:#8A7E72;">Curated internships and early-career roles.</p>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:12px 0;">
-                    <a href="https://fromcampustocareeer.com/career-templates" style="text-decoration:none;color:#2A2117;font-size:14px;font-weight:600;">📄 Career Templates</a>
+                    <a href="https://fromcampuscareer.com/career-templates" style="text-decoration:none;color:#2A2117;font-size:14px;font-weight:600;">📄 Career Templates</a>
                     <p style="margin:2px 0 0;font-size:13px;color:#8A7E72;">Scripts and trackers for every stage of your search.</p>
                   </td>
                 </tr>
@@ -127,7 +127,7 @@ function buildEmailHtml(firstName: string): string {
           <tr>
             <td style="background:#F2E4CE;border-radius:0 0 12px 12px;padding:24px 40px;text-align:center;">
               <p style="margin:0;font-size:12px;color:#8A7E72;line-height:1.6;">
-                You're receiving this because you subscribed at fromcampustocareeer.com.<br />
+                You're receiving this because you subscribed at fromcampuscareer.com.<br />
                 No spam, ever. We write when we have something worth saying.
               </p>
             </td>

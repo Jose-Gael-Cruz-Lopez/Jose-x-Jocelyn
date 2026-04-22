@@ -625,7 +625,7 @@ export default function Home() {
         </div>
         <div className="intro__right">
           <div className="intro__dot" aria-hidden="true" />
-          <p className="intro__text">We are two first-generation Mexican<span className="intro__emdash">—</span>Americans in tech who navigated every career milestone without a blueprint. No legacy connections. No family in the industry. No one to call when the offer letter made no sense. This platform exists to build what we never had: a visible pipeline from campus to career, told by two people at different stages of the same journey.</p>
+          <p className="intro__text">We are two first-generation Mexican-Americans in tech who navigated every career milestone without a blueprint. No legacy connections. No family in the industry. No one to call when the offer letter made no sense. This platform exists to build what we never had: a visible pipeline from campus to career, told by two people at different stages of the same journey.</p>
           <img src="/images/sun.png" alt="" className="mascot mascot--sun mascot--intro" aria-hidden="true" loading="lazy" decoding="async" />
         </div>
       </section>

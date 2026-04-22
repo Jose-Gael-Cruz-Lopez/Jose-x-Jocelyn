@@ -3,136 +3,6 @@ import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 
-const PROFILES = [
-  {
-    id: 1, initial: 'M', name: 'Maria R.', badge: 'New',
-    role: 'Data Analyst @ Fidelity · Boston, MA',
-    headline: 'First-gen transfer → data analytics at a major finance firm',
-    topics: 'First internships, data roles in finance, navigating big companies as a first-gen transfer student.',
-    tags: [
-      { label: 'First-Gen', cls: 'cc-tag--teal' }, { label: 'Transfer', cls: 'cc-tag--blue' },
-      { label: 'Latinx in Tech', cls: 'cc-tag--gold' }, { label: 'Data', cls: 'cc-tag--muted' }, { label: 'Boston', cls: 'cc-tag--muted' },
-    ],
-    capacity: 'Open to 2–3 chats / month', updated: 'Last updated April 2026',
-    linkedIn: 'https://www.linkedin.com',
-    dataRole: 'new-grad', dataFunc: 'data', dataStage: 'first-full-time',
-    dataIdentity: 'first-gen transfer', dataAvail: 'coffee-chats resume-reviews',
-    dataKeywords: 'data analyst fidelity bu boston first-gen transfer latinx finance',
-    avatarStyle: {},
-  },
-  {
-    id: 2, initial: 'J', name: 'James T.', badge: 'Active',
-    role: 'Software Engineer @ Stripe · New York, NY',
-    headline: 'Bootcamp grad → SWE at a top fintech, no CS degree required',
-    topics: 'Bootcamp-to-SWE transition, salary negotiation, technical interview prep, breaking into fintech without a traditional background.',
-    tags: [
-      { label: 'Nontraditional Path', cls: 'cc-tag--gold' }, { label: 'Career Changer', cls: 'cc-tag--blue' },
-      { label: 'SWE', cls: 'cc-tag--muted' }, { label: 'Fintech', cls: 'cc-tag--muted' },
-    ],
-    capacity: 'Open to 1–2 chats / month', updated: 'Last updated March 2026',
-    linkedIn: 'https://www.linkedin.com',
-    dataRole: 'early-career', dataFunc: 'swe', dataStage: 'transitioned',
-    dataIdentity: 'nontraditional', dataAvail: 'coffee-chats mock-interviews',
-    dataKeywords: 'swe stripe software engineer bootcamp nontraditional new york',
-    avatarStyle: { background: 'rgba(91,142,194,.12)', color: 'var(--color-blue)' },
-  },
-  {
-    id: 3, initial: 'P', name: 'Priya K.', badge: 'Active',
-    role: 'Product Manager @ Microsoft · Seattle, WA',
-    headline: 'International student → PM at Microsoft without an MBA',
-    topics: 'Breaking into PM, MBA vs. direct path, international student recruiting, navigating tech as a first-gen immigrant.',
-    tags: [
-      { label: 'First-Gen', cls: 'cc-tag--teal' }, { label: 'International', cls: 'cc-tag--navy' },
-      { label: 'Product', cls: 'cc-tag--muted' }, { label: 'Seattle', cls: 'cc-tag--muted' },
-    ],
-    capacity: 'Open to 2–3 chats / month', updated: 'Last updated April 2026',
-    linkedIn: 'https://www.linkedin.com',
-    dataRole: 'mid-career', dataFunc: 'product', dataStage: 'first-full-time',
-    dataIdentity: 'first-gen international', dataAvail: 'coffee-chats',
-    dataKeywords: 'product manager microsoft pm first-gen international india seattle',
-    avatarStyle: { background: 'rgba(179,69,57,.08)', color: 'var(--color-accent)' },
-  },
-  {
-    id: 4, initial: 'A', name: 'Alex M.', badge: 'New',
-    role: 'CS @ Boston University · Rising Junior',
-    headline: 'First-gen CS student navigating early internship recruiting',
-    topics: 'Freshman/sophomore internship hunt, resume reviews, cold outreach strategy, first-gen student experience at a big university.',
-    tags: [
-      { label: 'First-Gen', cls: 'cc-tag--teal' }, { label: 'Student', cls: 'cc-tag--muted' },
-      { label: 'SWE', cls: 'cc-tag--muted' }, { label: 'Boston', cls: 'cc-tag--muted' },
-    ],
-    capacity: 'Open to 1–2 chats / month', updated: 'Last updated April 2026',
-    linkedIn: 'https://www.linkedin.com',
-    dataRole: 'student', dataFunc: 'swe', dataStage: 'first-internship',
-    dataIdentity: 'first-gen', dataAvail: 'coffee-chats resume-reviews',
-    dataKeywords: 'cs bu boston university rising junior student first-gen internship',
-    avatarStyle: { background: 'rgba(58,125,107,.1)', color: 'var(--color-teal)' },
-  },
-  {
-    id: 5, initial: 'D', name: 'Diana C.', badge: 'Active',
-    role: 'Technical Recruiter @ Google · Remote',
-    headline: 'Retail → tech recruiting at Google - the inside view on hiring',
-    topics: 'What recruiters actually look for, how to get referred, career pivots, navigating interview processes from both sides of the table.',
-    tags: [
-      { label: 'Career Changer', cls: 'cc-tag--gold' }, { label: 'Nontraditional Path', cls: 'cc-tag--gold' },
-      { label: 'Recruiting', cls: 'cc-tag--muted' }, { label: 'Remote', cls: 'cc-tag--muted' },
-    ],
-    capacity: 'Open to 3–5 chats / month', updated: 'Last updated March 2026',
-    linkedIn: 'https://www.linkedin.com',
-    dataRole: 'recruiter', dataFunc: 'recruiting', dataStage: 'transitioned',
-    dataIdentity: 'nontraditional', dataAvail: 'coffee-chats mock-interviews',
-    dataKeywords: 'recruiter google technical recruiter career changer retail hiring',
-    avatarStyle: { background: 'rgba(232,168,56,.12)', color: 'var(--color-gold-dark)' },
-  },
-  {
-    id: 6, initial: 'M', name: 'Marcus W.', badge: 'Active',
-    role: 'Product Designer @ Meta · San Francisco, CA',
-    headline: 'Community college → transfer → product design at Meta',
-    topics: 'Building a design portfolio from scratch, transferring from community college, breaking into big tech without a "name" school.',
-    tags: [
-      { label: 'First-Gen', cls: 'cc-tag--teal' }, { label: 'Community College', cls: 'cc-tag--blue' },
-      { label: 'Transfer', cls: 'cc-tag--blue' }, { label: 'Design', cls: 'cc-tag--muted' },
-    ],
-    capacity: 'Open to 2–3 chats / month', updated: 'Last updated February 2026',
-    linkedIn: 'https://www.linkedin.com',
-    dataRole: 'mid-career', dataFunc: 'design', dataStage: 'first-full-time',
-    dataIdentity: 'community-college first-gen', dataAvail: 'coffee-chats resume-reviews',
-    dataKeywords: 'product designer meta design community college first-gen portfolio',
-    avatarStyle: { background: 'rgba(22,43,68,.08)', color: 'var(--color-navy)' },
-  },
-  {
-    id: 7, initial: 'S', name: 'Sofia L.', badge: 'New',
-    role: 'Data Scientist @ Salesforce · Chicago, IL',
-    headline: 'First-gen, low-income background → Salesforce via apprenticeship',
-    topics: 'Apprenticeship programs, data science career paths, Salesforce ecosystem, navigating tech when finances are tight.',
-    tags: [
-      { label: 'First-Gen', cls: 'cc-tag--teal' }, { label: 'Low-Income', cls: 'cc-tag--accent' },
-      { label: 'Data', cls: 'cc-tag--muted' }, { label: 'Apprenticeship', cls: 'cc-tag--muted' },
-    ],
-    capacity: 'Open to 2–3 chats / month', updated: 'Last updated April 2026',
-    linkedIn: 'https://www.linkedin.com',
-    dataRole: 'early-career', dataFunc: 'data', dataStage: 'apprenticeship',
-    dataIdentity: 'first-gen', dataAvail: 'coffee-chats mock-interviews',
-    dataKeywords: 'data science salesforce apprenticeship first-gen low-income chicago',
-    avatarStyle: { background: 'rgba(58,125,107,.1)', color: 'var(--color-teal)' },
-  },
-  {
-    id: 8, initial: 'R', name: 'Ryan H.', badge: 'Active',
-    role: 'SWE Intern @ TikTok · Los Angeles, CA',
-    headline: 'Transfer student → first SWE internship at TikTok this summer',
-    topics: 'First internship application cycle, technical interview prep for SWE, what the recruiting process at TikTok actually looks like.',
-    tags: [
-      { label: 'Transfer', cls: 'cc-tag--blue' }, { label: 'SWE', cls: 'cc-tag--muted' },
-      { label: 'Student', cls: 'cc-tag--muted' }, { label: 'LA', cls: 'cc-tag--muted' },
-    ],
-    capacity: 'Open to 1–2 chats / month', updated: 'Last updated April 2026',
-    linkedIn: 'https://www.linkedin.com',
-    dataRole: 'student', dataFunc: 'swe', dataStage: 'first-internship',
-    dataIdentity: 'transfer', dataAvail: 'coffee-chats',
-    dataKeywords: 'swe intern tiktok software engineering transfer student internship prep',
-    avatarStyle: { background: 'rgba(179,69,57,.08)', color: 'var(--color-accent)' },
-  },
-]
 
 const TEMPLATE_TEXT = `Hi [Name],
 
@@ -237,7 +107,7 @@ export default function CoffeeChat() {
     }
   }, [modalOpen])
 
-  const allProfiles = [...PROFILES, ...dbProfiles]
+  const allProfiles = dbProfiles
   const visibleProfiles = allProfiles.filter(p => {
     const q = search.toLowerCase().trim()
     if (q) {
@@ -323,6 +193,8 @@ export default function CoffeeChat() {
       topics: formData.topics,
       capacity: formData.capacity,
       consented_at: new Date().toISOString(),
+      status: 'approved',
+      public_profile: true,
     })
     setFormLoading(false)
     if (error) {
