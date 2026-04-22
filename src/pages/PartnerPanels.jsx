@@ -48,6 +48,7 @@ const UPCOMING_PANELS = [
 const ARCHIVE_CARDS = [
   {
     id: 'takeaways-1',
+    topics: ['bridge-year', 'internships', 'new-grad'],
     date: 'April 3, 2026',
     title: 'Still Recruiting in April: What Now?',
     recap: 'A candid conversation for students and recent grads still searching late in the cycle. The panel focused on how to reset your search, where to look next, how to talk about your timeline without shame, and what kinds of roles and programs still make sense when things did not go according to plan.',
@@ -62,6 +63,7 @@ const ARCHIVE_CARDS = [
   },
   {
     id: 'takeaways-2',
+    topics: ['interviewing', 'first-gen'],
     date: 'March 14, 2026',
     title: 'How to Navigate Rejection Without Spiraling',
     recap: 'This session focused on the emotional and strategic side of recruiting setbacks. Panelists discussed how to process rejection, learn from interviews, protect confidence, and keep moving without losing momentum or identity in the process.',
@@ -76,6 +78,7 @@ const ARCHIVE_CARDS = [
   },
   {
     id: 'takeaways-3',
+    topics: ['networking'],
     date: 'February 22, 2026',
     title: 'Coffee Chats That Actually Lead Somewhere',
     recap: 'A session about how to approach networking without sounding transactional, how to ask better questions, and how to turn one conversation into long-term connection and career insight.',
@@ -147,6 +150,10 @@ export default function PartnerPanels() {
   const [panelistError, setPanelistError] = useState('')
   const [suggestForm, setSuggestForm] = useState({ topic: '', why: '', stage: '', category: '', email: '' })
   const [panelistForm, setPanelistForm] = useState({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '', notes: '' })
+
+  const filteredArchive = activeTopic === 'all'
+    ? ARCHIVE_CARDS
+    : ARCHIVE_CARDS.filter(c => c.topics.includes(activeTopic))
 
   function toggleTakeaway(id) {
     setOpenTakeaway(prev => prev === id ? null : id)
@@ -946,7 +953,10 @@ export default function PartnerPanels() {
           <p className="pp-section-body">Missed a live session? Past panels live here as a growing archive of conversations, recordings, flyers, and takeaways. Every session is meant to stay useful after the event ends, so you can come back to the conversations <strong>most relevant to where you are right now.</strong></p>
         </div>
         <div className="pp-archive__list">
-          {ARCHIVE_CARDS.map(card => (
+          {filteredArchive.length === 0 && (
+            <p style={{ color: 'var(--color-muted)', fontSize: 15, padding: '40px 0' }}>No past panels match this topic yet. Check back as the archive grows.</p>
+          )}
+          {filteredArchive.map(card => (
             <article key={card.id} className="pp-archive-card">
               <div className="pp-archive-card__main">
                 <div>

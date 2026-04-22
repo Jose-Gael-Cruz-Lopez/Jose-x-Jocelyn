@@ -33,37 +33,50 @@ const STAGE_META = {
 }
 
 const TAG_LABELS = {
-  'first-gen':        'First-Gen',
-  'non-cs':           'Non-CS Major',
-  'nontraditional':   'Nontraditional',
-  'transfer':         'Transfer Student',
-  'career-changer':   'Career Changer',
-  'community-college':'Community College',
+  'first-gen':           'First-Gen',
+  'non-cs':              'Non-CS Major',
+  'nontraditional':      'Nontraditional',
+  'transfer':            'Transfer Student',
+  'career-changer':      'Career Changer',
+  'community-college':   'Community College',
+  'lgbtq':               'LGBTQ+',
+  'veteran':             'Veteran',
+  'first-gen-immigrant': 'First-Gen Immigrant',
+  'disability':          'Person with Disability',
+  'rural':               'Rural Background',
+  'returning-adult':     'Returning Adult',
+  'international':       'International Student',
+  'black':               'Black / African American',
+  'latinx':              'Latinx / Hispanic',
+  'indigenous':          'Indigenous / Native American',
+  'asian':               'Asian / Pacific Islander',
+  'foster':              'Foster Care Alumni',
 }
 
 const TAG_COLOR_MAP = {
-  'first-gen':        'teal',
-  'non-cs':           'blue',
-  'nontraditional':   'accent',
-  'transfer':         'gold',
-  'career-changer':   'navy',
-  'community-college':'muted',
+  'first-gen':           'teal',
+  'non-cs':              'blue',
+  'nontraditional':      'accent',
+  'transfer':            'gold',
+  'career-changer':      'navy',
+  'community-college':   'muted',
+  'lgbtq':               'teal',
+  'veteran':             'navy',
+  'first-gen-immigrant': 'teal',
+  'disability':          'blue',
+  'rural':               'gold',
+  'returning-adult':     'accent',
+  'international':       'blue',
+  'black':               'navy',
+  'latinx':              'accent',
+  'indigenous':          'gold',
+  'asian':               'teal',
+  'foster':              'muted',
 }
 
 const ROLE_LABELS = { swe: 'Software Engineer', data: 'Data / DS', pm: 'Product', biz: 'Business', design: 'Design', research: 'Research', other: 'Other' }
 const STAGE_LABELS = { intern: 'Intern', newgrad: 'New Grad', fulltime: 'Full-Time', pivot: 'Career Pivot', contract: 'Contract' }
 
-const RESUMES = [
-  { id: 1, handle: 'jorellp', role: 'Software Engineer', roleType: 'swe', stage: 'intern', companies: ['apple','google'], companyExtra: 3, tags: ['first-gen'], submitted: '1 hour ago', featured: null, allowDownload: true, story: null, appliedRole: 'Software Engineering Intern' },
-  { id: 2, handle: 'fearzyn', role: 'Software Engineer', roleType: 'swe', stage: 'fulltime', companies: ['google','meta','microsoft'], companyExtra: 5, tags: [], submitted: '2 hours ago', featured: null, allowDownload: false, story: null, appliedRole: 'Software Engineer (Full-Time)' },
-  { id: 3, handle: 'left', role: 'Software Engineer', roleType: 'swe', stage: 'newgrad', companies: ['anthropic'], companyExtra: 3, tags: [], submitted: '1 day ago', featured: null, allowDownload: true, story: null, appliedRole: 'Software Engineer - New Grad' },
-  { id: 4, handle: 'jcruiz', role: 'Data Analyst', roleType: 'data', stage: 'intern', companies: ['fidelity','jpmorgan'], companyExtra: 0, tags: ['first-gen','non-cs'], submitted: '2 days ago', featured: { annotation: 'Strong use of impact numbers on every bullet. This is what a project-heavy resume looks like done right.' }, allowDownload: true, story: 'Helped me land interviews at Fidelity and JPMorgan for their data internship programs.', appliedRole: 'Data Analyst Intern' },
-  { id: 5, handle: 'v.jocelyn', role: 'Data Analyst', roleType: 'data', stage: 'newgrad', companies: ['fidelity'], companyExtra: 0, tags: ['first-gen'], submitted: '3 days ago', featured: { annotation: 'This resume shows career readiness without relying on brand names. The framing is clean and every line earns its place.' }, allowDownload: true, story: 'Landed my first full-time offer at Fidelity six months after graduating.', appliedRole: 'Data Analyst (New Grad)' },
-  { id: 6, handle: 'kantor', role: 'Software Engineer', roleType: 'swe', stage: 'intern', companies: ['pinterest','reddit'], companyExtra: 1, tags: [], submitted: '09/29/2025', featured: null, allowDownload: false, story: null, appliedRole: 'Software Engineering Intern' },
-  { id: 7, handle: 'ashijob', role: 'Software Engineer', roleType: 'swe', stage: 'contract', companies: ['apple','meta','microsoft'], companyExtra: 2, tags: ['nontraditional'], submitted: '09/30/2025', featured: null, allowDownload: true, story: null, appliedRole: 'Contract Software Engineer' },
-  { id: 8, handle: 'go_edward', role: 'Data Scientist', roleType: 'data', stage: 'fulltime', companies: ['dropbox','pinterest'], companyExtra: 4, tags: [], submitted: '09/29/2025', featured: null, allowDownload: false, story: null, appliedRole: 'Data Scientist (Full-Time)' },
-  { id: 9, handle: 'richer', role: 'Software Engineer', roleType: 'swe', stage: 'pivot', companies: ['dropbox','pinterest'], companyExtra: 7, tags: ['career-changer'], submitted: '09/30/2025', featured: null, allowDownload: true, story: 'Made a full pivot from finance into software engineering. This resume helped me land interviews at 3 top companies.', appliedRole: 'Software Engineer (Career Pivot)' },
-]
 
 const SIDEBAR_COMPANIES = ['google','microsoft','meta','apple','amazon','stripe','pinterest','reddit','dropbox','fidelity','jpmorgan','anthropic']
 
@@ -180,6 +193,7 @@ function dbResumeToCard(row) {
     story: row.story || null,
     appliedRole: row.role_title || row.role_type || '',
     _storagePath: row.file_name || null,
+    avatarUrl: row.avatar_url || null,
   }
 }
 
@@ -193,11 +207,14 @@ export default function ResumeReviews() {
   const [submitError, setSubmitError] = useState('')
   const [submitForm, setSubmitForm] = useState({ handle: '', email: '', linkedin: '', roleTitle: '', roleType: '', stage: '', companies: '', bgTags: [], download: 'no', story: '', annotate: 'no' })
   const [fileName, setFileName] = useState('')
+  const [avatarFile, setAvatarFile] = useState(null)
+  const [avatarPreview, setAvatarPreview] = useState(null)
   const fileRef = useRef(null)
+  const avatarRef = useRef(null)
   const panelRef = useRef(null)
   const panelTriggerRef = useRef(null)
 
-  const allResumes = useMemo(() => [...RESUMES, ...dbResumes], [dbResumes])
+  const allResumes = dbResumes
 
   const visibleResumes = useMemo(() => {
     let result = allResumes.filter(r => {
@@ -310,6 +327,16 @@ export default function ResumeReviews() {
       setSubmitError('File upload failed. Please try again.')
       return
     }
+    let avatar_url = null
+    if (avatarFile) {
+      const ext = avatarFile.name.split('.').pop()
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const { error: avErr } = await supabase.storage.from('avatars').upload(path, avatarFile, { contentType: avatarFile.type })
+      if (!avErr) {
+        const { data } = supabase.storage.from('avatars').getPublicUrl(path)
+        avatar_url = data.publicUrl
+      }
+    }
     const { error } = await supabase.from('resume_submissions').insert({
       handle: submitForm.handle,
       email: submitForm.email,
@@ -323,6 +350,8 @@ export default function ResumeReviews() {
       story: submitForm.story || null,
       allow_annotation: submitForm.annotate === 'yes',
       file_name: storagePath,
+      status: 'approved',
+      avatar_url,
     })
     setSubmitLoading(false)
     if (error) { setSubmitError('Something went wrong. Please try again.') }
@@ -678,7 +707,13 @@ export default function ResumeReviews() {
                     </div>
                   </div>
                   <div className="rr-card__info">
-                    <div className="rr-card__handle">@{r.handle}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                      {r.avatarUrl
+                        ? <img src={r.avatarUrl} alt="" width={28} height={28} style={{ borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                        : <span style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(0,0,0,.07)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: 'var(--color-muted)', flexShrink: 0 }}>{(r.handle?.[0] || '?').toUpperCase()}</span>
+                      }
+                      <div className="rr-card__handle">@{r.handle}</div>
+                    </div>
                     <div className="rr-card__role">{r.role}</div>
                     <div className="rr-card__companies">
                       {r.companies.slice(0, 3).map(co => <CoLogo key={co} coKey={co} size={18} />)}
@@ -802,9 +837,33 @@ export default function ResumeReviews() {
                 <div className="rr-form-row">
                   <label className="rr-form-label" style={{ marginBottom: '10px' }}>Background Tags <em>(optional - select all that apply)</em></label>
                   <div className="rr-tag-toggles">
-                    {[['first-gen','First-Gen'],['non-cs','Non-CS Major'],['nontraditional','Nontraditional Path'],['transfer','Transfer Student'],['career-changer','Career Changer'],['community-college','Community College']].map(([tag, label]) => (
+                    {[
+                      ['first-gen','First-Gen'],['non-cs','Non-CS Major'],['nontraditional','Nontraditional Path'],
+                      ['transfer','Transfer Student'],['career-changer','Career Changer'],['community-college','Community College'],
+                      ['lgbtq','LGBTQ+'],['veteran','Veteran'],['first-gen-immigrant','First-Gen Immigrant'],
+                      ['disability','Person with Disability'],['rural','Rural Background'],['returning-adult','Returning Adult'],
+                      ['international','International Student'],['black','Black / African American'],['latinx','Latinx / Hispanic'],
+                      ['indigenous','Indigenous / Native American'],['asian','Asian / Pacific Islander'],['foster','Foster Care Alumni'],
+                    ].map(([tag, label]) => (
                       <button key={tag} type="button" className={`rr-tag-toggle${submitForm.bgTags.includes(tag) ? ' active' : ''}`} aria-pressed={submitForm.bgTags.includes(tag)} onClick={() => toggleBgTag(tag)}>{label}</button>
                     ))}
+                  </div>
+                </div>
+                <div className="rr-form-row">
+                  <label className="rr-form-label">Profile Photo <em>(optional - shown on your card)</em></label>
+                  <div className="rr-upload-zone" style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', cursor: 'pointer' }} onClick={() => avatarRef.current?.click()}>
+                    <input ref={avatarRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
+                      const f = e.target.files?.[0]
+                      if (f) { setAvatarFile(f); setAvatarPreview(URL.createObjectURL(f)) }
+                    }} />
+                    {avatarPreview
+                      ? <img src={avatarPreview} alt="Preview" style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                      : <span style={{ fontSize: 26 }}>📷</span>
+                    }
+                    <div>
+                      <span className="rr-upload-label" style={{ display: 'block', textAlign: 'left' }}>{avatarFile ? avatarFile.name : 'Add a profile photo'}</span>
+                      <span className="rr-upload-hint">JPG or PNG · Optional</span>
+                    </div>
                   </div>
                 </div>
                 <div className="rr-form-row">

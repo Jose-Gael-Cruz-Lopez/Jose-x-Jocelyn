@@ -155,7 +155,7 @@ function dbOpportunityToCard(row) {
     id: row.id, logo: abbr, logoStyle: {},
     deadlineLabel, deadlineCls,
     title: row.role, company: row.company,
-    tags, meta: [], desc: row.why || '',
+    tags, meta: [...(row.location ? [`📍 ${row.location}`] : []), ...(row.pay ? [`💰 ${row.pay}`] : [])], desc: row.why || '',
     source: 'Community submission',
     viewLink: row.link, postLink: row.link, postLabel: 'View role ↗',
     type: typeKey, stage: '', location: '', deadline: deadlineFilter, bridge: false,
@@ -205,7 +205,7 @@ export default function OpportunityBoard() {
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
-  const [form, setForm] = useState({ role: '', company: '', type: '', link: '', deadline: '', eligibility: '', why: '', email: '' })
+  const [form, setForm] = useState({ role: '', company: '', type: '', link: '', deadline: '', eligibility: '', why: '', email: '', location: '', pay: '' })
 
   const [dbOpportunities, setDbOpportunities] = useState([])
 
@@ -245,6 +245,9 @@ export default function OpportunityBoard() {
       eligibility: form.eligibility || null,
       why: form.why,
       submitted_by: form.email || null,
+      status: 'approved',
+      location: form.location || null,
+      pay: form.pay || null,
     })
     setFormLoading(false)
     if (error) {
@@ -576,6 +579,16 @@ export default function OpportunityBoard() {
                   <div>
                     <label className="ob-form-label" htmlFor="obEligibility">Eligibility Notes</label>
                     <input className="ob-form-input" type="text" id="obEligibility" placeholder="e.g. Open to non-CS, US only" value={form.eligibility} onChange={e => setForm(f => ({ ...f, eligibility: e.target.value }))} />
+                  </div>
+                </div>
+                <div className="ob-form-row ob-form-row-2">
+                  <div>
+                    <label className="ob-form-label" htmlFor="obLocation">Location</label>
+                    <input className="ob-form-input" type="text" id="obLocation" placeholder="e.g. Remote / US, New York, Hybrid" value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} />
+                  </div>
+                  <div>
+                    <label className="ob-form-label" htmlFor="obPay">Pay / Compensation</label>
+                    <input className="ob-form-input" type="text" id="obPay" placeholder="e.g. $45/hr, $7,500/mo, Paid" value={form.pay} onChange={e => setForm(f => ({ ...f, pay: e.target.value }))} />
                   </div>
                 </div>
                 <div className="ob-form-row">
