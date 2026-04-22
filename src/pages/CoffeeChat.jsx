@@ -12,8 +12,57 @@ Would you be open to a 15–20 minute chat sometime in the next few weeks? I hav
 
 No worries at all if your schedule is full. Thank you either way!`
 
-const FUNCTION_CHIPS = ['Software Engineering', 'Data', 'Product', 'Design', 'Research', 'Business / Ops', 'Recruiting']
-const IDENTITY_CHIPS = ['First-Gen', 'Low-Income', 'Transfer', 'Community College', 'International', 'Nontraditional Path']
+const FUNCTION_OPTIONS = [
+  'Software Engineering', 'Data / Analytics', 'Product Management', 'UX / UI Design',
+  'Research', 'Business / Operations', 'Recruiting / HR', 'Marketing', 'Sales',
+  'Finance / Accounting', 'Consulting', 'Legal', 'Healthcare / Medicine',
+  'Education / Teaching', 'Cybersecurity', 'DevOps / Infrastructure',
+  'Machine Learning / AI', 'Mobile Development', 'QA / Testing',
+  'Project / Program Management', 'Social Work / Nonprofit', 'Journalism / Media',
+  'Architecture / Engineering', 'Customer Success', 'Other',
+]
+
+const IDENTITY_OPTIONS = [
+  'First-Generation College Student', 'Low-Income Background', 'Transfer Student',
+  'Community College', 'International Student', 'Nontraditional Path',
+  'DACA / Undocumented', 'Black / African American', 'Latinx / Hispanic',
+  'Indigenous / Native American', 'Asian / Pacific Islander', 'LGBTQ+',
+  'First-Gen Immigrant', 'Veteran', 'Person with Disability', 'Single Parent',
+  'Rural Background', 'Career Changer', 'Returning Adult Student',
+  'Foster Care Alumni', 'Other',
+]
+
+function MultiSelectDropdown({ label, options, selected, onChange, placeholder }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false) }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+  const toggle = (val) => onChange(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val])
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button type="button" onClick={() => setOpen(o => !o)} className="cc-ms-trigger" aria-haspopup="listbox" aria-expanded={open}>
+        <span>{selected.length ? selected.join(', ') : placeholder}</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}>
+          <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </button>
+      {open && (
+        <div className="cc-ms-menu" role="listbox" aria-multiselectable="true">
+          {options.map(opt => (
+            <label key={opt} className={`cc-ms-option${selected.includes(opt) ? ' selected' : ''}`}>
+              <input type="checkbox" checked={selected.includes(opt)} onChange={() => toggle(opt)} style={{ display: 'none' }} />
+              <span className="cc-ms-check">{selected.includes(opt) ? '✓' : ''}</span>
+              {opt}
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
 function dbProfileToCard(row) {
   const funcColorMap = {
@@ -44,7 +93,7 @@ function dbProfileToCard(row) {
     topics: row.topics || '',
     tags, capacity: capacityMap[row.capacity] || row.capacity || 'Open',
     updated: `Last updated ${updated}`,
-    linkedIn: row.linkedin_url, avatarStyle: {},
+    linkedIn: row.linkedin_url, avatarStyle: {}, avatarUrl: row.avatar_url || null,
     dataRole: '', dataFunc: funcs.join(' ').toLowerCase(),
     dataStage: '', dataIdentity: identities.join(' ').toLowerCase(),
     dataAvail: 'coffee-chats',
@@ -70,6 +119,8 @@ export default function CoffeeChat() {
   const [formError, setFormError] = useState('')
   const [funcChips, setFuncChips] = useState([])
   const [identityChips, setIdentityChips] = useState([])
+  const [photoFile, setPhotoFile] = useState(null)
+  const [photoPreview, setPhotoPreview] = useState(null)
   const [formData, setFormData] = useState({
     name: '', pronouns: '', email: '', linkedin: '',
     role: '', location: '', topics: '', capacity: '',
@@ -181,6 +232,16 @@ export default function CoffeeChat() {
     }
     setFormLoading(true)
     setFormError('')
+    let avatar_url = null
+    if (photoFile) {
+      const ext = photoFile.name.split('.').pop()
+      const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const { error: uploadError } = await supabase.storage.from('avatars').upload(path, photoFile, { contentType: photoFile.type })
+      if (!uploadError) {
+        const { data } = supabase.storage.from('avatars').getPublicUrl(path)
+        avatar_url = data.publicUrl
+      }
+    }
     const { error } = await supabase.from('coffee_chat_profiles').insert({
       name: formData.name,
       pronouns: formData.pronouns || null,
@@ -195,6 +256,7 @@ export default function CoffeeChat() {
       consented_at: new Date().toISOString(),
       status: 'approved',
       public_profile: true,
+      avatar_url,
     })
     setFormLoading(false)
     if (error) {
@@ -369,6 +431,30 @@ export default function CoffeeChat() {
         .cc-card__cta-primary:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 8px; }
         .cc-card__cta-secondary:focus-visible { outline: 2px solid var(--color-dark); outline-offset: 2px; border-radius: 8px; }
 
+        .cc-ms-trigger { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 11px 14px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 8px; background: var(--color-white); color: var(--color-dark); font-family: var(--font-body); font-size: 15px; text-align: left; cursor: pointer; transition: border-color .2s; }
+        .cc-ms-trigger:focus { border-color: var(--color-gold); outline: none; }
+        .cc-ms-trigger span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-muted); }
+        .cc-ms-trigger span:not(:empty) { color: var(--color-dark); }
+        .cc-ms-menu { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--color-white); border: 1.5px solid rgba(0,0,0,.12); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.1); z-index: 100; max-height: 220px; overflow-y: auto; padding: 6px; }
+        .cc-ms-option { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 6px; font-size: 14px; color: var(--color-dark); cursor: pointer; transition: background .15s; }
+        .cc-ms-option:hover { background: rgba(0,0,0,.04); }
+        .cc-ms-option.selected { background: rgba(58,125,107,.08); color: var(--color-teal); }
+        .cc-ms-check { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid rgba(0,0,0,.2); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; color: var(--color-teal); }
+        .cc-ms-option.selected .cc-ms-check { border-color: var(--color-teal); background: rgba(58,125,107,.12); }
+        .cc-selected-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+        .cc-selected-tag { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(58,125,107,.1); color: var(--color-teal); border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .cc-selected-tag button { background: none; border: none; color: inherit; cursor: pointer; font-size: 14px; line-height: 1; padding: 0; opacity: .7; }
+        .cc-selected-tag button:hover { opacity: 1; }
+
+        .cc-photo-upload { display: flex; align-items: center; gap: 16px; }
+        .cc-photo-preview { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(0,0,0,.1); flex-shrink: 0; }
+        .cc-photo-placeholder { width: 64px; height: 64px; border-radius: 50%; background: rgba(0,0,0,.05); display: flex; align-items: center; justify-content: center; color: var(--color-muted); flex-shrink: 0; border: 1.5px dashed rgba(0,0,0,.15); }
+        .cc-photo-right { display: flex; flex-direction: column; gap: 4px; }
+        .cc-photo-btn { display: inline-block; padding: 8px 16px; background: var(--color-white); border: 1.5px solid rgba(0,0,0,.15); border-radius: 8px; font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--color-dark); cursor: pointer; transition: border-color .2s; }
+        .cc-photo-btn:hover { border-color: var(--color-dark); }
+        .cc-photo-hint { font-size: 12px; color: var(--color-muted); margin: 0; }
+        .cc-photo-remove { background: none; border: none; font-size: 12px; color: var(--color-accent); cursor: pointer; padding: 0; font-family: var(--font-body); }
+
         @media (max-width: 640px) { .cc-how__grid { grid-template-columns: 1fr; gap: 28px; } }
         @media (max-width: 640px) { .cc-reach__grid { grid-template-columns: 1fr; gap: 32px; } }
         @media (max-width: 740px) { .cc-apply__layout { grid-template-columns: 1fr; gap: 36px; } .cc-form-row-2 { grid-template-columns: 1fr; } }
@@ -498,7 +584,9 @@ export default function CoffeeChat() {
           ) : visibleProfiles.map(p => (
             <article key={p.id} className="cc-card">
               <div className="cc-card__top">
-                <div className="cc-card__avatar" style={p.avatarStyle}>{p.initial}</div>
+                <div className="cc-card__avatar" style={p.avatarUrl ? {} : p.avatarStyle}>
+                  {p.avatarUrl ? <img src={p.avatarUrl} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : p.initial}
+                </div>
                 <span className={`cc-card__badge${p.badge === 'New' ? ' cc-card__badge--new' : ''}`}>{p.badge}</span>
               </div>
               <div>
@@ -589,6 +677,29 @@ export default function CoffeeChat() {
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
+                <div className="cc-form-row">
+                  <label className="cc-form-label">Profile Photo <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
+                  <div className="cc-photo-upload">
+                    {photoPreview ? (
+                      <img src={photoPreview} alt="Preview" className="cc-photo-preview" />
+                    ) : (
+                      <div className="cc-photo-placeholder">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                      </div>
+                    )}
+                    <div className="cc-photo-right">
+                      <label htmlFor="ccPhoto" className="cc-photo-btn">Choose photo</label>
+                      <input id="ccPhoto" type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
+                        const file = e.target.files?.[0]
+                        if (!file) return
+                        setPhotoFile(file)
+                        setPhotoPreview(URL.createObjectURL(file))
+                      }} />
+                      <p className="cc-photo-hint">JPG, PNG or GIF · Max 2MB</p>
+                      {photoPreview && <button type="button" className="cc-photo-remove" onClick={() => { setPhotoFile(null); setPhotoPreview(null) }}>Remove</button>}
+                    </div>
+                  </div>
+                </div>
                 <div className="cc-form-row cc-form-row-2">
                   <div>
                     <label className="cc-form-label" htmlFor="ccName">Full Name <span>*</span></label>
@@ -619,19 +730,23 @@ export default function CoffeeChat() {
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label">Role / Function <span>*</span></label>
-                  <div className="cc-multiselect-group" role="group" aria-label="Select role or function">
-                    {FUNCTION_CHIPS.map(chip => (
-                      <button key={chip} type="button" className={`cc-ms-chip${funcChips.includes(chip) ? ' active' : ''}`} aria-pressed={funcChips.includes(chip)} onClick={() => toggleChip(funcChips, setFuncChips, chip)}>{chip}</button>
-                    ))}
-                  </div>
+                  <MultiSelectDropdown
+                    options={FUNCTION_OPTIONS}
+                    selected={funcChips}
+                    onChange={setFuncChips}
+                    placeholder="Select all that apply…"
+                  />
+                  {funcChips.length > 0 && <div className="cc-selected-tags">{funcChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => setFuncChips(p => p.filter(v => v !== c))}>×</button></span>)}</div>}
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label">Identity Tags <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
-                  <div className="cc-multiselect-group" role="group" aria-label="Select identity tags">
-                    {IDENTITY_CHIPS.map(chip => (
-                      <button key={chip} type="button" className={`cc-ms-chip${identityChips.includes(chip) ? ' active' : ''}`} aria-pressed={identityChips.includes(chip)} onClick={() => toggleChip(identityChips, setIdentityChips, chip)}>{chip}</button>
-                    ))}
-                  </div>
+                  <MultiSelectDropdown
+                    options={IDENTITY_OPTIONS}
+                    selected={identityChips}
+                    onChange={setIdentityChips}
+                    placeholder="Select all that apply…"
+                  />
+                  {identityChips.length > 0 && <div className="cc-selected-tags">{identityChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => setIdentityChips(p => p.filter(v => v !== c))}>×</button></span>)}</div>}
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccTopics">What topics can you talk about? <span>*</span></label>
