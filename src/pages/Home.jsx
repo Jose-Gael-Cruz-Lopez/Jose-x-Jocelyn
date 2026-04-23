@@ -546,7 +546,13 @@ export default function Home() {
         <div className="nav__links">
           <a href="#about" className="nav__link">About</a>
           <div className="nav__services-wrap">
-            <a href="#services" className="nav__link">Services</a>
+            <a href="#services" className="nav__link" onClick={e => {
+              e.preventDefault()
+              const target = document.querySelector('.services__tabs')
+              if (!target) return
+              const y = target.getBoundingClientRect().top + window.scrollY - 32
+              window.scrollTo({ top: Math.max(0, y), behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+            }}>Services</a>
             <div className="nav__services-dropdown">
               <div className="nav__services-group">
                 <span className="nav__services-label">Content</span>
