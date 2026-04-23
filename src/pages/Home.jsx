@@ -545,7 +545,28 @@ export default function Home() {
       <nav className={navClass} id="nav">
         <div className="nav__links">
           <a href="#about" className="nav__link">About</a>
-          <a href="#services" className="nav__link">Services</a>
+          <div className="nav__services-wrap">
+            <a href="#services" className="nav__link">Services</a>
+            <div className="nav__services-dropdown">
+              <div className="nav__services-group">
+                <span className="nav__services-label">Content</span>
+                <Link to="/linkedin-series" className="nav__services-item">LinkedIn Series</Link>
+                <Link to="/career-templates" className="nav__services-item">Career Templates</Link>
+              </div>
+              <div className="nav__services-group">
+                <span className="nav__services-label">Sprints</span>
+                <Link to="/bridge-year" className="nav__services-item">Bridge Year Sprint</Link>
+                <Link to="/interview-prep" className="nav__services-item">Interview Prep</Link>
+              </div>
+              <div className="nav__services-group">
+                <span className="nav__services-label">Community</span>
+                <Link to="/opportunity-board" className="nav__services-item">Opportunity Board</Link>
+                <Link to="/coffee-chat" className="nav__services-item">Coffee Chat Network</Link>
+                <Link to="/resume-reviews" className="nav__services-item">Resume Reviews</Link>
+                <Link to="/partner-panels" className="nav__services-item">Partner Panels</Link>
+              </div>
+            </div>
+          </div>
           <a href="#editorial" className="nav__link">La Voz del Día</a>
           <button className="nav__link nav__link--cta" onClick={openModal}>
             <span className="nav__link-accent" aria-hidden="true" />
