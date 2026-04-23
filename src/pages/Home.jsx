@@ -6,17 +6,28 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
 
 const SEARCH_INDEX = [
-  { label: 'About', description: 'Who we are & our story', type: 'section', target: '#about' },
-  { label: 'Services', description: 'All services overview', type: 'section', target: '#services' },
-  { label: 'La Voz del Día', description: 'Daily editorial & career insights', type: 'section', target: '#editorial' },
-  { label: 'LinkedIn Series', description: 'Content · LinkedIn growth tips', type: 'page', to: '/linkedin-series' },
-  { label: 'Career Templates', description: 'Content · Plug-and-play career docs', type: 'page', to: '/career-templates' },
-  { label: 'Bridge Year Sprint', description: 'Sprints · Bridge year program', type: 'page', to: '/bridge-year' },
-  { label: 'Interview Prep', description: 'Sprints · Interview preparation', type: 'page', to: '/interview-prep' },
-  { label: 'Opportunity Board', description: 'Community · Jobs & internships', type: 'page', to: '/opportunity-board' },
-  { label: 'Coffee Chat Network', description: 'Community · Connect with professionals', type: 'page', to: '/coffee-chat' },
-  { label: 'Resume Reviews', description: 'Community · Get your resume reviewed', type: 'page', to: '/resume-reviews' },
-  { label: 'Partner Panels', description: 'Community · Live panels with partners', type: 'page', to: '/partner-panels' },
+  { label: 'About', description: 'Who we are & our story', type: 'section', target: '#about',
+    keywords: ['who we are', 'story', 'jose', 'jocelyn', 'founders', 'first gen', 'mexican american', 'mission', 'vision', 'background', 'team'] },
+  { label: 'Services', description: 'All services overview', type: 'section', target: '#services',
+    keywords: ['offerings', 'programs', 'what we do', 'help', 'resources', 'tools', 'features', 'overview'] },
+  { label: 'La Voz del Día', description: 'Daily editorial & career insights', type: 'section', target: '#editorial',
+    keywords: ['blog', 'articles', 'editorial', 'daily', 'insights', 'reads', 'posts', 'news', 'la voz', 'writing', 'content', 'tips'] },
+  { label: 'LinkedIn Series', description: 'Content · LinkedIn growth tips', type: 'page', to: '/linkedin-series',
+    keywords: ['linkedin', 'social media', 'profile', 'posts', 'networking online', 'personal brand', 'branding', 'content creator', 'series', 'growth', 'followers', 'online presence'] },
+  { label: 'Career Templates', description: 'Content · Plug-and-play career docs', type: 'page', to: '/career-templates',
+    keywords: ['templates', 'resume template', 'cover letter', 'email template', 'documents', 'career docs', 'tools', 'tracker', 'job application', 'application materials', 'plug and play', 'free resources'] },
+  { label: 'Bridge Year Sprint', description: 'Sprints · Bridge year program', type: 'page', to: '/bridge-year',
+    keywords: ['bridge year', 'gap year', 'underclassmen', 'freshman', 'sophomore', 'junior', 'early career', 'sprint', 'cohort', 'first year', 'getting started', 'beginner', 'new to tech', 'start', 'foundation', 'program', 'first gen student'] },
+  { label: 'Interview Prep', description: 'Sprints · Interview preparation', type: 'page', to: '/interview-prep',
+    keywords: ['interview', 'prep', 'preparation', 'technical interview', 'behavioral', 'coding', 'practice', 'mock interview', 'questions', 'tips', 'underclassmen', 'new grad', 'entry level', 'leetcode', 'system design', 'offer', 'internship interview', 'job interview', 'cracking the interview'] },
+  { label: 'Opportunity Board', description: 'Community · Jobs & internships', type: 'page', to: '/opportunity-board',
+    keywords: ['jobs', 'internships', 'opportunities', 'new grad', 'entry level', 'hiring', 'full time', 'part time', 'summer internship', 'co-op', 'role', 'position', 'opening', 'work', 'employment', 'company', 'applications', 'job board', 'find a job', 'job search', 'career opportunities', 'recruiting', 'early career jobs'] },
+  { label: 'Coffee Chat Network', description: 'Community · Connect with professionals', type: 'page', to: '/coffee-chat',
+    keywords: ['coffee chat', 'networking', 'connect', 'professionals', 'mentorship', 'mentor', 'industry professionals', 'one on one', 'informational interview', 'community', 'meet people', 'chat', 'advice', 'guidance', 'talk to someone', 'career advice'] },
+  { label: 'Resume Reviews', description: 'Community · Get your resume reviewed', type: 'page', to: '/resume-reviews',
+    keywords: ['resume', 'review', 'feedback', 'cv', 'critique', 'improve resume', 'resume help', 'application materials', 'profile', 'showcase', 'resume check', 'resume tips', 'get reviewed'] },
+  { label: 'Partner Panels', description: 'Community · Live panels with partners', type: 'page', to: '/partner-panels',
+    keywords: ['panel', 'panels', 'event', 'live event', 'partners', 'speakers', 'talk', 'webinar', 'industry talk', 'recording', 'watch', 'listen', 'presentation', 'discussion', 'q and a', 'qa', 'fireside chat'] },
 ]
 
 const CONFETTI_COLORS = ['#E8A838','#B34539','#3A7D6B','#5B8EC2','#F2E4CE','#f5c026','#ff6b6b','#ff9ff3','#54a0ff','#5f27cd','#01a3a4','#feca57','#ff6348','#7bed9f']
@@ -541,9 +552,15 @@ export default function Home() {
     }
   }
 
-  const searchResults = searchQuery.trim().length === 0 ? SEARCH_INDEX : SEARCH_INDEX.filter(item =>
-    `${item.label} ${item.description}`.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const searchResults = (() => {
+    const q = searchQuery.trim().toLowerCase()
+    if (!q) return SEARCH_INDEX
+    const words = q.split(/\s+/).filter(w => w.length > 2)
+    return SEARCH_INDEX.filter(item => {
+      const haystack = `${item.label} ${item.description} ${item.keywords.join(' ')}`.toLowerCase()
+      return haystack.includes(q) || words.some(w => haystack.includes(w))
+    })
+  })()
 
   const openSearch = () => { setSearchOpen(true); setSearchQuery(''); setTimeout(() => searchInputRef.current?.focus(), 50) }
   const closeSearch = () => { setSearchOpen(false); setSearchQuery('') }
