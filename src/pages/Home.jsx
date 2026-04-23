@@ -1,9 +1,23 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import { supabase } from '../lib/supabase'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
+
+const SEARCH_INDEX = [
+  { label: 'About', description: 'Who we are & our story', type: 'section', target: '#about' },
+  { label: 'Services', description: 'All services overview', type: 'section', target: '#services' },
+  { label: 'La Voz del Día', description: 'Daily editorial & career insights', type: 'section', target: '#editorial' },
+  { label: 'LinkedIn Series', description: 'Content · LinkedIn growth tips', type: 'page', to: '/linkedin-series' },
+  { label: 'Career Templates', description: 'Content · Plug-and-play career docs', type: 'page', to: '/career-templates' },
+  { label: 'Bridge Year Sprint', description: 'Sprints · Bridge year program', type: 'page', to: '/bridge-year' },
+  { label: 'Interview Prep', description: 'Sprints · Interview preparation', type: 'page', to: '/interview-prep' },
+  { label: 'Opportunity Board', description: 'Community · Jobs & internships', type: 'page', to: '/opportunity-board' },
+  { label: 'Coffee Chat Network', description: 'Community · Connect with professionals', type: 'page', to: '/coffee-chat' },
+  { label: 'Resume Reviews', description: 'Community · Get your resume reviewed', type: 'page', to: '/resume-reviews' },
+  { label: 'Partner Panels', description: 'Community · Live panels with partners', type: 'page', to: '/partner-panels' },
+]
 
 const CONFETTI_COLORS = ['#E8A838','#B34539','#3A7D6B','#5B8EC2','#F2E4CE','#f5c026','#ff6b6b','#ff9ff3','#54a0ff','#5f27cd','#01a3a4','#feca57','#ff6348','#7bed9f']
 const PINATA_STAGES = [{ at: 0, src: '/pinanta/step1.png' },{ at: 3, src: '/pinanta/step2.png' },{ at: 5, src: '/pinanta/step3.png' }]
@@ -11,6 +25,10 @@ const HITS_TO_BREAK = 7
 const BREAK_MSGS = ["Echale ganas, you already took the first step.","Nobody gave us the blueprint either. That's why we built this.","Ya llegaste. The sun rises for you too.","First-gen is not a limitation. It's the origin story.","No palancas needed. Just you and this community."]
 
 export default function Home() {
+  const navigate = useNavigate()
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const searchInputRef = useRef(null)
   const [aboutTab, setAboutTab] = useState('who-we-are')
   const [servicesTab, setServicesTab] = useState('content')
   const [modalOpen, setModalOpen] = useState(false)
@@ -523,6 +541,21 @@ export default function Home() {
     }
   }
 
+  const searchResults = searchQuery.trim().length === 0 ? SEARCH_INDEX : SEARCH_INDEX.filter(item =>
+    `${item.label} ${item.description}`.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const openSearch = () => { setSearchOpen(true); setSearchQuery(''); setTimeout(() => searchInputRef.current?.focus(), 50) }
+  const closeSearch = () => { setSearchOpen(false); setSearchQuery('') }
+
+  const handleSearchSelect = (item) => {
+    closeSearch()
+    if (item.to) { navigate(item.to); return }
+    const el = document.querySelector(item.target)
+    if (!el) return
+    el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
+  }
+
   const navClass = ['nav', navOnHero ? 'nav--on-hero' : 'nav--dark', navHidden ? 'nav--hidden' : ''].filter(Boolean).join(' ')
 
   return (
@@ -541,9 +574,46 @@ export default function Home() {
         </div>
       )}
 
+      {/* SEARCH PALETTE */}
+      {searchOpen && (
+        <div className="search-overlay" onClick={closeSearch}>
+          <div className="search-palette" onClick={e => e.stopPropagation()} onKeyDown={e => e.key === 'Escape' && closeSearch()}>
+            <div className="search-palette__bar">
+              <svg className="search-palette__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.7"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
+              <input
+                ref={searchInputRef}
+                className="search-palette__input"
+                placeholder="Search pages & sections…"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                autoComplete="off"
+              />
+              <button className="search-palette__esc" onClick={closeSearch}>Esc</button>
+            </div>
+            <ul className="search-palette__results">
+              {searchResults.length === 0
+                ? <li className="search-palette__empty">No results for "{searchQuery}"</li>
+                : searchResults.map(item => (
+                  <li key={item.label}>
+                    <button className="search-palette__result" onClick={() => handleSearchSelect(item)}>
+                      <span className="search-palette__result-label">{item.label}</span>
+                      <span className="search-palette__result-desc">{item.description}</span>
+                      <span className={`search-palette__result-type search-palette__result-type--${item.type}`}>{item.type}</span>
+                    </button>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      )}
+
       {/* NAV */}
       <nav className={navClass} id="nav">
         <div className="nav__links">
+          <button className="nav__search-btn" aria-label="Search" onClick={openSearch}>
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="17" height="17"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+          </button>
           <a href="#about" className="nav__link">About</a>
           <div className="nav__services-wrap">
             <a href="#services" className="nav__link" onClick={e => {
