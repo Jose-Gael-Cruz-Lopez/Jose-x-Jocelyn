@@ -1,9 +1,34 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import { supabase } from '../lib/supabase'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger)
+
+const SEARCH_INDEX = [
+  { label: 'About', description: 'Who we are & our story', type: 'section', target: '#about',
+    keywords: ['who we are', 'about us', 'our story', 'jose', 'jocelyn', 'founders', 'co-founders', 'creator', 'hosts', 'people behind', 'first gen', 'first generation', 'mexican american', 'latino', 'latina', 'hispanic', 'latinx', 'chicano', 'brown', 'immigrant', 'immigrants', 'underrepresented', 'minority', 'diversity', 'inclusion', 'equity', 'mission', 'vision', 'values', 'why', 'purpose', 'background', 'journey', 'path', 'how it started', 'origin story', 'why we built this', 'personal story', 'team', 'people', 'real', 'authentic', 'what is campus to career', 'what is this', 'about the platform', 'representation'] },
+  { label: 'Services', description: 'All services overview', type: 'section', target: '#services',
+    keywords: ['services', 'all services', 'offerings', 'programs', 'what we do', 'what do you offer', 'help', 'resources', 'tools', 'features', 'overview', 'everything', 'explore', 'discover', 'platform', 'career help', 'career support', 'career resources', 'career tools', 'content', 'sprints', 'community', 'categories', 'navigation', 'where to go', 'what can i do here'] },
+  { label: 'La Voz del Día', description: 'Daily editorial & career insights', type: 'section', target: '#editorial',
+    keywords: ['la voz', 'voz', 'blog', 'articles', 'article', 'editorial', 'daily', 'insights', 'reads', 'reading', 'posts', 'post', 'news', 'writing', 'content', 'career content', 'tips', 'advice', 'guides', 'how to', 'stories', 'perspectives', 'opinions', 'featured', 'latest', 'recent', 'subscribe', 'newsletter', 'digest', 'weekly', 'thought pieces', 'career stories', 'industry insights', 'career reads'] },
+  { label: 'LinkedIn Series', description: 'Content · LinkedIn growth tips', type: 'page', to: '/linkedin-series',
+    keywords: ['linkedin', 'linked in', 'social media', 'profile', 'linkedin profile', 'optimize profile', 'profile tips', 'improve profile', 'headline', 'summary', 'about section', 'featured section', 'profile picture', 'banner', 'connections', 'followers', 'posts', 'posting', 'content creation', 'content strategy', 'thought leadership', 'articles', 'newsletter', 'carousel', 'personal brand', 'personal branding', 'brand yourself', 'visibility', 'reach', 'impressions', 'engagement', 'likes', 'comments', 'shares', 'algorithm', 'linkedin algorithm', 'beat the algorithm', 'get more views', 'networking online', 'online networking', 'connect on linkedin', 'linkedin networking', 'send connection request', 'inmail', 'online presence', 'digital presence', 'digital identity', 'online reputation', 'get noticed by recruiters', 'attract recruiters', 'linkedin jobs', 'series', 'episodes', 'tips', 'tricks', 'guide', 'growth', 'grow on linkedin'] },
+  { label: 'Career Templates', description: 'Content · Plug-and-play career docs', type: 'page', to: '/career-templates',
+    keywords: ['templates', 'template', 'free templates', 'free resources', 'downloadable', 'download', 'resume template', 'resume format', 'resume example', 'resume sample', 'ats resume', 'cover letter', 'cover letter template', 'cover letter example', 'how to write cover letter', 'email template', 'professional email', 'cold email template', 'follow up email', 'follow up', 'thank you email', 'thank you note', 'after interview email', 'networking email', 'reach out email', 'introduction email', 'linkedin message template', 'linkedin outreach', 'cold message', 'salary negotiation', 'negotiate offer', 'negotiate salary', 'counter offer', 'how to negotiate', 'negotiation script', 'negotiation email', 'negotiation', 'tracker', 'job tracker', 'application tracker', 'track applications', 'stay organized', 'spreadsheet', 'job search tracker', 'application spreadsheet', 'career tracker', '30 60 90', 'brag document', 'brag doc', 'goal setting', 'documents', 'docs', 'google doc', 'notion', 'scripts', 'plug and play', 'copy paste', 'materials', 'career documents', 'plug in', 'ready to use'] },
+  { label: 'Bridge Year Sprint', description: 'Sprints · Bridge year program', type: 'page', to: '/bridge-year',
+    keywords: ['bridge year', 'gap year', 'underclassmen', 'freshman', 'freshmen', 'sophomore', 'junior', 'first year', 'second year', 'third year', '1st year', '2nd year', '3rd year', 'early in college', 'new to college', 'just started college', 'early career', 'beginner', 'new to tech', 'new to industry', 'just starting', 'getting started', 'start', 'foundation', 'no experience', 'no internship yet', 'build experience', 'first internship', 'land first internship', 'break into tech', 'break into industry', 'pivot', 'career switcher', 'program', 'cohort', 'sprint', 'accountability', 'structured program', 'curriculum', 'first gen', 'nontraditional', 'transfer student', 'community college', 'returning student', 'underprivileged', 'low income', 'limited resources', 'lost', 'confused', 'overwhelmed', 'dont know where to start', 'where do i start', 'what should i do', 'need direction', 'what to do', 'roadmap', 'plan', 'career plan', 'career path', 'career roadmap', 'explore', 'discover', 'next steps', 'step by step', 'where to begin', 'early stage', 'guidance', 'help me start'] },
+  { label: 'Interview Prep', description: 'Sprints · Interview preparation', type: 'page', to: '/interview-prep',
+    keywords: ['interview', 'interviews', 'prep', 'preparation', 'prepare', 'practice', 'mock', 'mock interview', 'practice interview', 'get ready for interview', 'technical interview', 'coding interview', 'behavioral interview', 'system design interview', 'product interview', 'pm interview', 'design interview', 'case interview', 'consulting interview', 'finance interview', 'behavioral', 'technical', 'coding', 'algorithm', 'algorithms', 'data structure', 'data structures', 'dynamic programming', 'binary search', 'trees', 'graphs', 'arrays', 'linked list', 'recursion', 'big o', 'time complexity', 'leetcode', 'leet code', 'hackerrank', 'codewars', 'oa', 'online assessment', 'coding challenge', 'take home', 'star method', 'star framework', 'tell me about yourself', 'greatest strength', 'weakness', 'why this company', 'why this role', 'leadership', 'teamwork', 'conflict', 'failure', 'success', 'accomplishment', 'behavioral questions', 'faang', 'maang', 'big tech', 'google', 'meta', 'amazon', 'microsoft', 'apple', 'netflix', 'stripe', 'airbnb', 'uber', 'doordash', 'startup', 'underclassmen', 'new grad', 'new graduate', 'entry level', 'junior', 'tips', 'how to', 'guide', 'cheat sheet', 'nervous', 'anxious', 'scared', 'intimidated', 'unprepared', 'struggling', 'failing interviews', 'bombing interviews', 'need help', 'confidence', 'offer', 'job offer', 'return offer', 'rejection', 'rejected', 'phone screen', 'phone interview', 'technical screen', 'onsite', 'virtual interview', 'zoom interview', 'questions', 'common questions', 'internship interview', 'job interview', 'intern', 'cracking the interview', 'python', 'java', 'javascript', 'sql'] },
+  { label: 'Opportunity Board', description: 'Community · Jobs & internships', type: 'page', to: '/opportunity-board',
+    keywords: ['jobs', 'job', 'work', 'gig', 'career', 'internship', 'internships', 'intern', 'opportunities', 'opportunity', 'listing', 'listings', 'posting', 'postings', 'board', 'apply', 'application', 'applying', 'hire', 'hiring', 'recruited', 'recruiting', 'recruiter', 'hr', 'human resources', 'new grad', 'new graduate', 'recent grad', 'recent graduate', 'fresh grad', 'college grad', 'entry level', 'junior', 'first job', 'first real job', 'post grad', 'after college', 'after graduation', 'no experience', '0 years experience', 'summer', 'summer 2025', 'summer 2026', 'summer internship', 'summer program', 'fall', 'spring', 'winter', 'co-op', 'coop', 'fellowship', 'apprenticeship', 'full time', 'fulltime', 'part time', 'contract', 'freelance', 'remote', 'hybrid', 'in person', 'onsite', 'relocation', 'paid', 'stipend', 'salary', 'compensation', 'hourly', 'wage', 'unpaid', 'role', 'position', 'opening', 'employment', 'company', 'job board', 'job search', 'job hunting', 'find a job', 'find work', 'career opportunities', 'tech job', 'technology', 'software', 'engineering', 'software engineer', 'swe', 'product manager', 'pm', 'tpm', 'data science', 'data analytics', 'ux', 'ui', 'design', 'marketing', 'finance', 'consulting', 'banking', 'investment banking', 'healthcare', 'biotech', 'startup', 'faang', 'google', 'meta', 'amazon', 'microsoft', 'apple', 'business', 'mis', 'non-cs', 'nontechnical', 'stem', 'cs', 'computer science', 'diversity hiring', 'underrepresented', 'visa', 'sponsorship', 'opt', 'cpt', 'h1b', 'international', 'where to find jobs', 'career search'] },
+  { label: 'Coffee Chat Network', description: 'Community · Connect with professionals', type: 'page', to: '/coffee-chat',
+    keywords: ['coffee chat', 'coffee chats', 'virtual coffee', 'grab coffee', 'coffee meeting', 'networking', 'network', 'build connections', 'connect', 'connection', 'connections', 'meet professionals', 'meet people', 'reach out', 'cold email', 'cold outreach', 'linkedin message', 'mentor', 'mentors', 'mentorship', 'mentoring', 'mentee', 'find a mentor', 'get mentored', 'advisory', 'advisor', 'guide', 'guidance', 'career guidance', 'career advice', 'informational interview', 'info interview', 'info chat', 'industry insights', 'learning from professionals', 'professional', 'professionals', 'industry professional', 'industry expert', 'recruiter', 'hiring manager', 'engineer', 'designer', 'alumni', 'alum', 'alums', 'upperclassmen', 'peers', 'community', 'people', 'relationship', 'relationship building', 'professional development', 'professional network', 'talk to someone', 'talk to someone in the industry', 'get advice', 'ask questions', 'career questions', 'career path', 'day in the life', 'what is it like to work at', 'company culture', 'chat', 'talk', 'conversation', 'meet', 'meeting', 'zoom call', 'phone call', 'virtual meeting', 'advice', 'support', 'learn', 'how to reach out', 'how to network'] },
+  { label: 'Resume Reviews', description: 'Community · Get your resume reviewed', type: 'page', to: '/resume-reviews',
+    keywords: ['resume', 'resumes', 'cv', 'curriculum vitae', 'bio', 'professional profile', 'review', 'reviews', 'reviewed', 'feedback', 'critique', 'critiqued', 'help', 'resume help', 'improve', 'improve resume', 'fix', 'fix my resume', 'check', 'check my resume', 'proofread', 'edit', 'polish', 'polish up', 'ats', 'ats friendly', 'applicant tracking', 'keyword', 'keywords', 'format', 'formatting', 'layout', 'design', 'one page', 'two page', 'one pager', 'chronological', 'functional', 'skills', 'experience', 'work experience', 'projects', 'extracurriculars', 'clubs', 'gpa', 'education', 'certifications', 'awards', 'honors', 'leadership', 'bullet points', 'action verbs', 'quantify', 'metrics', 'numbers', 'accomplishments', 'achievements', 'results', 'student resume', 'college resume', 'undergrad resume', 'undergraduate', 'graduate', 'new grad resume', 'entry level resume', 'first resume', 'no experience resume', 'limited experience', 'tech resume', 'software engineer resume', 'swe resume', 'pm resume', 'product manager resume', 'data science resume', 'ux resume', 'marketing resume', 'internship resume', 'career changer resume', 'transfer student', 'nontraditional', 'international student resume', 'get reviewed', 'submit resume', 'share resume', 'see other resumes', 'browse resumes', 'resume examples', 'resume inspiration', 'showcase', 'upload', 'first gen resume', 'weak resume', 'strong resume', 'bad resume'] },
+  { label: 'Partner Panels', description: 'Community · Live panels with partners', type: 'page', to: '/partner-panels',
+    keywords: ['panel', 'panels', 'event', 'events', 'live', 'live event', 'webinar', 'webinars', 'talk', 'talks', 'speaker', 'speakers', 'panelist', 'panelists', 'industry talk', 'industry expert', 'fireside chat', 'fireside chats', 'roundtable', 'summit', 'workshop', 'seminar', 'recording', 'recordings', 'replay', 'rewatch', 'watch', 'listen', 'video', 'watch again', 'presentation', 'q&a', 'qa', 'questions', 'discussion', 'conversation', 'partners', 'partner', 'partner companies', 'company', 'sponsor', 'recruiter panel', 'alumni panel', 'career panel', 'tech panel', 'diversity panel', 'first gen panel', 'recruiting panel', 'zoom', 'virtual', 'online', 'live stream', 'past events', 'archive', 'past panels', 'previous panels', 'rsvp', 'register', 'sign up', 'attend', 'upcoming', 'schedule', 'next event', 'future events', '30 under 30', 'industry professionals speaking', 'hear from professionals', 'learn from professionals'] },
+]
 
 const CONFETTI_COLORS = ['#E8A838','#B34539','#3A7D6B','#5B8EC2','#F2E4CE','#f5c026','#ff6b6b','#ff9ff3','#54a0ff','#5f27cd','#01a3a4','#feca57','#ff6348','#7bed9f']
 const PINATA_STAGES = [{ at: 0, src: '/pinanta/step1.png' },{ at: 3, src: '/pinanta/step2.png' },{ at: 5, src: '/pinanta/step3.png' }]
@@ -11,6 +36,10 @@ const HITS_TO_BREAK = 7
 const BREAK_MSGS = ["Echale ganas, you already took the first step.","Nobody gave us the blueprint either. That's why we built this.","Ya llegaste. The sun rises for you too.","First-gen is not a limitation. It's the origin story.","No palancas needed. Just you and this community."]
 
 export default function Home() {
+  const navigate = useNavigate()
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const searchInputRef = useRef(null)
   const [aboutTab, setAboutTab] = useState('who-we-are')
   const [servicesTab, setServicesTab] = useState('content')
   const [modalOpen, setModalOpen] = useState(false)
@@ -523,6 +552,27 @@ export default function Home() {
     }
   }
 
+  const searchResults = (() => {
+    const q = searchQuery.trim().toLowerCase()
+    if (!q) return SEARCH_INDEX
+    const words = q.split(/\s+/).filter(w => w.length > 2)
+    return SEARCH_INDEX.filter(item => {
+      const haystack = `${item.label} ${item.description} ${item.keywords.join(' ')}`.toLowerCase()
+      return haystack.includes(q) || words.some(w => haystack.includes(w))
+    })
+  })()
+
+  const openSearch = () => { setSearchOpen(true); setSearchQuery(''); setTimeout(() => searchInputRef.current?.focus(), 50) }
+  const closeSearch = () => { setSearchOpen(false); setSearchQuery('') }
+
+  const handleSearchSelect = (item) => {
+    closeSearch()
+    if (item.to) { navigate(item.to); return }
+    const el = document.querySelector(item.target)
+    if (!el) return
+    el.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
+  }
+
   const navClass = ['nav', navOnHero ? 'nav--on-hero' : 'nav--dark', navHidden ? 'nav--hidden' : ''].filter(Boolean).join(' ')
 
   return (
@@ -541,12 +591,52 @@ export default function Home() {
         </div>
       )}
 
+      {/* SEARCH PALETTE */}
+      {searchOpen && (
+        <div className="search-overlay" onClick={closeSearch}>
+          <div className="search-palette" onClick={e => e.stopPropagation()} onKeyDown={e => e.key === 'Escape' && closeSearch()}>
+            <div className="search-palette__bar">
+              <svg className="search-palette__icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.7"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
+              <input
+                ref={searchInputRef}
+                className="search-palette__input"
+                placeholder="Search pages & sections…"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                autoComplete="off"
+              />
+              <button className="search-palette__esc" onClick={closeSearch}>Esc</button>
+            </div>
+            <ul className="search-palette__results">
+              {searchResults.length === 0
+                ? <li className="search-palette__empty">No results for "{searchQuery}"</li>
+                : searchResults.map(item => (
+                  <li key={item.label}>
+                    <button className="search-palette__result" onClick={() => handleSearchSelect(item)}>
+                      <span className="search-palette__result-label">{item.label}</span>
+                      <span className="search-palette__result-desc">{item.description}</span>
+                      <span className={`search-palette__result-type search-palette__result-type--${item.type}`}>{item.type}</span>
+                    </button>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      )}
+
       {/* NAV */}
       <nav className={navClass} id="nav">
         <div className="nav__links">
+          <button className="nav__search-btn" aria-label="Search" onClick={openSearch}>
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="17" height="17"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+          </button>
           <a href="#about" className="nav__link">About</a>
           <div className="nav__services-wrap">
-            <a href="#services" className="nav__link">Services</a>
+            <a href="#services" className="nav__link" onClick={e => {
+              e.preventDefault()
+              document.getElementById('services')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
+            }}>Services</a>
             <div className="nav__services-dropdown">
               <div className="nav__services-group">
                 <span className="nav__services-label">Content</span>
