@@ -860,11 +860,11 @@ export default function Home() {
           <div id="services-panel-community" role="tabpanel" aria-labelledby="services-tab-community" className={`services__panel${servicesTab === 'community' ? ' services__panel--active' : ''}`}>
             <p className="services__body">Community-driven support built on accountability and real connections. Opportunity boards, partnership panels, coffee chat networks, and resume review circles.</p>
             <div className="services__list">
-              <div className="services__list-col services__list-col--inline">
+              <div className="services__list-col services__list-col--grid-2">
                 <Link to="/opportunity-board" className="services__list-btn">Opportunity Board &rarr;</Link>
                 <Link to="/coffee-chat" className="services__list-btn">Coffee Chat Network &rarr;</Link>
-                <Link to="/partner-panels" className="services__list-btn">Partner Panels &rarr;</Link>
                 <Link to="/resume-reviews" className="services__list-btn">Resume Reviews &rarr;</Link>
+                <Link to="/partner-panels" className="services__list-btn">Partner Panels &rarr;</Link>
               </div>
             </div>
           </div>
