@@ -1564,6 +1564,8 @@ ul { list-style: none; }
 }
 
 .interr__text {
+  position: relative;
+  z-index: 1;
   margin-left: auto;
   padding-right: clamp(40px, 6vw, 100px);
   display: flex; flex-direction: column;
@@ -1573,9 +1575,13 @@ ul { list-style: none; }
   font-family: var(--font-display);
   font-size: clamp(60px, 12vw, 180px);
   font-weight: 700;
-  color: var(--color-white);
   line-height: 0.95;
   letter-spacing: -0.03em;
+}
+
+.interr__char {
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.2);
 }
 
 /* ============================================

@@ -348,7 +348,11 @@ export default function Home() {
     gsap.from('.c2c__closing', { scrollTrigger: { trigger: '.c2c__closing', start: 'top 92%', toggleActions: toggle }, y: 20, opacity: 0, duration: 0.6, ease: 'power2.out' })
     gsap.from('.services__image-inner', { scrollTrigger: { trigger: '.services', start: 'top 75%', toggleActions: toggle }, clipPath: 'inset(20%)', scale: 1.2, duration: 1, ease: 'power2.out' })
     gsap.from('.services__body', { scrollTrigger: { trigger: '.services__content', start: 'top 75%', toggleActions: toggle }, y: 40, opacity: 0, duration: 0.8, ease: 'power2.out' })
-    gsap.from('.interr__line', { scrollTrigger: { trigger: '.interr', start: 'top 70%', toggleActions: toggle }, y: 60, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.12 })
+    gsap.fromTo('.interr__char',
+      { color: 'rgba(255,255,255,0.2)' },
+      { color: '#ffffff', stagger: 0.04, duration: 0.3, ease: 'none',
+        scrollTrigger: { trigger: '.interr', start: 'top 75%', end: 'bottom 35%', scrub: 0.6 } }
+    )
     gsap.to('.interr__bar--cream', { scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 0.35 }, y: -40, ease: 'none' })
     gsap.to('.interr__bar--accent', { scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 0.35 }, y: 30, ease: 'none' })
     gsap.from('.editorial__showcase-inner', { scrollTrigger: { trigger: '.editorial__showcase', start: 'top 80%', toggleActions: persistToggle }, y: 60, opacity: 0, duration: 0.8, ease: 'power2.out' })
@@ -989,10 +993,13 @@ export default function Home() {
           <div className="interr__bar interr__bar--accent" />
         </div>
         <div className="interr__text">
-          <span className="interr__line">Transparent.</span>
-          <span className="interr__line">Actionable.</span>
-          <span className="interr__line">Community</span>
-          <span className="interr__line">Powered.</span>
+          {['Transparent.', 'Actionable.', 'Community', 'Powered.'].map((line, li) => (
+            <span key={li} className="interr__line">
+              {line.split('').map((char, ci) => (
+                <span key={ci} className="interr__char">{char}</span>
+              ))}
+            </span>
+          ))}
         </div>
       </section>
 
