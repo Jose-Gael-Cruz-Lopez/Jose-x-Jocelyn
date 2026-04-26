@@ -393,6 +393,9 @@ ul { list-style: none; }
   font-family: var(--font-body); font-size: 14px; color: var(--color-muted);
 }
 
+/* Mobile search icon in nav bar — hidden on desktop, shown at 767px */
+.nav__search-btn--mobile { display: none; }
+
 /* Mobile nav */
 .mobile-nav {
   position: fixed; inset: 0; z-index: 99;
@@ -409,6 +412,27 @@ ul { list-style: none; }
 }
 .mobile-nav__link:hover { color: var(--color-accent); }
 .mobile-nav__link:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; border-radius: 3px; }
+
+/* Search button inside mobile nav overlay */
+.mobile-nav__search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4.5vw, 32px);
+  font-weight: 500;
+  color: var(--color-cream);
+  opacity: 0.55;
+  letter-spacing: 0.02em;
+  border: 1.5px solid rgba(242, 228, 206, 0.2);
+  border-radius: 8px;
+  padding: 14px 32px;
+  width: clamp(240px, 72vw, 320px);
+  transition: opacity 0.2s, border-color 0.2s;
+}
+.mobile-nav__search:hover { opacity: 0.85; border-color: rgba(242, 228, 206, 0.4); }
+.mobile-nav__search:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
 
 /* ============================================
    HERO — Terracotta landing (red hero, pre–exact mockup pass)
@@ -1988,7 +2012,8 @@ ul { list-style: none; }
 @media (max-width: 767px) {
   .nav__links { display: none; }
   .nav__burger { display: flex; }
-  .nav { padding: 16px 20px; }
+  .nav__search-btn--mobile { display: inline-flex; align-items: center; justify-content: center; }
+  .nav { padding: 16px 20px; gap: 8px; }
 
   .hero {
     min-height: 100dvh;

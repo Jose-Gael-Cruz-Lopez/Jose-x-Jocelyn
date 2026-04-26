@@ -688,6 +688,9 @@ export default function Home() {
             <span className="nav__link-label">Get in Touch</span>
           </button>
         </div>
+        <button className="nav__search-btn nav__search-btn--mobile" aria-label="Search" onClick={openSearch}>
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="19" height="19"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+        </button>
         <button
           className={`nav__burger${menuOpen ? ' nav__burger--open' : ''}`}
           id="navBurger"
@@ -702,6 +705,10 @@ export default function Home() {
 
       {/* MOBILE NAV */}
       <div className={`mobile-nav${menuOpen ? ' mobile-nav--open' : ''}`} id="mobileNav" role="navigation" aria-label="Mobile navigation" aria-hidden={!menuOpen}>
+        <button className="mobile-nav__search" aria-label="Open search" onClick={() => { setMenuOpen(false); openSearch() }}>
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="20" height="20"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.7"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
+          <span>Search</span>
+        </button>
         <a href="#about" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>About</a>
         <a href="#services" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>Services</a>
         <a href="#editorial" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>La Voz del Día</a>
