@@ -1906,6 +1906,10 @@ ul { list-style: none; }
   outline: none; border-color: var(--color-gold);
   box-shadow: 0 0 0 3px rgba(232,168,56,0.25);
 }
+.modal__textarea {
+  resize: vertical; min-height: 120px; font-family: var(--font-body); line-height: 1.6;
+}
+.modal__btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
 .modal__check {
   display: flex; align-items: center; gap: 12px;

@@ -43,10 +43,10 @@ export default function Home() {
   const [aboutTab, setAboutTab] = useState('who-we-are')
   const [servicesTab, setServicesTab] = useState('content')
   const [modalOpen, setModalOpen] = useState(false)
-  const [modalStep, setModalStep] = useState(1)
+  const [modalSent, setModalSent] = useState(false)
   const [modalName, setModalName] = useState('')
   const [modalEmail, setModalEmail] = useState('')
-  const [modalInterests, setModalInterests] = useState([])
+  const [modalMessage, setModalMessage] = useState('')
   const [modalLoading, setModalLoading] = useState(false)
   const [modalError, setModalError] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
@@ -73,19 +73,40 @@ export default function Home() {
   const openModal = useCallback((e) => {
     e?.preventDefault()
     setModalOpen(true)
-    setModalStep(1)
   }, [])
 
   const closeModal = useCallback(() => {
     setModalOpen(false)
     setTimeout(() => {
-      setModalStep(1)
+      setModalSent(false)
       setModalName('')
       setModalEmail('')
-      setModalInterests([])
+      setModalMessage('')
       setModalError('')
     }, 400)
   }, [])
+
+  const handleModalSubmit = useCallback(async () => {
+    if (!modalEmail.trim() || !modalMessage.trim()) return
+    setModalLoading(true)
+    setModalError('')
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ name: modalName.trim(), email: modalEmail.trim(), message: modalMessage.trim() }),
+      })
+      if (!res.ok) throw new Error('Failed to send')
+      setModalSent(true)
+    } catch {
+      setModalError('Something went wrong. Please try again.')
+    }
+    setModalLoading(false)
+  }, [modalName, modalEmail, modalMessage])
 
   const handleModalKeyDown = useCallback((e) => {
     if (e.key !== 'Tab' || !modalRef.current) return
@@ -1090,49 +1111,29 @@ export default function Home() {
       {/* MODAL */}
       <div className={`modal${modalOpen ? ' modal--open' : ''}`} id="modal">
         <div className="modal__bg" onClick={closeModal} />
-        <div className="modal__box" role="dialog" aria-modal="true" aria-labelledby={`modal-step-${modalStep}-title`} ref={modalRef} onKeyDown={handleModalKeyDown}>
+        <div className="modal__box" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef} onKeyDown={handleModalKeyDown}>
           <button className="modal__close" id="modalClose" onClick={closeModal} aria-label="Close dialog">&times;</button>
-          <div className={`modal__step${modalStep === 1 ? ' modal__step--active' : ''}`}>
-            <h3 className="modal__title" id="modal-step-1-title">Tell us about you</h3>
-            <label className="sr-only" htmlFor="modalName">Full name</label>
-            <input type="text" id="modalName" className="modal__input" placeholder="Your full name" value={modalName} onChange={e => setModalName(e.target.value)} />
-            <label className="sr-only" htmlFor="modalEmail">Email address</label>
-            <input type="email" id="modalEmail" className="modal__input" placeholder="Your email" value={modalEmail} onChange={e => setModalEmail(e.target.value)} />
-            <button className="modal__btn" onClick={() => { if (!modalEmail.trim()) return; setModalStep(2) }}>Next &rarr;</button>
-          </div>
-          <div className={`modal__step${modalStep === 2 ? ' modal__step--active' : ''}`}>
-            <h3 className="modal__title" id="modal-step-2-title">What interests you?</h3>
-            {['Sprint cohorts', 'La Voz del Día content', 'Opportunity board', 'Mentorship'].map(interest => (
-              <label key={interest} className="modal__check">
-                <input type="checkbox" checked={modalInterests.includes(interest)} onChange={e => setModalInterests(prev => e.target.checked ? [...prev, interest] : prev.filter(i => i !== interest))} />
-                {' '}{interest}
-              </label>
-            ))}
-            {modalError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginTop: '8px' }}>{modalError}</p>}
-            <button className="modal__btn" disabled={modalLoading} onClick={async () => {
-              setModalLoading(true)
-              setModalError('')
-              const { error } = await supabase.from('subscribers').insert({
-                name: modalName.trim() || null,
-                email: modalEmail.trim(),
-                interests: modalInterests,
-                source: 'home_modal',
-              })
-              setModalLoading(false)
-              if (error && error.code !== '23505') { setModalError('Something went wrong. Please try again.') }
-              else { setModalStep(3) }
-            }}>{modalLoading ? 'Saving…' : 'Next →'}</button>
-          </div>
-          <div className={`modal__step${modalStep === 3 ? ' modal__step--active' : ''}`}>
-            <h3 className="modal__title" id="modal-step-3-title">You're in.</h3>
-            <p className="modal__msg">Welcome to From Campus to Career. We will reach out with next steps.</p>
-            <button className="modal__btn modal__btn--done" onClick={closeModal}>Close</button>
-          </div>
-          <div className="modal__dots">
-            <span className={`modal__dot${modalStep >= 1 ? ' modal__dot--active' : ''}`} />
-            <span className={`modal__dot${modalStep >= 2 ? ' modal__dot--active' : ''}`} />
-            <span className={`modal__dot${modalStep >= 3 ? ' modal__dot--active' : ''}`} />
-          </div>
+          {!modalSent ? (
+            <>
+              <h3 className="modal__title" id="modal-title">Get in touch</h3>
+              <label className="sr-only" htmlFor="modalName">Full name</label>
+              <input type="text" id="modalName" className="modal__input" placeholder="Your full name" value={modalName} onChange={e => setModalName(e.target.value)} />
+              <label className="sr-only" htmlFor="modalEmail">Email address</label>
+              <input type="email" id="modalEmail" className="modal__input" placeholder="Your email" value={modalEmail} onChange={e => setModalEmail(e.target.value)} />
+              <label className="sr-only" htmlFor="modalMessage">Message</label>
+              <textarea id="modalMessage" className="modal__input modal__textarea" placeholder="What's on your mind?" value={modalMessage} onChange={e => setModalMessage(e.target.value)} rows={5} />
+              {modalError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginTop: '8px' }}>{modalError}</p>}
+              <button className="modal__btn" disabled={modalLoading || !modalEmail.trim() || !modalMessage.trim()} onClick={handleModalSubmit}>
+                {modalLoading ? 'Sending…' : 'Send message →'}
+              </button>
+            </>
+          ) : (
+            <>
+              <h3 className="modal__title" id="modal-title">Message sent.</h3>
+              <p className="modal__msg">Thanks for reaching out! We'll get back to you soon.</p>
+              <button className="modal__btn modal__btn--done" onClick={closeModal}>Close</button>
+            </>
+          )}
         </div>
       </div>
     </>
