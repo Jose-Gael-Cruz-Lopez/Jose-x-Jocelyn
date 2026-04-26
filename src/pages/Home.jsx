@@ -374,8 +374,10 @@ export default function Home() {
       { color: '#ffffff', stagger: 0.04, duration: 0.3, ease: 'none',
         scrollTrigger: { trigger: '.interr', start: 'top 75%', end: 'bottom 35%', scrub: 0.6 } }
     )
-    gsap.to('.interr__bar--cream', { scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 0.35 }, y: -40, ease: 'none' })
-    gsap.to('.interr__bar--accent', { scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 0.35 }, y: 30, ease: 'none' })
+    if (window.innerWidth >= 1024) {
+      gsap.to('.interr__bar--cream', { scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 0.35 }, y: -40, ease: 'none' })
+      gsap.to('.interr__bar--accent', { scrollTrigger: { trigger: '.interr', start: 'top bottom', end: 'bottom top', scrub: 0.35 }, y: 30, ease: 'none' })
+    }
     gsap.from('.editorial__showcase-inner', { scrollTrigger: { trigger: '.editorial__showcase', start: 'top 80%', toggleActions: persistToggle }, y: 60, opacity: 0, duration: 0.8, ease: 'power2.out' })
     gsap.utils.toArray('.editorial__card').forEach((card, i) => {
       gsap.from(card, { scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: toggle }, clipPath: 'inset(0 0 100% 0)', duration: 0.7, ease: 'power3.out', delay: (i % 2) * 0.1 })
