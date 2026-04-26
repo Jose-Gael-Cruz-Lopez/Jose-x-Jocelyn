@@ -1954,7 +1954,7 @@ ul { list-style: none; }
   .intro { grid-template-columns: 1fr; min-height: 0; }
   .intro__left { min-height: unset; height: auto; overflow: visible; }
   .intro__banners { position: relative; inset: auto; height: auto; padding: 40px 0 16px; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 6px; }
-  .intro__banner-img { width: 44vw; max-width: 190px; height: auto; }
+  .intro__banner-img { width: 46vw; max-width: 210px; height: auto; }
   .intro__right { padding: 40px 32px; justify-content: flex-start; }
   .intro__text { max-width: 100%; font-size: clamp(20px, 3vw, 32px); }
 
