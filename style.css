@@ -1963,7 +1963,7 @@ ul { list-style: none; }
 
   .services { grid-template-columns: 1fr; min-height: auto; }
   .services__image { min-height: 320px; }
-  .pinata__img { width: clamp(140px, 36vw, 220px); }
+  .pinata__img { width: clamp(180px, 44vw, 260px); }
   .services__content { padding: 48px 32px; }
   .services__body { font-size: clamp(18px, 2.5vw, 28px); }
 
@@ -2013,7 +2013,7 @@ ul { list-style: none; }
   .gallery__track { height: 280px; }
 
   .services__image { min-height: 280px; }
-  .pinata__img { width: clamp(120px, 32vw, 180px); }
+  .pinata__img { width: clamp(160px, 40vw, 220px); }
   .services__content { padding: 32px 20px; }
   .services__tabs { flex-wrap: wrap; gap: 4px; margin-bottom: 24px; }
   .services__tab { font-size: 14px; padding: 4px 12px; }
