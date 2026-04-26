@@ -2039,7 +2039,7 @@ ul { list-style: none; }
   .editorial { padding-top: 48px; }
   .editorial__showcase { padding: 0 20px; margin-bottom: 36px; }
   .editorial__showcase-inner { padding: 28px 24px; }
-  .mascot--editorial { display: none; }
+  .mascot--editorial { display: block; }
   .editorial__grid { grid-template-columns: 1fr; }
   .editorial__card { min-height: 200px; padding: 28px 20px; }
   .editorial__card-title { font-size: clamp(18px, 4.5vw, 22px); }
