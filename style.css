@@ -2036,7 +2036,7 @@ ul { list-style: none; }
   .intro__right { padding: 36px 20px 60px; }
   .intro__text { font-size: clamp(17px, 4.5vw, 24px); }
   .intro__dot { width: 8px; height: 8px; margin-bottom: 20px; }
-  .mascot--intro { width: 48px; bottom: -8px; right: 12px; }
+  .mascot--intro { width: 48px; bottom: -28px; right: 12px; }
 
   .about { padding: clamp(40px, 6vh, 64px) 20px; }
   .about__tabs { flex-wrap: wrap; gap: 4px 0; }
