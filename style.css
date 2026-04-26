@@ -1952,8 +1952,10 @@ ul { list-style: none; }
   .hero__foot { font-size: clamp(10px, 1.9vw, 14px); }
 
   .intro { grid-template-columns: 1fr; }
-  .intro__left { min-height: 45vh; }
-  .intro__right { padding: 48px 32px; }
+  .intro__left { min-height: unset; height: auto; overflow: visible; }
+  .intro__banners { position: relative; inset: auto; height: auto; padding: 48px 12px 16px; grid-template-columns: 46vw 46vw; justify-content: center; align-content: start; column-gap: 8px; }
+  .intro__banner-img { width: 100%; max-width: none; }
+  .intro__right { padding: 32px 32px; }
   .intro__text { max-width: 100%; font-size: clamp(20px, 3vw, 32px); }
 
   .about { padding: clamp(48px, 8vh, 80px) clamp(20px, 4vw, 48px); }
@@ -1996,10 +1998,11 @@ ul { list-style: none; }
   .hero__tagline { font-size: clamp(18px, 3.6vw, 26px); }
   .hero__foot { font-size: clamp(10px, 2.2vw, 13px); }
 
-  .intro__left { min-height: 35vh; }
-  .intro__right { padding: 36px 20px; }
+  .intro__left { min-height: unset; height: auto; overflow: visible; }
+  .intro__right { padding: 36px 20px 60px; }
   .intro__text { font-size: clamp(17px, 4.5vw, 24px); }
   .intro__dot { width: 8px; height: 8px; margin-bottom: 20px; }
+  .mascot--intro { width: 48px; bottom: 8px; right: 12px; }
 
   .about { padding: clamp(40px, 6vh, 64px) 20px; }
   .about__cards { grid-template-columns: 1fr; gap: 20px; }
@@ -2058,7 +2061,8 @@ ul { list-style: none; }
   .hero__tagline { font-size: clamp(16px, 3.6vw, 22px); }
   .hero__foot { font-size: clamp(9px, 2.6vw, 12px); }
 
-  .intro__left { min-height: 28vh; }
+  .intro__left { min-height: unset; height: auto; overflow: visible; }
+  .intro__banner-img { max-width: 36vw; }
   .intro__text { font-size: 16px; }
 
   .about__card-tags span { font-size: 10px; padding: 6px 12px; }
