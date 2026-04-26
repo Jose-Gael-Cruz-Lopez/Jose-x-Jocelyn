@@ -2004,14 +2004,20 @@ ul { list-style: none; }
   .hero__foot { font-size: clamp(10px, 2.2vw, 13px); }
 
   .intro__left { min-height: unset; height: auto; overflow: visible; }
+  .intro__banners { display: grid; grid-template-columns: 1fr 1fr; padding: 24px 20px 0; gap: 8px; }
+  .intro__banner-img { width: 100%; max-width: none; height: auto; }
   .intro__right { padding: 36px 20px 60px; }
   .intro__text { font-size: clamp(17px, 4.5vw, 24px); }
   .intro__dot { width: 8px; height: 8px; margin-bottom: 20px; }
   .mascot--intro { width: 48px; bottom: 8px; right: 12px; }
 
   .about { padding: clamp(40px, 6vh, 64px) 20px; }
+  .about__tabs { flex-wrap: wrap; gap: 4px 0; }
+  .about__tab { padding: 10px 14px; font-size: 15px; }
   .about__cards { grid-template-columns: 1fr; gap: 20px; }
   .about__card { padding: clamp(28px, 5vw, 40px) clamp(24px, 4vw, 36px); }
+
+  .c2c { padding: clamp(48px, 7vh, 72px) 20px; }
 
   .gallery { min-height: 50vh; padding: 60px 0; }
   .gallery__track { height: 280px; }
@@ -2022,7 +2028,9 @@ ul { list-style: none; }
   .services__tabs { flex-wrap: wrap; gap: 4px; margin-bottom: 24px; }
   .services__tab { font-size: 14px; padding: 4px 12px; }
   .services__body { font-size: clamp(16px, 4.5vw, 22px); margin-bottom: 28px; }
-  .services__list { gap: 28px; }
+  .services__list { flex-direction: column; gap: 14px; }
+  .services__list-col--inline { flex-direction: row; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+  .services__list-col--grid-2 { grid-template-columns: 1fr; row-gap: 10px; }
   .services__list-col span { font-size: 14px; }
 
   .interr { min-height: auto; padding: 48px 0; }
@@ -2030,25 +2038,27 @@ ul { list-style: none; }
 
   .editorial { padding-top: 48px; }
   .editorial__showcase { padding: 0 20px; margin-bottom: 36px; }
+  .editorial__showcase-inner { padding: 28px 24px; }
+  .mascot--editorial { display: none; }
   .editorial__grid { grid-template-columns: 1fr; }
   .editorial__card { min-height: 200px; padding: 28px 20px; }
   .editorial__card-title { font-size: clamp(18px, 4.5vw, 22px); }
   .editorial__card-excerpt { font-size: 14px; }
 
-  .footer { padding: 40px 24px 36px; min-height: auto; }
-  .footer__logo-svg { width: clamp(160px, 40vw, 220px); }
+  .footer { padding: 36px 24px 28px; min-height: 230px; }
+  .footer__logo-svg { width: clamp(130px, 34vw, 180px); }
   .footer__cta {
-    position: relative; right: auto; top: auto;
-    transform: rotate(-5deg);
-    margin: 32px auto;
+    position: absolute; right: -2%; top: 36px; left: auto;
+    transform: rotate(-6deg);
+    margin: 0;
     display: block;
-    width: fit-content;
-    padding: 24px 40px;
+    width: auto;
+    padding: clamp(20px, 3.5vw, 36px) clamp(28px, 5vw, 52px);
   }
-  .footer__cta-text { font-size: clamp(32px, 9vw, 56px); }
+  .footer__cta-text { font-size: clamp(36px, 9vw, 52px); }
   .footer__bottom {
     flex-direction: column; gap: 12px;
-    text-align: center; margin-top: 36px;
+    text-align: center; margin-top: 16px;
   }
 
   .modal__box { padding: 32px 24px; max-width: 92%; }
@@ -2069,7 +2079,7 @@ ul { list-style: none; }
   .hero__foot { font-size: clamp(9px, 2.6vw, 12px); }
 
   .intro__left { min-height: unset; height: auto; overflow: visible; }
-  .intro__banner-img { max-width: 36vw; }
+  .intro__banners { padding: 16px 16px 0; gap: 6px; }
   .intro__text { font-size: 16px; }
 
   .about__card-tags span { font-size: 10px; padding: 6px 12px; }
@@ -2086,8 +2096,8 @@ ul { list-style: none; }
   .editorial__showcase-desc { font-size: 15px; }
   .editorial__card { min-height: 160px; }
 
-  .footer__cta { padding: 20px 32px; }
-  .footer__cta-text { font-size: clamp(28px, 8vw, 44px); }
+  .footer__cta { padding: clamp(16px, 3vw, 24px) clamp(20px, 4vw, 36px); right: -3%; top: 36px; }
+  .footer__cta-text { font-size: clamp(28px, 7.5vw, 42px); }
 
   .mobile-nav__link { font-size: clamp(24px, 6vw, 36px); }
 }
