@@ -671,7 +671,7 @@ ul { list-style: none; }
   column-gap: clamp(10px, 1.5vw, 20px);
   row-gap: clamp(8px, 1vw, 14px);
   /* Extra horizontal inset so banners aren’t clipped at the column edges */
-  padding: clamp(24px, 5vw, 56px) clamp(28px, 6vw, 72px);
+  padding: clamp(16px, 3vw, 36px) clamp(16px, 3vw, 40px);
   box-sizing: border-box;
   align-content: center;
   justify-content: center;
