@@ -2057,7 +2057,8 @@ ul { list-style: none; }
   .services__body { font-size: clamp(16px, 4.5vw, 22px); margin-bottom: 28px; }
   .services__list { flex-direction: column; gap: 14px; }
   .services__list-col--inline { flex-direction: row; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
-  .services__list-col--grid-2 { grid-template-columns: 1fr 1fr; column-gap: 8px; row-gap: 10px; }
+  .services__list-col--grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 8px; row-gap: 10px; }
+  .services__list-col--grid-2 .services__list-btn { white-space: normal; line-height: 1.3; font-size: 12px; padding: 10px 12px; }
   .services__list-col span { font-size: 14px; }
 
   .interr { min-height: auto; padding: 48px 0; }
