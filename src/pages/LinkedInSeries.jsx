@@ -107,7 +107,18 @@ const PAGE_CSS = `
   .ls-form-btn { margin-top:6px;padding:13px 28px;background:var(--color-dark);color:var(--color-cream);border:none;border-radius:8px;font-family:var(--font-display);font-size:14px;font-weight:600;cursor:pointer;transition:background .2s,transform .2s; }
   .ls-form-btn:hover { background:var(--color-accent);transform:translateY(-1px); }
   .ls-no-results { text-align:center;padding:64px 0;color:var(--color-muted); }
+  @media (max-width:768px) {
+    .ls-hero { padding: 88px 20px 48px; }
+    .ls-controls { padding-bottom: 28px; }
+    .ls-form-wrap { padding-top: 48px; padding-bottom: 48px; }
+  }
   @media (max-width:640px) { .ls-ep__head{flex-direction:column;gap:8px;} .ls-ep__num{font-size:32px;min-width:unset;} .ls-how__grid{grid-template-columns:1fr 1fr;} .ls-stats{flex-direction:column;} .ls-stat{border-right:none;border-bottom:1px solid rgba(0,0,0,.08);} .ls-stat:last-child{border-bottom:none;} }
+  @media (max-width:480px) {
+    .ls-hero { padding: 80px 16px 40px; }
+    .ls-how__grid { grid-template-columns: 1fr; }
+    .ls-filters { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 4px; }
+    .ls-filter { flex-shrink: 0; }
+  }
 `
 
 export default function LinkedInSeries() {

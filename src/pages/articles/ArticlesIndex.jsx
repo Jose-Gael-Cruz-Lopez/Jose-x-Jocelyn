@@ -207,11 +207,17 @@ export default function ArticlesIndex() {
         .arc-card:hover .arc-card__arrow { color: var(--color-accent); transform: translateX(4px); }
         .arc-empty { text-align: center; padding: 64px 0; color: var(--color-muted); font-size: 16px; }
         .arc-empty__icon { font-size: 36px; margin-bottom: 12px; }
+        @media (max-width: 768px) {
+          .arc-hero { padding: 88px 20px 48px; }
+        }
         @media (max-width: 600px) {
           .arc-card { gap: 14px; }
           .arc-card__arrow { display: none; }
           .arc-controls { flex-direction: column; align-items: stretch; }
           .arc-search { min-width: 0; }
+        }
+        @media (max-width: 480px) {
+          .arc-hero { padding: 80px 16px 40px; }
         }
       `}</style>
 

@@ -783,6 +783,7 @@ export default function PartnerPanels() {
           .pp-closing { padding: 48px 20px; }
           .pp-section-title { font-size: clamp(22px,5vw,30px); }
           .pp-btn-primary, .pp-btn-secondary { padding: 13px 20px; font-size: 13px; }
+          .pp-topic-chip { padding: 10px 14px; font-size: 12px; }
         }
         @media (max-width: 480px) {
           .pp-hero { padding: 80px 16px 40px; }
