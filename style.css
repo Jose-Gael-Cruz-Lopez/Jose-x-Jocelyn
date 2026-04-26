@@ -1951,19 +1951,19 @@ ul { list-style: none; }
   .hero__tagline { font-size: clamp(21px, 3.4vw, 30px); }
   .hero__foot { font-size: clamp(10px, 1.9vw, 14px); }
 
-  .intro { grid-template-columns: 1fr; }
+  .intro { grid-template-columns: 1fr; min-height: 0; }
   .intro__left { min-height: unset; height: auto; overflow: visible; }
-  .intro__banners { position: relative; inset: auto; height: auto; padding: 48px 12px 16px; grid-template-columns: 46vw 46vw; justify-content: center; align-content: start; column-gap: 8px; }
-  .intro__banner-img { width: 100%; max-width: none; }
-  .intro__right { padding: 32px 32px; }
+  .intro__banners { position: relative; inset: auto; height: auto; padding: 40px 0 16px; display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-start; gap: 6px; }
+  .intro__banner-img { width: 44vw; max-width: 190px; height: auto; }
+  .intro__right { padding: 40px 32px; justify-content: flex-start; }
   .intro__text { max-width: 100%; font-size: clamp(20px, 3vw, 32px); }
 
   .about { padding: clamp(48px, 8vh, 80px) clamp(20px, 4vw, 48px); }
   .about__cards { gap: 16px; }
 
   .services { grid-template-columns: 1fr; min-height: auto; }
-  .services__image { min-height: 320px; }
-  .pinata__img { width: clamp(180px, 44vw, 260px); }
+  .services__image { min-height: 360px; }
+  .pinata__img { width: clamp(220px, 54vw, 300px); }
   .services__content { padding: 48px 32px; }
   .services__body { font-size: clamp(18px, 2.5vw, 28px); }
 
@@ -2012,8 +2012,8 @@ ul { list-style: none; }
   .gallery { min-height: 50vh; padding: 60px 0; }
   .gallery__track { height: 280px; }
 
-  .services__image { min-height: 280px; }
-  .pinata__img { width: clamp(160px, 40vw, 220px); }
+  .services__image { min-height: 320px; }
+  .pinata__img { width: clamp(200px, 50vw, 270px); }
   .services__content { padding: 32px 20px; }
   .services__tabs { flex-wrap: wrap; gap: 4px; margin-bottom: 24px; }
   .services__tab { font-size: 14px; padding: 4px 12px; }
@@ -2036,8 +2036,9 @@ ul { list-style: none; }
   .footer__cta {
     position: relative; right: auto; top: auto;
     transform: rotate(-5deg);
-    margin: 32px 0;
-    display: inline-block;
+    margin: 32px auto;
+    display: block;
+    width: fit-content;
     padding: 24px 40px;
   }
   .footer__cta-text { font-size: clamp(32px, 9vw, 56px); }
