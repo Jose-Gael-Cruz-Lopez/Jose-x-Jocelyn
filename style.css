@@ -1962,8 +1962,8 @@ ul { list-style: none; }
   .about__cards { gap: 16px; }
 
   .services { grid-template-columns: 1fr; min-height: auto; }
-  .services__image { min-height: 360px; }
-  .pinata__img { width: clamp(220px, 54vw, 300px); }
+  .services__image { min-height: 380px; }
+  .pinata__img { width: clamp(250px, 62vw, 340px); }
   .services__content { padding: 48px 32px; }
   .services__body { font-size: clamp(18px, 2.5vw, 28px); }
 
@@ -2012,8 +2012,8 @@ ul { list-style: none; }
   .gallery { min-height: 50vh; padding: 60px 0; }
   .gallery__track { height: 280px; }
 
-  .services__image { min-height: 320px; }
-  .pinata__img { width: clamp(200px, 50vw, 270px); }
+  .services__image { min-height: 340px; }
+  .pinata__img { width: clamp(220px, 56vw, 300px); }
   .services__content { padding: 32px 20px; }
   .services__tabs { flex-wrap: wrap; gap: 4px; margin-bottom: 24px; }
   .services__tab { font-size: 14px; padding: 4px 12px; }
