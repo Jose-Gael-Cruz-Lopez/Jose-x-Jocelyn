@@ -858,7 +858,7 @@ export default function ResumeReviews() {
                     }} />
                     {avatarPreview
                       ? <img src={avatarPreview} alt="Preview" style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                      : <span style={{ fontSize: 26 }}>📷</span>
+                      : <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-muted)', flexShrink: 0 }} aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                     }
                     <div>
                       <span className="rr-upload-label" style={{ display: 'block', textAlign: 'left' }}>{avatarFile ? avatarFile.name : 'Add a profile photo'}</span>
@@ -870,7 +870,7 @@ export default function ResumeReviews() {
                   <label className="rr-form-label">Resume File <span>*</span> <em>(PDF only, max 5MB)</em></label>
                   <div className="rr-upload-zone">
                     <input ref={fileRef} type="file" id="sfFile" accept=".pdf" onChange={e => { if (e.target.files[0]) setFileName(e.target.files[0].name) }} />
-                    <span className="rr-upload-icon">📄</span>
+                    <svg className="rr-upload-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                     <span className="rr-upload-label">Drop your PDF here or click to browse</span>
                     <span className="rr-upload-hint">PDF only · Max 5MB</span>
                     {fileName && <div className="rr-upload-filename"><span>✓</span><span>{fileName}</span></div>}
@@ -947,7 +947,7 @@ export default function ResumeReviews() {
                   <div className="rr-panel__thumb-sub" />
                 </div>
                 <div className="rr-panel__no-preview">
-                  <span className="rr-panel__no-preview-icon">📄</span>
+                  <svg className="rr-panel__no-preview-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                   <span>Resume preview placeholder</span>
                   <span style={{ fontSize: '11px', opacity: .6 }}>Real PDF will display here</span>
                 </div>

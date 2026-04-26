@@ -783,7 +783,6 @@ export default function CoffeeChat() {
 
       <section className="cc-safety">
         <div className="cc-safety__box">
-          <span className="cc-safety__icon">🛡</span>
           <p className="cc-safety__text">
             <strong>A note on safety and boundaries.</strong> This network is for informational conversations only. Always protect your personal information, never send money, and remember that you are not obligated to answer any question that makes you uncomfortable. If any interaction feels off, you can block or report the person on LinkedIn and let us know so we can review their listing. We take this seriously.
           </p>

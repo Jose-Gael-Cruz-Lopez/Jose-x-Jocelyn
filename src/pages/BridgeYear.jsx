@@ -10,7 +10,7 @@ const PROGRAMS = [
     pills: [
       { label: '12 months', type: '' },
       { label: '$9,350–$11,000 / mo', type: 'pay' },
-      { label: '⚠ 4-day window', type: 'urgent' },
+      { label: '4-day window', type: 'urgent' },
     ],
     note: 'One of the most competitive and respected apprenticeships in tech. It is explicitly built for people the standard hiring process overlooks. The 2026 window ran March 23–27. Get on the notification list now so you do not miss the next cycle.',
     ctaLabel: 'Get Notified',
@@ -58,7 +58,7 @@ const PROGRAMS = [
     pills: [
       { label: '6 months', type: '' },
       { label: 'Paid', type: 'pay' },
-      { label: '⚠ Short window', type: 'urgent' },
+      { label: 'Short window', type: 'urgent' },
     ],
     note: 'Short application window, high value. The 2026 window opened April 6. In 2025 it ran Feb 10–17 - just one week. Add the date to your calendar and be ready. This one goes fast and most people miss it because they did not know to look.',
     ctaLabel: 'Get Notified',
@@ -70,7 +70,7 @@ const PROGRAMS = [
     pills: [
       { label: '2 years', type: '' },
       { label: 'Full-time employee', type: '' },
-      { label: '⚠ Jan–Feb window', type: 'urgent' },
+      { label: 'Jan–Feb window', type: 'urgent' },
     ],
     note: 'Two years of structured experience at one of the biggest financial institutions in the world. The 2026 window ran January 9 – February 9. Strong option for anyone targeting data, engineering, or finance-adjacent tech roles - and the two-year track builds real credential.',
     ctaLabel: 'Check Openings',

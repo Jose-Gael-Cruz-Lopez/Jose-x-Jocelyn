@@ -909,16 +909,16 @@ export default function PartnerPanels() {
         <div className="pp-upcoming__grid">
           {UPCOMING_PANELS.map(panel => (
             <article key={panel.id} className="pp-panel-card">
-              <span className="pp-panel-card__date-badge">📅 {panel.date}</span>
+              <span className="pp-panel-card__date-badge">{panel.date}</span>
               <h3 className="pp-panel-card__title">{panel.title}</h3>
               <p className="pp-panel-card__desc">{panel.desc}</p>
               <div className="pp-panel-card__meta">
                 <div className="pp-panel-card__meta-row">
-                  <span className="pp-panel-card__meta-icon">🕐</span>
+                  <span className="pp-panel-card__meta-icon">–</span>
                   <span>{panel.time} &nbsp;·&nbsp; <span className="pp-panel-card__meta-val">Zoom</span></span>
                 </div>
                 <div className="pp-panel-card__meta-row">
-                  <span className="pp-panel-card__meta-icon">🎯</span>
+                  <span className="pp-panel-card__meta-icon">–</span>
                   <span>Best for: <span className="pp-panel-card__meta-val">{panel.bestFor}</span></span>
                 </div>
               </div>
@@ -935,8 +935,8 @@ export default function PartnerPanels() {
               </div>
               <div className="pp-panel-card__actions">
                 <a href="#" className="pp-panel-card__cta-primary">{panel.cta}</a>
-                <button className="pp-panel-card__cta-sm" onClick={() => addToCalendar(panel.title, panel.calStart, panel.calEnd)}>📅 Calendar</button>
-                <a href="#" className="pp-panel-card__cta-sm">🗒 Flyer</a>
+                <button className="pp-panel-card__cta-sm" onClick={() => addToCalendar(panel.title, panel.calStart, panel.calEnd)}>Calendar</button>
+                <a href="#" className="pp-panel-card__cta-sm">Flyer</a>
               </div>
             </article>
           ))}
@@ -975,7 +975,7 @@ export default function PartnerPanels() {
                 </div>
                 <div className="pp-archive-card__actions">
                   <a href="#" className="pp-archive-card__cta pp-archive-card__cta--watch">▶ Watch Recording</a>
-                  <a href="#" className="pp-archive-card__cta pp-archive-card__cta--flyer">🗒 View Flyer</a>
+                  <a href="#" className="pp-archive-card__cta pp-archive-card__cta--flyer">View Flyer</a>
                   <button
                     className="pp-archive-card__cta pp-archive-card__cta--takeaways"
                     aria-expanded={openTakeaway === card.id}
