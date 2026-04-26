@@ -1996,7 +1996,9 @@ ul { list-style: none; }
   .services__body { font-size: clamp(18px, 2.5vw, 28px); }
 
   .interr { min-height: 45vh; padding: 60px 0; }
-  .interr__bars { display: none; }
+  .interr__bars { display: flex; left: 2%; }
+  .interr__bar--cream { width: clamp(100px, 22vw, 200px); height: clamp(28px, 6vw, 60px); }
+  .interr__bar--accent { width: clamp(110px, 24vw, 220px); height: clamp(32px, 7vw, 70px); }
   .interr__text { margin: 0 auto; padding: 0 32px; text-align: center; }
   .interr__line { font-size: clamp(48px, 10vw, 120px); }
 
