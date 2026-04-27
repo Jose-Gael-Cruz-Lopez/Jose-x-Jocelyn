@@ -129,7 +129,7 @@ function dbProfileToCard(row) {
     topics: row.topics || '',
     tags, capacity: capacityMap[row.capacity] || row.capacity || 'Open',
     updated: `Joined ${joined}`,
-    linkedIn: row.linkedin_url, avatarStyle: {}, avatarUrl: row.avatar_url || null,
+    linkedIn: row.linkedin_url, avatarUrl: row.avatar_url || null,
     dataRole, dataFunc: funcLower,
     dataStage, dataIdentity: identityLower,
     dataAvail: 'coffee-chats',
@@ -608,7 +608,7 @@ export default function CoffeeChat() {
             Clear all filters ×
           </button>
         )}
-        {!profilesLoading && <p className="cc-results-count"><span>{visibleProfiles.length}</span> people in the network</p>}
+        {!profilesLoading && !profilesError && <p className="cc-results-count"><span>{visibleProfiles.length}</span> people in the network</p>}
 
         <div className="cc-grid">
           {profilesLoading ? (
@@ -620,7 +620,7 @@ export default function CoffeeChat() {
           ) : visibleProfiles.map(p => (
             <article key={p.id} className="cc-card">
               <div className="cc-card__top">
-                <div className="cc-card__avatar" style={p.avatarUrl ? {} : p.avatarStyle}>
+                <div className="cc-card__avatar">
                   {p.avatarUrl ? <img src={p.avatarUrl} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : p.initial}
                 </div>
                 <span className={`cc-card__badge${p.badge === 'New' ? ' cc-card__badge--new' : ''}`}>{p.badge}</span>
