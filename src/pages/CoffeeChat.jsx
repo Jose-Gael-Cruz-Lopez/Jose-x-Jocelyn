@@ -814,7 +814,7 @@ export default function CoffeeChat() {
       <section className="cc-safety">
         <div className="cc-safety__box">
           <p className="cc-safety__text">
-            <strong>A note on safety and boundaries.</strong> This network is for informational conversations only. Always protect your personal information, never send money, and remember that you are not obligated to answer any question that makes you uncomfortable. If any interaction feels off, you can block or report the person on LinkedIn and let us know so we can review their listing. We take this seriously.
+            <strong>A note on safety and boundaries.</strong> This network is for informational conversations only. Always protect your personal information, never send money, and remember that you are not obligated to answer any question that makes you uncomfortable. If any interaction feels off, you can block or report the person on LinkedIn and <a href="mailto:campustocareerteam@gmail.com" style={{ color: 'var(--color-navy)', fontWeight: 600 }}>let us know</a> so we can review their listing. We take this seriously.
           </p>
         </div>
       </section>
