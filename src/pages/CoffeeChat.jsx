@@ -104,7 +104,7 @@ function dbProfileToCard(row) {
   return {
     id: row.id,
     initial: (row.name || '?')[0].toUpperCase(),
-    name: row.name, badge: 'Active',
+    name: row.name, badge: (Date.now() - new Date(row.created_at).getTime()) < 30 * 24 * 60 * 60 * 1000 ? 'New' : 'Active',
     role: `${row.role_title}${row.location ? ' · ' + row.location : ''}`,
     headline: funcs.length ? `${funcs[0]} professional` : row.role_title,
     topics: row.topics || '',
