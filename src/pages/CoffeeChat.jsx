@@ -84,6 +84,23 @@ function dbProfileToCard(row) {
   ]
   const capacityMap = { '1-2': 'Open to 1–2 chats / month', '3-5': 'Open to 3–5 chats / month', '6+': 'Open to 6+ chats / month' }
   const updated = new Date(row.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+
+  const titleLower = (row.role_title || '').toLowerCase()
+  const identityLower = identities.join(' ').toLowerCase()
+  const funcLower = funcs.join(' ').toLowerCase()
+
+  let dataRole = ''
+  if (/student|intern|undergraduate/.test(titleLower)) dataRole = 'student'
+  else if (/new.?grad|recent.?grad|entry.?level/.test(titleLower)) dataRole = 'new-grad'
+  else if (/recruit|talent.?acqui/.test(titleLower) || funcLower.includes('recruiting')) dataRole = 'recruiter'
+  else if (identityLower.includes('career changer') || identityLower.includes('nontraditional') || identityLower.includes('returning adult')) dataRole = 'career-changer'
+
+  let dataStage = ''
+  if (/intern/.test(titleLower)) dataStage = 'first-internship'
+  else if (/apprentice/.test(titleLower)) dataStage = 'apprenticeship'
+  else if (/new.?grad|recent.?grad/.test(titleLower)) dataStage = 'first-full-time'
+  else if (identityLower.includes('career changer') || identityLower.includes('nontraditional')) dataStage = 'transitioned'
+
   return {
     id: row.id,
     initial: (row.name || '?')[0].toUpperCase(),
@@ -94,8 +111,8 @@ function dbProfileToCard(row) {
     tags, capacity: capacityMap[row.capacity] || row.capacity || 'Open',
     updated: `Last updated ${updated}`,
     linkedIn: row.linkedin_url, avatarStyle: {}, avatarUrl: row.avatar_url || null,
-    dataRole: '', dataFunc: funcs.join(' ').toLowerCase(),
-    dataStage: '', dataIdentity: identities.join(' ').toLowerCase(),
+    dataRole, dataFunc: funcLower,
+    dataStage, dataIdentity: identityLower,
     dataAvail: 'coffee-chats',
     dataKeywords: `${row.name} ${row.role_title} ${row.topics || ''} ${funcs.join(' ')} ${identities.join(' ')} ${row.location || ''}`.toLowerCase(),
   }
@@ -112,7 +129,6 @@ export default function CoffeeChat() {
   const [modalOpen, setModalOpen] = useState(false)
   const [modalName, setModalName] = useState('')
   const [copied, setCopied] = useState(false)
-  const [copiedId, setCopiedId] = useState(null)
 
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
@@ -206,14 +222,6 @@ export default function CoffeeChat() {
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2500)
-    })
-  }
-
-  const directCopy = (id, name) => {
-    const text = TEMPLATE_TEXT.replace('[Name]', name)
-    navigator.clipboard.writeText(text).then(() => {
-      setCopiedId(id)
-      setTimeout(() => setCopiedId(null), 2000)
     })
   }
 
@@ -547,12 +555,12 @@ export default function CoffeeChat() {
             </select>
             <select className="cc-filter-select" aria-label="Function" value={filterFunc} onChange={e => setFilterFunc(e.target.value)}>
               <option value="">All Functions</option>
-              <option value="swe">Software Engineering</option>
-              <option value="data">Data</option>
-              <option value="product">Product</option>
+              <option value="software engineering">Software Engineering</option>
+              <option value="data">Data / Analytics</option>
+              <option value="product">Product Management</option>
               <option value="design">Design</option>
               <option value="research">Research</option>
-              <option value="business">Business / Ops</option>
+              <option value="business">Business / Operations</option>
               <option value="recruiting">Recruiting</option>
             </select>
             <select className="cc-filter-select" aria-label="Stage" value={filterStage} onChange={e => setFilterStage(e.target.value)}>
@@ -574,8 +582,6 @@ export default function CoffeeChat() {
             <select className="cc-filter-select" aria-label="Availability" value={filterAvail} onChange={e => setFilterAvail(e.target.value)}>
               <option value="">All Availability</option>
               <option value="coffee-chats">Open to Coffee Chats</option>
-              <option value="resume-reviews">Open to Resume Reviews</option>
-              <option value="mock-interviews">Open to Mock Interviews</option>
             </select>
           </div>
         </div>
@@ -609,7 +615,7 @@ export default function CoffeeChat() {
               <div className="cc-card__updated">{p.updated}</div>
               <div className="cc-card__actions">
                 <a href={p.linkedIn} target="_blank" rel="noopener noreferrer" className="cc-card__cta-primary">Connect on LinkedIn ↗</a>
-                <button className={`cc-card__cta-secondary${copiedId === p.id ? ' copied' : ''}`} onClick={() => directCopy(p.id, p.name.split(' ')[0])}>{copiedId === p.id ? '✓ Copied' : 'Copy template'}</button>
+                <button className="cc-card__cta-secondary" onClick={() => openModal(p.name.split(' ')[0])}>Copy template</button>
               </div>
             </article>
           ))}
