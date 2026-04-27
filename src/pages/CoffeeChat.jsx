@@ -121,6 +121,8 @@ export default function CoffeeChat() {
   const [identityChips, setIdentityChips] = useState([])
   const [photoFile, setPhotoFile] = useState(null)
   const [photoPreview, setPhotoPreview] = useState(null)
+  const [funcOtherText, setFuncOtherText] = useState('')
+  const [identityOtherText, setIdentityOtherText] = useState('')
   const [formData, setFormData] = useState({
     name: '', pronouns: '', email: '', linkedin: '',
     role: '', location: '', topics: '', capacity: '',
@@ -242,6 +244,8 @@ export default function CoffeeChat() {
         avatar_url = data.publicUrl
       }
     }
+    const processedFuncChips = funcChips.map(c => c === 'Other' ? (funcOtherText.trim() || 'Other') : c)
+    const processedIdentityChips = identityChips.map(c => c === 'Other' ? (identityOtherText.trim() || 'Other') : c)
     const { error } = await supabase.from('coffee_chat_profiles').insert({
       name: formData.name,
       pronouns: formData.pronouns || null,
@@ -249,8 +253,8 @@ export default function CoffeeChat() {
       linkedin_url: formData.linkedin,
       role_title: formData.role,
       location: formData.location || null,
-      role_function: funcChips,
-      identity_tags: identityChips,
+      role_function: processedFuncChips,
+      identity_tags: processedIdentityChips,
       topics: formData.topics,
       capacity: formData.capacity,
       consented_at: new Date().toISOString(),
@@ -736,7 +740,17 @@ export default function CoffeeChat() {
                     onChange={setFuncChips}
                     placeholder="Select all that apply…"
                   />
-                  {funcChips.length > 0 && <div className="cc-selected-tags">{funcChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => setFuncChips(p => p.filter(v => v !== c))}>×</button></span>)}</div>}
+                  {funcChips.length > 0 && <div className="cc-selected-tags">{funcChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => { setFuncChips(p => p.filter(v => v !== c)); if (c === 'Other') setFuncOtherText('') }}>×</button></span>)}</div>}
+                  {funcChips.includes('Other') && (
+                    <input
+                      className="cc-form-input"
+                      type="text"
+                      placeholder="Please describe your role / function…"
+                      value={funcOtherText}
+                      onChange={e => setFuncOtherText(e.target.value)}
+                      style={{ marginTop: '10px' }}
+                    />
+                  )}
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label">Identity Tags <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
@@ -746,7 +760,17 @@ export default function CoffeeChat() {
                     onChange={setIdentityChips}
                     placeholder="Select all that apply…"
                   />
-                  {identityChips.length > 0 && <div className="cc-selected-tags">{identityChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => setIdentityChips(p => p.filter(v => v !== c))}>×</button></span>)}</div>}
+                  {identityChips.length > 0 && <div className="cc-selected-tags">{identityChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => { setIdentityChips(p => p.filter(v => v !== c)); if (c === 'Other') setIdentityOtherText('') }}>×</button></span>)}</div>}
+                  {identityChips.includes('Other') && (
+                    <input
+                      className="cc-form-input"
+                      type="text"
+                      placeholder="Please describe your identity…"
+                      value={identityOtherText}
+                      onChange={e => setIdentityOtherText(e.target.value)}
+                      style={{ marginTop: '10px' }}
+                    />
+                  )}
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccTopics">What topics can you talk about? <span>*</span></label>
