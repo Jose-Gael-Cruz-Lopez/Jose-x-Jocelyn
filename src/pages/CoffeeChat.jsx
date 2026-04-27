@@ -137,6 +137,7 @@ export default function CoffeeChat() {
   const [identityChips, setIdentityChips] = useState([])
   const [photoFile, setPhotoFile] = useState(null)
   const [photoPreview, setPhotoPreview] = useState(null)
+  const [photoError, setPhotoError] = useState('')
   const [funcOtherText, setFuncOtherText] = useState('')
   const [identityOtherText, setIdentityOtherText] = useState('')
   const [formData, setFormData] = useState({
@@ -702,11 +703,18 @@ export default function CoffeeChat() {
                       <input id="ccPhoto" type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
                         const file = e.target.files?.[0]
                         if (!file) return
+                        if (file.size > 2 * 1024 * 1024) {
+                          setPhotoError('Photo must be under 2MB.')
+                          e.target.value = ''
+                          return
+                        }
+                        setPhotoError('')
                         setPhotoFile(file)
                         setPhotoPreview(URL.createObjectURL(file))
                       }} />
                       <p className="cc-photo-hint">JPG, PNG or GIF · Max 2MB</p>
-                      {photoPreview && <button type="button" className="cc-photo-remove" onClick={() => { setPhotoFile(null); setPhotoPreview(null) }}>Remove</button>}
+                      {photoError && <p style={{ color: 'var(--color-accent)', fontSize: '12px', margin: 0 }}>{photoError}</p>}
+                      {photoPreview && <button type="button" className="cc-photo-remove" onClick={() => { setPhotoFile(null); setPhotoPreview(null); setPhotoError('') }}>Remove</button>}
                     </div>
                   </div>
                 </div>
