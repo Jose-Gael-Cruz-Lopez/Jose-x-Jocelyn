@@ -8,7 +8,7 @@ const TEMPLATE_TEXT = `Hi [Name],
 
 I came across your profile on the J&J Coffee Chat Network and your path from [their background] really stood out to me - I'm currently [your situation, e.g. a first-gen CS junior trying to break into data roles].
 
-Would you be open to a 15–20 minute chat sometime in the next few weeks? I have specific questions about [topic you read on their card].
+Would you be open to a 15–30 minute chat sometime in the next few weeks? I have specific questions about [topic you read on their card].
 
 No worries at all if your schedule is full. Thank you either way!`
 
@@ -631,7 +631,7 @@ export default function CoffeeChat() {
         <div className="cc-reach__grid">
           <div>
             <h3 className="cc-reach__col-title">What makes a good message</h3>
-            <p className="cc-reach__body">Before you message anyone in the network, read their card and only reach out if something about their path actually connects to where you are trying to go. Your first message should be <strong>under 80 words</strong>, mention something specific about their background, and ask for a simple 15–20 minute chat - not "can you mentor me forever?"</p>
+            <p className="cc-reach__body">Before you message anyone in the network, read their card and only reach out if something about their path actually connects to where you are trying to go. Your first message should be <strong>under 80 words</strong>, mention something specific about their background, and ask for a simple 15–30 minute chat - not "can you mentor me forever?"</p>
             <p className="cc-reach__body">A strong message usually includes three things: <strong>who you are</strong>, <strong>why you are reaching out to them specifically</strong>, and a <strong>clear, respectful ask</strong>. The Career Templates page has ready-to-use coffee chat request templates you can copy and personalize for each person you contact.</p>
             <Link to="/career-templates" className="cc-reach__templates-link">See coffee chat templates</Link>
           </div>
