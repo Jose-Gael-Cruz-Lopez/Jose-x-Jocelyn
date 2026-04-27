@@ -66,14 +66,31 @@ function MultiSelectDropdown({ label, options, selected, onChange, placeholder }
 
 function dbProfileToCard(row) {
   const funcColorMap = {
-    'Software Engineering': 'cc-tag--blue', 'Data': 'cc-tag--teal',
-    'Product': 'cc-tag--gold', 'Design': 'cc-tag--navy',
-    'Business / Ops': 'cc-tag--muted', 'Recruiting': 'cc-tag--accent', 'Research': 'cc-tag--navy',
+    'Software Engineering': 'cc-tag--blue',
+    'Data / Analytics': 'cc-tag--teal',
+    'Product Management': 'cc-tag--gold',
+    'UX / UI Design': 'cc-tag--navy',
+    'Research': 'cc-tag--navy',
+    'Business / Operations': 'cc-tag--muted',
+    'Recruiting / HR': 'cc-tag--accent',
+    'Machine Learning / AI': 'cc-tag--teal',
+    'Cybersecurity': 'cc-tag--blue',
+    'DevOps / Infrastructure': 'cc-tag--blue',
+    'Mobile Development': 'cc-tag--blue',
   }
   const identityColorMap = {
-    'First-Gen': 'cc-tag--teal', 'Transfer': 'cc-tag--blue',
-    'Community College': 'cc-tag--blue', 'International': 'cc-tag--navy',
-    'Nontraditional Path': 'cc-tag--gold', 'Low-Income': 'cc-tag--accent',
+    'First-Generation College Student': 'cc-tag--teal',
+    'First-Gen Immigrant': 'cc-tag--teal',
+    'Transfer Student': 'cc-tag--blue',
+    'Community College': 'cc-tag--blue',
+    'International Student': 'cc-tag--navy',
+    'Nontraditional Path': 'cc-tag--gold',
+    'Low-Income Background': 'cc-tag--accent',
+    'Career Changer': 'cc-tag--gold',
+    'DACA / Undocumented': 'cc-tag--accent',
+    'Latinx / Hispanic': 'cc-tag--teal',
+    'Black / African American': 'cc-tag--teal',
+    'Indigenous / Native American': 'cc-tag--teal',
   }
   const funcs = row.role_function || []
   const identities = row.identity_tags || []
@@ -83,7 +100,7 @@ function dbProfileToCard(row) {
     ...(row.location ? [{ label: row.location, cls: 'cc-tag--muted' }] : []),
   ]
   const capacityMap = { '1-2': 'Open to 1–2 chats / month', '3-5': 'Open to 3–5 chats / month', '6+': 'Open to 6+ chats / month' }
-  const updated = new Date(row.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  const joined = new Date(row.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
   const titleLower = (row.role_title || '').toLowerCase()
   const identityLower = identities.join(' ').toLowerCase()
@@ -92,6 +109,8 @@ function dbProfileToCard(row) {
   let dataRole = ''
   if (/student|intern|undergraduate/.test(titleLower)) dataRole = 'student'
   else if (/new.?grad|recent.?grad|entry.?level/.test(titleLower)) dataRole = 'new-grad'
+  else if (/\b(junior|jr\.?|associate)\b/.test(titleLower)) dataRole = 'early-career'
+  else if (/\b(senior|sr\.?|lead|staff|principal|manager|director)\b/.test(titleLower)) dataRole = 'mid-career'
   else if (/recruit|talent.?acqui/.test(titleLower) || funcLower.includes('recruiting')) dataRole = 'recruiter'
   else if (identityLower.includes('career changer') || identityLower.includes('nontraditional') || identityLower.includes('returning adult')) dataRole = 'career-changer'
 
@@ -109,7 +128,7 @@ function dbProfileToCard(row) {
     headline: funcs.length ? `${funcs[0]} professional` : row.role_title,
     topics: row.topics || '',
     tags, capacity: capacityMap[row.capacity] || row.capacity || 'Open',
-    updated: `Last updated ${updated}`,
+    updated: `Joined ${joined}`,
     linkedIn: row.linkedin_url, avatarStyle: {}, avatarUrl: row.avatar_url || null,
     dataRole, dataFunc: funcLower,
     dataStage, dataIdentity: identityLower,
@@ -226,14 +245,10 @@ export default function CoffeeChat() {
     })
   }
 
-  const toggleChip = useCallback((arr, setArr, val) => {
-    setArr(prev => prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val])
-  }, [])
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     const { name, email, linkedin, role, topics, capacity, consent1, consent2 } = formData
-    if (!name || !email || !linkedin || !role || !topics || !capacity) {
+    if (!name || !email || !linkedin || !role || !topics || !capacity || funcChips.length === 0) {
       setFormError('Please fill in all required fields before submitting.')
       return
     }
@@ -567,7 +582,6 @@ export default function CoffeeChat() {
             <select className="cc-filter-select" aria-label="Stage" value={filterStage} onChange={e => setFilterStage(e.target.value)}>
               <option value="">All Stages</option>
               <option value="first-internship">First Internship</option>
-              <option value="multiple-internships">Multiple Internships</option>
               <option value="apprenticeship">Apprenticeship</option>
               <option value="first-full-time">First Full-Time</option>
               <option value="transitioned">Transitioned into Tech</option>
@@ -576,7 +590,7 @@ export default function CoffeeChat() {
               <option value="">All Identities</option>
               <option value="first-gen">First-Gen</option>
               <option value="transfer">Transfer</option>
-              <option value="community-college">Community College</option>
+              <option value="community college">Community College</option>
               <option value="international">International</option>
               <option value="nontraditional">Nontraditional Path</option>
             </select>
