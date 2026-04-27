@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase'
 
 const TEMPLATE_TEXT = `Hi [Name],
 
-I came across your profile on the J&J Coffee Chat Network and your path from [their background] really stood out to me - I'm currently [your situation, e.g. a first-gen CS junior trying to break into data roles].
+I came across your profile on the Coffee Chat Network and your path from [their background] really stood out to me — I'm currently [your situation, e.g. a first-gen CS junior trying to break into data roles].
 
 Would you be open to a 15–30 minute chat sometime in the next few weeks? I have specific questions about [topic you read on their card].
 
@@ -32,7 +32,7 @@ const IDENTITY_OPTIONS = [
   'Foster Care Alumni', 'Other',
 ]
 
-function MultiSelectDropdown({ label, options, selected, onChange, placeholder }) {
+function MultiSelectDropdown({ options, selected, onChange, placeholder }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   useEffect(() => {
@@ -166,6 +166,7 @@ export default function CoffeeChat() {
   })
 
   const [dbProfiles, setDbProfiles] = useState([])
+  const [profilesLoading, setProfilesLoading] = useState(true)
   const ccModalRef = useRef(null)
 
   useEffect(() => {
@@ -176,6 +177,7 @@ export default function CoffeeChat() {
       .order('created_at', { ascending: false })
       .then(({ data }) => {
         if (data?.length) setDbProfiles(data.map(dbProfileToCard))
+        setProfilesLoading(false)
       })
   }, [])
 
@@ -196,8 +198,7 @@ export default function CoffeeChat() {
     }
   }, [modalOpen])
 
-  const allProfiles = dbProfiles
-  const visibleProfiles = allProfiles.filter(p => {
+  const visibleProfiles = dbProfiles.filter(p => {
     const q = search.toLowerCase().trim()
     if (q) {
       const haystack = [p.dataKeywords, p.name.toLowerCase(), p.dataRole, p.dataFunc, p.dataStage, p.dataIdentity].join(' ')
@@ -374,7 +375,7 @@ export default function CoffeeChat() {
         .cc-card__cta-primary:hover { background: var(--color-teal); transform: translateY(-1px); }
         .cc-card__cta-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 13px 14px; background: transparent; color: var(--color-muted); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; transition: border-color .2s, color .2s; flex-shrink: 0; }
         .cc-card__cta-secondary:hover { border-color: var(--color-dark); color: var(--color-dark); }
-        .cc-card__cta-secondary.copied { border-color: var(--color-teal); color: var(--color-teal); }
+
 
         .cc-reach { max-width: 1040px; margin: 0 auto; padding: 80px clamp(20px,5vw,56px); }
         .cc-reach__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 32px; }
@@ -513,10 +514,10 @@ export default function CoffeeChat() {
           <p className="cc-section-sub">No guessing. No cold-messaging strangers. Just a directory of people who said yes.</p>
         </div>
         <p className="cc-section-body">
-          Everyone in this directory has filled out a short form and agreed to be listed as a connection. That means you are not guessing if someone is open to messages - you already know they are. The goal is to make networking feel less random and more like a structured, human directory you can navigate by interest, role, identity, and location.
+          Everyone in this directory has filled out a short form and agreed to be listed as a connection. That means you are not guessing if someone is open to messages — you already know they are. The goal is to make networking feel less random and more like a structured, human directory you can navigate by interest, role, identity, and location.
         </p>
         <p className="cc-section-body" style={{ marginTop: '16px' }}>
-          You pick who to reach out to, you send the request directly (usually via LinkedIn), and you schedule time that works for both of you. <strong>Jose and Jocelyn are not brokering introductions in the middle</strong> - this is a self-serve network designed to scale and stay lightweight.
+          You pick who to reach out to, you send the request directly (usually via LinkedIn), and you schedule time that works for both of you. <strong>Jose and Jocelyn are not brokering introductions in the middle</strong> — this is a self-serve network designed to scale and stay lightweight.
         </p>
         <div className="cc-how__grid">
           {[
@@ -613,7 +614,9 @@ export default function CoffeeChat() {
         <p className="cc-results-count"><span>{visibleProfiles.length}</span> people in the network</p>
 
         <div className="cc-grid">
-          {visibleProfiles.length === 0 ? (
+          {profilesLoading ? (
+            <p className="cc-no-results" style={{ fontStyle: 'italic' }}>Loading profiles…</p>
+          ) : visibleProfiles.length === 0 ? (
             <p className="cc-no-results">No profiles match your filters. Try adjusting your search.</p>
           ) : visibleProfiles.map(p => (
             <article key={p.id} className="cc-card">
@@ -655,7 +658,7 @@ export default function CoffeeChat() {
         <div className="cc-reach__grid">
           <div>
             <h3 className="cc-reach__col-title">What makes a good message</h3>
-            <p className="cc-reach__body">Before you message anyone in the network, read their card and only reach out if something about their path actually connects to where you are trying to go. Your first message should be <strong>under 80 words</strong>, mention something specific about their background, and ask for a simple 15–30 minute chat - not "can you mentor me forever?"</p>
+            <p className="cc-reach__body">Before you message anyone in the network, read their card and only reach out if something about their path actually connects to where you are trying to go. Your first message should be <strong>under 80 words</strong>, mention something specific about their background, and ask for a simple 15–30 minute chat — not "can you mentor me forever?"</p>
             <p className="cc-reach__body">A strong message usually includes three things: <strong>who you are</strong>, <strong>why you are reaching out to them specifically</strong>, and a <strong>clear, respectful ask</strong>. The Career Templates page has ready-to-use coffee chat request templates you can copy and personalize for each person you contact.</p>
             <Link to="/career-templates" className="cc-reach__templates-link">See coffee chat templates</Link>
           </div>
@@ -690,7 +693,7 @@ export default function CoffeeChat() {
             <p className="cc-apply__intro-kicker">Section 04</p>
             <h2 className="cc-apply__intro-title">Want to be listed in the Coffee Chat Network?</h2>
             <p className="cc-apply__intro-body">
-              If you are a student, recent grad, or professional who wants to give back - especially if you are <strong>first-gen, from an underrepresented group, or took a nontraditional route into tech</strong> - you can add yourself to the Coffee Chat Network. Your profile will show up in the directory so others can reach out for short conversations, questions, and perspective.
+              If you are a student, recent grad, or professional who wants to give back — especially if you are <strong>first-gen, from an underrepresented group, or took a nontraditional route into tech</strong> — you can add yourself to the Coffee Chat Network. Your profile will show up in the directory so others can reach out for short conversations, questions, and perspective.
             </p>
             <div className="cc-apply__perks">
               {['You control your own availability and capacity', 'New listings stay highlighted for 30 days', 'Your email is never displayed publicly', 'You are never obligated to accept every request'].map(p => (
