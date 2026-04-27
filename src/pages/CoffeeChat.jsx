@@ -587,6 +587,15 @@ export default function CoffeeChat() {
           </div>
         </div>
 
+        {(search || filterRole || filterFunc || filterStage || filterIdentity || filterAvail) && (
+          <button
+            type="button"
+            onClick={() => { setSearch(''); setFilterRole(''); setFilterFunc(''); setFilterStage(''); setFilterIdentity(''); setFilterAvail('') }}
+            style={{ background: 'none', border: 'none', color: 'var(--color-accent)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', padding: '0 0 14px', fontFamily: 'var(--font-body)' }}
+          >
+            Clear all filters ×
+          </button>
+        )}
         <p className="cc-results-count"><span>{visibleProfiles.length}</span> people in the network</p>
 
         <div className="cc-grid">
