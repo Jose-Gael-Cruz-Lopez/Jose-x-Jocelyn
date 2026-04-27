@@ -44,7 +44,7 @@ function MultiSelectDropdown({ options, selected, onChange, placeholder }) {
   return (
     <div ref={ref} style={{ position: 'relative' }}>
       <button type="button" onClick={() => setOpen(o => !o)} className="cc-ms-trigger" aria-haspopup="listbox" aria-expanded={open}>
-        <span>{selected.length ? selected.join(', ') : placeholder}</span>
+        <span className={selected.length ? '' : 'cc-ms-placeholder'}>{selected.length ? selected.join(', ') : placeholder}</span>
         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .2s' }}>
           <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
@@ -167,6 +167,7 @@ export default function CoffeeChat() {
 
   const [dbProfiles, setDbProfiles] = useState([])
   const [profilesLoading, setProfilesLoading] = useState(true)
+  const [profilesError, setProfilesError] = useState(false)
   const ccModalRef = useRef(null)
 
   useEffect(() => {
@@ -175,8 +176,12 @@ export default function CoffeeChat() {
       .eq('status', 'approved')
       .eq('public_profile', true)
       .order('created_at', { ascending: false })
-      .then(({ data }) => {
-        if (data?.length) setDbProfiles(data.map(dbProfileToCard))
+      .then(({ data, error }) => {
+        if (error) {
+          setProfilesError(true)
+        } else if (data?.length) {
+          setDbProfiles(data.map(dbProfileToCard))
+        }
         setProfilesLoading(false)
       })
   }, [])
@@ -374,7 +379,6 @@ export default function CoffeeChat() {
         .cc-card__cta-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 13px 14px; background: transparent; color: var(--color-muted); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; transition: border-color .2s, color .2s; flex-shrink: 0; }
         .cc-card__cta-secondary:hover { border-color: var(--color-dark); color: var(--color-dark); }
 
-
         .cc-reach { max-width: 1040px; margin: 0 auto; padding: 80px clamp(20px,5vw,56px); }
         .cc-reach__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 32px; }
         .cc-reach__col-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--color-dark); margin-bottom: 14px; }
@@ -455,8 +459,8 @@ export default function CoffeeChat() {
 
         .cc-ms-trigger { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 11px 14px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 8px; background: var(--color-white); color: var(--color-dark); font-family: var(--font-body); font-size: 15px; text-align: left; cursor: pointer; transition: border-color .2s; }
         .cc-ms-trigger:focus { border-color: var(--color-gold); outline: none; }
-        .cc-ms-trigger span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-muted); }
-        .cc-ms-trigger span:not(:empty) { color: var(--color-dark); }
+        .cc-ms-trigger span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-dark); }
+        .cc-ms-trigger span.cc-ms-placeholder { color: var(--color-muted); }
         .cc-ms-menu { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--color-white); border: 1.5px solid rgba(0,0,0,.12); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,.1); z-index: 100; max-height: 220px; overflow-y: auto; padding: 6px; }
         .cc-ms-option { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 6px; font-size: 14px; color: var(--color-dark); cursor: pointer; transition: background .15s; }
         .cc-ms-option:hover { background: rgba(0,0,0,.04); }
@@ -609,6 +613,8 @@ export default function CoffeeChat() {
         <div className="cc-grid">
           {profilesLoading ? (
             <p className="cc-no-results" style={{ fontStyle: 'italic' }}>Loading profiles…</p>
+          ) : profilesError ? (
+            <p className="cc-no-results">Something went wrong loading profiles. Please refresh the page.</p>
           ) : visibleProfiles.length === 0 ? (
             <p className="cc-no-results">No profiles match your filters. Try adjusting your search.</p>
           ) : visibleProfiles.map(p => (
