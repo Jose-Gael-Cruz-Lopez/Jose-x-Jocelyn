@@ -683,7 +683,7 @@ export default function CoffeeChat() {
               <div className="cc-form-success">
                 <div className="cc-form-success__icon">✓</div>
                 <div className="cc-form-success__title">You're on the list!</div>
-                <p className="cc-form-success__body">Thank you for joining the Coffee Chat Network. We'll review your submission and have your profile live within a few days. Keep an eye on your email for confirmation.</p>
+                <p className="cc-form-success__body">Your profile is now live on the Coffee Chat Network. Students and peers can already find you and reach out. Thank you for being someone who gives back.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
