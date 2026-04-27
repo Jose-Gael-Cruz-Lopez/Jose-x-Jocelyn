@@ -300,8 +300,6 @@ export default function CoffeeChat() {
       <style>{`
         html, body { background: var(--color-cream); }
 
-        .cc-wrap { max-width: 1040px; margin: 0 auto; padding-left: clamp(20px,5vw,56px); padding-right: clamp(20px,5vw,56px); }
-
         .cc-kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px; }
         .cc-section-title { font-family: var(--font-display); font-size: clamp(26px,4vw,40px); font-weight: 700; color: var(--color-dark); line-height: 1.15; margin-bottom: 10px; }
         .cc-section-sub { font-family: var(--font-display); font-size: clamp(16px,2vw,20px); font-weight: 400; color: var(--color-accent); margin-bottom: 20px; }
@@ -411,11 +409,6 @@ export default function CoffeeChat() {
         .cc-form-input:focus, .cc-form-select:focus, .cc-form-textarea:focus { border-color: var(--color-gold); }
         .cc-form-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
         .cc-form-select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B5E52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
-        .cc-multiselect-group { display: flex; flex-wrap: wrap; gap: 8px; }
-        .cc-ms-chip { display: inline-flex; align-items: center; gap: 6px; padding: 13px 16px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--color-muted); cursor: pointer; transition: border-color .15s, color .15s, background .15s; }
-        .cc-ms-chip:hover { border-color: var(--color-dark); color: var(--color-dark); }
-        .cc-ms-chip.active, .cc-ms-chip[aria-pressed="true"] { border-color: var(--color-teal); background: rgba(58,125,107,.08); color: var(--color-teal); }
-        .cc-ms-chip:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; border-radius: 20px; }
         .cc-form-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
         .cc-form-check input[type="checkbox"] { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; accent-color: var(--color-teal); cursor: pointer; }
         .cc-form-check-label { font-size: 13px; color: var(--color-muted); line-height: 1.6; }
@@ -611,7 +604,7 @@ export default function CoffeeChat() {
             Clear all filters ×
           </button>
         )}
-        <p className="cc-results-count"><span>{visibleProfiles.length}</span> people in the network</p>
+        {!profilesLoading && <p className="cc-results-count"><span>{visibleProfiles.length}</span> people in the network</p>}
 
         <div className="cc-grid">
           {profilesLoading ? (
@@ -673,7 +666,7 @@ export default function CoffeeChat() {
                 { type: 'dont', text: <><strong>Don't</strong> ask them to get you a job or a referral in the first message.</> },
                 { type: 'dont', text: <><strong>Don't</strong> send copy-paste messages to ten people in one hour.</> },
                 { type: 'dont', text: <><strong>Don't</strong> ask questions you could have Googled in 30 seconds.</> },
-                { type: 'dont', text: <><strong>Don't</strong> ghost after they accept - that harms everyone in the network.</> },
+                { type: 'dont', text: <><strong>Don't</strong> ghost after they accept — that harms everyone in the network.</> },
               ].map((item, i) => (
                 <div key={i} className="cc-do-item">
                   <span className={`cc-do-item__icon cc-do-item__icon--${item.type}`}>{item.type === 'do' ? '✓' : '✕'}</span>
@@ -887,7 +880,7 @@ export default function CoffeeChat() {
         <div className="cc-modal" role="dialog" aria-modal="true" aria-labelledby="cc-modal-title" ref={ccModalRef} onKeyDown={handleCcModalKeyDown}>
           <button className="cc-modal__close" onClick={closeModal} aria-label="Close">✕</button>
           <p className="cc-modal__kicker">Coffee Chat Templates</p>
-          <h2 id="cc-modal-title" className="cc-modal__title">Coffee Chat Request - Reaching out to {modalName}</h2>
+          <h2 id="cc-modal-title" className="cc-modal__title">Coffee Chat Request — Reaching out to {modalName}</h2>
           <p className="cc-modal__sub">Personalize the bracketed fields before sending. Keep your final message under 80 words.</p>
           <div className="cc-modal__template">{TEMPLATE_TEXT.replace('[Name]', modalName)}</div>
           <button className={`cc-modal__copy-btn${copied ? ' copied' : ''}`} onClick={copyTemplate}>
