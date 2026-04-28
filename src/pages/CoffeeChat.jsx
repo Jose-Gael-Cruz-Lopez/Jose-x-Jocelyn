@@ -71,6 +71,33 @@ const slugify = (s) => (s || '')
   .replace(/-+/g, '-')
   .replace(/^-|-$/g, '')
 
+const FUNC_HEADLINE_MAP = {
+  'Software Engineering': 'Software engineer',
+  'Data / Analytics': 'Data & analytics',
+  'Product Management': 'Product manager',
+  'UX / UI Design': 'UX/UI designer',
+  'Research': 'Researcher',
+  'Business / Operations': 'Business & operations',
+  'Recruiting / HR': 'Recruiter / HR',
+  'Marketing': 'Marketer',
+  'Sales': 'Sales professional',
+  'Finance / Accounting': 'Finance & accounting',
+  'Consulting': 'Consultant',
+  'Legal': 'Legal professional',
+  'Healthcare / Medicine': 'Healthcare professional',
+  'Education / Teaching': 'Educator',
+  'Cybersecurity': 'Cybersecurity professional',
+  'DevOps / Infrastructure': 'DevOps engineer',
+  'Machine Learning / AI': 'ML/AI engineer',
+  'Mobile Development': 'Mobile developer',
+  'QA / Testing': 'QA engineer',
+  'Project / Program Management': 'Program manager',
+  'Social Work / Nonprofit': 'Social sector professional',
+  'Journalism / Media': 'Journalist / media',
+  'Architecture / Engineering': 'Architect / engineer',
+  'Customer Success': 'Customer success',
+}
+
 function dbProfileToCard(row) {
   const funcColorMap = {
     'Software Engineering': 'cc-tag--blue',
@@ -151,19 +178,20 @@ function dbProfileToCard(row) {
     initial: (row.name || '?').slice(0, 1).toUpperCase(),
     name: row.name,
     badge: (Date.now() - createdAt.getTime()) < 30 * 24 * 60 * 60 * 1000 ? 'New' : 'Active',
-    role: `${row.role_title}${row.location ? ' · ' + row.location : ''}`,
-    headline: funcs.length ? `${funcs[0]} professional` : row.role_title,
+    // Drop appended location to avoid duplicating it (location already shows as a tag)
+    role: row.role_title,
+    // Use friendlier function-derived headlines (e.g. "Software engineer" not "Software Engineering professional")
+    headline: funcs.length ? (FUNC_HEADLINE_MAP[funcs[0]] || funcs[0]) : row.role_title,
     topics: row.topics || '',
     tags,
     capacity: capacityLabel,
     updated: `Joined ${joined}`,
-    linkedIn: row.linkedin_url,
+    linkedIn: row.linkedin_url || null,
     avatarUrl: row.avatar_url || null,
     dataRole,
     dataFuncSlugs: funcSlugString,
     dataStage,
     dataIdentitySlugs: identitySlugString,
-    dataAvail: 'coffee-chats',
     dataKeywords: `${row.name} ${row.role_title} ${row.topics || ''} ${funcs.join(' ')} ${identities.join(' ')} ${row.location || ''}`.toLowerCase(),
   }
 }
@@ -174,7 +202,6 @@ export default function CoffeeChat() {
   const [filterFunc, setFilterFunc] = useState('')
   const [filterStage, setFilterStage] = useState('')
   const [filterIdentity, setFilterIdentity] = useState('')
-  const [filterAvail, setFilterAvail] = useState('')
 
   const [modalOpen, setModalOpen] = useState(false)
   const [modalName, setModalName] = useState('')
@@ -252,7 +279,6 @@ export default function CoffeeChat() {
     if (filterFunc && !p.dataFuncSlugs.includes(`|${filterFunc}|`)) return false
     if (filterStage && p.dataStage !== filterStage) return false
     if (filterIdentity && !p.dataIdentitySlugs.includes(`|${filterIdentity}|`)) return false
-    if (filterAvail && p.dataAvail !== filterAvail) return false
     return true
   })
 
@@ -679,17 +705,13 @@ export default function CoffeeChat() {
                 <option key={i} value={slugify(i)}>{i}</option>
               ))}
             </select>
-            <select className="cc-filter-select" aria-label="Availability" value={filterAvail} onChange={e => setFilterAvail(e.target.value)}>
-              <option value="">All Availability</option>
-              <option value="coffee-chats">Open to Coffee Chats</option>
-            </select>
           </div>
         </div>
 
-        {(search || filterRole || filterFunc || filterStage || filterIdentity || filterAvail) && (
+        {(search || filterRole || filterFunc || filterStage || filterIdentity) && (
           <button
             type="button"
-            onClick={() => { setSearch(''); setFilterRole(''); setFilterFunc(''); setFilterStage(''); setFilterIdentity(''); setFilterAvail('') }}
+            onClick={() => { setSearch(''); setFilterRole(''); setFilterFunc(''); setFilterStage(''); setFilterIdentity('') }}
             style={{ background: 'none', border: 'none', color: 'var(--color-accent)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', padding: '0 0 14px', fontFamily: 'var(--font-body)' }}
           >
             Clear all filters ×
@@ -732,7 +754,7 @@ export default function CoffeeChat() {
               <div className="cc-card__capacity">{p.capacity}</div>
               <div className="cc-card__updated">{p.updated}</div>
               <div className="cc-card__actions">
-                <a href={p.linkedIn} target="_blank" rel="noopener noreferrer" className="cc-card__cta-primary">Connect on LinkedIn ↗</a>
+                {p.linkedIn && <a href={p.linkedIn} target="_blank" rel="noopener noreferrer" className="cc-card__cta-primary">Connect on LinkedIn ↗</a>}
                 <button className="cc-card__cta-secondary" onClick={() => openModal(p.name.split(' ')[0])}>Copy template</button>
               </div>
             </article>
