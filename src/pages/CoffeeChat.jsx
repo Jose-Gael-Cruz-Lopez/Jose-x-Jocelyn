@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 
@@ -71,6 +71,10 @@ const slugify = (s) => (s || '')
   .replace(/-+/g, '-')
   .replace(/^-|-$/g, '')
 
+const ALLOWED_PHOTO_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+
+const LINKEDIN_URL_REGEX = /^(https?:\/\/)?([a-z0-9-]+\.)?linkedin\.[a-z]{2,}\/.+/i
+
 const FUNC_HEADLINE_MAP = {
   'Software Engineering': 'Software engineer',
   'Data / Analytics': 'Data & analytics',
@@ -133,10 +137,18 @@ function dbProfileToCard(row) {
     ...funcs.map(f => ({ label: f, cls: funcColorMap[f] || 'cc-tag--muted' })),
     ...(row.location ? [{ label: row.location, cls: 'cc-tag--muted' }] : []),
   ]
-  const capacityMap = { '1-2': 'Open to 1–2 chats / month', '3-5': 'Open to 3–5 chats / month', '6+': 'Open to 6+ chats / month' }
+  const capacityMap = {
+    '1-2': 'Takes 1–2 chats / month',
+    '3-5': 'Takes 3–5 chats / month',
+    '6-9': 'Takes 6–9 chats / month',
+    '6+': 'Takes 6+ chats / month',
+    '10+': 'Takes 10+ chats / month',
+  }
   const capacityLabel = capacityMap[row.capacity] || 'Open to coffee chats'
   const createdAt = row.created_at ? new Date(row.created_at) : new Date()
-  const joined = createdAt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  // Prefer approval timestamp for the "Member since" label so it reflects when the profile actually became visible.
+  const memberSinceDate = row.approved_at ? new Date(row.approved_at) : createdAt
+  const memberSince = memberSinceDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
   const titleLower = (row.role_title || '').toLowerCase()
   const topicsLower = (row.topics || '').toLowerCase()
@@ -148,36 +160,45 @@ function dbProfileToCard(row) {
   const identitySlugString = `|${identitySlugs.join('|')}|`
   const funcSlugString = `|${funcSlugs.join('|')}|`
 
-  let dataRole = ''
-  if (/\b(student|undergraduate|undergrad|grad student|phd candidate)\b/.test(haystack)) dataRole = 'student'
-  else if (/\bintern\b/.test(haystack)) dataRole = 'student'
-  else if (/(new|recent).?grad|entry.?level/.test(haystack)) dataRole = 'new-grad'
-  else if (/\b(junior|jr\.?|associate|analyst i)\b/.test(haystack)) dataRole = 'early-career'
-  else if (/\b(senior|sr\.?|lead|staff|principal|manager|director|vp|head of)\b/.test(haystack)) dataRole = 'mid-career'
-  else if (/recruit|talent.?acqui|sourcer/.test(haystack) || funcSlugs.includes('recruiting-hr')) dataRole = 'recruiter'
-  else if (
+  // Multi-valued: a profile can fit several role/stage buckets at once
+  // (e.g. a senior engineer who's also a career changer should match both).
+  const dataRoles = []
+  if (/\b(student|undergraduate|undergrad|grad student|phd candidate)\b/.test(haystack) || /\bintern\b/.test(haystack)) dataRoles.push('student')
+  if (/(new|recent).?grad|entry.?level/.test(haystack)) dataRoles.push('new-grad')
+  if (/\b(junior|jr\.?|associate|analyst i)\b/.test(haystack)) dataRoles.push('early-career')
+  if (/\b(senior|sr\.?|lead|staff|principal|manager|director|vp|head of)\b/.test(haystack)) dataRoles.push('mid-career')
+  if (/recruit|talent.?acqui|sourcer/.test(haystack) || funcSlugs.includes('recruiting-hr')) dataRoles.push('recruiter')
+  if (
     identitySlugs.includes('career-changer') ||
     identitySlugs.includes('nontraditional-path') ||
     identitySlugs.includes('returning-adult-student')
-  ) dataRole = 'career-changer'
+  ) dataRoles.push('career-changer')
 
-  let dataStage = ''
-  if (/\bintern\b/.test(haystack)) dataStage = 'first-internship'
-  else if (/apprentice/.test(haystack)) dataStage = 'apprenticeship'
-  else if (/(new|recent).?grad|first.?(job|role|full.?time)/.test(haystack)) dataStage = 'first-full-time'
-  else if (/\b(searching|job.?search|seeking|open to|laid off)\b/.test(haystack)) dataStage = 'job-searching'
-  else if (
+  const dataStages = []
+  if (/\bintern\b/.test(haystack)) dataStages.push('first-internship')
+  if (/apprentice/.test(haystack)) dataStages.push('apprenticeship')
+  if (/(new|recent).?grad|first.?(job|role|full.?time)/.test(haystack)) dataStages.push('first-full-time')
+  if (/\b(searching|job.?search|seeking|laid off)\b/.test(haystack)) dataStages.push('job-searching')
+  if (
     identitySlugs.includes('career-changer') ||
     identitySlugs.includes('nontraditional-path') ||
     /pivot|transition/.test(haystack)
-  ) dataStage = 'transitioned'
-  else if (/\b(senior|staff|principal|lead|manager|director)\b/.test(haystack)) dataStage = 'experienced'
+  ) dataStages.push('transitioned')
+  if (/\b(senior|staff|principal|lead|manager|director)\b/.test(haystack)) dataStages.push('experienced')
+
+  const safeName = (row.name || '').trim()
+  const firstName = safeName.split(/\s+/)[0] || 'there'
+  const isNew = (Date.now() - memberSinceDate.getTime()) < 30 * 24 * 60 * 60 * 1000
 
   return {
     id: row.id,
-    initial: (row.name || '?').slice(0, 1).toUpperCase(),
-    name: row.name,
-    badge: (Date.now() - createdAt.getTime()) < 30 * 24 * 60 * 60 * 1000 ? 'New' : 'Active',
+    initial: safeName ? safeName.slice(0, 1).toUpperCase() : '?',
+    name: safeName || 'Anonymous',
+    firstName,
+    // Featured beats New; otherwise show New only for genuinely-recent listings.
+    badge: row.featured ? 'Featured' : (isNew ? 'New' : null),
+    badgeKind: row.featured ? 'featured' : (isNew ? 'new' : null),
+    featured: !!row.featured,
     // Drop appended location to avoid duplicating it (location already shows as a tag)
     role: row.role_title,
     // Use friendlier function-derived headlines (e.g. "Software engineer" not "Software Engineering professional")
@@ -185,14 +206,14 @@ function dbProfileToCard(row) {
     topics: row.topics || '',
     tags,
     capacity: capacityLabel,
-    updated: `Joined ${joined}`,
+    updated: `Member since ${memberSince}`,
     linkedIn: row.linkedin_url || null,
     avatarUrl: row.avatar_url || null,
-    dataRole,
+    dataRoleSlugs: `|${dataRoles.join('|')}|`,
     dataFuncSlugs: funcSlugString,
-    dataStage,
+    dataStageSlugs: `|${dataStages.join('|')}|`,
     dataIdentitySlugs: identitySlugString,
-    dataKeywords: `${row.name} ${row.role_title} ${row.topics || ''} ${funcs.join(' ')} ${identities.join(' ')} ${row.location || ''}`.toLowerCase(),
+    dataKeywords: `${safeName} ${row.role_title || ''} ${row.topics || ''} ${funcs.join(' ')} ${identities.join(' ')} ${row.location || ''}`.toLowerCase(),
   }
 }
 
@@ -221,35 +242,179 @@ export default function CoffeeChat() {
     name: '', pronouns: '', email: '', linkedin: '',
     role: '', location: '', topics: '', capacity: '',
     consent1: false, consent2: false, consent3: false,
+    // Honeypot — real users never fill this. Bots that auto-fill all inputs will trip it.
+    website: '',
   })
+
+  const turnstileSiteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
+  const [turnstileToken, setTurnstileToken] = useState('')
+  const turnstileWidgetRef = useRef(null)
+  const turnstileRenderedRef = useRef(false)
+
+  useEffect(() => {
+    if (!turnstileSiteKey) return
+    if (document.getElementById('cf-turnstile-script')) return
+    const script = document.createElement('script')
+    script.id = 'cf-turnstile-script'
+    script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
+    script.async = true
+    script.defer = true
+    document.head.appendChild(script)
+  }, [turnstileSiteKey])
+
+  useEffect(() => {
+    if (!turnstileSiteKey || formSubmitted) return
+    const renderWidget = () => {
+      if (!window.turnstile || !turnstileWidgetRef.current || turnstileRenderedRef.current) return
+      window.turnstile.render(turnstileWidgetRef.current, {
+        sitekey: turnstileSiteKey,
+        callback: (token) => setTurnstileToken(token),
+        'expired-callback': () => setTurnstileToken(''),
+        'error-callback': () => setTurnstileToken(''),
+        theme: 'light',
+      })
+      turnstileRenderedRef.current = true
+    }
+    renderWidget()
+    const interval = setInterval(renderWidget, 250)
+    const timeout = setTimeout(() => clearInterval(interval), 8000)
+    return () => { clearInterval(interval); clearTimeout(timeout) }
+  }, [turnstileSiteKey, formSubmitted])
 
   const [dbProfiles, setDbProfiles] = useState([])
   const [profilesLoading, setProfilesLoading] = useState(true)
   const [profilesError, setProfilesError] = useState(false)
+  const [sharedId, setSharedId] = useState(null)
+  const [highlightId, setHighlightId] = useState(null)
+  const [submittedProfileId, setSubmittedProfileId] = useState(null)
+
+  // Newsletter signup state (small subscribe row near the bottom of the page).
+  const [subEmail, setSubEmail] = useState('')
+  const [subHoneypot, setSubHoneypot] = useState('')
+  const [subState, setSubState] = useState('idle') // idle | loading | success | error
+  const [subError, setSubError] = useState('')
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault()
+    setSubError('')
+    // Honeypot: bots auto-filling all inputs trip this; treat as silent success.
+    if (subHoneypot) {
+      setSubState('success')
+      setSubEmail('')
+      return
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(subEmail.trim())) {
+      setSubError('Please enter a valid email.')
+      return
+    }
+    setSubState('loading')
+    const { error } = await supabase.from('subscribers').insert({
+      email: subEmail.trim(),
+      source: 'coffee-chat-page',
+    })
+    if (error && error.code !== '23505') {
+      setSubState('error')
+      setSubError('Could not subscribe. Try again in a moment.')
+      return
+    }
+    // Treat existing email as success (silent re-subscribe is fine UX).
+    setSubState('success')
+    setSubEmail('')
+  }
+  const [searchParams] = useSearchParams()
   const ccModalRef = useRef(null)
   const lastFocusedRef = useRef(null)
   const copyTimeoutRef = useRef(null)
+  const shareTimeoutRef = useRef(null)
 
   useEffect(() => {
     // Explicit column list — never fetch `email` to the public client.
-    supabase.from('coffee_chat_profiles')
-      .select('id, name, pronouns, linkedin_url, role_title, location, role_function, identity_tags, topics, capacity, avatar_url, created_at')
-      .eq('status', 'approved')
-      .eq('public_profile', true)
-      .order('created_at', { ascending: false })
-      .then(({ data, error }) => {
-        if (error) {
-          setProfilesError(true)
-        } else if (data?.length) {
-          setDbProfiles(data.map(dbProfileToCard))
-        }
-        setProfilesLoading(false)
-      })
+    // Try first with approved_at (newer schema). Fall back to created_at-only on column-missing
+    // so the page still works against an older deployed schema.
+    const baseColumns = 'id, name, pronouns, linkedin_url, role_title, location, role_function, identity_tags, topics, capacity, avatar_url, created_at'
+    const run = async () => {
+      // Try newest schema first (featured + approved_at). Fall back twice for older deploys.
+      let { data, error } = await supabase.from('coffee_chat_profiles')
+        .select(`${baseColumns}, approved_at, featured`)
+        .eq('status', 'approved')
+        .eq('public_profile', true)
+        .order('featured', { ascending: false })
+        .order('approved_at', { ascending: false, nullsFirst: false })
+        .order('created_at', { ascending: false })
+      if (error?.code === '42703' && error?.message?.includes('featured')) {
+        // Schema has approved_at but not featured.
+        ;({ data, error } = await supabase.from('coffee_chat_profiles')
+          .select(`${baseColumns}, approved_at`)
+          .eq('status', 'approved')
+          .eq('public_profile', true)
+          .order('approved_at', { ascending: false, nullsFirst: false })
+          .order('created_at', { ascending: false }))
+      }
+      if (error?.code === '42703') {
+        // Oldest schema — neither column.
+        ;({ data, error } = await supabase.from('coffee_chat_profiles')
+          .select(baseColumns)
+          .eq('status', 'approved')
+          .eq('public_profile', true)
+          .order('created_at', { ascending: false }))
+      }
+      if (error) {
+        setProfilesError(true)
+      } else if (data?.length) {
+        setDbProfiles(data.map(dbProfileToCard))
+      }
+      setProfilesLoading(false)
+    }
+    run()
+  }, [])
+
+  // Debounced search keeps filter responsive at scale.
+  const [debouncedSearch, setDebouncedSearch] = useState('')
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(search), 180)
+    return () => clearTimeout(id)
+  }, [search])
+
+  // Deep link: ?profile=<id> scrolls to and highlights a specific card.
+  // Fires once when profiles finish loading so submitting a new profile
+  // afterward doesn't re-scroll the user back to the originally-shared card.
+  const deepLinkHandledRef = useRef(false)
+  useEffect(() => {
+    if (deepLinkHandledRef.current) return
+    const id = searchParams.get('profile')
+    if (!id || profilesLoading) return
+    deepLinkHandledRef.current = true
+    setTimeout(() => {
+      const el = document.getElementById(`cc-card-${id}`)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        setHighlightId(id)
+        setTimeout(() => setHighlightId(null), 2500)
+      }
+    }, 300)
+  }, [searchParams, profilesLoading])
+
+  const copyShareLink = (profileId) => {
+    const url = `${window.location.origin}/coffee-chat?profile=${profileId}`
+    navigator.clipboard.writeText(url).then(() => {
+      setSharedId(profileId)
+      if (shareTimeoutRef.current) clearTimeout(shareTimeoutRef.current)
+      shareTimeoutRef.current = setTimeout(() => setSharedId(null), 2500)
+    }).catch(() => {})
+  }
+
+  useEffect(() => () => {
+    if (shareTimeoutRef.current) clearTimeout(shareTimeoutRef.current)
   }, [])
 
   useEffect(() => () => {
     if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current)
   }, [])
+
+  // Revoke any leftover object URL when the form unmounts to prevent leaks.
+  useEffect(() => () => {
+    if (photoPreview) URL.revokeObjectURL(photoPreview)
+  }, [photoPreview])
 
   useEffect(() => {
     if (modalOpen) {
@@ -268,19 +433,42 @@ export default function CoffeeChat() {
     }
   }, [modalOpen])
 
-  const visibleProfiles = dbProfiles.filter(p => {
-    const q = search.toLowerCase().trim()
+  // Helper: does a profile match the search query and the active filters,
+  // optionally excluding one filter category (used for stacked filter counts).
+  const matchesFilters = useCallback((p, exclude) => {
+    const q = debouncedSearch.toLowerCase().trim()
     if (q) {
-      const haystack = [p.dataKeywords, p.name.toLowerCase(), p.dataRole, p.dataStage].join(' ')
+      const haystack = [p.dataKeywords, p.name.toLowerCase(), p.dataRoleSlugs, p.dataStageSlugs].join(' ')
       if (!haystack.includes(q)) return false
     }
-    if (filterRole && p.dataRole !== filterRole) return false
-    // Slug-bracketed match prevents "first-gen" from accidentally matching "first-gen-immigrant"
-    if (filterFunc && !p.dataFuncSlugs.includes(`|${filterFunc}|`)) return false
-    if (filterStage && p.dataStage !== filterStage) return false
-    if (filterIdentity && !p.dataIdentitySlugs.includes(`|${filterIdentity}|`)) return false
+    if (exclude !== 'role' && filterRole && !p.dataRoleSlugs.includes(`|${filterRole}|`)) return false
+    if (exclude !== 'func' && filterFunc && !p.dataFuncSlugs.includes(`|${filterFunc}|`)) return false
+    if (exclude !== 'stage' && filterStage && !p.dataStageSlugs.includes(`|${filterStage}|`)) return false
+    if (exclude !== 'identity' && filterIdentity && !p.dataIdentitySlugs.includes(`|${filterIdentity}|`)) return false
     return true
-  })
+  }, [debouncedSearch, filterRole, filterFunc, filterStage, filterIdentity])
+
+  const visibleProfiles = useMemo(
+    () => dbProfiles.filter(p => matchesFilters(p)),
+    [dbProfiles, matchesFilters]
+  )
+
+  const anyFilterActive = Boolean(debouncedSearch || filterRole || filterFunc || filterStage || filterIdentity)
+
+  // Per-option counts that respect *other* active filters so the numbers stay honest.
+  // Picking Role=Student updates Function counts to "(N within students)" rather than "(N total)".
+  const filterCounts = useMemo(() => {
+    const counts = { role: {}, func: {}, stage: {}, identity: {} }
+    const bump = (obj, slugs) => slugs.split('|').filter(Boolean).forEach(s => { obj[s] = (obj[s] || 0) + 1 })
+    for (const p of dbProfiles) {
+      if (matchesFilters(p, 'role')) bump(counts.role, p.dataRoleSlugs)
+      if (matchesFilters(p, 'func')) bump(counts.func, p.dataFuncSlugs)
+      if (matchesFilters(p, 'stage')) bump(counts.stage, p.dataStageSlugs)
+      if (matchesFilters(p, 'identity')) bump(counts.identity, p.dataIdentitySlugs)
+    }
+    return counts
+  }, [dbProfiles, matchesFilters])
+  const countSuffix = (n) => n ? ` (${n})` : ''
 
   const openModal = (name) => {
     lastFocusedRef.current = document.activeElement
@@ -318,6 +506,13 @@ export default function CoffeeChat() {
     }
   }, [])
 
+  // Smooth scroll for in-page hero CTAs without fighting the router's hash effect.
+  const scrollToSection = (id) => (e) => {
+    e.preventDefault()
+    const el = document.getElementById(id)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   const copyTemplate = () => {
     const text = TEMPLATE_TEXT.replace('[Name]', modalName)
     navigator.clipboard.writeText(text).then(() => {
@@ -334,6 +529,37 @@ export default function CoffeeChat() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    // Honeypot: silently swallow bots without surfacing a real error.
+    if (formData.website) {
+      setFormSubmitted(true)
+      return
+    }
+    if (turnstileSiteKey && !turnstileToken) {
+      setFormError('Please complete the verification challenge before submitting.')
+      return
+    }
+    // Server-side verify the Turnstile token. If the edge function isn't deployed yet,
+    // we treat it as a soft-pass (the client widget alone still gates obvious bots).
+    if (turnstileSiteKey && turnstileToken) {
+      try {
+        const { data: verify, error: verifyErr } = await supabase.functions.invoke('verify-turnstile', {
+          body: { token: turnstileToken },
+        })
+        if (verifyErr) {
+          // Edge function missing or returned non-2xx — log but allow submission.
+          console.warn('Turnstile verify call failed; falling back to client-only gate:', verifyErr.message)
+        } else if (verify && verify.success === false) {
+          setFormError('The verification challenge failed. Please try again.')
+          if (window.turnstile && turnstileWidgetRef.current) {
+            try { window.turnstile.reset(turnstileWidgetRef.current) } catch {}
+          }
+          setTurnstileToken('')
+          return
+        }
+      } catch (e) {
+        console.warn('Turnstile verify threw:', e)
+      }
+    }
     const { name, email, linkedin, role, topics, capacity, consent1, consent2, consent3 } = formData
     const trimmedEmail = email.trim()
     if (!name.trim() || !trimmedEmail || !linkedin.trim() || !role.trim() || !topics.trim() || !capacity || funcChips.length === 0) {
@@ -343,6 +569,10 @@ export default function CoffeeChat() {
     // Basic email shape check beyond browser validation
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       setFormError('Please enter a valid email address.')
+      return
+    }
+    if (!LINKEDIN_URL_REGEX.test(linkedin.trim())) {
+      setFormError('Please enter a valid LinkedIn URL (e.g. https://linkedin.com/in/yourname).')
       return
     }
     if (funcChips.includes('Other') && !funcOtherText.trim()) {
@@ -386,7 +616,8 @@ export default function CoffeeChat() {
     const processedFuncChips = funcChips.map(c => c === 'Other' ? funcOtherText.trim() : c)
     const processedIdentityChips = identityChips.map(c => c === 'Other' ? identityOtherText.trim() : c)
 
-    const { error } = await supabase.from('coffee_chat_profiles').insert({
+    const nowIso = new Date().toISOString()
+    const insertPayload = {
       name: name.trim(),
       pronouns: formData.pronouns.trim() || null,
       email: trimmedEmail,
@@ -397,12 +628,18 @@ export default function CoffeeChat() {
       identity_tags: processedIdentityChips,
       topics: topics.trim(),
       capacity: capacity,
-      consented_at: new Date().toISOString(),
-      // Profiles enter moderation queue. An admin flips status → 'approved' to publish.
-      status: 'pending',
+      consented_at: nowIso,
+      // Auto-approve for now: profiles go live immediately so the directory builds momentum.
+      // The admin moderation page still exists at /admin/coffee-chat — it can be re-enabled
+      // later by flipping this back to 'pending'.
+      status: 'approved',
+      approved_at: nowIso,
       public_profile: true,
       avatar_url,
-    })
+    }
+    const { data: insertedRows, error } = await supabase.from('coffee_chat_profiles')
+      .insert(insertPayload)
+      .select('id, name, pronouns, linkedin_url, role_title, location, role_function, identity_tags, topics, capacity, avatar_url, created_at, approved_at, featured')
     setFormLoading(false)
     if (error) {
       if (error.code === '23505') {
@@ -413,12 +650,38 @@ export default function CoffeeChat() {
         setFormError('Something went wrong. Please try again.')
       }
     } else {
+      const newRow = insertedRows?.[0]
+      if (newRow) {
+        const newCard = dbProfileToCard(newRow)
+        setDbProfiles(prev => [newCard, ...prev])
+        setSubmittedProfileId(newRow.id)
+        // Fire-and-forget: send the welcome email if the edge function is deployed.
+        // Failures are silent — the directory listing is the source of truth.
+        try {
+          supabase.functions.invoke('coffee-chat-welcome', {
+            body: { name: newRow.name, email: trimmedEmail, profileId: newRow.id },
+          }).catch(() => {})
+        } catch { /* noop — edge function may not be deployed */ }
+      }
       setFormSubmitted(true)
     }
   }
 
+  const viewMyProfile = () => {
+    if (!submittedProfileId) return
+    const el = document.getElementById(`cc-card-${submittedProfileId}`)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      setHighlightId(submittedProfileId)
+      setTimeout(() => setHighlightId(null), 2500)
+    }
+  }
+
   return (
-    <ArticleLayout title="Coffee Chat Network">
+    <ArticleLayout
+      title="Coffee Chat Network"
+      description="A live directory of students, grads, and professionals who actually want to be reached out to. Browse profiles, filter by background and role, and request a 15–30 minute coffee chat using our templates."
+    >
       <style>{`
         html, body { background: var(--color-cream); }
 
@@ -474,6 +737,7 @@ export default function CoffeeChat() {
         .cc-card__avatar { width: 48px; height: 48px; border-radius: 50%; background: rgba(58,125,107,.1); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--color-teal); flex-shrink: 0; border: 1.5px solid rgba(58,125,107,.15); }
         .cc-card__badge { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 20px; background: rgba(58,125,107,.1); color: var(--color-teal); flex-shrink: 0; }
         .cc-card__badge--new { background: rgba(232,168,56,.12); color: var(--color-gold-dark); }
+        .cc-card__badge--featured { background: rgba(58,125,107,.14); color: var(--color-teal); }
         .cc-card__name { font-family: var(--font-display); font-size: clamp(16px,1.8vw,18px); font-weight: 700; color: var(--color-dark); line-height: 1.2; }
         .cc-card__role { font-size: 13px; color: var(--color-muted); line-height: 1.4; }
         .cc-card__headline { font-size: 13px; color: var(--color-teal); font-weight: 500; font-style: italic; line-height: 1.5; }
@@ -495,6 +759,12 @@ export default function CoffeeChat() {
         .cc-card__cta-primary:hover { background: var(--color-teal); transform: translateY(-1px); }
         .cc-card__cta-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 13px 14px; background: transparent; color: var(--color-muted); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; transition: border-color .2s, color .2s; flex-shrink: 0; }
         .cc-card__cta-secondary:hover { border-color: var(--color-dark); color: var(--color-dark); }
+        .cc-card__footer-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: -2px; }
+        .cc-card__report { font-size: 11px; color: rgba(0,0,0,.35); text-decoration: none; transition: color .15s; }
+        .cc-card__report:hover { color: var(--color-accent); text-decoration: underline; }
+        .cc-card__share { font-size: 11px; color: rgba(0,0,0,.45); text-decoration: none; background: none; border: none; padding: 0; cursor: pointer; font-family: var(--font-body); transition: color .15s; }
+        .cc-card__share:hover { color: var(--color-teal); text-decoration: underline; }
+        .cc-card--highlight { box-shadow: 0 0 0 3px rgba(58,125,107,.4), 0 10px 32px rgba(0,0,0,.12); transform: translateY(-3px); }
 
         .cc-reach { max-width: 1040px; margin: 0 auto; padding: 80px clamp(20px,5vw,56px); }
         .cc-reach__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 32px; }
@@ -614,8 +884,8 @@ export default function CoffeeChat() {
           Cold outreach is hard when you don't know who is open to talking. The Coffee Chat Network is a self-serve directory of people who have raised their hand to say, <strong>"Yes, you can reach out to me."</strong> Everyone listed here has opted in to be contacted for 15–30 minute conversations about career paths, recruiting, internships, apprenticeships, and early-career life in tech and related fields. You can browse profiles, find people whose journeys look like the future you want, and click straight into their LinkedIn to request a chat using our templates.
         </p>
         <div className="cc-hero__ctas">
-          <a href="#browse" className="cc-btn-primary">Browse profiles</a>
-          <a href="#apply" className="cc-btn-secondary">Apply to join the network</a>
+          <a href="#browse" onClick={scrollToSection('browse')} className="cc-btn-primary">Browse profiles</a>
+          <a href="#apply" onClick={scrollToSection('apply')} className="cc-btn-secondary">Add yourself to the network</a>
         </div>
       </header>
 
@@ -633,10 +903,13 @@ export default function CoffeeChat() {
         <p className="cc-section-body" style={{ marginTop: '16px' }}>
           You pick who to reach out to, you send the request directly (usually via LinkedIn), and you schedule time that works for both of you. <strong>Jose and Jocelyn are not brokering introductions in the middle</strong> — this is a self-serve network designed to scale and stay lightweight.
         </p>
+        <p className="cc-section-body" style={{ marginTop: '16px' }}>
+          Want to be listed yourself? Fill out the form at the bottom of the page. Your profile <strong>goes live in the directory the moment you submit</strong> — no review queue, no waiting. You can email us anytime to update or remove it.
+        </p>
         <div className="cc-how__grid">
           {[
             { num: 'Step 01', title: 'Browse the directory', body: 'Use the search bar and filters to find people whose backgrounds, roles, or paths align with where you are trying to go. Read their cards carefully before reaching out.' },
-            { num: 'Step 02', title: 'Read their profile', body: "Every card shows their current role, their path, what topics they can talk about, and how many chats per month they can take. Use all of that before you write your message." },
+            { num: 'Step 02', title: 'Read their profile', body: "Every card shows their current role, their function tags (SWE, data, design, etc.), background tags (first-gen, transfer, etc.), the topics they can talk about, and how many chats per month they take. Use all of that before you write your message." },
             { num: 'Step 03', title: 'Send a personalized message', body: 'Use our coffee chat request templates as a starting point. Keep it short, specific, and respectful of their time. Under 80 words is a good rule of thumb.' },
             { num: 'Step 04', title: 'Show up prepared', body: 'If they accept, come ready with 3–5 real questions. Do your research. Be on time. Send a thank-you after. These small things matter more than most people think.' },
           ].map(s => (
@@ -655,7 +928,13 @@ export default function CoffeeChat() {
         <div className="cc-browse__head">
           <p className="cc-kicker">Section 02</p>
           <h2 className="cc-section-title">Browse the Coffee Chat Network</h2>
-          <p className="cc-section-sub">Filter by role, background, stage, or what you need help with.</p>
+          <p className="cc-section-sub">Search and filter by role, function, career stage, or background.</p>
+          <p style={{ fontSize: '13px', color: 'var(--color-muted)', marginTop: '6px', maxWidth: '640px' }}>
+            <span style={{ display: 'inline-block', fontSize: '10px', fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: '4px', background: 'rgba(58,125,107,.14)', color: 'var(--color-teal)', marginRight: '6px' }}>Featured</span>
+            profiles appear at the top — typically people Jose &amp; Jocelyn have personally vouched for.
+            <span style={{ display: 'inline-block', fontSize: '10px', fontWeight: 700, letterSpacing: '.06em', textTransform: 'uppercase', padding: '3px 8px', borderRadius: '4px', background: 'rgba(232,168,56,.12)', color: 'var(--color-gold-dark)', margin: '0 6px 0 14px' }}>New</span>
+            badges mark profiles added in the last 30 days.
+          </p>
         </div>
 
         <div className="cc-filter-bar">
@@ -677,38 +956,40 @@ export default function CoffeeChat() {
           <div className="cc-filters">
             <select className="cc-filter-select" aria-label="Role type" value={filterRole} onChange={e => setFilterRole(e.target.value)}>
               <option value="">All Role Types</option>
-              <option value="student">Student / Intern</option>
-              <option value="new-grad">New Grad</option>
-              <option value="early-career">Early Career</option>
-              <option value="mid-career">Mid / Senior</option>
-              <option value="recruiter">Recruiter</option>
-              <option value="career-changer">Career Changer</option>
+              <option value="student">Student / Intern{countSuffix(filterCounts.role['student'])}</option>
+              <option value="new-grad">New Grad{countSuffix(filterCounts.role['new-grad'])}</option>
+              <option value="early-career">Early Career{countSuffix(filterCounts.role['early-career'])}</option>
+              <option value="mid-career">Mid / Senior{countSuffix(filterCounts.role['mid-career'])}</option>
+              <option value="recruiter">Recruiter{countSuffix(filterCounts.role['recruiter'])}</option>
+              <option value="career-changer">Career Changer{countSuffix(filterCounts.role['career-changer'])}</option>
             </select>
             <select className="cc-filter-select" aria-label="Function" value={filterFunc} onChange={e => setFilterFunc(e.target.value)}>
               <option value="">All Functions</option>
-              {FUNCTION_OPTIONS.filter(f => f !== 'Other').map(f => (
-                <option key={f} value={slugify(f)}>{f}</option>
-              ))}
+              {FUNCTION_OPTIONS.filter(f => f !== 'Other').map(f => {
+                const slug = slugify(f)
+                return <option key={f} value={slug}>{f}{countSuffix(filterCounts.func[slug])}</option>
+              })}
             </select>
             <select className="cc-filter-select" aria-label="Stage" value={filterStage} onChange={e => setFilterStage(e.target.value)}>
               <option value="">All Stages</option>
-              <option value="first-internship">First Internship</option>
-              <option value="apprenticeship">Apprenticeship</option>
-              <option value="first-full-time">First Full-Time</option>
-              <option value="job-searching">Currently Job Searching</option>
-              <option value="transitioned">Transitioned / Pivoted</option>
-              <option value="experienced">Experienced</option>
+              <option value="first-internship">First Internship{countSuffix(filterCounts.stage['first-internship'])}</option>
+              <option value="apprenticeship">Apprenticeship{countSuffix(filterCounts.stage['apprenticeship'])}</option>
+              <option value="first-full-time">First Full-Time{countSuffix(filterCounts.stage['first-full-time'])}</option>
+              <option value="job-searching">Currently Job Searching{countSuffix(filterCounts.stage['job-searching'])}</option>
+              <option value="transitioned">Transitioned / Pivoted{countSuffix(filterCounts.stage['transitioned'])}</option>
+              <option value="experienced">Experienced{countSuffix(filterCounts.stage['experienced'])}</option>
             </select>
             <select className="cc-filter-select" aria-label="Identity" value={filterIdentity} onChange={e => setFilterIdentity(e.target.value)}>
               <option value="">All Identities</option>
-              {IDENTITY_OPTIONS.filter(i => i !== 'Other').map(i => (
-                <option key={i} value={slugify(i)}>{i}</option>
-              ))}
+              {IDENTITY_OPTIONS.filter(i => i !== 'Other').map(i => {
+                const slug = slugify(i)
+                return <option key={i} value={slug}>{i}{countSuffix(filterCounts.identity[slug])}</option>
+              })}
             </select>
           </div>
         </div>
 
-        {(search || filterRole || filterFunc || filterStage || filterIdentity) && (
+        {anyFilterActive && (
           <button
             type="button"
             onClick={() => { setSearch(''); setFilterRole(''); setFilterFunc(''); setFilterStage(''); setFilterIdentity('') }}
@@ -717,7 +998,14 @@ export default function CoffeeChat() {
             Clear all filters ×
           </button>
         )}
-        {!profilesLoading && !profilesError && <p className="cc-results-count"><span>{visibleProfiles.length}</span> people in the network</p>}
+        {!profilesLoading && !profilesError && (
+          <p className="cc-results-count">
+            {anyFilterActive
+              ? <>Showing <span>{visibleProfiles.length}</span> of <span>{dbProfiles.length}</span> {dbProfiles.length === 1 ? 'profile' : 'profiles'}</>
+              : <><span>{dbProfiles.length}</span> {dbProfiles.length === 1 ? 'person' : 'people'} in the network</>
+            }
+          </p>
+        )}
 
         <div className="cc-grid">
           {profilesLoading ? (
@@ -727,35 +1015,77 @@ export default function CoffeeChat() {
           ) : dbProfiles.length === 0 ? (
             <div className="cc-no-results">
               <p style={{ marginBottom: '14px' }}>The directory is just getting started — be one of the first to join.</p>
-              <a href="#apply" className="cc-btn-primary" style={{ display: 'inline-flex' }}>Apply to join the network</a>
+              <a href="#apply" onClick={scrollToSection('apply')} className="cc-btn-primary" style={{ display: 'inline-flex' }}>Add yourself to the network</a>
             </div>
           ) : visibleProfiles.length === 0 ? (
             <p className="cc-no-results">No profiles match your filters. Try adjusting your search.</p>
           ) : visibleProfiles.map(p => (
-            <article key={p.id} className="cc-card">
+            <article key={p.id} id={`cc-card-${p.id}`} className={`cc-card${highlightId === p.id ? ' cc-card--highlight' : ''}`}>
               <div className="cc-card__top">
                 <div className="cc-card__avatar">
-                  {p.avatarUrl ? <img src={p.avatarUrl} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : p.initial}
+                  {p.avatarUrl ? (
+                    <img
+                      src={p.avatarUrl}
+                      alt={`${p.name}'s profile photo`}
+                      loading="lazy"
+                      onError={(e) => {
+                        // Hide the broken image and let the initial show as fallback
+                        e.currentTarget.style.display = 'none'
+                        if (e.currentTarget.parentElement && !e.currentTarget.parentElement.dataset.fallback) {
+                          e.currentTarget.parentElement.dataset.fallback = '1'
+                          e.currentTarget.parentElement.textContent = p.initial
+                        }
+                      }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                    />
+                  ) : p.initial}
                 </div>
-                <span className={`cc-card__badge${p.badge === 'New' ? ' cc-card__badge--new' : ''}`}>{p.badge}</span>
+                {p.badge && <span className={`cc-card__badge cc-card__badge--${p.badgeKind}`}>{p.badge}</span>}
               </div>
               <div>
                 <div className="cc-card__name">{p.name}</div>
                 <div className="cc-card__role">{p.role}</div>
               </div>
               <div className="cc-card__headline">{p.headline}</div>
-              <div>
-                <div className="cc-card__topics-label">Topics</div>
-                <div className="cc-card__topics">{p.topics}</div>
-              </div>
-              <div className="cc-card__tags">
-                {p.tags.map(t => <span key={t.label} className={`cc-tag ${t.cls}`}>{t.label}</span>)}
-              </div>
+              {p.topics && (
+                <div>
+                  <div className="cc-card__topics-label">Topics</div>
+                  <div className="cc-card__topics">{p.topics}</div>
+                </div>
+              )}
+              {p.tags.length > 0 && (
+                <div className="cc-card__tags">
+                  {p.tags.map(t => <span key={t.label} className={`cc-tag ${t.cls}`}>{t.label}</span>)}
+                </div>
+              )}
               <div className="cc-card__capacity">{p.capacity}</div>
               <div className="cc-card__updated">{p.updated}</div>
               <div className="cc-card__actions">
                 {p.linkedIn && <a href={p.linkedIn} target="_blank" rel="noopener noreferrer" className="cc-card__cta-primary">Connect on LinkedIn ↗</a>}
-                <button className="cc-card__cta-secondary" onClick={() => openModal(p.name.split(' ')[0])}>Copy template</button>
+                <button
+                  className="cc-card__cta-secondary"
+                  type="button"
+                  aria-haspopup="dialog"
+                  onClick={() => openModal(p.firstName)}
+                >
+                  Copy template
+                </button>
+              </div>
+              <div className="cc-card__footer-row">
+                <button
+                  type="button"
+                  className="cc-card__share"
+                  onClick={() => copyShareLink(p.id)}
+                  aria-label={`Share link to ${p.name}'s profile`}
+                >
+                  {sharedId === p.id ? '✓ Link copied' : 'Share profile'}
+                </button>
+                <a
+                  className="cc-card__report"
+                  href={`mailto:campustocareerteam@gmail.com?subject=Coffee%20Chat%20Network%20—%20Report%20listing&body=Listing%20ID%3A%20${encodeURIComponent(p.id)}%0AName%3A%20${encodeURIComponent(p.name)}%0A%0AReason%3A%20`}
+                >
+                  Report listing
+                </a>
               </div>
             </article>
           ))}
@@ -806,12 +1136,12 @@ export default function CoffeeChat() {
             <p className="cc-apply__intro-kicker">Section 04</p>
             <h2 className="cc-apply__intro-title">Want to be listed in the Coffee Chat Network?</h2>
             <p className="cc-apply__intro-body">
-              If you are a student, recent grad, or professional who wants to give back — especially if you are <strong>first-gen, from an underrepresented group, or took a nontraditional route into tech</strong> — you can apply to be listed in the Coffee Chat Network. Submissions are reviewed within 1–2 business days, then your profile appears in the directory so others can reach out for short conversations, questions, and perspective.
+              If you are a student, recent grad, or professional who wants to give back — especially if you are <strong>first-gen, from an underrepresented group, or took a nontraditional route into tech</strong> — you can add yourself to the Coffee Chat Network. Your profile goes live the moment you submit, so others can reach out for short conversations, questions, and perspective.
             </p>
             <div className="cc-apply__perks">
               {[
                 'You control your own availability and capacity',
-                'Submissions reviewed within 1–2 business days',
+                'Your profile goes live the moment you submit',
                 'New listings stay highlighted for 30 days',
                 'Your email is stored privately and never displayed publicly',
                 'You are never obligated to accept every request',
@@ -828,8 +1158,13 @@ export default function CoffeeChat() {
             {formSubmitted ? (
               <div className="cc-form-success">
                 <div className="cc-form-success__icon">✓</div>
-                <div className="cc-form-success__title">Submission received!</div>
-                <p className="cc-form-success__body">Thanks for applying to the Coffee Chat Network. We review every submission within 1–2 business days to keep the directory safe — once approved, your profile will appear publicly and people can reach out. We'll email you when it goes live.</p>
+                <div className="cc-form-success__title">You're in the network!</div>
+                <p className="cc-form-success__body">Your profile is now live in the Coffee Chat Network. Students and peers can find you and reach out via your LinkedIn. Thanks for being someone who shows up for the next person.</p>
+                {submittedProfileId && (
+                  <button type="button" onClick={viewMyProfile} className="cc-btn-primary" style={{ marginTop: '20px', display: 'inline-flex' }}>
+                    See my listing in the directory →
+                  </button>
+                )}
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
@@ -845,9 +1180,14 @@ export default function CoffeeChat() {
                     )}
                     <div className="cc-photo-right">
                       <label htmlFor="ccPhoto" className="cc-photo-btn">Choose photo</label>
-                      <input id="ccPhoto" type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
+                      <input id="ccPhoto" type="file" accept="image/jpeg,image/png,image/gif,image/webp" style={{ display: 'none' }} onChange={e => {
                         const file = e.target.files?.[0]
                         if (!file) return
+                        if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
+                          setPhotoError('Please use JPG, PNG, GIF, or WebP. SVG and other formats are not supported.')
+                          e.target.value = ''
+                          return
+                        }
                         if (file.size > 2 * 1024 * 1024) {
                           setPhotoError('Photo must be under 2MB.')
                           e.target.value = ''
@@ -857,9 +1197,14 @@ export default function CoffeeChat() {
                         setPhotoFile(file)
                         setPhotoPreview(URL.createObjectURL(file))
                       }} />
-                      <p className="cc-photo-hint">JPG, PNG or GIF · Max 2MB</p>
+                      <p className="cc-photo-hint">JPG, PNG, GIF, or WebP · Max 2MB</p>
                       {photoError && <p style={{ color: 'var(--color-accent)', fontSize: '12px', margin: 0 }}>{photoError}</p>}
-                      {photoPreview && <button type="button" className="cc-photo-remove" onClick={() => { setPhotoFile(null); setPhotoPreview(null); setPhotoError('') }}>Remove</button>}
+                      {photoPreview && <button type="button" className="cc-photo-remove" onClick={() => {
+                        if (photoPreview) URL.revokeObjectURL(photoPreview)
+                        setPhotoFile(null)
+                        setPhotoPreview(null)
+                        setPhotoError('')
+                      }}>Remove</button>}
                     </div>
                   </div>
                 </div>
@@ -879,16 +1224,17 @@ export default function CoffeeChat() {
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccLinkedIn">LinkedIn URL <span>*</span></label>
-                  <input className="cc-form-input" type="url" id="ccLinkedIn" placeholder="https://linkedin.com/in/yourname" required maxLength={300} pattern="^(https?:\/\/)?([a-z]{2,3}\.)?linkedin\.com\/.+" title="Enter your LinkedIn profile URL (e.g. https://linkedin.com/in/yourname)" value={formData.linkedin} onChange={e => setFormData(d => ({ ...d, linkedin: e.target.value }))} />
+                  {/* type=text + inputMode=url so users can paste 'linkedin.com/in/foo' without scheme; we normalize on submit */}
+                  <input className="cc-form-input" type="text" inputMode="url" id="ccLinkedIn" placeholder="https://linkedin.com/in/yourname" required maxLength={300} autoComplete="url" title="Enter your LinkedIn profile URL (e.g. https://linkedin.com/in/yourname)" value={formData.linkedin} onChange={e => setFormData(d => ({ ...d, linkedin: e.target.value }))} />
                 </div>
                 <div className="cc-form-row cc-form-row-2">
                   <div>
                     <label className="cc-form-label" htmlFor="ccCurrentRole">Current Role + Company/School <span>*</span></label>
-                    <input className="cc-form-input" type="text" id="ccCurrentRole" placeholder="e.g. SWE @ Stripe" required maxLength={200} value={formData.role} onChange={e => setFormData(d => ({ ...d, role: e.target.value }))} />
+                    <input className="cc-form-input" type="text" id="ccCurrentRole" placeholder="e.g. SWE @ Stripe" required maxLength={200} autoComplete="organization-title" value={formData.role} onChange={e => setFormData(d => ({ ...d, role: e.target.value }))} />
                   </div>
                   <div>
                     <label className="cc-form-label" htmlFor="ccLocation">City / Time Zone</label>
-                    <input className="cc-form-input" type="text" id="ccLocation" placeholder="e.g. Boston, ET" maxLength={100} value={formData.location} onChange={e => setFormData(d => ({ ...d, location: e.target.value }))} />
+                    <input className="cc-form-input" type="text" id="ccLocation" placeholder="e.g. Boston, ET" maxLength={100} autoComplete="address-level2" value={formData.location} onChange={e => setFormData(d => ({ ...d, location: e.target.value }))} />
                   </div>
                 </div>
                 <div className="cc-form-row">
@@ -936,6 +1282,7 @@ export default function CoffeeChat() {
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccTopics">What topics can you talk about? <span>*</span></label>
                   <textarea className="cc-form-textarea" id="ccTopics" placeholder="e.g. First internships, technical interviews, navigating being first-gen at a big company…" required maxLength={500} value={formData.topics} onChange={e => setFormData(d => ({ ...d, topics: e.target.value }))}></textarea>
+                  <p style={{ fontSize: '11px', color: 'var(--color-muted)', textAlign: 'right', margin: '4px 2px 0 0' }}>{formData.topics.length} / 500</p>
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccCapacity">How many chats per month can you take? <span>*</span></label>
@@ -943,7 +1290,8 @@ export default function CoffeeChat() {
                     <option value="">Select capacity…</option>
                     <option value="1-2">1–2 chats / month</option>
                     <option value="3-5">3–5 chats / month</option>
-                    <option value="6+">6+ chats / month</option>
+                    <option value="6-9">6–9 chats / month</option>
+                    <option value="10+">10+ chats / month</option>
                   </select>
                 </div>
                 <div className="cc-form-row" style={{ marginBottom: '20px' }}>
@@ -960,6 +1308,26 @@ export default function CoffeeChat() {
                     <label className="cc-form-check-label" htmlFor="ccConsent3">I understand this is not a job placement service and I am not required to say yes to every request.</label>
                   </div>
                 </div>
+                {/* Honeypot — visually hidden but reachable to bots that scrape and auto-fill */}
+                <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}>
+                  <label htmlFor="ccWebsite">Leave this field blank</label>
+                  <input
+                    id="ccWebsite"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={formData.website}
+                    onChange={e => setFormData(d => ({ ...d, website: e.target.value }))}
+                  />
+                </div>
+                {turnstileSiteKey && (
+                  <div className="cc-form-row" style={{ display: 'flex', justifyContent: 'center' }}>
+                    <div ref={turnstileWidgetRef} />
+                  </div>
+                )}
+                <p style={{ fontSize: '12px', color: 'var(--color-muted)', lineHeight: 1.55, marginBottom: '14px', padding: '12px 14px', background: 'rgba(22,43,68,.04)', border: '1px solid rgba(22,43,68,.08)', borderRadius: '8px' }}>
+                  <strong style={{ color: 'var(--color-dark)', fontWeight: 600 }}>Privacy:</strong> Your data is stored privately in our database and is only used to operate the directory. To <strong>edit, pause, or delete</strong> your listing anytime, email <a href="mailto:campustocareerteam@gmail.com" style={{ color: 'var(--color-navy)', fontWeight: 600 }}>campustocareerteam@gmail.com</a>.
+                </p>
                 {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
                 <button className="cc-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit my profile'}</button>
               </form>
@@ -1006,6 +1374,56 @@ export default function CoffeeChat() {
           </div>
         </div>
       </section>
+
+      <section style={{ maxWidth: '720px', margin: '0 auto', padding: '60px clamp(20px,5vw,56px)', textAlign: 'center' }}>
+        <p className="cc-kicker" style={{ marginBottom: '10px' }}>La Voz del Día</p>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(20px,2.6vw,26px)', fontWeight: 700, color: 'var(--color-dark)', marginBottom: '8px', lineHeight: 1.25 }}>Get the weekly career letter.</h2>
+        <p style={{ fontSize: '14px', color: 'var(--color-muted)', lineHeight: 1.6, marginBottom: '20px' }}>Practical essays on first internships, recruiting, identity, and early-career life. One a week, no spam.</p>
+        {subState === 'success' ? (
+          <div>
+            <p style={{ color: 'var(--color-teal)', fontWeight: 600, fontSize: '14px', marginBottom: '6px' }}>✓ You're subscribed — see you in your inbox.</p>
+            <button
+              type="button"
+              onClick={() => { setSubState('idle'); setSubError(''); setSubEmail('') }}
+              style={{ background: 'none', border: 'none', color: 'var(--color-muted)', textDecoration: 'underline', cursor: 'pointer', fontSize: '12px', fontFamily: 'var(--font-body)', padding: 0 }}
+            >
+              Subscribe another email
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center', maxWidth: '480px', margin: '0 auto' }}>
+            <input
+              type="email"
+              required
+              maxLength={255}
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={subEmail}
+              onChange={e => setSubEmail(e.target.value)}
+              style={{ flex: '1 1 220px', minWidth: '180px', padding: '11px 14px', border: '1.5px solid rgba(0,0,0,.12)', borderRadius: '8px', fontFamily: 'var(--font-body)', fontSize: '14px', background: 'var(--color-white)', color: 'var(--color-dark)', outline: 'none' }}
+              aria-label="Email for newsletter"
+            />
+            <button type="submit" disabled={subState === 'loading'} className="cc-btn-primary" style={{ padding: '11px 20px', fontSize: '13px' }}>
+              {subState === 'loading' ? 'Subscribing…' : 'Subscribe'}
+            </button>
+            {/* Honeypot — visually hidden but reachable to scraping bots */}
+            <div aria-hidden="true" style={{ position: 'absolute', left: '-10000px', width: 1, height: 1, overflow: 'hidden' }}>
+              <label htmlFor="newsletterCompany">Company (leave blank)</label>
+              <input
+                id="newsletterCompany"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={subHoneypot}
+                onChange={e => setSubHoneypot(e.target.value)}
+              />
+            </div>
+          </form>
+        )}
+        {subError && <p style={{ color: 'var(--color-accent)', fontSize: '13px', marginTop: '10px' }}>{subError}</p>}
+      </section>
+
+      <hr className="cc-divider" />
 
       {/* Template Modal */}
       <div className={`cc-modal-overlay${modalOpen ? ' open' : ''}`} onClick={e => { if (e.target === e.currentTarget) closeModal() }}>

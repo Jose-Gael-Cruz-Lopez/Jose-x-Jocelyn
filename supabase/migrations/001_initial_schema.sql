@@ -70,11 +70,43 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_column THEN NULL;
 END $$;
 
--- Prevent duplicate submissions per email. Skips silently if duplicates already exist.
+-- Track when a profile was actually approved (vs. when it was submitted).
+DO $$ BEGIN
+  ALTER TABLE coffee_chat_profiles ADD COLUMN approved_at timestamptz;
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Allow admins to feature specific profiles so they sort to the top of the directory.
+DO $$ BEGIN
+  ALTER TABLE coffee_chat_profiles ADD COLUMN featured boolean DEFAULT false NOT NULL;
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Auto-set approved_at the first time status flips to 'approved'.
+CREATE OR REPLACE FUNCTION coffee_chat_set_approved_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.status = 'approved' AND (OLD.status IS DISTINCT FROM 'approved') AND NEW.approved_at IS NULL THEN
+    NEW.approved_at := now();
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS coffee_chat_approved_at_trigger ON coffee_chat_profiles;
+CREATE TRIGGER coffee_chat_approved_at_trigger
+  BEFORE UPDATE ON coffee_chat_profiles
+  FOR EACH ROW
+  EXECUTE FUNCTION coffee_chat_set_approved_at();
+
+-- Prevent duplicate submissions per email. Skips silently if the constraint already
+-- exists, or if duplicates would prevent it. UNIQUE constraints raise duplicate_table
+-- (42P07) on re-creation because they own an implicit index — catch that too.
 DO $$ BEGIN
   ALTER TABLE coffee_chat_profiles ADD CONSTRAINT coffee_chat_email_unique UNIQUE (email);
 EXCEPTION
   WHEN duplicate_object THEN NULL;
+  WHEN duplicate_table THEN NULL;
   WHEN unique_violation THEN
     RAISE NOTICE 'Could not add unique constraint on coffee_chat_profiles.email — existing duplicates must be cleaned up first';
 END $$;
@@ -92,9 +124,114 @@ REVOKE SELECT ON coffee_chat_profiles FROM anon, authenticated;
 GRANT SELECT (
   id, name, pronouns, linkedin_url, role_title, location,
   role_function, identity_tags, topics, capacity, avatar_url,
-  public_profile, status, created_at
+  public_profile, status, created_at, approved_at, featured
 ) ON coffee_chat_profiles TO anon, authenticated;
 GRANT INSERT ON coffee_chat_profiles TO anon, authenticated;
+
+
+-- ── 3a. COFFEE CHAT ADMIN ──────────────────────────────────
+-- Allow-list of admin emails. Authenticated users matching this list can
+-- moderate coffee chat submissions via the SECURITY DEFINER RPCs below.
+CREATE TABLE IF NOT EXISTS coffee_chat_admins (
+  email     text PRIMARY KEY,
+  added_at  timestamptz DEFAULT now()
+);
+
+ALTER TABLE coffee_chat_admins ENABLE ROW LEVEL SECURITY;
+
+-- Authenticated users can check whether *they themselves* are an admin (for the UI gate),
+-- but cannot enumerate other admins.
+DROP POLICY IF EXISTS "coffee_chat_admins_self_check" ON coffee_chat_admins;
+CREATE POLICY "coffee_chat_admins_self_check" ON coffee_chat_admins
+  FOR SELECT TO authenticated
+  USING (lower(email) = lower(auth.jwt() ->> 'email'));
+
+-- Helper used by the RPCs below.
+CREATE OR REPLACE FUNCTION is_coffee_chat_admin()
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1 FROM coffee_chat_admins
+    WHERE lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  );
+$$;
+
+-- List pending submissions — bypasses column grants so admins see email.
+CREATE OR REPLACE FUNCTION admin_list_pending_coffee_chat_profiles()
+RETURNS TABLE (
+  id uuid, name text, pronouns text, email text, linkedin_url text,
+  role_title text, location text, role_function text[], identity_tags text[],
+  topics text, capacity text, avatar_url text, created_at timestamptz
+)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF NOT is_coffee_chat_admin() THEN
+    RAISE EXCEPTION 'Not authorized' USING ERRCODE = '42501';
+  END IF;
+  RETURN QUERY
+    SELECT p.id, p.name, p.pronouns, p.email, p.linkedin_url,
+           p.role_title, p.location, p.role_function, p.identity_tags,
+           p.topics, p.capacity, p.avatar_url, p.created_at
+    FROM coffee_chat_profiles p
+    WHERE p.status = 'pending'
+    ORDER BY p.created_at ASC;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION admin_approve_coffee_chat_profile(profile_id uuid)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF NOT is_coffee_chat_admin() THEN
+    RAISE EXCEPTION 'Not authorized' USING ERRCODE = '42501';
+  END IF;
+  UPDATE coffee_chat_profiles SET status = 'approved' WHERE id = profile_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION admin_reject_coffee_chat_profile(profile_id uuid)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF NOT is_coffee_chat_admin() THEN
+    RAISE EXCEPTION 'Not authorized' USING ERRCODE = '42501';
+  END IF;
+  UPDATE coffee_chat_profiles SET status = 'rejected' WHERE id = profile_id;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION admin_set_featured_coffee_chat_profile(profile_id uuid, is_featured boolean)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  IF NOT is_coffee_chat_admin() THEN
+    RAISE EXCEPTION 'Not authorized' USING ERRCODE = '42501';
+  END IF;
+  UPDATE coffee_chat_profiles SET featured = is_featured WHERE id = profile_id;
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION is_coffee_chat_admin() TO authenticated;
+GRANT EXECUTE ON FUNCTION admin_list_pending_coffee_chat_profiles() TO authenticated;
+GRANT EXECUTE ON FUNCTION admin_approve_coffee_chat_profile(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION admin_reject_coffee_chat_profile(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION admin_set_featured_coffee_chat_profile(uuid, boolean) TO authenticated;
 
 
 -- ── 4. RESUME SUBMISSIONS ──────────────────────────────────

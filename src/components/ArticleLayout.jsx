@@ -13,7 +13,7 @@ const NAV_LINKS = [
   { to: '/resume-reviews', label: 'Resumes' },
 ]
 
-export default function ArticleLayout({ children, title }) {
+export default function ArticleLayout({ children, title, description }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { pathname } = useLocation()
@@ -29,6 +29,35 @@ export default function ArticleLayout({ children, title }) {
   useEffect(() => {
     document.title = title ? `${title} | Jose x Jocelyn` : 'Jose x Jocelyn'
   }, [title])
+
+  useEffect(() => {
+    if (!description) return
+    const setMeta = (name, attr = 'name') => {
+      let tag = document.head.querySelector(`meta[${attr}="${name}"]`)
+      if (!tag) {
+        tag = document.createElement('meta')
+        tag.setAttribute(attr, name)
+        document.head.appendChild(tag)
+      }
+      tag.setAttribute('content', description)
+    }
+    setMeta('description')
+    setMeta('og:description', 'property')
+    setMeta('twitter:description')
+    if (title) {
+      const setMetaTitle = (name, attr = 'name') => {
+        let tag = document.head.querySelector(`meta[${attr}="${name}"]`)
+        if (!tag) {
+          tag = document.createElement('meta')
+          tag.setAttribute(attr, name)
+          document.head.appendChild(tag)
+        }
+        tag.setAttribute('content', `${title} | Jose x Jocelyn`)
+      }
+      setMetaTitle('og:title', 'property')
+      setMetaTitle('twitter:title')
+    }
+  }, [description, title])
 
   useEffect(() => {
     if (menuOpen) {
