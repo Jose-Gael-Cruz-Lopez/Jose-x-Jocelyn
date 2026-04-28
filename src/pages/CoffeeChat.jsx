@@ -64,6 +64,13 @@ function MultiSelectDropdown({ options, selected, onChange, placeholder }) {
   )
 }
 
+const slugify = (s) => (s || '')
+  .toLowerCase()
+  .replace(/[\s\/]+/g, '-')
+  .replace(/[^a-z0-9-]/g, '')
+  .replace(/-+/g, '-')
+  .replace(/^-|-$/g, '')
+
 function dbProfileToCard(row) {
   const funcColorMap = {
     'Software Engineering': 'cc-tag--blue',
@@ -100,38 +107,62 @@ function dbProfileToCard(row) {
     ...(row.location ? [{ label: row.location, cls: 'cc-tag--muted' }] : []),
   ]
   const capacityMap = { '1-2': 'Open to 1–2 chats / month', '3-5': 'Open to 3–5 chats / month', '6+': 'Open to 6+ chats / month' }
-  const joined = new Date(row.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  const capacityLabel = capacityMap[row.capacity] || 'Open to coffee chats'
+  const createdAt = row.created_at ? new Date(row.created_at) : new Date()
+  const joined = createdAt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
   const titleLower = (row.role_title || '').toLowerCase()
-  const identityLower = identities.join(' ').toLowerCase()
-  const funcLower = funcs.join(' ').toLowerCase()
+  const topicsLower = (row.topics || '').toLowerCase()
+  const haystack = `${titleLower} ${topicsLower}`
+
+  // Exact-match slugs prevent "first-gen" filter from accidentally matching "first-gen immigrant".
+  const identitySlugs = identities.map(slugify)
+  const funcSlugs = funcs.map(slugify)
+  const identitySlugString = `|${identitySlugs.join('|')}|`
+  const funcSlugString = `|${funcSlugs.join('|')}|`
 
   let dataRole = ''
-  if (/student|intern|undergraduate/.test(titleLower)) dataRole = 'student'
-  else if (/new.?grad|recent.?grad|entry.?level/.test(titleLower)) dataRole = 'new-grad'
-  else if (/\b(junior|jr\.?|associate)\b/.test(titleLower)) dataRole = 'early-career'
-  else if (/\b(senior|sr\.?|lead|staff|principal|manager|director)\b/.test(titleLower)) dataRole = 'mid-career'
-  else if (/recruit|talent.?acqui/.test(titleLower) || funcLower.includes('recruiting')) dataRole = 'recruiter'
-  else if (identityLower.includes('career changer') || identityLower.includes('nontraditional') || identityLower.includes('returning adult')) dataRole = 'career-changer'
+  if (/\b(student|undergraduate|undergrad|grad student|phd candidate)\b/.test(haystack)) dataRole = 'student'
+  else if (/\bintern\b/.test(haystack)) dataRole = 'student'
+  else if (/(new|recent).?grad|entry.?level/.test(haystack)) dataRole = 'new-grad'
+  else if (/\b(junior|jr\.?|associate|analyst i)\b/.test(haystack)) dataRole = 'early-career'
+  else if (/\b(senior|sr\.?|lead|staff|principal|manager|director|vp|head of)\b/.test(haystack)) dataRole = 'mid-career'
+  else if (/recruit|talent.?acqui|sourcer/.test(haystack) || funcSlugs.includes('recruiting-hr')) dataRole = 'recruiter'
+  else if (
+    identitySlugs.includes('career-changer') ||
+    identitySlugs.includes('nontraditional-path') ||
+    identitySlugs.includes('returning-adult-student')
+  ) dataRole = 'career-changer'
 
   let dataStage = ''
-  if (/intern/.test(titleLower)) dataStage = 'first-internship'
-  else if (/apprentice/.test(titleLower)) dataStage = 'apprenticeship'
-  else if (/new.?grad|recent.?grad/.test(titleLower)) dataStage = 'first-full-time'
-  else if (identityLower.includes('career changer') || identityLower.includes('nontraditional')) dataStage = 'transitioned'
+  if (/\bintern\b/.test(haystack)) dataStage = 'first-internship'
+  else if (/apprentice/.test(haystack)) dataStage = 'apprenticeship'
+  else if (/(new|recent).?grad|first.?(job|role|full.?time)/.test(haystack)) dataStage = 'first-full-time'
+  else if (/\b(searching|job.?search|seeking|open to|laid off)\b/.test(haystack)) dataStage = 'job-searching'
+  else if (
+    identitySlugs.includes('career-changer') ||
+    identitySlugs.includes('nontraditional-path') ||
+    /pivot|transition/.test(haystack)
+  ) dataStage = 'transitioned'
+  else if (/\b(senior|staff|principal|lead|manager|director)\b/.test(haystack)) dataStage = 'experienced'
 
   return {
     id: row.id,
-    initial: (row.name || '?')[0].toUpperCase(),
-    name: row.name, badge: (Date.now() - new Date(row.created_at).getTime()) < 30 * 24 * 60 * 60 * 1000 ? 'New' : 'Active',
+    initial: (row.name || '?').slice(0, 1).toUpperCase(),
+    name: row.name,
+    badge: (Date.now() - createdAt.getTime()) < 30 * 24 * 60 * 60 * 1000 ? 'New' : 'Active',
     role: `${row.role_title}${row.location ? ' · ' + row.location : ''}`,
     headline: funcs.length ? `${funcs[0]} professional` : row.role_title,
     topics: row.topics || '',
-    tags, capacity: capacityMap[row.capacity] || row.capacity || 'Open',
+    tags,
+    capacity: capacityLabel,
     updated: `Joined ${joined}`,
-    linkedIn: row.linkedin_url, avatarUrl: row.avatar_url || null,
-    dataRole, dataFunc: funcLower,
-    dataStage, dataIdentity: identityLower,
+    linkedIn: row.linkedin_url,
+    avatarUrl: row.avatar_url || null,
+    dataRole,
+    dataFuncSlugs: funcSlugString,
+    dataStage,
+    dataIdentitySlugs: identitySlugString,
     dataAvail: 'coffee-chats',
     dataKeywords: `${row.name} ${row.role_title} ${row.topics || ''} ${funcs.join(' ')} ${identities.join(' ')} ${row.location || ''}`.toLowerCase(),
   }
@@ -162,17 +193,20 @@ export default function CoffeeChat() {
   const [formData, setFormData] = useState({
     name: '', pronouns: '', email: '', linkedin: '',
     role: '', location: '', topics: '', capacity: '',
-    consent1: false, consent2: false,
+    consent1: false, consent2: false, consent3: false,
   })
 
   const [dbProfiles, setDbProfiles] = useState([])
   const [profilesLoading, setProfilesLoading] = useState(true)
   const [profilesError, setProfilesError] = useState(false)
   const ccModalRef = useRef(null)
+  const lastFocusedRef = useRef(null)
+  const copyTimeoutRef = useRef(null)
 
   useEffect(() => {
+    // Explicit column list — never fetch `email` to the public client.
     supabase.from('coffee_chat_profiles')
-      .select('*')
+      .select('id, name, pronouns, linkedin_url, role_title, location, role_function, identity_tags, topics, capacity, avatar_url, created_at')
       .eq('status', 'approved')
       .eq('public_profile', true)
       .order('created_at', { ascending: false })
@@ -184,6 +218,10 @@ export default function CoffeeChat() {
         }
         setProfilesLoading(false)
       })
+  }, [])
+
+  useEffect(() => () => {
+    if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current)
   }, [])
 
   useEffect(() => {
@@ -206,18 +244,20 @@ export default function CoffeeChat() {
   const visibleProfiles = dbProfiles.filter(p => {
     const q = search.toLowerCase().trim()
     if (q) {
-      const haystack = [p.dataKeywords, p.name.toLowerCase(), p.dataRole, p.dataFunc, p.dataStage, p.dataIdentity].join(' ')
+      const haystack = [p.dataKeywords, p.name.toLowerCase(), p.dataRole, p.dataStage].join(' ')
       if (!haystack.includes(q)) return false
     }
-    if (filterRole && !p.dataRole.includes(filterRole)) return false
-    if (filterFunc && !p.dataFunc.includes(filterFunc)) return false
-    if (filterStage && !p.dataStage.includes(filterStage)) return false
-    if (filterIdentity && !p.dataIdentity.includes(filterIdentity)) return false
-    if (filterAvail && !p.dataAvail.includes(filterAvail)) return false
+    if (filterRole && p.dataRole !== filterRole) return false
+    // Slug-bracketed match prevents "first-gen" from accidentally matching "first-gen-immigrant"
+    if (filterFunc && !p.dataFuncSlugs.includes(`|${filterFunc}|`)) return false
+    if (filterStage && p.dataStage !== filterStage) return false
+    if (filterIdentity && !p.dataIdentitySlugs.includes(`|${filterIdentity}|`)) return false
+    if (filterAvail && p.dataAvail !== filterAvail) return false
     return true
   })
 
   const openModal = (name) => {
+    lastFocusedRef.current = document.activeElement
     setModalName(name)
     setModalOpen(true)
     setCopied(false)
@@ -226,6 +266,15 @@ export default function CoffeeChat() {
   const closeModal = () => {
     setModalOpen(false)
     setCopied(false)
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current)
+      copyTimeoutRef.current = null
+    }
+    // Restore focus to the trigger so keyboard users don't lose their place
+    setTimeout(() => {
+      const el = lastFocusedRef.current
+      if (el && typeof el.focus === 'function') el.focus()
+    }, 0)
   }
 
   const handleCcModalKeyDown = useCallback((e) => {
@@ -247,54 +296,96 @@ export default function CoffeeChat() {
     const text = TEMPLATE_TEXT.replace('[Name]', modalName)
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true)
-      setTimeout(() => setCopied(false), 2500)
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current)
+      copyTimeoutRef.current = setTimeout(() => {
+        setCopied(false)
+        copyTimeoutRef.current = null
+      }, 2500)
+    }).catch(() => {
+      setCopied(false)
     })
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const { name, email, linkedin, role, topics, capacity, consent1, consent2 } = formData
-    if (!name || !email || !linkedin || !role || !topics || !capacity || funcChips.length === 0) {
+    const { name, email, linkedin, role, topics, capacity, consent1, consent2, consent3 } = formData
+    const trimmedEmail = email.trim()
+    if (!name.trim() || !trimmedEmail || !linkedin.trim() || !role.trim() || !topics.trim() || !capacity || funcChips.length === 0) {
       setFormError('Please fill in all required fields before submitting.')
       return
     }
-    if (!consent1 || !consent2) {
-      setFormError('Please check both consent boxes before submitting.')
+    // Basic email shape check beyond browser validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      setFormError('Please enter a valid email address.')
+      return
+    }
+    if (funcChips.includes('Other') && !funcOtherText.trim()) {
+      setFormError('Please describe your role / function in the "Other" field.')
+      return
+    }
+    if (identityChips.includes('Other') && !identityOtherText.trim()) {
+      setFormError('Please describe your identity in the "Other" field.')
+      return
+    }
+    if (!consent1 || !consent2 || !consent3) {
+      setFormError('Please check all three consent boxes before submitting.')
       return
     }
     setFormLoading(true)
     setFormError('')
+
+    // Normalize LinkedIn URL — accept "linkedin.com/in/foo" without scheme
+    const normalizedLinkedIn = (() => {
+      const trimmed = linkedin.trim()
+      if (/^https?:\/\//i.test(trimmed)) return trimmed
+      return `https://${trimmed.replace(/^\/+/, '')}`
+    })()
+
     let avatar_url = null
     if (photoFile) {
-      const ext = photoFile.name.split('.').pop()
+      const ext = (photoFile.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg'
       const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-      const { error: uploadError } = await supabase.storage.from('avatars').upload(path, photoFile, { contentType: photoFile.type })
-      if (!uploadError) {
-        const { data } = supabase.storage.from('avatars').getPublicUrl(path)
-        avatar_url = data.publicUrl
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(path, photoFile, { contentType: photoFile.type })
+      if (uploadError) {
+        setFormLoading(false)
+        setFormError('We couldn\'t upload your photo. Please try a smaller image, a different format, or remove it and resubmit.')
+        return
       }
+      const { data } = supabase.storage.from('avatars').getPublicUrl(path)
+      avatar_url = data.publicUrl
     }
-    const processedFuncChips = funcChips.map(c => c === 'Other' ? (funcOtherText.trim() || 'Other') : c)
-    const processedIdentityChips = identityChips.map(c => c === 'Other' ? (identityOtherText.trim() || 'Other') : c)
+
+    const processedFuncChips = funcChips.map(c => c === 'Other' ? funcOtherText.trim() : c)
+    const processedIdentityChips = identityChips.map(c => c === 'Other' ? identityOtherText.trim() : c)
+
     const { error } = await supabase.from('coffee_chat_profiles').insert({
-      name: formData.name,
-      pronouns: formData.pronouns || null,
-      email: formData.email,
-      linkedin_url: formData.linkedin,
-      role_title: formData.role,
-      location: formData.location || null,
+      name: name.trim(),
+      pronouns: formData.pronouns.trim() || null,
+      email: trimmedEmail,
+      linkedin_url: normalizedLinkedIn,
+      role_title: role.trim(),
+      location: formData.location.trim() || null,
       role_function: processedFuncChips,
       identity_tags: processedIdentityChips,
-      topics: formData.topics,
-      capacity: formData.capacity,
+      topics: topics.trim(),
+      capacity: capacity,
       consented_at: new Date().toISOString(),
-      status: 'approved',
+      // Profiles enter moderation queue. An admin flips status → 'approved' to publish.
+      status: 'pending',
       public_profile: true,
       avatar_url,
     })
     setFormLoading(false)
     if (error) {
-      setFormError('Something went wrong. Please try again.')
+      if (error.code === '23505') {
+        setFormError('We already have a submission with this email. If you\'d like to update your profile, please email campustocareerteam@gmail.com.')
+      } else if (error.message?.toLowerCase().includes('row-level security')) {
+        setFormError('Submission was blocked by security rules. Please email campustocareerteam@gmail.com so we can investigate.')
+      } else {
+        setFormError('Something went wrong. Please try again.')
+      }
     } else {
       setFormSubmitted(true)
     }
@@ -489,7 +580,7 @@ export default function CoffeeChat() {
         @media (max-width: 480px) { .cc-hero { padding: 80px 16px 40px; } }
       `}</style>
 
-      <header className="cc-hero" id="top">
+      <header className="cc-hero">
         <p className="cc-hero__kicker">From Campus to Career · Community</p>
         <h1 className="cc-hero__title">Coffee Chat <em>Network</em></h1>
         <p className="cc-hero__sub">A live directory of students, grads, and professionals who actually want to be reached out to.</p>
@@ -560,37 +651,33 @@ export default function CoffeeChat() {
           <div className="cc-filters">
             <select className="cc-filter-select" aria-label="Role type" value={filterRole} onChange={e => setFilterRole(e.target.value)}>
               <option value="">All Role Types</option>
-              <option value="student">Student</option>
+              <option value="student">Student / Intern</option>
               <option value="new-grad">New Grad</option>
               <option value="early-career">Early Career</option>
-              <option value="mid-career">Mid-Career</option>
+              <option value="mid-career">Mid / Senior</option>
               <option value="recruiter">Recruiter</option>
               <option value="career-changer">Career Changer</option>
             </select>
             <select className="cc-filter-select" aria-label="Function" value={filterFunc} onChange={e => setFilterFunc(e.target.value)}>
               <option value="">All Functions</option>
-              <option value="software engineering">Software Engineering</option>
-              <option value="data">Data / Analytics</option>
-              <option value="product">Product Management</option>
-              <option value="design">Design</option>
-              <option value="research">Research</option>
-              <option value="business">Business / Operations</option>
-              <option value="recruiting">Recruiting</option>
+              {FUNCTION_OPTIONS.filter(f => f !== 'Other').map(f => (
+                <option key={f} value={slugify(f)}>{f}</option>
+              ))}
             </select>
             <select className="cc-filter-select" aria-label="Stage" value={filterStage} onChange={e => setFilterStage(e.target.value)}>
               <option value="">All Stages</option>
               <option value="first-internship">First Internship</option>
               <option value="apprenticeship">Apprenticeship</option>
               <option value="first-full-time">First Full-Time</option>
-              <option value="transitioned">Transitioned into Tech</option>
+              <option value="job-searching">Currently Job Searching</option>
+              <option value="transitioned">Transitioned / Pivoted</option>
+              <option value="experienced">Experienced</option>
             </select>
             <select className="cc-filter-select" aria-label="Identity" value={filterIdentity} onChange={e => setFilterIdentity(e.target.value)}>
               <option value="">All Identities</option>
-              <option value="first-gen">First-Gen</option>
-              <option value="transfer">Transfer</option>
-              <option value="community college">Community College</option>
-              <option value="international">International</option>
-              <option value="nontraditional">Nontraditional Path</option>
+              {IDENTITY_OPTIONS.filter(i => i !== 'Other').map(i => (
+                <option key={i} value={slugify(i)}>{i}</option>
+              ))}
             </select>
             <select className="cc-filter-select" aria-label="Availability" value={filterAvail} onChange={e => setFilterAvail(e.target.value)}>
               <option value="">All Availability</option>
@@ -615,6 +702,11 @@ export default function CoffeeChat() {
             <p className="cc-no-results" style={{ fontStyle: 'italic' }}>Loading profiles…</p>
           ) : profilesError ? (
             <p className="cc-no-results">Something went wrong loading profiles. Please refresh the page.</p>
+          ) : dbProfiles.length === 0 ? (
+            <div className="cc-no-results">
+              <p style={{ marginBottom: '14px' }}>The directory is just getting started — be one of the first to join.</p>
+              <a href="#apply" className="cc-btn-primary" style={{ display: 'inline-flex' }}>Apply to join the network</a>
+            </div>
           ) : visibleProfiles.length === 0 ? (
             <p className="cc-no-results">No profiles match your filters. Try adjusting your search.</p>
           ) : visibleProfiles.map(p => (
@@ -692,10 +784,16 @@ export default function CoffeeChat() {
             <p className="cc-apply__intro-kicker">Section 04</p>
             <h2 className="cc-apply__intro-title">Want to be listed in the Coffee Chat Network?</h2>
             <p className="cc-apply__intro-body">
-              If you are a student, recent grad, or professional who wants to give back — especially if you are <strong>first-gen, from an underrepresented group, or took a nontraditional route into tech</strong> — you can add yourself to the Coffee Chat Network. Your profile will show up in the directory so others can reach out for short conversations, questions, and perspective.
+              If you are a student, recent grad, or professional who wants to give back — especially if you are <strong>first-gen, from an underrepresented group, or took a nontraditional route into tech</strong> — you can apply to be listed in the Coffee Chat Network. Submissions are reviewed within 1–2 business days, then your profile appears in the directory so others can reach out for short conversations, questions, and perspective.
             </p>
             <div className="cc-apply__perks">
-              {['You control your own availability and capacity', 'New listings stay highlighted for 30 days', 'Your email is never displayed publicly', 'You are never obligated to accept every request'].map(p => (
+              {[
+                'You control your own availability and capacity',
+                'Submissions reviewed within 1–2 business days',
+                'New listings stay highlighted for 30 days',
+                'Your email is stored privately and never displayed publicly',
+                'You are never obligated to accept every request',
+              ].map(p => (
                 <div key={p} className="cc-apply__perk">
                   <span className="cc-apply__perk-icon">✓</span>
                   <span>{p}</span>
@@ -708,8 +806,8 @@ export default function CoffeeChat() {
             {formSubmitted ? (
               <div className="cc-form-success">
                 <div className="cc-form-success__icon">✓</div>
-                <div className="cc-form-success__title">You're on the list!</div>
-                <p className="cc-form-success__body">Your profile is now live on the Coffee Chat Network. Students and peers can already find you and reach out. Thank you for being someone who gives back.</p>
+                <div className="cc-form-success__title">Submission received!</div>
+                <p className="cc-form-success__body">Thanks for applying to the Coffee Chat Network. We review every submission within 1–2 business days to keep the directory safe — once approved, your profile will appear publicly and people can reach out. We'll email you when it goes live.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
@@ -746,29 +844,29 @@ export default function CoffeeChat() {
                 <div className="cc-form-row cc-form-row-2">
                   <div>
                     <label className="cc-form-label" htmlFor="ccName">Full Name <span>*</span></label>
-                    <input className="cc-form-input" type="text" id="ccName" placeholder="Your full name" value={formData.name} onChange={e => setFormData(d => ({ ...d, name: e.target.value }))} />
+                    <input className="cc-form-input" type="text" id="ccName" placeholder="Your full name" required maxLength={100} autoComplete="name" value={formData.name} onChange={e => setFormData(d => ({ ...d, name: e.target.value }))} />
                   </div>
                   <div>
                     <label className="cc-form-label" htmlFor="ccPronouns">Pronouns</label>
-                    <input className="cc-form-input" type="text" id="ccPronouns" placeholder="e.g. she/her" value={formData.pronouns} onChange={e => setFormData(d => ({ ...d, pronouns: e.target.value }))} />
+                    <input className="cc-form-input" type="text" id="ccPronouns" placeholder="e.g. she/her" maxLength={40} value={formData.pronouns} onChange={e => setFormData(d => ({ ...d, pronouns: e.target.value }))} />
                   </div>
                 </div>
                 <div className="cc-form-row">
-                  <label className="cc-form-label" htmlFor="ccEmail">Email <span>*</span> <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(for internal use only)</span></label>
-                  <input className="cc-form-input" type="email" id="ccEmail" placeholder="your@email.com" value={formData.email} onChange={e => setFormData(d => ({ ...d, email: e.target.value }))} />
+                  <label className="cc-form-label" htmlFor="ccEmail">Email <span>*</span> <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(stored privately — never shown publicly)</span></label>
+                  <input className="cc-form-input" type="email" id="ccEmail" placeholder="your@email.com" required maxLength={255} autoComplete="email" value={formData.email} onChange={e => setFormData(d => ({ ...d, email: e.target.value }))} />
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccLinkedIn">LinkedIn URL <span>*</span></label>
-                  <input className="cc-form-input" type="url" id="ccLinkedIn" placeholder="linkedin.com/in/yourname" value={formData.linkedin} onChange={e => setFormData(d => ({ ...d, linkedin: e.target.value }))} />
+                  <input className="cc-form-input" type="url" id="ccLinkedIn" placeholder="https://linkedin.com/in/yourname" required maxLength={300} pattern="^(https?:\/\/)?([a-z]{2,3}\.)?linkedin\.com\/.+" title="Enter your LinkedIn profile URL (e.g. https://linkedin.com/in/yourname)" value={formData.linkedin} onChange={e => setFormData(d => ({ ...d, linkedin: e.target.value }))} />
                 </div>
                 <div className="cc-form-row cc-form-row-2">
                   <div>
                     <label className="cc-form-label" htmlFor="ccCurrentRole">Current Role + Company/School <span>*</span></label>
-                    <input className="cc-form-input" type="text" id="ccCurrentRole" placeholder="e.g. SWE @ Stripe" value={formData.role} onChange={e => setFormData(d => ({ ...d, role: e.target.value }))} />
+                    <input className="cc-form-input" type="text" id="ccCurrentRole" placeholder="e.g. SWE @ Stripe" required maxLength={200} value={formData.role} onChange={e => setFormData(d => ({ ...d, role: e.target.value }))} />
                   </div>
                   <div>
                     <label className="cc-form-label" htmlFor="ccLocation">City / Time Zone</label>
-                    <input className="cc-form-input" type="text" id="ccLocation" placeholder="e.g. Boston, ET" value={formData.location} onChange={e => setFormData(d => ({ ...d, location: e.target.value }))} />
+                    <input className="cc-form-input" type="text" id="ccLocation" placeholder="e.g. Boston, ET" maxLength={100} value={formData.location} onChange={e => setFormData(d => ({ ...d, location: e.target.value }))} />
                   </div>
                 </div>
                 <div className="cc-form-row">
@@ -785,6 +883,7 @@ export default function CoffeeChat() {
                       className="cc-form-input"
                       type="text"
                       placeholder="Please describe your role / function…"
+                      maxLength={80}
                       value={funcOtherText}
                       onChange={e => setFuncOtherText(e.target.value)}
                       style={{ marginTop: '10px' }}
@@ -805,6 +904,7 @@ export default function CoffeeChat() {
                       className="cc-form-input"
                       type="text"
                       placeholder="Please describe your identity…"
+                      maxLength={80}
                       value={identityOtherText}
                       onChange={e => setIdentityOtherText(e.target.value)}
                       style={{ marginTop: '10px' }}
@@ -813,11 +913,11 @@ export default function CoffeeChat() {
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccTopics">What topics can you talk about? <span>*</span></label>
-                  <textarea className="cc-form-textarea" id="ccTopics" placeholder="e.g. First internships, technical interviews, navigating being first-gen at a big company…" value={formData.topics} onChange={e => setFormData(d => ({ ...d, topics: e.target.value }))}></textarea>
+                  <textarea className="cc-form-textarea" id="ccTopics" placeholder="e.g. First internships, technical interviews, navigating being first-gen at a big company…" required maxLength={500} value={formData.topics} onChange={e => setFormData(d => ({ ...d, topics: e.target.value }))}></textarea>
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccCapacity">How many chats per month can you take? <span>*</span></label>
-                  <select className="cc-form-select" id="ccCapacity" value={formData.capacity} onChange={e => setFormData(d => ({ ...d, capacity: e.target.value }))}>
+                  <select className="cc-form-select" id="ccCapacity" required value={formData.capacity} onChange={e => setFormData(d => ({ ...d, capacity: e.target.value }))}>
                     <option value="">Select capacity…</option>
                     <option value="1-2">1–2 chats / month</option>
                     <option value="3-5">3–5 chats / month</option>
@@ -826,12 +926,16 @@ export default function CoffeeChat() {
                 </div>
                 <div className="cc-form-row" style={{ marginBottom: '20px' }}>
                   <div className="cc-form-check">
-                    <input type="checkbox" id="ccConsent1" checked={formData.consent1} onChange={e => setFormData(d => ({ ...d, consent1: e.target.checked }))} />
-                    <label className="cc-form-check-label" htmlFor="ccConsent1">I am okay being listed publicly on the Coffee Chat Network.</label>
+                    <input type="checkbox" id="ccConsent1" required checked={formData.consent1} onChange={e => setFormData(d => ({ ...d, consent1: e.target.checked }))} />
+                    <label className="cc-form-check-label" htmlFor="ccConsent1">I consent to being listed publicly on the Coffee Chat Network. My name, pronouns, role, photo (if uploaded), LinkedIn URL, location, topics, and selected tags will be visible to anyone who visits the directory.</label>
                   </div>
                   <div className="cc-form-check">
-                    <input type="checkbox" id="ccConsent2" checked={formData.consent2} onChange={e => setFormData(d => ({ ...d, consent2: e.target.checked }))} />
-                    <label className="cc-form-check-label" htmlFor="ccConsent2">I understand this is not a job placement service and I am not required to say yes to every request.</label>
+                    <input type="checkbox" id="ccConsent2" required checked={formData.consent2} onChange={e => setFormData(d => ({ ...d, consent2: e.target.checked }))} />
+                    <label className="cc-form-check-label" htmlFor="ccConsent2">I understand my email is stored privately, used only by the Jose × Jocelyn team for moderation and updates, and will not appear in the public directory.</label>
+                  </div>
+                  <div className="cc-form-check">
+                    <input type="checkbox" id="ccConsent3" required checked={formData.consent3} onChange={e => setFormData(d => ({ ...d, consent3: e.target.checked }))} />
+                    <label className="cc-form-check-label" htmlFor="ccConsent3">I understand this is not a job placement service and I am not required to say yes to every request.</label>
                   </div>
                 </div>
                 {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}

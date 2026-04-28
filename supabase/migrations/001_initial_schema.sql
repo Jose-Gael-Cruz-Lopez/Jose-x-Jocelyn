@@ -57,11 +57,27 @@ CREATE TABLE IF NOT EXISTS coffee_chat_profiles (
   identity_tags   text[],
   topics          text,
   capacity        text,
+  avatar_url      text,
   public_profile  boolean DEFAULT true,
   consented_at    timestamptz,
   status          text DEFAULT 'pending',
   created_at      timestamptz DEFAULT now()
 );
+
+-- For databases that already have the table without avatar_url, add it.
+DO $$ BEGIN
+  ALTER TABLE coffee_chat_profiles ADD COLUMN avatar_url text;
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Prevent duplicate submissions per email. Skips silently if duplicates already exist.
+DO $$ BEGIN
+  ALTER TABLE coffee_chat_profiles ADD CONSTRAINT coffee_chat_email_unique UNIQUE (email);
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+  WHEN unique_violation THEN
+    RAISE NOTICE 'Could not add unique constraint on coffee_chat_profiles.email — existing duplicates must be cleaned up first';
+END $$;
 
 ALTER TABLE coffee_chat_profiles ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "coffee_chat_insert" ON coffee_chat_profiles;
@@ -69,6 +85,16 @@ DROP POLICY IF EXISTS "coffee_chat_read_approved" ON coffee_chat_profiles;
 CREATE POLICY "coffee_chat_insert" ON coffee_chat_profiles FOR INSERT WITH CHECK (true);
 CREATE POLICY "coffee_chat_read_approved" ON coffee_chat_profiles FOR SELECT
   USING (status = 'approved' AND public_profile = true);
+
+-- Defense in depth: revoke broad SELECT and re-grant only non-sensitive columns to anon/auth.
+-- The `email` column is intentionally excluded so it cannot be queried by the public client.
+REVOKE SELECT ON coffee_chat_profiles FROM anon, authenticated;
+GRANT SELECT (
+  id, name, pronouns, linkedin_url, role_title, location,
+  role_function, identity_tags, topics, capacity, avatar_url,
+  public_profile, status, created_at
+) ON coffee_chat_profiles TO anon, authenticated;
+GRANT INSERT ON coffee_chat_profiles TO anon, authenticated;
 
 
 -- ── 4. RESUME SUBMISSIONS ──────────────────────────────────
@@ -193,13 +219,21 @@ DROP POLICY IF EXISTS "linkedin_requests_insert" ON linkedin_episode_requests;
 CREATE POLICY "linkedin_requests_insert" ON linkedin_episode_requests FOR INSERT WITH CHECK (true);
 
 
--- ── STORAGE BUCKET ─────────────────────────────────────────
+-- ── STORAGE BUCKETS ────────────────────────────────────────
+-- Resumes: private bucket — admins only via service_role
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('resumes', 'resumes', false)
 ON CONFLICT (id) DO NOTHING;
 
+-- Avatars: public read so coffee chat profile photos render anywhere
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('avatars', 'avatars', true)
+ON CONFLICT (id) DO NOTHING;
+
 DROP POLICY IF EXISTS "resume_upload" ON storage.objects;
 DROP POLICY IF EXISTS "resume_admin_select" ON storage.objects;
+DROP POLICY IF EXISTS "avatar_upload" ON storage.objects;
+DROP POLICY IF EXISTS "avatar_public_read" ON storage.objects;
 
 CREATE POLICY "resume_upload" ON storage.objects
   FOR INSERT WITH CHECK (
@@ -211,3 +245,11 @@ CREATE POLICY "resume_admin_select" ON storage.objects
   FOR SELECT USING (
     bucket_id = 'resumes' AND auth.role() = 'service_role'
   );
+
+-- Anyone can upload an avatar during the coffee-chat sign-up flow
+CREATE POLICY "avatar_upload" ON storage.objects
+  FOR INSERT WITH CHECK (bucket_id = 'avatars');
+
+-- Public read so <img src> works without auth
+CREATE POLICY "avatar_public_read" ON storage.objects
+  FOR SELECT USING (bucket_id = 'avatars');
