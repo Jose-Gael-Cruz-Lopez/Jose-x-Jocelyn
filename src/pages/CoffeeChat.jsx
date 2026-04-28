@@ -64,6 +64,33 @@ function MultiSelectDropdown({ options, selected, onChange, placeholder }) {
   )
 }
 
+const FUNC_HEADLINE_MAP = {
+  'Software Engineering': 'Software engineer',
+  'Data / Analytics': 'Data & analytics',
+  'Product Management': 'Product manager',
+  'UX / UI Design': 'UX/UI designer',
+  'Research': 'Researcher',
+  'Business / Operations': 'Business & operations',
+  'Recruiting / HR': 'Recruiter / HR',
+  'Marketing': 'Marketer',
+  'Sales': 'Sales professional',
+  'Finance / Accounting': 'Finance & accounting',
+  'Consulting': 'Consultant',
+  'Legal': 'Legal professional',
+  'Healthcare / Medicine': 'Healthcare professional',
+  'Education / Teaching': 'Educator',
+  'Cybersecurity': 'Cybersecurity professional',
+  'DevOps / Infrastructure': 'DevOps engineer',
+  'Machine Learning / AI': 'ML/AI engineer',
+  'Mobile Development': 'Mobile developer',
+  'QA / Testing': 'QA engineer',
+  'Project / Program Management': 'Program manager',
+  'Social Work / Nonprofit': 'Social sector professional',
+  'Journalism / Media': 'Journalist / media',
+  'Architecture / Engineering': 'Architect / engineer',
+  'Customer Success': 'Customer success',
+}
+
 function dbProfileToCard(row) {
   const funcColorMap = {
     'Software Engineering': 'cc-tag--blue',
@@ -124,15 +151,14 @@ function dbProfileToCard(row) {
     id: row.id,
     initial: (row.name || '?')[0].toUpperCase(),
     name: row.name, badge: (Date.now() - new Date(row.created_at).getTime()) < 30 * 24 * 60 * 60 * 1000 ? 'New' : 'Active',
-    role: `${row.role_title}${row.location ? ' · ' + row.location : ''}`,
-    headline: funcs.length ? `${funcs[0]} professional` : row.role_title,
+    role: row.role_title,
+    headline: funcs.length ? (FUNC_HEADLINE_MAP[funcs[0]] || funcs[0]) : row.role_title,
     topics: row.topics || '',
     tags, capacity: capacityMap[row.capacity] || row.capacity || 'Open',
     updated: `Joined ${joined}`,
     linkedIn: row.linkedin_url, avatarUrl: row.avatar_url || null,
     dataRole, dataFunc: funcLower,
     dataStage, dataIdentity: identityLower,
-    dataAvail: 'coffee-chats',
     dataKeywords: `${row.name} ${row.role_title} ${row.topics || ''} ${funcs.join(' ')} ${identities.join(' ')} ${row.location || ''}`.toLowerCase(),
   }
 }
@@ -143,7 +169,6 @@ export default function CoffeeChat() {
   const [filterFunc, setFilterFunc] = useState('')
   const [filterStage, setFilterStage] = useState('')
   const [filterIdentity, setFilterIdentity] = useState('')
-  const [filterAvail, setFilterAvail] = useState('')
 
   const [modalOpen, setModalOpen] = useState(false)
   const [modalName, setModalName] = useState('')
@@ -213,7 +238,6 @@ export default function CoffeeChat() {
     if (filterFunc && !p.dataFunc.includes(filterFunc)) return false
     if (filterStage && !p.dataStage.includes(filterStage)) return false
     if (filterIdentity && !p.dataIdentity.includes(filterIdentity)) return false
-    if (filterAvail && !p.dataAvail.includes(filterAvail)) return false
     return true
   })
 
@@ -587,22 +611,32 @@ export default function CoffeeChat() {
             <select className="cc-filter-select" aria-label="Identity" value={filterIdentity} onChange={e => setFilterIdentity(e.target.value)}>
               <option value="">All Identities</option>
               <option value="first-gen">First-Gen</option>
-              <option value="transfer">Transfer</option>
+              <option value="low-income">Low-Income Background</option>
+              <option value="transfer">Transfer Student</option>
               <option value="community college">Community College</option>
-              <option value="international">International</option>
+              <option value="international">International Student</option>
               <option value="nontraditional">Nontraditional Path</option>
-            </select>
-            <select className="cc-filter-select" aria-label="Availability" value={filterAvail} onChange={e => setFilterAvail(e.target.value)}>
-              <option value="">All Availability</option>
-              <option value="coffee-chats">Open to Coffee Chats</option>
+              <option value="daca">DACA / Undocumented</option>
+              <option value="black">Black / African American</option>
+              <option value="latinx">Latinx / Hispanic</option>
+              <option value="indigenous">Indigenous / Native American</option>
+              <option value="asian">Asian / Pacific Islander</option>
+              <option value="lgbtq">LGBTQ+</option>
+              <option value="veteran">Veteran</option>
+              <option value="disability">Person with Disability</option>
+              <option value="single parent">Single Parent</option>
+              <option value="rural">Rural Background</option>
+              <option value="career changer">Career Changer</option>
+              <option value="returning adult">Returning Adult Student</option>
+              <option value="foster">Foster Care Alumni</option>
             </select>
           </div>
         </div>
 
-        {(search || filterRole || filterFunc || filterStage || filterIdentity || filterAvail) && (
+        {(search || filterRole || filterFunc || filterStage || filterIdentity) && (
           <button
             type="button"
-            onClick={() => { setSearch(''); setFilterRole(''); setFilterFunc(''); setFilterStage(''); setFilterIdentity(''); setFilterAvail('') }}
+            onClick={() => { setSearch(''); setFilterRole(''); setFilterFunc(''); setFilterStage(''); setFilterIdentity('') }}
             style={{ background: 'none', border: 'none', color: 'var(--color-accent)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', padding: '0 0 14px', fontFamily: 'var(--font-body)' }}
           >
             Clear all filters ×
@@ -640,7 +674,7 @@ export default function CoffeeChat() {
               <div className="cc-card__capacity">{p.capacity}</div>
               <div className="cc-card__updated">{p.updated}</div>
               <div className="cc-card__actions">
-                <a href={p.linkedIn} target="_blank" rel="noopener noreferrer" className="cc-card__cta-primary">Connect on LinkedIn ↗</a>
+                {p.linkedIn && <a href={p.linkedIn} target="_blank" rel="noopener noreferrer" className="cc-card__cta-primary">Connect on LinkedIn ↗</a>}
                 <button className="cc-card__cta-secondary" onClick={() => openModal(p.name.split(' ')[0])}>Copy template</button>
               </div>
             </article>
