@@ -596,10 +596,27 @@ export default function CoffeeChat() {
               <option value="software engineering">Software Engineering</option>
               <option value="data">Data / Analytics</option>
               <option value="product">Product Management</option>
-              <option value="design">Design</option>
+              <option value="design">UX / UI Design</option>
               <option value="research">Research</option>
               <option value="business">Business / Operations</option>
-              <option value="recruiting">Recruiting</option>
+              <option value="recruiting">Recruiting / HR</option>
+              <option value="marketing">Marketing</option>
+              <option value="sales">Sales</option>
+              <option value="finance">Finance / Accounting</option>
+              <option value="consulting">Consulting</option>
+              <option value="legal">Legal</option>
+              <option value="healthcare">Healthcare / Medicine</option>
+              <option value="education">Education / Teaching</option>
+              <option value="cybersecurity">Cybersecurity</option>
+              <option value="devops">DevOps / Infrastructure</option>
+              <option value="machine learning">Machine Learning / AI</option>
+              <option value="mobile">Mobile Development</option>
+              <option value="qa">QA / Testing</option>
+              <option value="program management">Project / Program Management</option>
+              <option value="social work">Social Work / Nonprofit</option>
+              <option value="journalism">Journalism / Media</option>
+              <option value="architecture">Architecture / Engineering</option>
+              <option value="customer success">Customer Success</option>
             </select>
             <select className="cc-filter-select" aria-label="Stage" value={filterStage} onChange={e => setFilterStage(e.target.value)}>
               <option value="">All Stages</option>
@@ -793,7 +810,7 @@ export default function CoffeeChat() {
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccLinkedIn">LinkedIn URL <span>*</span></label>
-                  <input className="cc-form-input" type="url" id="ccLinkedIn" placeholder="linkedin.com/in/yourname" value={formData.linkedin} onChange={e => setFormData(d => ({ ...d, linkedin: e.target.value }))} />
+                  <input className="cc-form-input" type="url" id="ccLinkedIn" placeholder="https://linkedin.com/in/yourname" value={formData.linkedin} onChange={e => setFormData(d => ({ ...d, linkedin: e.target.value }))} />
                 </div>
                 <div className="cc-form-row cc-form-row-2">
                   <div>
