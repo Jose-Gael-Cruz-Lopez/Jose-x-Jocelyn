@@ -2,33 +2,24 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
+import { useT } from '../hooks/useT'
 
+// Stable structural data — canonical keys only, no display strings
 const EPISODES = [
-  { num:'01', lens:'both', topics:'internships rejection', lensLabel:'Both', tags:['Internships','Rejection'], title:'Still Recruiting in April', summary:'Jose covers where to find late-cycle roles and how to move fast when everyone says it\'s too late. Jocelyn explains how hiring teams view late applicants and how to frame "still searching" in interviews.', why:'Late-cycle recruiting is where most first-gen students lose momentum - this episode reframes it as a real strategy, not a fallback.', posts:[{type:'Announcement',title:'Kicking off Ep. 01 - Still Recruiting in April',preview:'Series launch post introducing the episode premise and what\'s coming from both lenses.',author:'both',status:'Coming Soon'},{type:'Student Lens',title:'Where the late-cycle roles actually are (and how to find them fast)',preview:'The exact search process Jose uses - company career pages, Handshake filters, outreach-first applications, and why LinkedIn is the last place to look.',author:'jose',status:'Coming Soon'},{type:'Post-Grad Lens',title:'How hiring teams actually see late applicants',preview:'What Jocelyn learned being on the inside - reneges open seats, budget comes in late, and late applicants can actually move faster than early ones.',author:'jocelyn',status:'Coming Soon'},{type:'Recap & CTA',title:'Ep. 01 Recap - The late-cycle playbook in one post',preview:'Full episode summary, key takeaways from both lenses, and links to the related article and application tracker template.',author:'both',status:'Coming Soon'}]},
-  { num:'02', lens:'jose', topics:'internships', lensLabel:'Jose', tags:['Internships'], title:'What Nobody Tells You About Internship Apps', summary:'The timeline myths most students believe, when early-ID programs actually close (much earlier than you think), and how most students apply so late they never had a real shot.', why:'Most students don\'t lose the recruiting game at the interview - they lose it before they even apply. This episode fixes that.', posts:[{type:'Student Lens',title:'The internship recruiting timeline nobody shows you',preview:'When early-ID programs open, when they actually close, and why applying in February for a summer internship is already too late for most top firms.',author:'jose',status:'Coming Soon'},{type:'Student Lens',title:'How most students apply wrong (and how to fix it)',preview:'The real habits separating students who land roles from those who wonder what went wrong - tracking, follow-up cadence, and targeting over volume.',author:'jose',status:'Coming Soon'},{type:'Carousel',title:'The recruiting timeline, slide by slide',preview:'A visual breakdown of the full internship recruiting calendar - when to research, when to apply, when to follow up, and when it\'s actually over.',author:'jose',status:'Coming Soon'}]},
-  { num:'03', lens:'jocelyn', topics:'offers on-the-job', lensLabel:'Jocelyn', tags:['Offers','On the Job'], title:'How Return Offers Actually Work', summary:'What managers track all summer, the unspoken criteria they use to make return offer decisions, and how to position yourself for a yes before the summer ends.', why:'Most interns try to impress during their last two weeks. The ones who get return offers started on day one.', posts:[{type:'Post-Grad Lens',title:'What your manager is actually tracking this summer',preview:'The real criteria behind return offer decisions - visibility, initiative, relationships, communication patterns, and how you handle uncertainty.',author:'jocelyn',status:'Coming Soon'},{type:'Post-Grad Lens',title:'The unspoken criteria nobody puts in the intern handbook',preview:'Culture fit signals, how you navigate ambiguity, whether you ask the right questions - the soft factors that often matter more than project output.',author:'jocelyn',status:'Coming Soon'},{type:'Carousel',title:'The return offer checklist',preview:'A week-by-week guide for the first 10 weeks of an internship, built around the moments that matter most for getting a return offer.',author:'jocelyn',status:'Coming Soon'}]},
-  { num:'04', lens:'both', topics:'offers', lensLabel:'Both', tags:['Offers'], title:'Reading Your First Full-Time Offer', summary:'Jose breaks down what\'s confusing about comp, titles, and benefits when you\'ve never seen a six-figure offer before. Jocelyn walks through exactly how she broke down her first full-time offer - and what she negotiated.', why:'First-gen students often accept the first number they see. This episode gives you the vocabulary and framework to actually read what you\'re signing.', posts:[{type:'Student Lens',title:'I have an offer. Now what does any of this mean?',preview:'Base, bonus, equity, vesting, benefits, 401k match - a plain-language breakdown for students who\'ve never seen an offer letter before.',author:'jose',status:'Coming Soon'},{type:'Post-Grad Lens',title:'How I broke down my first offer - and what I pushed back on',preview:'Jocelyn\'s real story: the number, the confusion, the negotiation conversation, and what she wishes she had known when the offer hit her inbox.',author:'jocelyn',status:'Coming Soon'},{type:'Carousel',title:'The anatomy of a full-time offer',preview:'Every line item explained: base salary, signing bonus, equity (RSUs vs options), benefits, PTO, and what\'s actually negotiable.',author:'both',status:'Coming Soon'}]},
-  { num:'05', lens:'jose', topics:'internships', lensLabel:'Jose', tags:['Internships'], title:'Cold Outreach That Gets Replies', summary:'Exact message frameworks, subject lines that work, follow-up timing, and everything you should not say in a cold LinkedIn DM or outreach email.', why:'Cold outreach is the most underused lever in student recruiting. Most students do it once, hear nothing, and stop. This episode fixes the execution.', posts:[{type:'Student Lens',title:'The cold DM that actually gets a response',preview:'Three message frameworks - one for recruiters, one for engineers, one for alumni - and the exact structure that makes each one work.',author:'jose',status:'Coming Soon'},{type:'Student Lens',title:'The follow-up sequence (without sounding desperate)',preview:'Day 1, Day 7, Day 14 - the exact timing and phrasing for following up on outreach that hasn\'t gotten a response yet.',author:'jose',status:'Coming Soon'},{type:'Carousel',title:'What not to say in a cold DM (and why it kills your shot)',preview:'Real examples of cold outreach that doesn\'t work - too long, too generic, too desperate - and the rewritten versions that actually convert.',author:'jose',status:'Coming Soon'}]},
-  { num:'06', lens:'jocelyn', topics:'on-the-job', lensLabel:'Jocelyn', tags:['On the Job'], title:'Your First 90 Days in a Tech Role', summary:'How to onboard effectively, build relationships without being annoying, find your footing fast, and make your work visible in a corporate environment.', why:'The first 90 days set the tone for your entire first year. Most people coast through them. The ones who don\'t are the ones who get promoted.', posts:[{type:'Post-Grad Lens',title:'The first 30 days: your only job is to listen',preview:'Why the first month isn\'t about impressing anyone - it\'s about understanding the team, the culture, and what actually matters here.',author:'jocelyn',status:'Coming Soon'},{type:'Post-Grad Lens',title:'How to build relationships at work without being weird about it',preview:'First-gen-specific advice on navigating office dynamics - who to connect with, how often, and why being too eager can backfire just as much as being too quiet.',author:'jocelyn',status:'Coming Soon'},{type:'Carousel',title:'The 30-60-90 framework for your first role',preview:'Three phases, three mindsets, three sets of goals - a visual guide to structuring your first three months so you actually find your footing.',author:'jocelyn',status:'Coming Soon'}]},
-  { num:'07', lens:'both', topics:'rejection', lensLabel:'Both', tags:['Rejection'], title:'How to Handle Rejection Without Spiraling', summary:'Jose shares the real-time feelings of rejection and what he does next. Jocelyn breaks down what rejection actually tells you - and what it doesn\'t - and how she reframes it.', why:'Rejection is not a signal you did it wrong. But nobody tells you that in the moment. This episode is the conversation we wish we had when it happened to us.', posts:[{type:'Student Lens',title:'I just got rejected. Here\'s what I actually did next.',preview:'A real account of what rejection feels like in real time, the temptation to spiral, and the small actions that helped Jose keep moving forward.',author:'jose',status:'Coming Soon'},{type:'Post-Grad Lens',title:'What rejection is actually telling you (it\'s not what you think)',preview:'Three real stories of final-round rejections, what the actual reasons were, and why none of them were about being inadequate.',author:'jocelyn',status:'Coming Soon'},{type:'Recap',title:'Ep. 07 Recap - Rejection doesn\'t mean you did it wrong',preview:'A grounded, direct recap of both perspectives - with a link to the full article and a reminder that the process is longer than any single outcome.',author:'both',status:'Coming Soon'}]},
-  { num:'08', lens:'both', topics:'internships', lensLabel:'Both', tags:['Internships'], title:'Low GPA, First-Gen, No Networks - Now What?', summary:'An honest conversation about structural disadvantages and what actually moves the needle when you don\'t have the traditional markers of access.', why:'A lot of advice is written for people who are one good resume away from success. This episode is for everyone else.', posts:[{type:'Student Lens',title:'What I actually did when my GPA wasn\'t competitive',preview:'The moves Jose made when the standard path felt closed - alternative entry points, skills-forward positioning, and the companies that genuinely don\'t filter by GPA.',author:'jose',status:'Coming Soon'},{type:'Post-Grad Lens',title:'What the hiring team actually sees when there\'s no network',preview:'Jocelyn on being first-gen in a field full of legacy connections - what she substituted for networks, and what she\'d tell herself to do differently.',author:'jocelyn',status:'Coming Soon'},{type:'Carousel',title:'The moves that work when you don\'t have traditional access',preview:'A practical slide deck on the levers that actually shift outcomes for first-gen students - fellowships, alternate pipelines, community programs, and visibility plays.',author:'both',status:'Coming Soon'}]},
-  { num:'09', lens:'both', topics:'internships offers on-the-job', lensLabel:'Both', tags:['Internships','Offers','On the Job'], title:'Internship to Full-Time: The Handoff', summary:'The relay in one episode - Jose on landing the internship, Jocelyn on turning it into a career. The full arc from first application to full-time offer, told from both ends.', why:'The whole point of this series is in this episode. The handoff is the thing we built this platform to make visible.', posts:[{type:'Student Lens',title:'How I land internships - the real process, not the polished version',preview:'Jose\'s actual system: where he looks, how he tracks, how he reaches out, what happens when things go wrong, and what a "yes" actually feels like.',author:'jose',status:'Coming Soon'},{type:'Post-Grad Lens',title:'How I turned my internship into a full-time role',preview:'Jocelyn on the specific moves she made during her internship - the relationships she built, the visibility she created, and the conversation she had to ask for the offer.',author:'jocelyn',status:'Coming Soon'},{type:'Recap',title:'The full arc - from first app to full-time offer',preview:'Both perspectives woven together into one complete narrative. The relay baton, passed from Jose\'s side of the bridge to Jocelyn\'s.',author:'both',status:'Coming Soon'}]},
-  { num:'10', lens:'both', topics:'internships offers rejection on-the-job', lensLabel:'Both', tags:['Internships','Offers','Rejection','On the Job'], title:'What We Wish We Knew Earlier', summary:'Personal, storytelling-forward, designed to go viral. Jose and Jocelyn each share the one thing they wish someone had told them before they started - and why it matters more than any tactic.', why:'This is the episode people share. It\'s not about strategy - it\'s about truth.', posts:[{type:'Student Lens',title:'What I wish I knew before I started applying',preview:'Jose\'s most personal post in the series - the things no one told him, the assumptions he made that cost him time, and what he\'d go back and change.',author:'jose',status:'Coming Soon'},{type:'Post-Grad Lens',title:'What I wish I knew before I graduated',preview:'Jocelyn on the gap between college and the real world - the things she had to learn the hard way that nobody warned her about and that she now tells every first-gen student she mentors.',author:'jocelyn',status:'Coming Soon'},{type:'Recap & CTA',title:'Ep. 10 Recap - The full series in one post',preview:'A look back at all 10 episodes, the most important lessons from each, and a call to action for the next cohort of first-gen students ready to start their journey.',author:'both',status:'Coming Soon'}]},
+  { num: '01', lens: 'both', topics: 'internships rejection', tags: ['internships', 'rejection'], posts: [{ type: 'announcement', author: 'both', status: 'coming-soon' }, { type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap-cta', author: 'both', status: 'coming-soon' }] },
+  { num: '02', lens: 'jose', topics: 'internships', tags: ['internships'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'carousel', author: 'jose', status: 'coming-soon' }] },
+  { num: '03', lens: 'jocelyn', topics: 'offers on-the-job', tags: ['offers', 'on-the-job'], posts: [{ type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'carousel', author: 'jocelyn', status: 'coming-soon' }] },
+  { num: '04', lens: 'both', topics: 'offers', tags: ['offers'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'carousel', author: 'both', status: 'coming-soon' }] },
+  { num: '05', lens: 'jose', topics: 'internships', tags: ['internships'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'carousel', author: 'jose', status: 'coming-soon' }] },
+  { num: '06', lens: 'jocelyn', topics: 'on-the-job', tags: ['on-the-job'], posts: [{ type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'carousel', author: 'jocelyn', status: 'coming-soon' }] },
+  { num: '07', lens: 'both', topics: 'rejection', tags: ['rejection'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap', author: 'both', status: 'coming-soon' }] },
+  { num: '08', lens: 'both', topics: 'internships', tags: ['internships'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'carousel', author: 'both', status: 'coming-soon' }] },
+  { num: '09', lens: 'both', topics: 'internships offers on-the-job', tags: ['internships', 'offers', 'on-the-job'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap', author: 'both', status: 'coming-soon' }] },
+  { num: '10', lens: 'both', topics: 'internships offers rejection on-the-job', tags: ['internships', 'offers', 'rejection', 'on-the-job'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap-cta', author: 'both', status: 'coming-soon' }] },
 ]
 
-const FILTERS = [
-  { f:'all', label:'All Posts' },
-  { f:'jose', label:"Jose's Lens" },
-  { f:'jocelyn', label:"Jocelyn's Lens" },
-  { f:'both', label:'Both Perspectives' },
-  { f:'internships', label:'Internships' },
-  { f:'offers', label:'Offers' },
-  { f:'rejection', label:'Rejection' },
-  { f:'on-the-job', label:'On the Job' },
-]
-
-const LENS_FILTERS = new Set(['all','jose','jocelyn','both'])
-const TOPIC_FILTERS = new Set(['internships','offers','rejection','on-the-job'])
+const LENS_FILTERS = new Set(['all', 'jose', 'jocelyn', 'both'])
+const TOPIC_FILTERS = new Set(['internships', 'offers', 'rejection', 'on-the-job'])
 
 function lensClass(a) {
   return a === 'jose' ? 'ls-ep__lens--jose' : a === 'jocelyn' ? 'ls-ep__lens--jocelyn' : 'ls-ep__lens--both'
@@ -73,7 +64,7 @@ const PAGE_CSS = `
   .ls-ep__title { font-family:var(--font-display);font-size:clamp(20px,2.8vw,28px);font-weight:600;color:var(--color-dark);line-height:1.25;margin-bottom:10px; }
   .ls-ep__summary { font-size:15px;color:var(--color-muted);line-height:1.6;max-width:640px;margin-bottom:8px; }
   .ls-ep__why { font-size:13px;color:var(--color-teal);font-weight:500; }
-  .ls-ep__why::before { content:"Why it matters: ";font-weight:700; }
+  .ls-ep__why-prefix { font-weight:700; }
   .ls-ep__posts { display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px; }
   .ls-post { background:var(--color-white);border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:10px; }
   .ls-post--featured { border-color:var(--color-gold);background:rgba(232,168,56,.04); }
@@ -121,7 +112,27 @@ const PAGE_CSS = `
   }
 `
 
+// Maps canonical type key → translation key
+const TYPE_KEY_MAP = {
+  'announcement': 'typeAnnouncement',
+  'student-lens': 'typeStudentLens',
+  'post-grad-lens': 'typePostGradLens',
+  'recap-cta': 'typeRecapCTA',
+  'carousel': 'typeCarousel',
+  'recap': 'typeRecap',
+}
+
+// Maps canonical tag key → translation key
+const TAG_KEY_MAP = {
+  'internships': 'tagInternships',
+  'offers': 'tagOffers',
+  'rejection': 'tagRejection',
+  'on-the-job': 'tagOnTheJob',
+}
+
 export default function LinkedInSeries() {
+  const t = useT('linkedInSeries')
+
   const [activeFilter, setActiveFilter] = useState('all')
   const [topic, setTopic] = useState('')
   const [email, setEmail] = useState('')
@@ -130,9 +141,20 @@ export default function LinkedInSeries() {
   const [formError, setFormError] = useState('')
   const [formSubmitted, setFormSubmitted] = useState(false)
 
+  const FILTERS = [
+    { f: 'all',        label: t.filterAll },
+    { f: 'jose',       label: t.filterJose },
+    { f: 'jocelyn',    label: t.filterJocelyn },
+    { f: 'both',       label: t.filterBoth },
+    { f: 'internships',label: t.filterInternships },
+    { f: 'offers',     label: t.filterOffers },
+    { f: 'rejection',  label: t.filterRejection },
+    { f: 'on-the-job', label: t.filterOnTheJob },
+  ]
+
   const handleSubmit = async e => {
     e.preventDefault()
-    if (!topic.trim()) { setFormError('Please enter a topic or question.'); return }
+    if (!topic.trim()) { setFormError(t.formErrorTopic); return }
     setFormLoading(true)
     setFormError('')
     const { error } = await supabase.from('linkedin_episode_requests').insert({
@@ -141,7 +163,7 @@ export default function LinkedInSeries() {
       category: category || null,
     })
     setFormLoading(false)
-    if (error) { setFormError('Something went wrong. Please try again.') }
+    if (error) { setFormError(t.formErrorGeneric) }
     else { setFormSubmitted(true) }
   }
 
@@ -152,24 +174,36 @@ export default function LinkedInSeries() {
     return true
   })
 
+  function getLensLabel(lens) {
+    if (lens === 'jose') return t.lensLabelJose
+    if (lens === 'jocelyn') return t.lensLabelJocelyn
+    return t.lensLabelBoth
+  }
+
+  function getAuthorLabel(author) {
+    if (author === 'jose') return t.authorJose
+    if (author === 'jocelyn') return t.authorJocelyn
+    return t.authorBoth
+  }
+
   return (
     <ArticleLayout title="The LinkedIn Series">
       <style>{PAGE_CSS}</style>
 
       <header className="ls-hero">
-        <p className="ls-hero__kicker">From Campus to Career · Content Series</p>
-        <h1 className="ls-hero__title">The <span className="ls-linkedin">LinkedIn</span> <em>Series</em></h1>
-        <p className="ls-hero__sub">One topic. Two perspectives. Real-time notes from both sides of the bridge.<br /><br /><strong>Jose</strong> covers the student lens - internships, outreach, applications, rejection, and figuring things out in real time. <strong>Jocelyn</strong> covers the post-grad lens - interviews, offers, onboarding, and early-career growth. Every episode lives on LinkedIn first, then gets archived here.</p>
+        <p className="ls-hero__kicker">{t.heroKicker}</p>
+        <h1 className="ls-hero__title">{t.heroTitlePrefix}<span className="ls-linkedin">{t.heroTitleLinkedIn}</span> <em>{t.heroTitleEm}</em></h1>
+        <p className="ls-hero__sub" dangerouslySetInnerHTML={{ __html: t.heroSubHTML }} />
         <div className="ls-stats">
-          <div className="ls-stat"><div className="ls-stat__num">10</div><div className="ls-stat__label">Episodes planned</div></div>
-          <div className="ls-stat"><div className="ls-stat__num">0</div><div className="ls-stat__label">Posts published</div></div>
-          <div className="ls-stat"><div className="ls-stat__num">2</div><div className="ls-stat__label">Lenses</div></div>
-          <div className="ls-stat"><div className="ls-stat__num">Weekly</div><div className="ls-stat__label">Updated</div></div>
+          <div className="ls-stat"><div className="ls-stat__num">{t.stat1Num}</div><div className="ls-stat__label">{t.stat1Label}</div></div>
+          <div className="ls-stat"><div className="ls-stat__num">{t.stat2Num}</div><div className="ls-stat__label">{t.stat2Label}</div></div>
+          <div className="ls-stat"><div className="ls-stat__num">{t.stat3Num}</div><div className="ls-stat__label">{t.stat3Label}</div></div>
+          <div className="ls-stat"><div className="ls-stat__num">{t.stat4Num}</div><div className="ls-stat__label">{t.stat4Label}</div></div>
         </div>
       </header>
 
       <div className="ls-controls">
-        <div className="ls-filters" role="group" aria-label="Filter episodes">
+        <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel}>
           {FILTERS.map(({ f, label }) => (
             <button key={f} className={`ls-filter${activeFilter === f ? ' ls-filter--active' : ''}`} onClick={() => setActiveFilter(f)}>{label}</button>
           ))}
@@ -180,49 +214,55 @@ export default function LinkedInSeries() {
 
       <div className="ls-episodes">
         {visibleEps.length === 0
-          ? <div className="ls-no-results" aria-live="polite"><p>No episodes match that filter.</p></div>
-          : visibleEps.map(ep => (
-            <div key={ep.num} className="ls-ep">
-              <div className="ls-ep__head">
-                <div className="ls-ep__num">{ep.num}</div>
-                <div className="ls-ep__info">
-                  <div className="ls-ep__badges">
-                    <span className={`ls-ep__lens ${lensClass(ep.lens)}`}>{ep.lensLabel}</span>
-                    {ep.tags.map(t => <span key={t} className="ls-ep__tag">{t}</span>)}
-                  </div>
-                  <h2 className="ls-ep__title">{ep.title}</h2>
-                  <p className="ls-ep__summary">{ep.summary}</p>
-                  <p className="ls-ep__why">{ep.why}</p>
-                </div>
-              </div>
-              <div className="ls-ep__posts">
-                {ep.posts.map((p, i) => (
-                  <div key={i} className={`ls-post${i === 0 ? ' ls-post--featured' : ''}`}>
-                    <div className="ls-post__type">{p.type}</div>
-                    <div className="ls-post__title">{p.title}</div>
-                    <div className="ls-post__preview">{p.preview}</div>
-                    <div className="ls-post__footer">
-                      <span className={`ls-post__author ${authorClass(p.author)}`}>{p.author === 'both' ? 'Both' : p.author === 'jose' ? 'Jose' : 'Jocelyn'}</span>
-                      <span className="ls-post__status">{p.status}</span>
+          ? <div className="ls-no-results" aria-live="polite"><p>{t.noResults}</p></div>
+          : visibleEps.map(ep => {
+              const epData = t.episodes[parseInt(ep.num, 10) - 1] ?? {}
+              return (
+                <div key={ep.num} className="ls-ep">
+                  <div className="ls-ep__head">
+                    <div className="ls-ep__num">{ep.num}</div>
+                    <div className="ls-ep__info">
+                      <div className="ls-ep__badges">
+                        <span className={`ls-ep__lens ${lensClass(ep.lens)}`}>{getLensLabel(ep.lens)}</span>
+                        {ep.tags.map(tag => <span key={tag} className="ls-ep__tag">{t[TAG_KEY_MAP[tag]] ?? tag}</span>)}
+                      </div>
+                      <h2 className="ls-ep__title">{epData.title}</h2>
+                      <p className="ls-ep__summary">{epData.summary}</p>
+                      <p className="ls-ep__why"><span className="ls-ep__why-prefix">{t.whyPrefix}</span>{epData.why}</p>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          ))
+                  <div className="ls-ep__posts">
+                    {ep.posts.map((p, postIdx) => {
+                      const postData = epData.posts?.[postIdx] ?? {}
+                      return (
+                        <div key={`${ep.num}-${postIdx}`} className={`ls-post${postIdx === 0 ? ' ls-post--featured' : ''}`}>
+                          <div className="ls-post__type">{t[TYPE_KEY_MAP[p.type]] ?? p.type}</div>
+                          <div className="ls-post__title">{postData.title}</div>
+                          <div className="ls-post__preview">{postData.preview}</div>
+                          <div className="ls-post__footer">
+                            <span className={`ls-post__author ${authorClass(p.author)}`}>{getAuthorLabel(p.author)}</span>
+                            <span className="ls-post__status">{t.statusComingSoon}</span>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })
         }
       </div>
 
       <section className="ls-how">
         <div className="ls-how__inner">
-          <p className="ls-how__kicker">The Ecosystem</p>
-          <h2 className="ls-how__title">How this series works</h2>
+          <p className="ls-how__kicker">{t.howKicker}</p>
+          <h2 className="ls-how__title">{t.howTitle}</h2>
           <div className="ls-how__grid">
-            {[['01','LinkedIn Series','Where content is published in real time. Follow Jose and Jocelyn to get each post as it drops.'],['02','This Archive','Every post organized by episode, labeled, searchable, and connected to related resources. Your home base.'],['03','Career Templates','Every episode connects to a copy-paste tool you can use immediately - outreach scripts, trackers, planners.'],['04','La Voz del Día','The deeper breakdown of each episode - longer analysis, more context, and the nuance that doesn\'t fit in a LinkedIn post.']].map(([n,t,d]) => (
-              <div key={n} className="ls-how__item">
-                <div className="ls-how__item-icon">{n}</div>
-                <div className="ls-how__item-title">{n === '01' ? <><span className="ls-linkedin">LinkedIn</span> Series</> : t}</div>
-                <div className="ls-how__item-desc">{d}</div>
+            {t.howItems.map(item => (
+              <div key={item.n} className="ls-how__item">
+                <div className="ls-how__item-icon">{item.n}</div>
+                <div className="ls-how__item-title">{item.n === '01' ? <><span className="ls-linkedin">{t.heroTitleLinkedIn}</span> {t.heroTitleEm}</> : item.title}</div>
+                <div className="ls-how__item-desc">{item.desc}</div>
               </div>
             ))}
           </div>
@@ -231,36 +271,43 @@ export default function LinkedInSeries() {
 
       <div className="ls-form-wrap">
         <div className="ls-form-box">
-          <p className="ls-form-box__kicker">Shape the Series</p>
-          <h2 className="ls-form-box__title">What do you want us to cover?</h2>
-          <p className="ls-form-box__sub">We source episode topics directly from the people reading this. Tell us where you're stuck and we'll build an episode around it.</p>
+          <p className="ls-form-box__kicker">{t.formKicker}</p>
+          <h2 className="ls-form-box__title">{t.formTitle}</h2>
+          <p className="ls-form-box__sub">{t.formSub}</p>
           {formSubmitted ? (
             <div style={{ padding: '32px 0', textAlign: 'center' }}>
               <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(58,125,107,.1)', color: 'var(--color-teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, margin: '0 auto 14px' }}>✓</div>
-              <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--color-dark)', marginBottom: 6 }}>Topic submitted!</p>
-              <p style={{ fontSize: 14, color: 'var(--color-muted)' }}>Thanks — we'll consider it for an upcoming episode.</p>
+              <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--color-dark)', marginBottom: 6 }}>{t.formSuccessTitle}</p>
+              <p style={{ fontSize: 14, color: 'var(--color-muted)' }}>{t.formSuccessBody}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
-              <div className="ls-form-row"><label className="ls-form-label" htmlFor="topicField">Your topic or question</label><textarea className="ls-form-textarea" id="topicField" placeholder="e.g. How do I handle a gap in my resume? What do I do after I get ghosted by a recruiter?" value={topic} onChange={e => setTopic(e.target.value)} /></div>
-              <div className="ls-form-row"><label className="ls-form-label" htmlFor="emailField">Your email</label><input className="ls-form-input" type="email" id="emailField" placeholder="you@school.edu" value={email} onChange={e => setEmail(e.target.value)} /></div>
+              <div className="ls-form-row"><label className="ls-form-label" htmlFor="topicField">{t.formLabelTopic}</label><textarea className="ls-form-textarea" id="topicField" placeholder={t.formPlaceholderTopic} value={topic} onChange={e => setTopic(e.target.value)} /></div>
+              <div className="ls-form-row"><label className="ls-form-label" htmlFor="emailField">{t.formLabelEmail}</label><input className="ls-form-input" type="email" id="emailField" placeholder={t.formPlaceholderEmail} value={email} onChange={e => setEmail(e.target.value)} /></div>
               <div className="ls-form-row">
-                <label className="ls-form-label" htmlFor="topicCat">Topic area (optional)</label>
-                <select className="ls-form-select" id="topicCat" value={category} onChange={e => setCategory(e.target.value)}><option value="">Select a category…</option><option>Internship search</option><option>Offers &amp; negotiation</option><option>Recruiting &amp; outreach</option><option>Workplace &amp; onboarding</option><option>Mindset &amp; rejection</option></select>
+                <label className="ls-form-label" htmlFor="topicCat">{t.formLabelCategory}</label>
+                <select className="ls-form-select" id="topicCat" value={category} onChange={e => setCategory(e.target.value)}>
+                  <option value="">{t.formCategoryPlaceholder}</option>
+                  <option value="internship-search">{t.catInternshipSearch}</option>
+                  <option value="offers-negotiation">{t.catOffersNegotiation}</option>
+                  <option value="recruiting-outreach">{t.catRecruitingOutreach}</option>
+                  <option value="workplace-onboarding">{t.catWorkplaceOnboarding}</option>
+                  <option value="mindset-rejection">{t.catMindsetRejection}</option>
+                </select>
               </div>
               {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
-              <button className="ls-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit Topic'}</button>
+              <button className="ls-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
             </form>
           )}
         </div>
       </div>
 
       <footer className="art-footer" style={{ maxWidth: '1040px' }}>
-        <span className="art-footer__copy">Jose x Jocelyn &copy; 2026</span>
+        <span className="art-footer__copy">{t.footerCopy}</span>
         <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">Home</Link>
-          <Link to="/articles" className="art-footer__link">La Voz del Día</Link>
-          <Link to="/career-templates" className="art-footer__link">Templates</Link>
+          <Link to="/" className="art-footer__link">{t.footerHome}</Link>
+          <Link to="/articles" className="art-footer__link">{t.footerArticles}</Link>
+          <Link to="/career-templates" className="art-footer__link">{t.footerTemplates}</Link>
         </div>
       </footer>
     </ArticleLayout>
