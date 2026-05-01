@@ -1,27 +1,30 @@
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../../components/ArticleLayout'
 import ArticleSubscribe from '../../components/ArticleSubscribe'
+import { useT } from '../../hooks/useT'
 
 export default function Rejection() {
+  const t = useT('rejection')
+
   const handleShare = () => {
-    if (navigator.share) navigator.share({ title: "Rejection Doesn't Mean You Did It Wrong", url: window.location.href })
+    if (navigator.share) navigator.share({ title: t.shareTitle, url: window.location.href })
     else navigator.clipboard?.writeText(window.location.href)
   }
 
   return (
-    <ArticleLayout title="Rejection Doesn't Mean You Did It Wrong | La Voz del Día">
+    <ArticleLayout title={t.pageTitle}>
       <header className="art-header">
-        <span className="art-header__label art-header__label--both">Both</span>
-        <h1 className="art-header__title">Rejection Doesn't Mean You Did It Wrong</h1>
-        <p className="art-header__subtitle">You can do everything right and still get rejected. How to process it and keep moving.</p>
+        <span className="art-header__label art-header__label--both">{t.headerLabel}</span>
+        <h1 className="art-header__title">{t.headerTitle}</h1>
+        <p className="art-header__subtitle">{t.headerSubtitle}</p>
         <div className="art-header__meta art-header__meta--both">
-          <div className="art-header__avatars" role="group" aria-label="Authors: Jose G. Cruz-Lopez and Jocelyn Vazquez">
+          <div className="art-header__avatars" role="group" aria-label={t.authorsAriaLabel}>
             <img src="/images/jose.jpeg" alt="" className="art-header__avatar art-header__avatar--stack" width="44" height="44" decoding="async" />
             <img src="/images/jocelyn.jpeg" alt="" className="art-header__avatar art-header__avatar--stack" width="44" height="44" decoding="async" />
           </div>
           <div className="art-header__author-info">
-            <span className="art-header__author-name">Jose G. Cruz-Lopez &amp; Jocelyn Vazquez</span>
-            <span className="art-header__date">February 2026 · 6 min read</span>
+            <span className="art-header__author-name">{t.authorName}</span>
+            <span className="art-header__date">{t.authorDate}</span>
           </div>
         </div>
       </header>
@@ -47,87 +50,78 @@ export default function Rejection() {
               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
             </svg>
-            Share
+            {t.shareBtn}
           </button>
         </div>
       </div>
 
       <article className="art-body">
-        <p>We need to talk about rejection, because nobody does. Not honestly.</p>
-        <p>Every career advice page tells you to "learn from rejection" and "use it as motivation." That's fine as a bumper sticker. But when you're sitting in your room at 11pm reading your fourth automated rejection email this week, motivation is not what you need. What you need is honesty.</p>
-        <p>So here's ours.</p>
+        <p>{t.p1}</p>
+        <p>{t.p2}</p>
+        <p>{t.p3}</p>
 
-        <h2>Jose's story</h2>
-        <p>I applied to over 200 internships my sophomore year. I got rejected from the vast majority of them without ever talking to a human. Some I was genuinely excited about. Some I spent hours tailoring my resume for. The result was the same: a templated email that started with "After careful consideration..."</p>
-        <p>The hardest part wasn't the rejection itself. It was the silence. Applications that went into a void and never came back. No feedback. No explanation. Just nothing.</p>
-        <p>I started to wonder if something was wrong with me. If my resume wasn't good enough. If my school wasn't good enough. If I wasn't good enough.</p>
+        <h2>{t.h2Jose}</h2>
+        <p>{t.p4}</p>
+        <p>{t.p5}</p>
+        <p>{t.p6}</p>
 
-        <h2>Jocelyn's story</h2>
-        <p>When I was job searching post-graduation, I made it to the final round of interviews at three different companies. Three times I was the last candidate standing. Three times they went with someone else.</p>
-        <p>Each one felt personal. I replayed every answer I gave, every question I could have handled differently. I wondered if I had smiled enough, or too much. If my answers were too long or too short. I picked myself apart.</p>
-        <p>The truth I learned later: one company hired internally. One had a budget cut. One chose a candidate with a specific niche skill I didn't have. None of it was about me being inadequate.</p>
+        <h2>{t.h2Jocelyn}</h2>
+        <p>{t.p7}</p>
+        <p>{t.p8}</p>
+        <p>{t.p9}</p>
 
-        <h2>What rejection actually means</h2>
-        <p>Here is what rejection almost never means:</p>
+        <h2>{t.h2Meaning}</h2>
+        <p>{t.pNeverMeans}</p>
         <ul>
-          <li>That you weren't qualified</li>
-          <li>That you interviewed badly</li>
-          <li>That you'll never get hired</li>
-          <li>That you're falling behind your peers</li>
+          {t.neverList.map(item => <li key={item}>{item}</li>)}
         </ul>
 
-        <p>Here is what rejection usually means:</p>
+        <p>{t.pUsuallyMeans}</p>
         <ul>
-          <li>Another candidate had a specific experience that matched slightly better</li>
-          <li>The team's priorities shifted</li>
-          <li>The role was filled before your application was reviewed</li>
-          <li>The hiring manager had a bias they may not even be aware of</li>
-          <li>Timing</li>
+          {t.usuallyList.map(item => <li key={item}>{item}</li>)}
         </ul>
-        <p>Most of these factors are completely outside your control. And accepting that is the hardest part.</p>
+        <p>{t.pControl}</p>
 
-        <h2>How to process it without spiraling</h2>
+        <h2>{t.h2Process}</h2>
 
-        <h3>1. Feel it</h3>
-        <p>Don't "stay positive" right away. If you're disappointed, be disappointed. If you're angry, be angry. Suppressing it just delays the crash.</p>
+        <h3>{t.h3Feel}</h3>
+        <p>{t.pFeel}</p>
 
-        <h3>2. Set a recovery window</h3>
-        <p>Give yourself a defined amount of time to be in your feelings about it. 24 hours. 48 hours. Then actively choose to move forward. The window prevents the disappointment from becoming your identity.</p>
+        <h3>{t.h3Window}</h3>
+        <p>{t.pWindow}</p>
 
-        <h3>3. Debrief, don't ruminate</h3>
-        <p>Ask yourself three questions:</p>
+        <h3>{t.h3Debrief}</h3>
+        <p>{t.pDebrief}</p>
         <ul>
-          <li>Was there something I could have genuinely done better?</li>
-          <li>Was there something outside my control?</li>
-          <li>What's one small action I can take this week to keep moving?</li>
+          {t.debriefList.map(item => <li key={item}>{item}</li>)}
         </ul>
-        <p>Write down the answers. Then close the notebook.</p>
+        <p>{t.pNotebook}</p>
 
-        <h3>4. Talk to someone who gets it</h3>
-        <p>Not someone who will say "everything happens for a reason." Someone who has been rejected and can sit with you in the discomfort without rushing to fix it. That's the kind of support that actually helps.</p>
+        <h3>{t.h3Talk}</h3>
+        <p>{t.pTalk}</p>
 
         <blockquote>
-          <p>Rejection is not the opposite of success. It is part of the path to it. Every person you admire has a stack of "no's" you never saw.</p>
+          <p>{t.blockquote}</p>
         </blockquote>
 
-        <h2>The numbers that matter</h2>
-        <p>Between the two of us, we've collected well over 400 rejections. We've also landed internships, full-time offers, and built careers in tech. Both of those things are true at the same time.</p>
-        <p>Your rejection count is not your failure count. It is your attempt count. And the only people who never get rejected are the ones who never try.</p>
-        <p>Keep going. Seriously. Keep going.</p>
+        <h2>{t.h2Numbers}</h2>
+        <p>{t.pNumbers1}</p>
+        <p>{t.pNumbers2}</p>
+        <p>{t.pNumbers3}</p>
       </article>
 
       <ArticleSubscribe source="article_rejection" />
 
       <section className="art-recs">
-        <h3 className="art-recs__title">Recommended reading</h3>
+        <h3 className="art-recs__title">{t.recsTitle}</h3>
         <div className="art-recs__grid">
           <Link to="/articles/coffee-chat-framework" className="art-recs__card">
-            <div className="art-recs__card-tag">Jose</div>
-            <h4 className="art-recs__card-title">The Coffee Chat Framework That Actually Gets Responses</h4>
+            <div className="art-recs__card-tag">{t.rec1Tag}</div>
+            <h4 className="art-recs__card-title">{t.rec1Title}</h4>
           </Link>
           <Link to="/articles/negotiate-salary" className="art-recs__card">
-            <div className="art-recs__card-tag">Jocelyn</div>
-            <h4 className="art-recs__card-title">How to Negotiate When You've Never Seen a Six-Figure Salary</h4>
+            <div className="art-recs__card-tag">{t.rec2Tag}</div>
+            <h4 className="art-recs__card-title">{t.rec2Title}</h4>
           </Link>
         </div>
       </section>

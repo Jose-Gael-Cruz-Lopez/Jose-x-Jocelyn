@@ -1,78 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../../components/ArticleLayout'
-
-const ARTICLES = [
-  {
-    id: 'late-cycle-internships',
-    to: '/articles/late-cycle-internships',
-    author: 'jose',
-    month: 'April 2026',
-    title: "Late-Cycle Internships: Where to Look When Everyone Says It's Over",
-    excerpt: "It is April and you still don't have an internship. Here is what to do right now.",
-    date: 'April 2026',
-    read: '8 min read',
-  },
-  {
-    id: 'first-90-days',
-    to: '/articles/first-90-days',
-    author: 'jocelyn',
-    month: 'April 2026',
-    title: 'Your First 90 Days: A Survival Guide for First-Gen Professionals',
-    excerpt: 'No one teaches you how to read benefits, navigate office politics, or build a career ladder. Until now.',
-    date: 'April 2026',
-    read: '10 min read',
-  },
-  {
-    id: 'first-gen-internship-playbook',
-    to: '/articles/first-gen-internship-playbook',
-    author: 'both',
-    month: 'March 2026',
-    title: 'The Complete First-Gen Internship Playbook',
-    excerpt: 'From discovery to signed offer, with no sugar-coating. Everything we learned.',
-    date: 'March 2026',
-    read: '14 min read',
-  },
-  {
-    id: 'coffee-chat-framework',
-    to: '/articles/coffee-chat-framework',
-    author: 'jose',
-    month: 'March 2026',
-    title: 'The Coffee Chat Framework That Actually Gets Responses',
-    excerpt: 'A step-by-step system for reaching out to professionals and turning conversations into opportunities.',
-    date: 'March 2026',
-    read: '7 min read',
-  },
-  {
-    id: 'negotiate-salary',
-    to: '/articles/negotiate-salary',
-    author: 'jocelyn',
-    month: 'February 2026',
-    title: "How to Negotiate When You've Never Seen a Six-Figure Salary",
-    excerpt: "Compensation is benefits, equity, signing bonuses, and leverage you didn't know you had.",
-    date: 'February 2026',
-    read: '9 min read',
-  },
-  {
-    id: 'rejection',
-    to: '/articles/rejection',
-    author: 'both',
-    month: 'February 2026',
-    title: "Rejection Doesn't Mean You Did It Wrong",
-    excerpt: 'You can do everything right and still get rejected. How to process it and keep moving.',
-    date: 'February 2026',
-    read: '6 min read',
-  },
-]
-
-const MONTHS = ['April 2026', 'March 2026', 'February 2026']
-const FILTERS = [
-  { key: 'all', label: 'All' },
-  { key: 'jose', label: 'Jose' },
-  { key: 'jocelyn', label: 'Jocelyn' },
-  { key: 'both', label: 'Both' },
-]
-const AUTHOR_LABEL = { jose: 'Jose', jocelyn: 'Jocelyn', both: 'Both' }
+import { useT } from '../../hooks/useT'
 
 const ArrowIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -81,12 +10,21 @@ const ArrowIcon = () => (
 )
 
 export default function ArticlesIndex() {
+  const t = useT('articlesIndex')
   const [activeFilter, setActiveFilter] = useState('all')
   const [search, setSearch] = useState('')
 
+  const FILTERS = [
+    { key: 'all',     label: t.filterAll },
+    { key: 'jose',    label: t.filterJose },
+    { key: 'jocelyn', label: t.filterJocelyn },
+    { key: 'both',    label: t.filterBoth },
+  ]
+  const AUTHOR_LABEL = { jose: t.authorJose, jocelyn: t.authorJocelyn, both: t.authorBoth }
+
   const visible = useMemo(() => {
     const q = search.toLowerCase().trim()
-    return ARTICLES.filter(a => {
+    return t.articles.filter(a => {
       const matchesFilter = activeFilter === 'all' || a.author === activeFilter
       const matchesSearch = !q ||
         a.title.toLowerCase().includes(q) ||
@@ -94,12 +32,12 @@ export default function ArticlesIndex() {
         a.author.includes(q)
       return matchesFilter && matchesSearch
     })
-  }, [activeFilter, search])
+  }, [activeFilter, search, t])
 
-  const countText = visible.length === 1 ? '1 article' : `${visible.length} articles`
+  const countText = visible.length === 1 ? t.countSingular : `${visible.length} ${t.filterAll === 'Todos' ? 'artículos' : 'articles'}`
 
   return (
-    <ArticleLayout title="La Voz del Día - All Articles | Jose x Jocelyn" footerWidth={900}>
+    <ArticleLayout title={t.pageTitle} footerWidth={900}>
       <style>{`
         html, body { background: var(--color-cream); }
         .arc-hero {
@@ -215,9 +153,9 @@ export default function ArticlesIndex() {
       `}</style>
 
       <header className="arc-hero">
-        <span className="arc-hero__label">Knowledge Hub</span>
-        <h1 className="arc-hero__title">La Voz <span>del Día</span></h1>
-        <p className="arc-hero__sub">Practical advice on recruiting, internships, full-time offers, and first-gen career survival — written from both sides of the bridge.</p>
+        <span className="arc-hero__label">{t.heroLabel}</span>
+        <h1 className="arc-hero__title">{t.heroTitle}<span>{t.heroTitleEm}</span></h1>
+        <p className="arc-hero__sub">{t.heroSub}</p>
       </header>
 
       <div className="arc-controls">
@@ -228,14 +166,14 @@ export default function ArticlesIndex() {
           <input
             type="search"
             className="arc-search__input"
-            placeholder="Search articles…"
-            aria-label="Search articles"
+            placeholder={t.searchPlaceholder}
+            aria-label={t.searchAriaLabel}
             autoComplete="off"
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
         </div>
-        <div className="arc-filters" role="group" aria-label="Filter by author">
+        <div className="arc-filters" role="group" aria-label={t.filterAriaLabel}>
           {FILTERS.map(f => (
             <button
               key={f.key}
@@ -250,19 +188,19 @@ export default function ArticlesIndex() {
 
       <p className="arc-count" aria-live="polite">{countText}</p>
 
-      <div className="arc-list" aria-label="Article list">
+      <div className="arc-list" aria-label={t.listAriaLabel}>
         {visible.length === 0 ? (
           <div className="arc-empty" aria-live="polite">
             <div className="arc-empty__icon">—</div>
-            <p>No articles match your search.</p>
+            <p>{t.emptyState}</p>
           </div>
         ) : (
-          MONTHS.map(month => {
+          t.months.map(month => {
             const monthArticles = visible.filter(a => a.month === month)
             if (monthArticles.length === 0) return null
             return (
               <div key={month} className="arc-month-group">
-                <p className="arc-month-label">{month}</p>
+                <p className="arc-month-label">{monthArticles[0].date}</p>
                 {monthArticles.map(a => (
                   <Link key={a.id} to={a.to} className="arc-card">
                     <div className="arc-card__body">

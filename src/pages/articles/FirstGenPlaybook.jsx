@@ -1,27 +1,30 @@
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../../components/ArticleLayout'
 import ArticleSubscribe from '../../components/ArticleSubscribe'
+import { useT } from '../../hooks/useT'
 
 export default function FirstGenPlaybook() {
+  const t = useT('firstGenPlaybook')
+
   const handleShare = () => {
-    if (navigator.share) navigator.share({ title: 'The Complete First-Gen Internship Playbook', url: window.location.href })
+    if (navigator.share) navigator.share({ title: t.shareTitle, url: window.location.href })
     else navigator.clipboard?.writeText(window.location.href)
   }
 
   return (
-    <ArticleLayout title="The Complete First-Gen Internship Playbook | La Voz del Día">
+    <ArticleLayout title={t.pageTitle}>
       <header className="art-header">
-        <span className="art-header__label art-header__label--both">Both</span>
-        <h1 className="art-header__title">The Complete First-Gen Internship Playbook</h1>
-        <p className="art-header__subtitle">From discovery to signed offer, with no sugar-coating. Everything we learned.</p>
+        <span className="art-header__label art-header__label--both">{t.headerLabel}</span>
+        <h1 className="art-header__title">{t.headerTitle}</h1>
+        <p className="art-header__subtitle">{t.headerSubtitle}</p>
         <div className="art-header__meta art-header__meta--both">
-          <div className="art-header__avatars" role="group" aria-label="Authors: Jose G. Cruz-Lopez and Jocelyn Vazquez">
+          <div className="art-header__avatars" role="group" aria-label={t.authorsAriaLabel}>
             <img src="/images/jose.jpeg" alt="" className="art-header__avatar art-header__avatar--stack" width="44" height="44" decoding="async" />
             <img src="/images/jocelyn.jpeg" alt="" className="art-header__avatar art-header__avatar--stack" width="44" height="44" decoding="async" />
           </div>
           <div className="art-header__author-info">
-            <span className="art-header__author-name">Jose G. Cruz-Lopez &amp; Jocelyn Vazquez</span>
-            <span className="art-header__date">March 2026 · 14 min read</span>
+            <span className="art-header__author-name">{t.authorName}</span>
+            <span className="art-header__date">{t.authorDate}</span>
           </div>
         </div>
       </header>
@@ -47,101 +50,91 @@ export default function FirstGenPlaybook() {
               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
             </svg>
-            Share
+            {t.shareBtn}
           </button>
         </div>
       </div>
 
       <article className="art-body">
-        <p>We wrote this together because the internship search looks different depending on where you're standing. Jose is in it right now. Jocelyn has been through it and came out the other side. Between us, we've applied to hundreds of roles, gotten rejected from most of them, and still ended up exactly where we needed to be.</p>
-        <p>This is the playbook we wish someone had handed us. No motivational fluff. Just the steps.</p>
+        <p>{t.p1}</p>
+        <p>{t.p2}</p>
 
-        <h2>Phase 1: Discovery (months 1 through 2)</h2>
+        <h2>{t.h2Phase1}</h2>
 
-        <h3>Know what you're looking for</h3>
-        <p>Before you apply anywhere, answer three questions:</p>
+        <h3>{t.h3Know}</h3>
+        <p>{t.pKnow}</p>
         <ol>
-          <li>What skills do you want to build this summer?</li>
-          <li>What industry or domain interests you most?</li>
-          <li>What is your minimum bar for compensation and location?</li>
+          {t.knowList.map(item => <li key={item}>{item}</li>)}
         </ol>
-        <p>You don't need perfect answers. You need a filter. Without one, you'll apply to everything and prepare for nothing.</p>
+        <p>{t.pFilter}</p>
 
-        <h3>Build your tracker</h3>
-        <p>Create a spreadsheet with these columns: Company, Role, Date Applied, Status, Contact, Next Step. Update it every time you apply. This is your command center.</p>
+        <h3>{t.h3Tracker}</h3>
+        <p>{t.pTracker}</p>
 
-        <h3>Where to find opportunities</h3>
+        <h3>{t.h3Where}</h3>
         <ul>
-          <li>Handshake and your university career portal</li>
-          <li>Company career pages directly</li>
-          <li>LinkedIn Jobs (set alerts)</li>
-          <li>GitHub repos that aggregate internship listings</li>
-          <li>Professional organizations in your field (SHPE, ColorStack, NSBE, etc.)</li>
+          {t.whereList.map(item => <li key={item}>{item}</li>)}
         </ul>
 
-        <h2>Phase 2: Preparation (months 2 through 3)</h2>
+        <h2>{t.h2Phase2}</h2>
 
-        <h3>Resume</h3>
-        <p>One page. Always one page. Lead with education if you're a student. Use action verbs and quantify impact wherever possible. "Increased event attendance by 40%" beats "Helped plan events." Have at least two people review it before submitting anywhere.</p>
+        <h3>{t.h3Resume}</h3>
+        <p>{t.pResume}</p>
 
-        <h3>LinkedIn</h3>
-        <p>Your LinkedIn profile is your second resume. Professional headshot, clear headline, an "About" section that tells your story. Connect with recruiters at companies you're targeting. Engage with content in your field.</p>
+        <h3>{t.h3LinkedIn}</h3>
+        <p>{t.pLinkedIn}</p>
 
-        <h3>Technical preparation</h3>
-        <p>If your field requires technical interviews, start practicing early. LeetCode, HackerRank, or NeetCode for software engineering. Case study practice for consulting. SQL and Excel practice for data and analytics. Consistency beats intensity.</p>
+        <h3>{t.h3Technical}</h3>
+        <p>{t.pTechnical}</p>
 
-        <h3>Behavioral preparation</h3>
-        <p>Learn the STAR method (Situation, Task, Action, Result). Prepare 5 to 7 stories from your experience that demonstrate leadership, problem-solving, teamwork, and resilience. Practice saying them out loud until they feel natural.</p>
+        <h3>{t.h3Behavioral}</h3>
+        <p>{t.pBehavioral}</p>
 
-        <h2>Phase 3: Application sprint (months 3 through 5)</h2>
-        <p>Set a weekly target. We recommend 15 to 25 applications per week during peak season. Quality still matters, but volume creates options.</p>
+        <h2>{t.h2Phase3}</h2>
+        <p>{t.pSprint}</p>
 
         <div className="art-callout">
-          <p><strong>Jose's take:</strong> I applied to over 200 roles my first cycle. I heard back from maybe 20. Got interviews at 8. Landed 2 offers. Those numbers are normal. Don't let the silence break your rhythm.</p>
-          <p><strong>Jocelyn's take:</strong> When I was applying, I kept a "rejection wall" in my notes app. Every no was proof I was in the game. By the end, those rejections were the foundation of the story I told in interviews.</p>
+          <p dangerouslySetInnerHTML={{ __html: t.calloutJose }} />
+          <p dangerouslySetInnerHTML={{ __html: t.calloutJocelyn }} />
         </div>
 
-        <h2>Phase 4: Interviews (ongoing)</h2>
+        <h2>{t.h2Phase4}</h2>
 
-        <h3>Before the interview</h3>
+        <h3>{t.h3Before}</h3>
         <ul>
-          <li>Research the company's recent news, products, and values.</li>
-          <li>Prepare 3 questions to ask your interviewer that show genuine curiosity.</li>
-          <li>Test your tech setup if it's virtual. Camera, mic, lighting, background.</li>
+          {t.beforeList.map(item => <li key={item}>{item}</li>)}
         </ul>
 
-        <h3>During the interview</h3>
+        <h3>{t.h3During}</h3>
         <ul>
-          <li>Take a breath before answering. Silence is not a weakness.</li>
-          <li>If you don't know, say so. Then walk through how you'd figure it out.</li>
-          <li>Be specific. Replace "I worked on a team project" with "I led a 4-person team to build a dashboard that tracked student engagement across 3 campus organizations."</li>
+          {t.duringList.map(item => <li key={item}>{item}</li>)}
         </ul>
 
-        <h3>After the interview</h3>
-        <p>Send a thank-you email within 24 hours. Reference something specific from the conversation. Keep it short and genuine.</p>
+        <h3>{t.h3After}</h3>
+        <p>{t.pAfter}</p>
 
-        <h2>Phase 5: Offer negotiation</h2>
-        <p>Yes, you can negotiate an internship offer. Not always on pay, but on start date, housing stipend, team placement, or project scope. The worst they can say is no, and they will not rescind the offer for asking.</p>
+        <h2>{t.h2Phase5}</h2>
+        <p>{t.pNegotiate}</p>
 
         <blockquote>
-          <p>Every "no" you collect is one step closer to the "yes" that changes everything. Keep applying.</p>
+          <p>{t.blockquote}</p>
         </blockquote>
 
-        <p>The complete journey from first application to signed offer is messy, nonlinear, and exhausting. But it is also completely doable. We are proof. And soon, you will be too.</p>
+        <p>{t.pClose}</p>
       </article>
 
       <ArticleSubscribe source="article_first_gen_playbook" />
 
       <section className="art-recs">
-        <h3 className="art-recs__title">Recommended reading</h3>
+        <h3 className="art-recs__title">{t.recsTitle}</h3>
         <div className="art-recs__grid">
           <Link to="/articles/late-cycle-internships" className="art-recs__card">
-            <div className="art-recs__card-tag">Jose</div>
-            <h4 className="art-recs__card-title">Late-Cycle Internships: Where to Look When Everyone Says It's Over</h4>
+            <div className="art-recs__card-tag">{t.rec1Tag}</div>
+            <h4 className="art-recs__card-title">{t.rec1Title}</h4>
           </Link>
           <Link to="/articles/rejection" className="art-recs__card">
-            <div className="art-recs__card-tag">Both</div>
-            <h4 className="art-recs__card-title">Rejection Doesn't Mean You Did It Wrong</h4>
+            <div className="art-recs__card-tag">{t.rec2Tag}</div>
+            <h4 className="art-recs__card-title">{t.rec2Title}</h4>
           </Link>
         </div>
       </section>

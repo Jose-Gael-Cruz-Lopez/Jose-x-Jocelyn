@@ -1,24 +1,27 @@
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../../components/ArticleLayout'
 import ArticleSubscribe from '../../components/ArticleSubscribe'
+import { useT } from '../../hooks/useT'
 
 export default function CoffeeChatFramework() {
+  const t = useT('coffeeChatFramework')
+
   const handleShare = () => {
-    if (navigator.share) navigator.share({ title: 'The Coffee Chat Framework That Actually Gets Responses', url: window.location.href })
+    if (navigator.share) navigator.share({ title: t.shareTitle, url: window.location.href })
     else navigator.clipboard?.writeText(window.location.href)
   }
 
   return (
-    <ArticleLayout title="The Coffee Chat Framework That Actually Gets Responses | La Voz del Día">
+    <ArticleLayout title={t.pageTitle}>
       <header className="art-header">
-        <span className="art-header__label art-header__label--jose">Jose</span>
-        <h1 className="art-header__title">The Coffee Chat Framework That Actually Gets Responses</h1>
-        <p className="art-header__subtitle">A step-by-step system for reaching out to professionals and turning conversations into opportunities.</p>
+        <span className="art-header__label art-header__label--jose">{t.headerLabel}</span>
+        <h1 className="art-header__title">{t.headerTitle}</h1>
+        <p className="art-header__subtitle">{t.headerSubtitle}</p>
         <div className="art-header__meta">
-          <img src="/images/jose.jpeg" alt="Jose G. Cruz-Lopez" className="art-header__avatar" />
+          <img src="/images/jose.jpeg" alt={t.authorAlt} className="art-header__avatar" />
           <div className="art-header__author-info">
-            <span className="art-header__author-name">Jose G. Cruz-Lopez</span>
-            <span className="art-header__date">March 2026 · 7 min read</span>
+            <span className="art-header__author-name">{t.authorName}</span>
+            <span className="art-header__date">{t.authorDate}</span>
           </div>
         </div>
       </header>
@@ -44,91 +47,89 @@ export default function CoffeeChatFramework() {
               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
             </svg>
-            Share
+            {t.shareBtn}
           </button>
         </div>
       </div>
 
       <article className="art-body">
-        <p>"Just reach out to people on LinkedIn." Everyone says it. No one teaches you how.</p>
-        <p>I spent months sending messages that went nowhere before I figured out what actually works. The difference between a message that gets ignored and one that gets a response is not luck. It is structure.</p>
-        <p>Here is the exact framework I use, and it has a response rate above 40%.</p>
+        <p>{t.p1}</p>
+        <p>{t.p2}</p>
+        <p>{t.p3}</p>
 
-        <h2>The anatomy of a message that works</h2>
-        <p>Every cold outreach message that gets a response has three elements:</p>
+        <h2>{t.h2Anatomy}</h2>
+        <p>{t.pAnatomy}</p>
         <ol>
-          <li><strong>A specific hook</strong> that shows you did your homework</li>
-          <li><strong>A clear ask</strong> that is easy to say yes to</li>
-          <li><strong>Respect for their time</strong> that removes friction</li>
+          {t.anatomyList.map(item => (
+            <li key={item} dangerouslySetInnerHTML={{ __html: item }} />
+          ))}
         </ol>
-        <p>That's it. No flattery essays. No life stories. Three elements, under 100 words.</p>
+        <p>{t.pSimple}</p>
 
-        <h2>The template</h2>
+        <h2>{t.h2Template}</h2>
         <div className="art-callout">
-          <p>Hi [Name],</p>
-          <p>I saw your [specific post / project / talk about X] and it resonated because [brief personal connection in 1 sentence].</p>
-          <p>I'm a [year] student at [school] exploring [field], and I'd love to hear how you approached [specific thing they did]. Would you have 15 minutes for a quick virtual chat this week or next?</p>
-          <p>Totally understand if not. Either way, thanks for sharing your work.</p>
-          <p>Best, [Your name]</p>
+          <p>{t.templateLine1}</p>
+          <p>{t.templateLine2}</p>
+          <p>{t.templateLine3}</p>
+          <p>{t.templateLine4}</p>
+          <p>{t.templateLine5}</p>
         </div>
 
-        <h3>Why this works</h3>
+        <h3>{t.h3WhyWorks}</h3>
         <ul>
-          <li><strong>Specific hook:</strong> Referencing their actual work proves you're not mass-messaging. People respond to people who pay attention.</li>
-          <li><strong>Clear ask:</strong> "15 minutes" is a low commitment. "This week or next" gives them flexibility. You made it easy to say yes.</li>
-          <li><strong>Graceful exit:</strong> "Totally understand if not" removes pressure. Ironically, this makes people more likely to respond.</li>
+          {t.whyWorksList.map(item => (
+            <li key={item} dangerouslySetInnerHTML={{ __html: item }} />
+          ))}
         </ul>
 
-        <h2>Before you send: the prep work</h2>
+        <h2>{t.h2Prep}</h2>
 
-        <h3>Step 1: Choose the right people</h3>
-        <p>Don't start with the CEO. Target people 1 to 3 levels above where you want to be. They remember what it's like to be early-career and they're more likely to respond.</p>
+        <h3>{t.h3Step1}</h3>
+        <p>{t.pStep1}</p>
 
-        <h3>Step 2: Do the research</h3>
-        <p>Spend 5 minutes on their LinkedIn profile. Read their recent posts. Check if they've been featured in any articles or podcasts. Find one specific thing you can reference. This is what separates your message from the other 50 they got this week.</p>
+        <h3>{t.h3Step2}</h3>
+        <p>{t.pStep2}</p>
 
-        <h3>Step 3: Warm the connection first</h3>
-        <p>Before you send a message, engage with their content. Like a post. Leave a thoughtful comment. Do this for a week. When your name shows up in their DMs, they'll recognize it.</p>
+        <h3>{t.h3Step3}</h3>
+        <p>{t.pStep3}</p>
 
-        <h2>During the chat: the 15-minute playbook</h2>
-        <p>You asked for 15 minutes. Respect that. Here is how to structure it:</p>
+        <h2>{t.h2During}</h2>
+        <p>{t.pDuring}</p>
         <ul>
-          <li><strong>Minutes 1 to 2:</strong> Thank them. Introduce yourself in 30 seconds or less.</li>
-          <li><strong>Minutes 3 to 10:</strong> Ask your prepared questions. Listen more than you talk. Take notes.</li>
-          <li><strong>Minutes 11 to 14:</strong> Ask "Is there anyone else you'd recommend I talk to?" This one question can snowball a single chat into an entire network.</li>
-          <li><strong>Minute 15:</strong> Thank them again. Wrap up on time, even if they offer to keep going. Respecting their time builds respect for you.</li>
+          {t.duringList.map(item => (
+            <li key={item} dangerouslySetInnerHTML={{ __html: item }} />
+          ))}
         </ul>
 
-        <h2>After the chat: the follow-up that seals it</h2>
-        <p>Within 24 hours, send a thank-you message. Reference one specific takeaway from the conversation. If they mentioned someone to connect with, follow up on that referral and let the original person know you did.</p>
+        <h2>{t.h2After}</h2>
+        <p>{t.pAfter}</p>
 
         <blockquote>
-          <p>A coffee chat is not a job interview. It is a relationship. Play the long game. The people you connect with today will remember you when opportunities open up tomorrow.</p>
+          <p>{t.blockquote}</p>
         </blockquote>
 
-        <h2>Common mistakes to avoid</h2>
+        <h2>{t.h2Mistakes}</h2>
         <ul>
-          <li><strong>Asking for a job in the first message.</strong> Never. The ask is for a conversation, not a position.</li>
-          <li><strong>Sending a generic message.</strong> If your message could be sent to anyone, it will be ignored by everyone.</li>
-          <li><strong>Not following up.</strong> If they don't respond in a week, send one polite follow-up. After that, move on.</li>
-          <li><strong>Going over time.</strong> If you asked for 15 minutes, end at 15 minutes. Period.</li>
+          {t.mistakesList.map(item => (
+            <li key={item} dangerouslySetInnerHTML={{ __html: item }} />
+          ))}
         </ul>
 
-        <p>Networking is a skill, not a personality trait. You can learn it. And once you do, it becomes the single most powerful tool in your career toolkit.</p>
+        <p>{t.pClose}</p>
       </article>
 
       <ArticleSubscribe source="article_coffee_chat_framework" />
 
       <section className="art-recs">
-        <h3 className="art-recs__title">Recommended reading</h3>
+        <h3 className="art-recs__title">{t.recsTitle}</h3>
         <div className="art-recs__grid">
           <Link to="/articles/late-cycle-internships" className="art-recs__card">
-            <div className="art-recs__card-tag">Jose</div>
-            <h4 className="art-recs__card-title">Late-Cycle Internships: Where to Look When Everyone Says It's Over</h4>
+            <div className="art-recs__card-tag">{t.rec1Tag}</div>
+            <h4 className="art-recs__card-title">{t.rec1Title}</h4>
           </Link>
           <Link to="/articles/first-gen-internship-playbook" className="art-recs__card">
-            <div className="art-recs__card-tag">Both</div>
-            <h4 className="art-recs__card-title">The Complete First-Gen Internship Playbook</h4>
+            <div className="art-recs__card-tag">{t.rec2Tag}</div>
+            <h4 className="art-recs__card-title">{t.rec2Title}</h4>
           </Link>
         </div>
       </section>
