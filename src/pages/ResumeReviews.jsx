@@ -24,13 +24,26 @@ const COMPANIES = {
   anthropic: { name: 'Anthropic',slug: null, letter: 'A',  color: '#C4602D', bg: 'rgba(196,96,45,.1)' },
 }
 
-const STAGE_META = {
-  intern:        { label: 'INTERN',        cls: 'intern',        tagCls: 'rr-tag--blue' },
-  newgrad:       { label: 'NEW GRAD',      cls: 'newgrad',       tagCls: 'rr-tag--teal' },
-  fulltime:      { label: 'FULL-TIME',     cls: 'fulltime',      tagCls: 'rr-tag--navy' },
-  pivot:         { label: 'CAREER PIVOT',  cls: 'pivot',         tagCls: 'rr-tag--accent' },
-  contract:      { label: 'CONTRACT',      cls: 'contract',      tagCls: 'rr-tag--muted' },
-  apprenticeship:{ label: 'APPRENTICESHIP',cls: 'apprenticeship',tagCls: 'rr-tag--gold' },
+const STAGE_META_STYLE = {
+  intern:        { cls: 'intern',        tagCls: 'rr-tag--blue' },
+  newgrad:       { cls: 'newgrad',       tagCls: 'rr-tag--teal' },
+  fulltime:      { cls: 'fulltime',      tagCls: 'rr-tag--navy' },
+  pivot:         { cls: 'pivot',         tagCls: 'rr-tag--accent' },
+  contract:      { cls: 'contract',      tagCls: 'rr-tag--muted' },
+  apprenticeship:{ cls: 'apprenticeship',tagCls: 'rr-tag--gold' },
+}
+
+function getStageMeta(stage, t) {
+  const style = STAGE_META_STYLE[stage] || { cls: 'contract', tagCls: 'rr-tag--muted' }
+  const labelMap = {
+    intern:         t.stageInternLabel,
+    newgrad:        t.stageNewGradLabel,
+    fulltime:       t.stageFullTimeLabel,
+    pivot:          t.stageCareerPivotLabel,
+    contract:       t.stageContractLabel,
+    apprenticeship: t.stageApprenticeshipLabel,
+  }
+  return { ...style, label: labelMap[stage] || stage.toUpperCase() }
 }
 
 const TAG_LABELS = {
@@ -75,8 +88,6 @@ const TAG_COLOR_MAP = {
   'foster':              'muted',
 }
 
-const ROLE_LABELS = { swe: 'Software Engineer', data: 'Data / DS', pm: 'Product', biz: 'Business', design: 'Design', research: 'Research', other: 'Other' }
-const STAGE_LABELS = { intern: 'Intern', newgrad: 'New Grad', fulltime: 'Full-Time', pivot: 'Career Pivot', contract: 'Contract' }
 
 
 const SIDEBAR_COMPANIES = ['google','microsoft','meta','apple','amazon','stripe','pinterest','reddit','dropbox','fidelity','jpmorgan','anthropic']
@@ -218,7 +229,7 @@ export default function ResumeReviews() {
       if (filter.roles.length && !filter.roles.includes(r.roleType)) return false
       if (filter.stages.length && !filter.stages.includes(r.stage)) return false
       if (filter.companies.length && !filter.companies.some(c => r.companies.includes(c))) return false
-      if (filter.tags.length && !filter.tags.every(t => r.tags.includes(t))) return false
+      if (filter.tags.length && !filter.tags.every(tag => r.tags.includes(tag))) return false
       return true
     })
     if (filter.sort === 'featured') result = [...result].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
@@ -687,7 +698,7 @@ export default function ResumeReviews() {
                 {t.gridEmptyBody}
               </div>
             ) : visibleResumes.map(r => {
-              const sm = STAGE_META[r.stage] || { label: r.stage.toUpperCase(), cls: 'contract', tagCls: 'rr-tag--muted' }
+              const sm = getStageMeta(r.stage, t)
               return (
                 <article key={r.id} className="rr-card" onClick={() => { panelTriggerRef.current = document.activeElement; setPanelId(r.id) }} tabIndex={0} role="button" aria-label={`${t.cardViewBtn} ${r.handle}`} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { panelTriggerRef.current = e.currentTarget; setPanelId(r.id) } }}>
                   <div className="rr-card__stage-wrap">
@@ -947,7 +958,7 @@ export default function ResumeReviews() {
                 </div>
                 <div className="rr-panel__meta-row">
                   <span className="rr-panel__meta-label">{t.panelMetaStage}</span>
-                  <span className={`rr-tag ${(STAGE_META[panelResume.stage] || {}).tagCls || 'rr-tag--muted'}`}>{(STAGE_META[panelResume.stage] || {}).label || panelResume.stage.toUpperCase()}</span>
+                  <span className={`rr-tag ${getStageMeta(panelResume.stage, t).tagCls}`}>{getStageMeta(panelResume.stage, t).label}</span>
                 </div>
                 <div className="rr-panel__meta-row">
                   <span className="rr-panel__meta-label">{t.panelMetaTraction}</span>
