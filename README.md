@@ -1,46 +1,44 @@
 # Jose x Jocelyn · From Campus to Career
 
-From Campus to Career is a collaborative initiative for first-generation and underrepresented students in tech and data: practical advice, transparent insights, and a visible path from first internship search to full-time role.
+A structured ecosystem that turns first-gen ambition into real career outcomes.
 
-## About
+Built by two first-generation Mexican-Americans in tech, **From Campus to Career** gives first-gen and underrepresented students the roadmap, connections, and tools they never had access to — told by two people at different stages of the same journey.
 
-- **Jose G. Cruz-Lopez** focuses on getting in: internships, applications, and recruiting insight as an actively recruiting student.
-- **Jocelyn Vazquez** focuses on staying and growing: offers, negotiation, and early-career growth in tech and data.
+## Who We Are
 
-## Features
+- **Jose G. Cruz-Lopez** — Navigating the recruiting grind as an actively job-searching student. Covers internship applications, cold outreach, interview prep, and breaking into tech.
+- **Jocelyn Vazquez** — First-gen Information Systems graduate now working in tech and data. Covers compensation, corporate culture, negotiation, onboarding, and career growth.
 
-- **Hero:** Full-viewport brand wordmark with GSAP entrance animations
-- **About:** Tabs for Who We Are, Mission, and Vision
-- **Gallery:** Animated portfolio-style card carousel
-- **Interruption:** Bold typographic statement with animated bars
-- **Services:** Content, Sprints, and Community with tabbed navigation
-- **Editorial:** Article grid with author tags
-- **Contact:** Multi-step modal form
-- **Scroll animations:** GSAP ScrollTrigger
-- **Responsive:** Mobile hamburger menu and adapted layouts
+## What We Offer
+
+| Pillar | What it is |
+|---|---|
+| **Content** | Split-screen LinkedIn series and plug-and-play career templates |
+| **Sprints** | Small-cohort programs built around a single milestone (Bridge Year, Interview Prep) |
+| **Community** | Opportunity board, partner panels, coffee chat networks, and resume review circles |
+| **La Voz del Día** | Articles on recruiting, internships, full-time offers, and first-gen survival |
 
 ## Tech Stack
 
-- **HTML5 / CSS3 / Vanilla JavaScript**
-- **GSAP** (ScrollTrigger): scroll-driven animations and reveals
-- **Anime.js:** gallery motion
-- **Swiper.js:** carousel assets (if used)
-- **Clash Display** (Fontshare): display typography
-- **Satoshi** (Fontshare): body typography
-
-## Design Inspiration
-
-UI/UX design inspired by [kobykooba.com](https://kobykooba.com/), adapted for the Jose x Jocelyn / From Campus to Career brand.
+- **React 18** + **React Router v6**
+- **Vite** (dev server + build)
+- **Tailwind CSS** + **PostCSS**
+- **GSAP** + **ScrollTrigger** (scroll animations)
+- **Supabase** (backend / database)
+- **Clash Display** + **Satoshi** (Fontshare)
 
 ## Getting Started
 
-This is a static site. To run locally:
+```bash
+npm install
+npm run dev
+```
+
+Runs at `http://localhost:3000`.
 
 ```bash
-# Using any static file server
-npx serve . -l 3000
-
-# Or simply open index.html in your browser
+npm run build    # production build → dist/
+npm run preview  # preview the production build locally
 ```
 
 ## License
