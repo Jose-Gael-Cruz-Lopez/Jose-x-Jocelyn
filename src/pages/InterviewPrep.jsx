@@ -510,7 +510,7 @@ export default function InterviewPrep() {
           </div>
 
           {activePanel && (
-            <div className="ip-type-panel__inner">
+            <div className="ip-type-panel__inner" role="tabpanel" aria-labelledby={`ip-tab-${activeTab}`}>
               <div className="ip-type-panel__desc" dangerouslySetInnerHTML={{ __html: `<p>${activePanel.desc}</p>` }} />
               <div>
                 <p className="ip-type-panel__res-label">{t.typesResLabel}</p>
@@ -628,7 +628,7 @@ export default function InterviewPrep() {
                   <select className="ip-form-select" id="ipStage" value={form.stage} onChange={e => setField('stage', e.target.value)}>
                     <option value="">{t.formSelectStage}</option>
                     {t.formStageOptions.map(opt => (
-                      <option key={opt}>{opt}</option>
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
                   </select>
                 </div>
@@ -637,7 +637,7 @@ export default function InterviewPrep() {
                   <select className="ip-form-select" id="ipType" value={form.type} onChange={e => setField('type', e.target.value)}>
                     <option value="">{t.formSelectType}</option>
                     {t.formTypeOptions.map(opt => (
-                      <option key={opt}>{opt}</option>
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
                   </select>
                 </div>
