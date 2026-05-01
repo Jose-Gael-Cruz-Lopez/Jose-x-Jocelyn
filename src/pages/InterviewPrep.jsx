@@ -2,319 +2,11 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
-
-const GRADE_CARDS = [
-  {
-    bar: 'fy',
-    label: 'First-Year / Sophomore',
-    title: 'First Interviews & Early Opportunities',
-    body: 'If you are early in college, the goal is not to sound "impressive" - it is to show <strong>curiosity, reliability, communication, and proof that you can learn quickly.</strong> You may be interviewing for externships, insight programs, student leadership roles, or freshman/sophomore internships. You do not need a perfect story. You need a clear one.',
-    resources: [
-      { label: 'Tell Me About Yourself Script', to: '/career-templates' },
-      { label: 'First Interview Checklist', to: '/career-templates' },
-      { label: 'Common Behavioral Questions for Early Students', to: '/career-templates' },
-      { label: 'How to Talk About Class Projects and Club Work', to: '/career-templates' },
-      { label: 'Questions to Ask at the End of an Interview', to: '/career-templates' },
-    ],
-  },
-  {
-    bar: 'jr',
-    label: 'Junior / Internship Recruiting',
-    title: 'Internship Interviews & Recruiter Rounds',
-    body: 'Juniors are usually being tested on <strong>readiness, communication, and whether you can contribute quickly</strong> in an internship environment. You need to know how to talk about projects, coursework, leadership, and prior experience in a structured way - not just describe what you did, but frame what it shows about you.',
-    resources: [
-      { label: 'STAR Story Bank', to: '/career-templates' },
-      { label: 'Resume-to-Interview Translation Guide', to: '/career-templates' },
-      { label: 'Recruiter Screen Prep Guide', to: '/career-templates' },
-      { label: 'Technical Interview Checklist', to: '/career-templates' },
-      { label: 'Behavioral Interview Question Bank', to: '/career-templates' },
-      { label: 'Post-Interview Thank You Template', to: '/career-templates' },
-    ],
-  },
-  {
-    bar: 'sr',
-    label: 'Senior / New Grad',
-    title: 'Full-Time Roles, Finals & Late Cycle',
-    body: "Senior-level interviews often test <strong>maturity, clarity, decision-making, and whether you seem ready to operate as a full-time employee</strong> rather than just a student. This section also helps seniors still searching late in the cycle - the question is not just how to interview, but how to interview when your search timeline is longer than your peers'.",
-    resources: [
-      { label: 'Full-Time Tell Me About Yourself Script', to: '/career-templates' },
-      { label: 'How to Explain Your Search Timeline', to: '/career-templates' },
-      { label: 'Final Round Prep Guide', to: '/career-templates' },
-      { label: 'Offer-Stage Interview Questions', to: '/career-templates' },
-      { label: 'Questions to Ask Hiring Managers', to: '/career-templates' },
-      { label: 'Post-Interview Reflection Doc', to: '/career-templates' },
-    ],
-  },
-  {
-    bar: 'rg',
-    label: 'Recent Grad / Bridge Year',
-    title: 'Gap Navigation, Apprenticeships & Transitions',
-    body: 'This stage is less about sounding perfect and more about <strong>explaining your path clearly, showing momentum, and connecting your past experience to where you are trying to go next.</strong> Interviewers will ask about your timeline. The way you answer that question matters more than most candidates realize.',
-    resources: [
-      { label: 'Gap Narrative Script', to: '/career-templates' },
-      { label: 'Apprenticeship Interview Guide', to: '/bridge-year' },
-      { label: 'Career Transition Story Builder', to: '/career-templates' },
-      { label: 'Confidence Reframe Worksheet', to: '/career-templates' },
-      { label: 'Interview Tracker + Reflection Tool', to: '/career-templates' },
-    ],
-  },
-]
-
-const INTERVIEW_TYPES = [
-  {
-    key: 'recruiter',
-    label: 'Recruiter Screen',
-    desc: 'Recruiter screens are usually the <strong>first filter</strong> and are less about technical depth than about clarity, fit, communication, and whether your story makes sense. The recruiter is not trying to trip you up - they are trying to decide if they should send you further. Your job is to be clear, specific, and easy to advocate for. Practice your "tell me about yourself" and your "why this company" until they are effortless.',
-    resources: [
-      'Recruiter Screen Prep Checklist',
-      '10 Common Recruiter Screen Questions',
-      'Tell Me About Yourself Script',
-      'Why This Role / Why This Company Framework',
-      'Salary Question Guidance for Early-Career',
-    ],
-  },
-  {
-    key: 'behavioral',
-    label: 'Behavioral',
-    desc: 'Behavioral interviews are used to <strong>predict future performance based on past actions</strong> - which is why the STAR method matters so much. Every question that starts with "tell me about a time when…" is an invitation to tell a story. The candidates who do well in behavioral rounds are not the ones with the most impressive stories; they are the ones who tell their stories with the most structure and specificity.',
-    resources: [
-      'STAR Story Bank',
-      'Behavioral Question Bank (30 questions)',
-      'Story Selection Guide',
-      '"Weaknesses" Answer Framework',
-      'Leadership / Teamwork / Failure Answer Builder',
-    ],
-  },
-  {
-    key: 'technical',
-    label: 'Technical',
-    desc: 'Technical interviews test <strong>problem-solving, clarity of thought, and communication under pressure</strong> - not just whether you get the perfect answer. Interviewers often care as much about how you think out loud as about what you produce. If you get stuck, narrating your thought process and asking clarifying questions will always serve you better than going silent and hoping.',
-    resources: [
-      'Technical Interview Prep Checklist',
-      'How to Narrate Your Thinking Out Loud',
-      'Project Walkthrough Framework',
-      'SQL / Coding / Data Question Prep Templates',
-      'What to Do When You Get Stuck',
-    ],
-  },
-  {
-    key: 'case',
-    label: 'Case',
-    desc: 'Case interviews test <strong>structure, logic, prioritization, and communication</strong> rather than memorized knowledge. They are most common in consulting, product, strategy, and business internships. The biggest mistake candidates make is jumping to conclusions before structuring the problem. The interviewers are evaluating your process - how you break down ambiguous problems - more than your final answer.',
-    resources: [
-      'Case Interview Framework Sheet',
-      'Profitability / Market Entry / Product Strategy Examples',
-      'How to Structure Your Answer in Real Time',
-      'Common Mistakes in Case Interviews',
-    ],
-  },
-  {
-    key: 'oneway',
-    label: 'One-Way / Recorded',
-    desc: 'Asynchronous and recorded interviews are increasingly common - and they need their own strategy. <strong>Timing, tone, environment, and on-camera presence matter differently</strong> when there is no human on the other side reacting to you. The biggest traps are reading answers off a script, running over time, and a poor setup that distracts from your answers.',
-    resources: [
-      'One-Way Interview Checklist',
-      'Camera / Lighting / Environment Setup Guide',
-      'How to Sound Natural Without Reading',
-      'Time-Boxed Answer Practice Sheet',
-    ],
-  },
-  {
-    key: 'final',
-    label: 'Final Round',
-    desc: 'Final round interviews often involve hiring managers, team members, and sometimes senior leadership. They are testing <strong>maturity, team fit, communication style, and readiness for the actual day-to-day work.</strong> The questions are less predictable than earlier rounds - interviewers at this stage want to have a conversation, not run a checklist. The candidates who advance are the ones who seem genuinely ready to show up.',
-    resources: [
-      'Final Round Prep Guide',
-      'Questions to Ask a Hiring Manager',
-      'Team-Fit Answer Guide',
-      'Offer-Stage Red Flags and Green Flags',
-      'Post-Interview Thank You Note',
-    ],
-  },
-]
-
-const RESOURCE_CARDS = [
-  {
-    name: 'Tell Me About Yourself Script',
-    desc: 'Three versions: student, senior/new grad, and career transition. A 3-part framework - who you are, what you have done, why this role - that turns the most-asked question into a practiced, confident answer.',
-    gradeTags: [
-      { label: 'First-Year', type: 'fy' },
-      { label: 'Junior', type: 'jr' },
-      { label: 'Senior', type: 'sr' },
-      { label: 'Recent Grad', type: 'rg' },
-    ],
-    roundTags: [
-      { label: 'Recruiter', type: 'rec' },
-      { label: 'Behavioral', type: 'beh' },
-      { label: 'Final Round', type: 'fin' },
-    ],
-    ctaLabel: 'Copy Template →',
-  },
-  {
-    name: 'STAR Story Bank Template',
-    desc: 'A blank document for building 6–8 interview stories organized by teamwork, leadership, challenge, failure, conflict, and initiative - built once, reused in every interview.',
-    gradeTags: [
-      { label: 'Junior', type: 'jr' },
-      { label: 'Senior', type: 'sr' },
-      { label: 'Recent Grad', type: 'rg' },
-    ],
-    roundTags: [
-      { label: 'Behavioral', type: 'beh' },
-      { label: 'Final Round', type: 'fin' },
-    ],
-    ctaLabel: 'Open Framework →',
-  },
-  {
-    name: 'Questions to Ask at the End',
-    desc: '15 specific, non-generic questions organized by who you are talking to: recruiter, engineer, hiring manager, or panel. The questions that actually show you have thought about the role.',
-    gradeTags: [
-      { label: 'First-Year', type: 'fy' },
-      { label: 'Junior', type: 'jr' },
-      { label: 'Senior', type: 'sr' },
-      { label: 'Recent Grad', type: 'rg' },
-    ],
-    roundTags: [
-      { label: 'Recruiter', type: 'rec' },
-      { label: 'Technical', type: 'tech' },
-      { label: 'Final Round', type: 'fin' },
-    ],
-    ctaLabel: 'Open Framework →',
-  },
-  {
-    name: 'Post-Interview Reflection Doc',
-    desc: 'What happened, what questions you got, where you froze, and what to improve next time. Turns every interview - successful or not - into feedback for the next one.',
-    gradeTags: [
-      { label: 'Junior', type: 'jr' },
-      { label: 'Senior', type: 'sr' },
-      { label: 'Recent Grad', type: 'rg' },
-    ],
-    roundTags: [
-      { label: 'Behavioral', type: 'beh' },
-      { label: 'Technical', type: 'tech' },
-      { label: 'Final Round', type: 'fin' },
-    ],
-    ctaLabel: 'Open Framework →',
-  },
-  {
-    name: 'Mock Answer Builder',
-    desc: 'A worksheet for drafting strong responses to specific questions before practice - so you are building answers from structure, not performing under pressure for the first time in the real interview.',
-    gradeTags: [
-      { label: 'First-Year', type: 'fy' },
-      { label: 'Junior', type: 'jr' },
-      { label: 'Senior', type: 'sr' },
-    ],
-    roundTags: [
-      { label: 'Behavioral', type: 'beh' },
-      { label: 'Technical', type: 'tech' },
-      { label: 'Case', type: 'case' },
-    ],
-    ctaLabel: 'Open Framework →',
-  },
-  {
-    name: 'Interview Day Checklist',
-    desc: 'What to do 24 hours before, 1 hour before, and 10 minutes before - so the day of the interview is about being present, not scrambling. Covers both virtual and in-person formats.',
-    gradeTags: [
-      { label: 'First-Year', type: 'fy' },
-      { label: 'Junior', type: 'jr' },
-      { label: 'Senior', type: 'sr' },
-      { label: 'Recent Grad', type: 'rg' },
-    ],
-    roundTags: [
-      { label: 'Recruiter', type: 'rec' },
-      { label: 'Behavioral', type: 'beh' },
-      { label: 'Technical', type: 'tech' },
-      { label: 'One-Way', type: 'ow' },
-    ],
-    ctaLabel: 'Copy Template →',
-  },
-  {
-    name: 'Confidence Reframe Guide',
-    desc: 'Built specifically for first-gen students who tend to undersell their experience. A framework for translating real grit, real responsibility, and real leadership from non-traditional contexts into language that interviewers recognize.',
-    gradeTags: [
-      { label: 'First-Year', type: 'fy' },
-      { label: 'Junior', type: 'jr' },
-      { label: 'Recent Grad', type: 'rg' },
-    ],
-    roundTags: [
-      { label: 'Recruiter', type: 'rec' },
-      { label: 'Behavioral', type: 'beh' },
-      { label: 'Final Round', type: 'fin' },
-    ],
-    ctaLabel: 'Open Framework →',
-  },
-]
-
-const SUGGESTED_PATHS = [
-  {
-    num: '01',
-    trigger: '"I\'m a sophomore and I have my first interview."',
-    items: [
-      { label: 'Tell Me About Yourself Script', to: '/career-templates' },
-      { label: 'First Interview Checklist', to: '/career-templates' },
-      { label: 'Common Behavioral Questions for Early Students', to: '/career-templates' },
-      { label: 'Questions to Ask at the End of an Interview', to: '/career-templates' },
-    ],
-  },
-  {
-    num: '02',
-    trigger: '"I\'m a junior interviewing for internships."',
-    items: [
-      { label: 'Recruiter Screen Prep Guide', to: '/career-templates' },
-      { label: 'STAR Story Bank', to: '/career-templates' },
-      { label: 'Technical Interview Checklist', to: '/career-templates' },
-      { label: 'Post-Interview Thank You Note', to: '/career-templates' },
-    ],
-  },
-  {
-    num: '03',
-    trigger: '"I\'m a senior and I keep reaching final rounds."',
-    items: [
-      { label: 'Final Round Prep Guide', to: '/career-templates' },
-      { label: 'Team-Fit Answer Builder', to: '/career-templates' },
-      { label: 'Questions to Ask Hiring Managers', to: '/career-templates' },
-      { label: 'Post-Interview Reflection Doc', to: '/career-templates' },
-    ],
-  },
-  {
-    num: '04',
-    trigger: '"I graduated and I\'m trying to break into tech."',
-    items: [
-      { label: 'Gap Narrative Script', to: '/career-templates' },
-      { label: 'Apprenticeship Interview Guide', to: '/bridge-year' },
-      { label: 'Career Transition Story Builder', to: '/career-templates' },
-      { label: 'Confidence Reframe Guide', to: '/career-templates' },
-    ],
-  },
-]
-
-const ECO_LINKS = [
-  {
-    num: '01',
-    title: 'LinkedIn Series',
-    desc: 'The broader career context and real-time breakdowns - recruiting timelines, offer anatomy, and first-gen-specific strategy.',
-    to: '/linkedin-series',
-  },
-  {
-    num: '02',
-    title: 'Career Templates',
-    desc: 'The scripts and trackers you can copy and use immediately - outreach, applications, offers, and on-the-job tools.',
-    to: '/career-templates',
-  },
-  {
-    num: '03',
-    title: 'Bridge Year Hub',
-    desc: 'If the bigger issue is not just interviewing, but figuring out what roles and pathways to pursue - apprenticeships, new grad roles, and a self-guided sprint path.',
-    to: '/bridge-year',
-  },
-  {
-    num: '04',
-    title: 'La Voz del Día',
-    desc: 'Deeper reading on rejection, negotiation, onboarding, and the parts of the process that are harder to fit in a checklist.',
-    to: '/articles',
-  },
-]
+import { useT } from '../hooks/useT'
 
 export default function InterviewPrep() {
+  const t = useT('interviewPrep')
+
   const [activeTab, setActiveTab] = useState('recruiter')
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
@@ -325,7 +17,7 @@ export default function InterviewPrep() {
   const handleSubmit = async e => {
     e.preventDefault()
     if (!form.role) {
-      setFormError('Please describe your role or interview situation.')
+      setFormError(t.formErrorRequired)
       return
     }
     setFormLoading(true)
@@ -339,16 +31,16 @@ export default function InterviewPrep() {
     })
     setFormLoading(false)
     if (error) {
-      setFormError('Something went wrong. Please try again.')
+      setFormError(t.formErrorGeneric)
     } else {
       setFormSubmitted(true)
     }
   }
 
-  const activePanel = INTERVIEW_TYPES.find(t => t.key === activeTab)
+  const activePanel = t.interviewTypes.find(it => it.key === activeTab)
 
   return (
-    <ArticleLayout title="Interview Prep Hub">
+    <ArticleLayout title={`${t.heroTitle} ${t.heroTitleEm}`}>
       <style>{`
         html, body { background: var(--color-cream); }
 
@@ -739,17 +431,15 @@ export default function InterviewPrep() {
 
       {/* HERO */}
       <header className="ip-hero" id="top">
-        <p className="ip-hero__kicker">From Campus to Career · Interview Prep</p>
-        <h1 className="ip-hero__title">Interview Prep <em>Hub</em></h1>
-        <p className="ip-hero__sub">Stop guessing what the interviewer wants. Start preparing with a system.</p>
-        <p className="ip-hero__body">
-          This page is built for students and early-career candidates preparing for internships, apprenticeships, new grad roles, and early full-time opportunities. <strong>Jose brings the student-side view</strong> of what it feels like to prepare in real time, and <strong>Jocelyn brings the early-career view</strong> of what actually stands out once you are in the room. Together, this page gives you practical tools, organized pathways, and interview-specific resources you can use right now.
-        </p>
-        <nav className="ip-jumps" aria-label="Page sections">
-          <a href="#by-grade" className="ip-jump">Start by grade level</a>
-          <a href="#by-type" className="ip-jump">Browse by interview type</a>
-          <a href="#resources" className="ip-jump">Use interview templates</a>
-          <a href="#paths" className="ip-jump">Find your suggested path</a>
+        <p className="ip-hero__kicker">{t.heroKicker}</p>
+        <h1 className="ip-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
+        <p className="ip-hero__sub">{t.heroSub}</p>
+        <p className="ip-hero__body" dangerouslySetInnerHTML={{ __html: t.heroBody }} />
+        <nav className="ip-jumps" aria-label={t.heroJumpsAriaLabel}>
+          <a href="#by-grade" className="ip-jump">{t.heroJump1}</a>
+          <a href="#by-type" className="ip-jump">{t.heroJump2}</a>
+          <a href="#resources" className="ip-jump">{t.heroJump3}</a>
+          <a href="#paths" className="ip-jump">{t.heroJump4}</a>
         </nav>
       </header>
 
@@ -758,13 +448,13 @@ export default function InterviewPrep() {
       {/* S1: GRADE LEVEL */}
       <section className="ip-grade" id="by-grade">
         <div className="ip-grade__head">
-          <p className="ip-kicker">Section 01</p>
-          <h2 className="ip-section-title">Start by Grade Level</h2>
-          <p className="ip-section-sub">Different stages. Different needs. Different resources.</p>
-          <p className="ip-section-body">Students at different points in college need completely different preparation. Find your stage, read the paragraph, and work through the recommended resources in order - that is the fastest path to being ready.</p>
+          <p className="ip-kicker">{t.gradeKicker}</p>
+          <h2 className="ip-section-title">{t.gradeTitle}</h2>
+          <p className="ip-section-sub">{t.gradeSub}</p>
+          <p className="ip-section-body">{t.gradeBody}</p>
         </div>
         <div className="ip-grade__grid">
-          {GRADE_CARDS.map(card => (
+          {t.gradeCards.map(card => (
             <div className="ip-grade-card" key={card.bar}>
               <div className={`ip-grade-card__bar ip-grade-card__bar--${card.bar}`} />
               <div className="ip-grade-card__inner">
@@ -772,7 +462,7 @@ export default function InterviewPrep() {
                 <h3 className="ip-grade-card__title">{card.title}</h3>
                 <p className="ip-grade-card__body" dangerouslySetInnerHTML={{ __html: card.body }} />
                 <div className="ip-grade-card__resources">
-                  <p className="ip-grade-card__res-label">Recommended resources</p>
+                  <p className="ip-grade-card__res-label">{t.gradeResLabel}</p>
                   <div className="ip-grade-card__res-list">
                     {card.resources.map(r => (
                       <Link key={r.label} to={r.to} className={`ip-grade-card__res-item ip-grade-card__res-item--${card.bar}`}>{r.label}</Link>
@@ -790,12 +480,12 @@ export default function InterviewPrep() {
       {/* S2: INTERVIEW TYPES */}
       <section className="ip-types" id="by-type">
         <div className="ip-types__inner">
-          <p className="ip-types__kicker">Section 02</p>
-          <h2 className="ip-types__title">Browse by Interview Type</h2>
-          <p className="ip-types__sub">I have a [type] interview tomorrow. Here is exactly where to start.</p>
+          <p className="ip-types__kicker">{t.typesKicker}</p>
+          <h2 className="ip-types__title">{t.typesTitle}</h2>
+          <p className="ip-types__sub">{t.typesSub}</p>
 
-          <div className="ip-type-tabs" role="tablist" aria-label="Interview types" onKeyDown={e => {
-            const KEYS = INTERVIEW_TYPES.map(t => t.key)
+          <div className="ip-type-tabs" role="tablist" aria-label={t.typesTabsAriaLabel} onKeyDown={e => {
+            const KEYS = t.interviewTypes.map(it => it.key)
             const idx = KEYS.indexOf(activeTab)
             let next = null
             if (e.key === 'ArrowRight') { e.preventDefault(); next = KEYS[(idx + 1) % KEYS.length] }
@@ -804,17 +494,17 @@ export default function InterviewPrep() {
             if (e.key === 'End')        { e.preventDefault(); next = KEYS[KEYS.length - 1] }
             if (next) { setActiveTab(next); setTimeout(() => document.getElementById(`ip-tab-${next}`)?.focus(), 0) }
           }}>
-            {INTERVIEW_TYPES.map(t => (
+            {t.interviewTypes.map(it => (
               <button
-                key={t.key}
-                id={`ip-tab-${t.key}`}
-                className={`ip-type-tab${activeTab === t.key ? ' ip-type-tab--active' : ''}`}
+                key={it.key}
+                id={`ip-tab-${it.key}`}
+                className={`ip-type-tab${activeTab === it.key ? ' ip-type-tab--active' : ''}`}
                 role="tab"
-                aria-selected={activeTab === t.key}
-                tabIndex={activeTab === t.key ? 0 : -1}
-                onClick={() => setActiveTab(t.key)}
+                aria-selected={activeTab === it.key}
+                tabIndex={activeTab === it.key ? 0 : -1}
+                onClick={() => setActiveTab(it.key)}
               >
-                {t.label}
+                {it.label}
               </button>
             ))}
           </div>
@@ -823,7 +513,7 @@ export default function InterviewPrep() {
             <div className="ip-type-panel__inner">
               <div className="ip-type-panel__desc" dangerouslySetInnerHTML={{ __html: `<p>${activePanel.desc}</p>` }} />
               <div>
-                <p className="ip-type-panel__res-label">Resources for this round</p>
+                <p className="ip-type-panel__res-label">{t.typesResLabel}</p>
                 <div className="ip-type-panel__res-list">
                   {activePanel.resources.map(res => (
                     <Link key={res} to="/career-templates" className="ip-type-panel__res">{res}</Link>
@@ -838,26 +528,26 @@ export default function InterviewPrep() {
       {/* S3: RESOURCE LIBRARY */}
       <section className="ip-library" id="resources">
         <div className="ip-library__head">
-          <p className="ip-kicker">Section 03</p>
-          <h2 className="ip-section-title">Core Resource Library</h2>
-          <p className="ip-section-sub">Every tool you need. Organized by who it is for and what interview it fits.</p>
+          <p className="ip-kicker">{t.libraryKicker}</p>
+          <h2 className="ip-section-title">{t.libraryTitle}</h2>
+          <p className="ip-section-sub">{t.librarySub}</p>
         </div>
         <div className="ip-library__grid">
-          {RESOURCE_CARDS.map(card => (
+          {t.resourceCards.map(card => (
             <div className="ip-res-card" key={card.name}>
               <h3 className="ip-res-card__name">{card.name}</h3>
               <p className="ip-res-card__desc">{card.desc}</p>
               <div className="ip-res-card__tags-group">
                 <div className="ip-res-card__tag-row">
-                  <span className="ip-res-card__tag-label">Grade:</span>
-                  {card.gradeTags.map(t => (
-                    <span key={t.label} className={`ip-tag ip-tag--${t.type}`}>{t.label}</span>
+                  <span className="ip-res-card__tag-label">{t.libraryGradeLabel}</span>
+                  {card.gradeTags.map(tag => (
+                    <span key={tag.label} className={`ip-tag ip-tag--${tag.type}`}>{tag.label}</span>
                   ))}
                 </div>
                 <div className="ip-res-card__tag-row">
-                  <span className="ip-res-card__tag-label">Round:</span>
-                  {card.roundTags.map(t => (
-                    <span key={t.label} className={`ip-tag ip-tag--${t.type}`}>{t.label}</span>
+                  <span className="ip-res-card__tag-label">{t.libraryRoundLabel}</span>
+                  {card.roundTags.map(tag => (
+                    <span key={tag.label} className={`ip-tag ip-tag--${tag.type}`}>{tag.label}</span>
                   ))}
                 </div>
               </div>
@@ -872,13 +562,13 @@ export default function InterviewPrep() {
       {/* S4: SUGGESTED PATHS */}
       <section className="ip-paths" id="paths">
         <div className="ip-paths__head">
-          <p className="ip-kicker">Section 04</p>
-          <h2 className="ip-section-title">Suggested Paths</h2>
-          <p className="ip-section-sub">Find your situation. Follow the path.</p>
-          <p className="ip-section-body">Not sure where to start? Find the sentence that matches your situation and work through the four resources in order. These paths combine grade level and interview type into a single, actionable sequence.</p>
+          <p className="ip-kicker">{t.pathsKicker}</p>
+          <h2 className="ip-section-title">{t.pathsTitle}</h2>
+          <p className="ip-section-sub">{t.pathsSub}</p>
+          <p className="ip-section-body">{t.pathsBody}</p>
         </div>
         <div className="ip-paths__grid">
-          {SUGGESTED_PATHS.map(path => (
+          {t.suggestedPaths.map(path => (
             <div className="ip-path-card" key={path.num}>
               <div className="ip-path-card__num">{path.num}</div>
               <p className="ip-path-card__trigger">{path.trigger}</p>
@@ -896,12 +586,12 @@ export default function InterviewPrep() {
       <section className="ip-eco" id="ecosystem">
         <div className="ip-eco__inner">
           <div>
-            <p className="ip-eco__kicker">The Ecosystem</p>
-            <h2 className="ip-eco__title">How this hub fits the rest of the site</h2>
-            <p className="ip-eco__body">The Interview Prep Hub helps you <strong>prepare for the room.</strong> But interviewing is only one part of the campus-to-career pipeline - and the other parts are already built out. Use this page for interview readiness, then use the rest of the site for the context and tools around it.</p>
+            <p className="ip-eco__kicker">{t.ecoKicker}</p>
+            <h2 className="ip-eco__title">{t.ecoTitle}</h2>
+            <p className="ip-eco__body" dangerouslySetInnerHTML={{ __html: t.ecoBody }} />
           </div>
           <div className="ip-eco__links">
-            {ECO_LINKS.map(link => (
+            {t.ecoLinks.map(link => (
               <Link key={link.num} to={link.to} className="ip-eco__link">
                 <span className="ip-eco__link-icon">{link.num}</span>
                 <div>
@@ -917,56 +607,51 @@ export default function InterviewPrep() {
       {/* S6: REQUEST FORM */}
       <section className="ip-form-wrap" id="request">
         <div className="ip-form-box">
-          <p className="ip-form-box__kicker">Shape This Hub</p>
-          <h2 className="ip-form-box__title">What kind of interview do you need help with?</h2>
-          <p className="ip-form-box__sub">If there is a resource, question bank, or guide you wish existed on this page, send it here. Jose and Jocelyn use these requests to decide what templates, explainers, and LinkedIn episodes to make next.</p>
+          <p className="ip-form-box__kicker">{t.formKicker}</p>
+          <h2 className="ip-form-box__title">{t.formTitle}</h2>
+          <p className="ip-form-box__sub">{t.formSub}</p>
 
           {formSubmitted ? (
             <div className="ip-form-success">
-              <h3>Request received!</h3>
-              <p>Jose and Jocelyn review every submission and use them to decide what to build next. Thank you for helping shape this hub.</p>
+              <h3>{t.formSuccessTitle}</h3>
+              <p>{t.formSuccessBody}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
               <div className="ip-form-row">
-                <label className="ip-form-label" htmlFor="ipRole">What role or interview are you preparing for?</label>
-                <input className="ip-form-input" type="text" id="ipRole" placeholder="e.g. SWE internship at Salesforce, data analyst new grad role…" value={form.role} onChange={e => setField('role', e.target.value)} />
+                <label className="ip-form-label" htmlFor="ipRole">{t.formLabelRole}</label>
+                <input className="ip-form-input" type="text" id="ipRole" placeholder={t.formPlaceholderRole} value={form.role} onChange={e => setField('role', e.target.value)} />
               </div>
               <div className="ip-form-row-2">
                 <div>
-                  <label className="ip-form-label" htmlFor="ipStage">Your stage</label>
+                  <label className="ip-form-label" htmlFor="ipStage">{t.formLabelStage}</label>
                   <select className="ip-form-select" id="ipStage" value={form.stage} onChange={e => setField('stage', e.target.value)}>
-                    <option value="">Select…</option>
-                    <option>First-Year / Sophomore</option>
-                    <option>Junior</option>
-                    <option>Senior / New Grad</option>
-                    <option>Recent Grad</option>
-                    <option>Career Transition</option>
+                    <option value="">{t.formSelectStage}</option>
+                    {t.formStageOptions.map(opt => (
+                      <option key={opt}>{opt}</option>
+                    ))}
                   </select>
                 </div>
                 <div>
-                  <label className="ip-form-label" htmlFor="ipType">Interview type</label>
+                  <label className="ip-form-label" htmlFor="ipType">{t.formLabelType}</label>
                   <select className="ip-form-select" id="ipType" value={form.type} onChange={e => setField('type', e.target.value)}>
-                    <option value="">Select…</option>
-                    <option>Recruiter Screen</option>
-                    <option>Behavioral</option>
-                    <option>Technical</option>
-                    <option>Case</option>
-                    <option>One-Way / Recorded</option>
-                    <option>Final Round</option>
+                    <option value="">{t.formSelectType}</option>
+                    {t.formTypeOptions.map(opt => (
+                      <option key={opt}>{opt}</option>
+                    ))}
                   </select>
                 </div>
               </div>
               <div className="ip-form-row">
-                <label className="ip-form-label" htmlFor="ipNeed">What do you need help with?</label>
-                <textarea className="ip-form-textarea" id="ipNeed" placeholder="e.g. I keep blanking on leadership questions. I don't know how to explain my gap year. I have a case interview in 48 hours and no idea where to start…" value={form.need} onChange={e => setField('need', e.target.value)} />
+                <label className="ip-form-label" htmlFor="ipNeed">{t.formLabelNeed}</label>
+                <textarea className="ip-form-textarea" id="ipNeed" placeholder={t.formPlaceholderNeed} value={form.need} onChange={e => setField('need', e.target.value)} />
               </div>
               <div className="ip-form-row">
-                <label className="ip-form-label" htmlFor="ipEmail">Email (optional)</label>
-                <input className="ip-form-input" type="email" id="ipEmail" placeholder="you@school.edu" value={form.email} onChange={e => setField('email', e.target.value)} />
+                <label className="ip-form-label" htmlFor="ipEmail">{t.formLabelEmail}</label>
+                <input className="ip-form-input" type="email" id="ipEmail" placeholder={t.formPlaceholderEmail} value={form.email} onChange={e => setField('email', e.target.value)} />
               </div>
               {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
-              <button className="ip-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Sending…' : 'Send Request'}</button>
+              <button className="ip-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
             </form>
           )}
         </div>
@@ -974,12 +659,12 @@ export default function InterviewPrep() {
 
       {/* FOOTER */}
       <footer className="art-footer art-footer--wide">
-        <span className="art-footer__copy">Jose x Jocelyn © 2026</span>
+        <span className="art-footer__copy">{t.footerCopy}</span>
         <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">Home</Link>
-          <Link to="/articles" className="art-footer__link">La Voz del Día</Link>
-          <Link to="/career-templates" className="art-footer__link">Templates</Link>
-          <Link to="/bridge-year" className="art-footer__link">Bridge Year</Link>
+          <Link to="/" className="art-footer__link">{t.footerHome}</Link>
+          <Link to="/articles" className="art-footer__link">{t.footerLaVoz}</Link>
+          <Link to="/career-templates" className="art-footer__link">{t.footerTemplates}</Link>
+          <Link to="/bridge-year" className="art-footer__link">{t.footerBridgeYear}</Link>
         </div>
       </footer>
     </ArticleLayout>
