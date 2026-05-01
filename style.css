@@ -330,6 +330,35 @@ ul { list-style: none; }
 }
 .nav__search-btn:hover { opacity: 1; }
 
+.nav__lang-btn {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: inherit;
+  padding: 4px 2px;
+  margin-right: 4px;
+}
+
+.nav__lang-active {
+  opacity: 1;
+}
+
+.nav__lang-inactive {
+  opacity: 0.4;
+}
+
+.nav__lang-sep {
+  opacity: 0.35;
+  font-weight: 400;
+}
+
 /* Search palette overlay */
 .search-overlay {
   position: fixed; inset: 0; z-index: 500;
