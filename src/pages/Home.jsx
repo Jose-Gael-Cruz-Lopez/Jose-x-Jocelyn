@@ -108,7 +108,7 @@ export default function Home() {
       if (!res.ok) throw new Error('Failed to send')
       setModalSent(true)
     } catch {
-      setModalError('Something went wrong. Please try again.')
+      setModalError(t.modalError)
     }
     setModalLoading(false)
   }, [modalName, modalEmail, modalMessage])
@@ -722,7 +722,7 @@ export default function Home() {
 
       {/* MOBILE NAV */}
       <div className={`mobile-nav${menuOpen ? ' mobile-nav--open' : ''}`} id="mobileNav" role="navigation" aria-label="Mobile navigation" aria-hidden={!menuOpen}>
-        <button className="mobile-nav__search" aria-label={tNav.openMenu} onClick={() => { setMenuOpen(false); openSearch() }}>
+        <button className="mobile-nav__search" aria-label={tNav.searchBtnLabel} onClick={() => { setMenuOpen(false); openSearch() }}>
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="20" height="20"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.7"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
           <span>{tNav.mobileSearch}</span>
         </button>
@@ -1011,8 +1011,8 @@ export default function Home() {
             <p className="services__body">{t.servicesContentBody}</p>
             <div className="services__list">
               <div className="services__list-col services__list-col--inline">
-                <Link to="/linkedin-series" className="services__list-btn">LinkedIn Series &rarr;</Link>
-                <Link to="/career-templates" className="services__list-btn">Career Templates &rarr;</Link>
+                <Link to="/linkedin-series" className="services__list-btn">{tNav.linkedInSeries} →</Link>
+                <Link to="/career-templates" className="services__list-btn">{tNav.careerTemplates} →</Link>
               </div>
             </div>
           </div>
@@ -1020,8 +1020,8 @@ export default function Home() {
             <p className="services__body">{t.servicesSprintsBody}</p>
             <div className="services__list">
               <div className="services__list-col services__list-col--inline">
-                <Link to="/bridge-year" className="services__list-btn">Bridge Year Sprint &rarr;</Link>
-                <Link to="/interview-prep" className="services__list-btn">Interview Prep &rarr;</Link>
+                <Link to="/bridge-year" className="services__list-btn">{tNav.bridgeYearSprint} →</Link>
+                <Link to="/interview-prep" className="services__list-btn">{tNav.interviewPrep} →</Link>
               </div>
             </div>
           </div>
@@ -1029,10 +1029,10 @@ export default function Home() {
             <p className="services__body">{t.servicesCommunityBody}</p>
             <div className="services__list">
               <div className="services__list-col services__list-col--grid-2">
-                <Link to="/opportunity-board" className="services__list-btn">Opportunity Board &rarr;</Link>
-                <Link to="/coffee-chat" className="services__list-btn">Coffee Chat Network &rarr;</Link>
-                <Link to="/resume-reviews" className="services__list-btn">Resume Reviews &rarr;</Link>
-                <Link to="/partner-panels" className="services__list-btn">Partner Panels &rarr;</Link>
+                <Link to="/opportunity-board" className="services__list-btn">{tNav.opportunityBoard} →</Link>
+                <Link to="/coffee-chat" className="services__list-btn">{tNav.coffeeChatNetwork} →</Link>
+                <Link to="/resume-reviews" className="services__list-btn">{tNav.resumeReviews} →</Link>
+                <Link to="/partner-panels" className="services__list-btn">{tNav.partnerPanels} →</Link>
               </div>
             </div>
           </div>

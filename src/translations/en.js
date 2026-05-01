@@ -101,6 +101,7 @@ export const en = {
     modalEmailPlaceholder: 'Your email',
     modalMessageLabel: 'Message',
     modalMessagePlaceholder: "What's on your mind?",
+    modalError: 'Something went wrong. Please try again.',
     modalSend: 'Send message →',
     modalSending: 'Sending…',
     modalSentTitle: 'Message sent.',

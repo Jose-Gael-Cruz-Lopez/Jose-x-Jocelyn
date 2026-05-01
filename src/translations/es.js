@@ -101,6 +101,7 @@ export const es = {
     modalEmailPlaceholder: 'Tu correo',
     modalMessageLabel: 'Mensaje',
     modalMessagePlaceholder: '¿Qué tienes en mente?',
+    modalError: 'Algo salió mal. Por favor intenta de nuevo.',
     modalSend: 'Enviar mensaje →',
     modalSending: 'Enviando…',
     modalSentTitle: 'Mensaje enviado.',
