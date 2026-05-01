@@ -1,6 +1,9 @@
 import { createContext, useContext, useState } from 'react'
 
-export const LanguageContext = createContext({ lang: 'en', setLang: () => {} })
+export const LanguageContext = createContext({
+  lang: 'en',
+  setLang: () => { throw new Error('useLang must be used inside LanguageProvider') },
+})
 
 export function LanguageProvider({ children }) {
   const [lang, setLang] = useState(() => localStorage.getItem('jj-lang') ?? 'en')
