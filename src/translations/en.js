@@ -1644,11 +1644,6 @@ export const en = {
     // ── Empty state ───────────────────────────────────────────────────────────
     emptyState: 'No templates in this category yet.',
 
-    // ── CTA button labels ─────────────────────────────────────────────────────
-    ctaCopyTemplate: 'Copy Template',
-    ctaOpenTracker: 'Open Tracker',
-    ctaOpenFramework: 'Open Framework',
-
     // ── Templates ─────────────────────────────────────────────────────────────
     templates: [
       {
