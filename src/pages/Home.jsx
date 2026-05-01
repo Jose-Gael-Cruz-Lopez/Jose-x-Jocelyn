@@ -891,7 +891,7 @@ export default function Home() {
             <img src="/images/c2c-title-collab.png" alt="From Campus to Career" className="c2c__title-img" loading="lazy" decoding="async" />
           </div>
           <div className="c2c__content">
-            <p className="c2c__lead">A structured pipeline that turns first&#8209;gen ambition into real career outcomes.</p>
+            <p className="c2c__lead">A structured ecosystem that turns first&#8209;gen ambition into real career outcomes.</p>
             <div className="c2c__grid">
               {[
                 { n: '01', t: 'Content', d: 'Split-screen LinkedIn series and plug-and-play career templates. Real talk from both sides of the pipeline, without the fluff.', cls: 'c2c__card--navy' },
