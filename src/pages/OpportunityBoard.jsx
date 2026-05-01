@@ -332,7 +332,7 @@ export default function OpportunityBoard() {
         .ob-card__source-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--color-gold-dark); flex-shrink: 0; }
         .ob-card__actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
         .ob-card__cta-primary { display: inline-flex; align-items: center; gap: 6px; padding: 13px 16px; background: var(--color-dark); color: var(--color-cream); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: none; cursor: pointer; transition: background .2s, transform .15s; flex: 1; justify-content: center; }
-        .ob-card__cta-primary:hover { background: var(--color-teal); transform: translateY(-1px); }
+        .ob-card__cta-primary:hover { background: var(--color-accent-hover); transform: translateY(-1px); }
         .ob-card__cta-secondary { display: inline-flex; align-items: center; gap: 6px; padding: 13px 14px; background: transparent; color: var(--color-muted); border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600; text-decoration: none; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; transition: border-color .2s, color .2s; flex-shrink: 0; }
         .ob-card__cta-secondary:hover { border-color: var(--color-dark); color: var(--color-dark); }
         .ob-card__cta-primary:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 8px; }

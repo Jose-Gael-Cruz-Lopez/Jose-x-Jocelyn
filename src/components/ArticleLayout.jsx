@@ -13,7 +13,7 @@ const NAV_LINKS = [
   { to: '/resume-reviews', label: 'Resumes' },
 ]
 
-export default function ArticleLayout({ children, title }) {
+export default function ArticleLayout({ children, title, footerWidth = 680 }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { pathname } = useLocation()
@@ -116,6 +116,22 @@ export default function ArticleLayout({ children, title }) {
       </div>
 
       <main>{children}</main>
+
+      <section className="art-signoff" aria-label="Sign off">
+        <div className="art-signoff__inner" style={{ maxWidth: footerWidth }}>
+          <p className="art-signoff__line">You belong in these rooms.</p>
+          <p className="art-signoff__sub">We built this because no one handed us the playbook. If something resonated — or if you have questions — we want to hear from you.</p>
+          <Link to="/#contact" className="art-signoff__cta">Get in touch ↗</Link>
+        </div>
+      </section>
+
+      <footer className="art-footer--wide" style={{ maxWidth: footerWidth }}>
+        <span className="art-footer__copy">Jose x Jocelyn © 2026</span>
+        <div className="art-footer__links">
+          <Link to="/" className="art-footer__link">Home</Link>
+          <Link to="/#contact" className="art-footer__link">Contact</Link>
+        </div>
+      </footer>
     </>
   )
 }

@@ -123,13 +123,6 @@ export default function First90Days() {
         </div>
       </section>
 
-      <footer className="art-footer--wide" style={{ maxWidth: 680 }}>
-        <span className="art-footer__copy">Jose x Jocelyn © 2026</span>
-        <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">Home</Link>
-          <Link to="/#contact" className="art-footer__link">Contact</Link>
-        </div>
-      </footer>
     </ArticleLayout>
   )
 }
