@@ -1,19 +1,22 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-
-const NAV_LINKS = [
-  { to: '/articles', label: 'La Voz del Día' },
-  { to: '/linkedin-series', label: 'LinkedIn Series' },
-  { to: '/career-templates', label: 'Templates' },
-  { to: '/bridge-year', label: 'Bridge Year' },
-  { to: '/coffee-chat', label: 'Coffee Chat' },
-  { to: '/opportunity-board', label: 'Opportunities' },
-  { to: '/interview-prep', label: 'Interview Prep' },
-  { to: '/partner-panels', label: 'Panels' },
-  { to: '/resume-reviews', label: 'Resumes' },
-]
+import { useT } from '../hooks/useT'
 
 export default function ArticleLayout({ children, title, footerWidth = 680 }) {
+  const t = useT('articleLayout')
+
+  const NAV_LINKS = [
+    { to: '/articles',         label: t.navLaVoz },
+    { to: '/linkedin-series',  label: t.navLinkedIn },
+    { to: '/career-templates', label: t.navTemplates },
+    { to: '/bridge-year',      label: t.navBridgeYear },
+    { to: '/coffee-chat',      label: t.navCoffeeChat },
+    { to: '/opportunity-board',label: t.navOpportunities },
+    { to: '/interview-prep',   label: t.navInterviewPrep },
+    { to: '/partner-panels',   label: t.navPanels },
+    { to: '/resume-reviews',   label: t.navResumes },
+  ]
+
   const [menuOpen, setMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { pathname } = useLocation()
@@ -73,7 +76,7 @@ export default function ArticleLayout({ children, title, footerWidth = 680 }) {
   return (
     <>
       <nav className={`art-nav${scrolled ? ' art-nav--scrolled' : ''}`} id="artNav">
-        <Link to="/" className="art-nav__brand">Jose × Jocelyn</Link>
+        <Link to="/" className="art-nav__brand">{t.brand}</Link>
         <div className="art-nav__right">
           {NAV_LINKS.map(({ to, label }) => (
             <Link
@@ -85,12 +88,12 @@ export default function ArticleLayout({ children, title, footerWidth = 680 }) {
               {label}
             </Link>
           ))}
-          <Link to="/#contact" className="art-nav__link">Get in Touch</Link>
+          <Link to="/#contact" className="art-nav__link">{t.navGetInTouch}</Link>
         </div>
         <button
           ref={burgerRef}
           className={`art-nav__burger${menuOpen ? ' art-nav__burger--open' : ''}`}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-label={menuOpen ? t.closeMenu : t.openMenu}
           aria-expanded={menuOpen}
           aria-controls="mobileNav"
           onClick={() => setMenuOpen(o => !o)}
@@ -99,7 +102,7 @@ export default function ArticleLayout({ children, title, footerWidth = 680 }) {
         </button>
       </nav>
 
-      <div className={`art-nav__mobile${menuOpen ? ' art-nav__mobile--open' : ''}`} id="mobileNav" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden={!menuOpen}>
+      <div className={`art-nav__mobile${menuOpen ? ' art-nav__mobile--open' : ''}`} id="mobileNav" role="dialog" aria-modal="true" aria-label={t.navAriaLabel} aria-hidden={!menuOpen}>
         <div className="art-nav__mobile-panel" ref={panelRef} onKeyDown={handlePanelKeyDown}>
           {NAV_LINKS.map(({ to, label }) => (
             <Link
@@ -111,7 +114,7 @@ export default function ArticleLayout({ children, title, footerWidth = 680 }) {
               {label}
             </Link>
           ))}
-          <Link to="/#contact" className="art-nav__mobile-link" onClick={closeMenu}>Get in Touch</Link>
+          <Link to="/#contact" className="art-nav__mobile-link" onClick={closeMenu}>{t.navGetInTouch}</Link>
         </div>
       </div>
 
@@ -119,17 +122,17 @@ export default function ArticleLayout({ children, title, footerWidth = 680 }) {
 
       <section className="art-signoff" aria-label="Sign off">
         <div className="art-signoff__inner" style={{ maxWidth: footerWidth }}>
-          <p className="art-signoff__line">You belong in these rooms.</p>
-          <p className="art-signoff__sub">We built this because no one handed us the playbook. If something resonated — or if you have questions — we want to hear from you.</p>
-          <Link to="/#contact" className="art-signoff__cta">Get in touch ↗</Link>
+          <p className="art-signoff__line">{t.signoffLine}</p>
+          <p className="art-signoff__sub">{t.signoffSub}</p>
+          <Link to="/#contact" className="art-signoff__cta">{t.signoffCta}</Link>
         </div>
       </section>
 
       <footer className="art-footer--wide" style={{ maxWidth: footerWidth }}>
-        <span className="art-footer__copy">Jose x Jocelyn © 2026</span>
+        <span className="art-footer__copy">{t.footerCopy}</span>
         <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">Home</Link>
-          <Link to="/#contact" className="art-footer__link">Contact</Link>
+          <Link to="/" className="art-footer__link">{t.footerHome}</Link>
+          <Link to="/#contact" className="art-footer__link">{t.footerContact}</Link>
         </div>
       </footer>
     </>

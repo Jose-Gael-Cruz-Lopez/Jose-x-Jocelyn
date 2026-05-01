@@ -2389,6 +2389,40 @@ export const es = {
     rec2Title: 'El manual completo de pasantías para primera generación',
   },
 
+  articleLayout: {
+    brand: 'Jose × Jocelyn',
+    // nav links
+    navLaVoz: 'La Voz del Día',
+    navLinkedIn: 'Serie de LinkedIn',
+    navTemplates: 'Plantillas',
+    navBridgeYear: 'Año Puente',
+    navCoffeeChat: 'Conversaciones',
+    navOpportunities: 'Oportunidades',
+    navInterviewPrep: 'Entrevistas',
+    navPanels: 'Paneles',
+    navResumes: 'Currículums',
+    navGetInTouch: 'Contáctanos',
+    // burger
+    openMenu: 'Abrir menú',
+    closeMenu: 'Cerrar menú',
+    navAriaLabel: 'Menú de navegación',
+    // sign-off
+    signoffLine: 'Tú perteneces a estos espacios.',
+    signoffSub: 'Construimos esto porque nadie nos entregó el manual. Si algo resonó — o si tienes preguntas — queremos escucharte.',
+    signoffCta: 'Contáctanos ↗',
+    // footer
+    footerCopy: 'Jose x Jocelyn © 2026',
+    footerHome: 'Inicio',
+    footerContact: 'Contacto',
+    // subscribe widget
+    subscribeTitle: 'Mantente al tanto',
+    subscribeDesc: 'Recibe nuevos artículos de La Voz del Día en tu bandeja de entrada.',
+    subscribePlaceholder: 'tu@correo.com',
+    subscribeBtnIdle: 'Suscribirte',
+    subscribeBtnLoading: 'Suscribiendo…',
+    subscribeSuccess: 'Ya estás en la lista.',
+  },
+
   coffeeChatFramework: {
     pageTitle: 'El marco de conversaciones informativas que realmente obtiene respuestas | La Voz del Día',
     shareTitle: 'El marco de conversaciones informativas que realmente obtiene respuestas',

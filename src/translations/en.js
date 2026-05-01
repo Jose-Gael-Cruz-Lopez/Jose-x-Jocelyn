@@ -2389,6 +2389,40 @@ export const en = {
     rec2Title: 'The Complete First-Gen Internship Playbook',
   },
 
+  articleLayout: {
+    brand: 'Jose × Jocelyn',
+    // nav links
+    navLaVoz: 'La Voz del Día',
+    navLinkedIn: 'LinkedIn Series',
+    navTemplates: 'Templates',
+    navBridgeYear: 'Bridge Year',
+    navCoffeeChat: 'Coffee Chat',
+    navOpportunities: 'Opportunities',
+    navInterviewPrep: 'Interview Prep',
+    navPanels: 'Panels',
+    navResumes: 'Resumes',
+    navGetInTouch: 'Get in Touch',
+    // burger
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
+    navAriaLabel: 'Navigation menu',
+    // sign-off
+    signoffLine: 'You belong in these rooms.',
+    signoffSub: 'We built this because no one handed us the playbook. If something resonated — or if you have questions — we want to hear from you.',
+    signoffCta: 'Get in touch ↗',
+    // footer
+    footerCopy: 'Jose x Jocelyn © 2026',
+    footerHome: 'Home',
+    footerContact: 'Contact',
+    // subscribe widget
+    subscribeTitle: 'Stay in the loop',
+    subscribeDesc: 'Get new articles from La Voz del Día delivered to your inbox.',
+    subscribePlaceholder: 'your@email.com',
+    subscribeBtnIdle: 'Subscribe',
+    subscribeBtnLoading: 'Subscribing…',
+    subscribeSuccess: "You're on the list.",
+  },
+
   coffeeChatFramework: {
     pageTitle: 'The Coffee Chat Framework That Actually Gets Responses | La Voz del Día',
     shareTitle: 'The Coffee Chat Framework That Actually Gets Responses',
