@@ -485,7 +485,7 @@ export default function OpportunityBoard() {
           </p>
           <div className="ob-archive-grid">
             {t.archiveCards.map(a => (
-              <article key={a.title} className="ob-card archived">
+              <article key={a.id} className="ob-card archived">
                 <div className="ob-card__top">
                   <div className="ob-card__company-logo" style={{ background: 'rgba(0,0,0,.05)', color: 'var(--color-muted)' }}>{a.logo}</div>
                   <span className="ob-card__deadline" style={{ color: 'var(--color-muted)' }}>{a.closed}</span>
@@ -559,12 +559,12 @@ export default function OpportunityBoard() {
                     <label className="ob-form-label" htmlFor="obRoleType">{t.formLabelType} <span>{t.formLabelTypeRequired}</span></label>
                     <select className="ob-form-select" id="obRoleType" value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
                       <option value="">{t.formTypeDefault}</option>
-                      <option>{t.formTypeInternship}</option>
-                      <option>{t.formTypeApprenticeship}</option>
-                      <option>{t.formTypeNewGrad}</option>
-                      <option>{t.formTypeFellowship}</option>
-                      <option>{t.formTypeProgram}</option>
-                      <option>{t.formTypeScholarship}</option>
+                      <option value="internship">{t.formTypeInternship}</option>
+                      <option value="apprenticeship">{t.formTypeApprenticeship}</option>
+                      <option value="new grad">{t.formTypeNewGrad}</option>
+                      <option value="fellowship">{t.formTypeFellowship}</option>
+                      <option value="program">{t.formTypeProgram}</option>
+                      <option value="scholarship">{t.formTypeScholarship}</option>
                     </select>
                   </div>
                 </div>

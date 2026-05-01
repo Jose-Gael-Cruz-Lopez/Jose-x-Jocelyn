@@ -1093,8 +1093,8 @@ export const en = {
     archiveLabel: 'Just closed - keep an eye out next cycle',
     archiveSource: 'J&J LinkedIn post',
     archiveCards: [
-      { logo: 'Am', title: 'SWE Internship - Early Career (SDE I)', company: 'Amazon', closed: 'Closed Apr 1', tags: ['Internship', 'SWE', 'Summer 2026'], desc: 'Typically opens again in September for the following summer. Set a calendar reminder for August 15.' },
-      { logo: 'As', title: 'Diversity & Inclusion Scholarship', company: 'Asana', closed: 'Closed Mar 20', tags: ['Scholarship', 'Underrepresented Students'], desc: 'Usually reopens each fall. Watch for the announcement in October - often tied to Grace Hopper / NSBE / SHPE season.' },
+      { id: 'amazon-sde', logo: 'Am', title: 'SWE Internship - Early Career (SDE I)', company: 'Amazon', closed: 'Closed Apr 1', tags: ['Internship', 'SWE', 'Summer 2026'], desc: 'Typically opens again in September for the following summer. Set a calendar reminder for August 15.' },
+      { id: 'asana-di', logo: 'As', title: 'Diversity & Inclusion Scholarship', company: 'Asana', closed: 'Closed Mar 20', tags: ['Scholarship', 'Underrepresented Students'], desc: 'Usually reopens each fall. Watch for the announcement in October - often tied to Grace Hopper / NSBE / SHPE season.' },
     ],
 
     // dbOpportunityToCard dynamic labels
