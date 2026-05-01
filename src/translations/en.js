@@ -1603,4 +1603,187 @@ export const en = {
     footerArticles: 'La Voz del Día',
     footerTemplates: 'Templates',
   },
+
+  careerTemplates: {
+    // ── Hero ─────────────────────────────────────────────────────────────────
+    heroKicker: 'From Campus to Career · Resource Library',
+    heroTitle: 'Career Templates',
+    heroTagline: 'Copy. Edit. Send.',
+    heroSub: 'Real scripts, trackers, and frameworks from',
+    heroSubStrong: 'two people who are actually doing this',
+    heroSubSuffix: '- not career coaches who haven\'t applied in a decade. Every template maps to a real moment in the journey from campus to career.',
+
+    // ── Filter labels ─────────────────────────────────────────────────────────
+    filterAll: 'All',
+    filterOutreach: 'Outreach & Networking',
+    filterApply: 'Applications',
+    filterInterview: 'Interviews',
+    filterOffers: 'Offers & Negotiation',
+    filterJob: 'On the Job',
+    filterAriaLabel: 'Filter by pipeline stage',
+
+    // ── Stage labels (used in card badges) ───────────────────────────────────
+    stageOutreach: 'Outreach',
+    stageApply: 'Apply Better',
+    stageInterview: 'Interviews',
+    stageOffers: 'Offers',
+    stageJob: 'On the Job',
+
+    // ── Author badge labels ───────────────────────────────────────────────────
+    authorJose: 'Jose',
+    authorJocelyn: 'Jocelyn',
+    authorBoth: 'Both',
+
+    // ── Count line ────────────────────────────────────────────────────────────
+    countOne: '1 template',
+    countMany: '{n} templates',
+
+    // ── Grid aria label ───────────────────────────────────────────────────────
+    gridAriaLabel: 'Template library',
+
+    // ── Empty state ───────────────────────────────────────────────────────────
+    emptyState: 'No templates in this category yet.',
+
+    // ── CTA button labels ─────────────────────────────────────────────────────
+    ctaCopyTemplate: 'Copy Template',
+    ctaOpenTracker: 'Open Tracker',
+    ctaOpenFramework: 'Open Framework',
+
+    // ── Templates ─────────────────────────────────────────────────────────────
+    templates: [
+      {
+        id: 1, cat: 'outreach', stage: 'outreach', author: 'jose',
+        num: '01',
+        title: 'Cold LinkedIn DM - Student to Professional',
+        desc: 'Three versions: to a recruiter, to an engineer, and to an alum. Short, specific, non-desperate. The exact messages that actually get replies.',
+        ctaLabel: 'Copy Template', ctaIcon: 'copy',
+      },
+      {
+        id: 2, cat: 'outreach', stage: 'outreach', author: 'jose',
+        num: '02',
+        title: 'Coffee Chat Request Email',
+        desc: 'One template with customizable fields - intro, specific ask, and availability block. Turns cold outreach into warm conversations without sounding transactional.',
+        ctaLabel: 'Copy Template', ctaIcon: 'copy',
+      },
+      {
+        id: 3, cat: 'outreach', stage: 'outreach', author: 'jose',
+        num: '03',
+        title: 'Follow-Up After No Response (3-Step Sequence)',
+        desc: 'Day 1, Day 7, Day 14 follow-up messages that don\'t sound needy or desperate. The system Jose uses to follow up on every outreach without burning bridges.',
+        ctaLabel: 'Copy Template', ctaIcon: 'copy',
+      },
+      {
+        id: 4, cat: 'outreach', stage: 'outreach', author: 'both',
+        num: '04',
+        title: 'Recruiter Outreach on LinkedIn',
+        desc: 'Specific to early-career - how to express genuine interest in a role without formally applying yet, and how to position yourself before the application portal even opens.',
+        ctaLabel: 'Copy Template', ctaIcon: 'copy',
+      },
+      {
+        id: 5, cat: 'apply', stage: 'apply', author: 'both',
+        num: '05',
+        title: 'Internship Application Tracker',
+        desc: 'Spreadsheet layout: company, role, deadline, application status, contact name, follow-up date, and notes column. The system that turns chaotic applying into a real pipeline.',
+        ctaLabel: 'Open Tracker', ctaIcon: 'external',
+      },
+      {
+        id: 6, cat: 'apply', stage: 'apply', author: 'both',
+        num: '06',
+        title: 'Resume Bullet Formula',
+        desc: 'A STAR-lite formula with 10 filled-in examples from CS, data, and engineering roles. Converts vague experience descriptions into specific, measurable bullet points that recruiters actually read.',
+        ctaLabel: 'Open Framework', ctaIcon: 'external',
+      },
+      {
+        id: 7, cat: 'interview', stage: 'interview', author: 'both',
+        num: '07',
+        title: '"Tell Me About Yourself" Script',
+        desc: 'A 3-part framework: who you are, what you\'ve done, why this role - with a student version and a post-grad version. Converts generic self-introductions into confident, specific narratives.',
+        ctaLabel: 'Copy Template', ctaIcon: 'copy',
+      },
+      {
+        id: 8, cat: 'interview', stage: 'interview', author: 'both',
+        num: '08',
+        title: 'STAR Story Bank Template',
+        desc: 'A blank template for 6–8 stories covering leadership, failure, teamwork, and problem-solving. Build your whole story library once, then pull from it in every interview.',
+        ctaLabel: 'Open Framework', ctaIcon: 'external',
+      },
+      {
+        id: 9, cat: 'interview', stage: 'interview', author: 'both',
+        num: '09',
+        title: 'Post-Interview Thank You Note',
+        desc: 'Two versions: one for after a recruiter screen, one for after a technical or panel round. Specific, warm, and short - the kind that actually gets forwarded.',
+        ctaLabel: 'Copy Template', ctaIcon: 'copy',
+      },
+      {
+        id: 10, cat: 'interview', stage: 'interview', author: 'jocelyn',
+        num: '10',
+        title: 'Questions to Ask at the End of an Interview',
+        desc: '15 specific, non-generic questions organized by who you\'re talking to: recruiter, engineer, or hiring manager. The questions that actually show you\'ve thought about the role.',
+        ctaLabel: 'Open Framework', ctaIcon: 'external',
+      },
+      {
+        id: 11, cat: 'offers', stage: 'offers', author: 'jocelyn',
+        num: '11',
+        title: 'How to Compare Two Offers',
+        desc: 'A weighted decision matrix template - base, bonus, equity, growth trajectory, culture signals, and location. Makes the decision visible and less emotionally driven.',
+        ctaLabel: 'Open Tracker', ctaIcon: 'external',
+      },
+      {
+        id: 12, cat: 'offers', stage: 'offers', author: 'jocelyn',
+        num: '12',
+        title: 'Offer Negotiation Email',
+        desc: 'A copy-paste script for asking for more comp with a specific number already filled in. Professional, direct, and warm - the version that doesn\'t risk the offer.',
+        ctaLabel: 'Copy Template', ctaIcon: 'copy',
+      },
+      {
+        id: 13, cat: 'job', stage: 'job', author: 'jocelyn',
+        num: '13',
+        title: 'First Week Check-In Message to Manager',
+        desc: 'How to set up your first 1:1, what to say in it, and how to start the relationship on the right note without being over-eager or under-prepared.',
+        ctaLabel: 'Copy Template', ctaIcon: 'copy',
+      },
+      {
+        id: 14, cat: 'job', stage: 'job', author: 'jocelyn',
+        num: '14',
+        title: '30-60-90 Day Plan Template',
+        desc: 'A three-phase plan for your first three months - goals, key relationships to build, and deliverables at each stage. The document that turns a good first impression into a strong first year.',
+        ctaLabel: 'Open Framework', ctaIcon: 'external',
+      },
+      {
+        id: 15, cat: 'job', stage: 'job', author: 'both',
+        num: '15',
+        title: 'End-of-Internship Reflection Doc',
+        desc: 'A self-evaluation template to fill out before your last week - documenting your impact, the relationships you built, and how to prep for the return offer conversation.',
+        ctaLabel: 'Open Framework', ctaIcon: 'external',
+      },
+    ],
+
+    // ── Request form ──────────────────────────────────────────────────────────
+    formKicker: 'Shape the Library',
+    formTitle: 'What part of the campus-to-career process feels unclear right now?',
+    formSub: "Every template on this page started with a question someone couldn't find a good answer to. Tell us where you're stuck and we'll build the tool for it.",
+    formLabelRequest: 'What template do you wish existed?',
+    formPlaceholderRequest: 'e.g. A script for asking for a deadline extension on an offer…',
+    formLabelEmail: 'Your email',
+    formPlaceholderEmail: 'you@school.edu',
+    formLabelCategory: 'Pipeline stage (optional)',
+    formCategoryPlaceholder: 'Select a stage…',
+    catInternshipSearch: 'Internship search',
+    catNetworkingOutreach: 'Networking & outreach',
+    catInterviewPrep: 'Interview prep',
+    catOffersNegotiation: 'Offers & negotiation',
+    catFirstJobOnboarding: 'First job & onboarding',
+    formErrorRequired: 'Please describe the template you need.',
+    formErrorGeneric: 'Something went wrong. Please try again.',
+    formBtnSubmit: 'Submit Request',
+    formBtnSubmitting: 'Submitting…',
+    formSuccessTitle: 'Request submitted!',
+    formSuccessBody: "Thanks — we'll build it if enough people ask for the same thing.",
+
+    // ── Footer ────────────────────────────────────────────────────────────────
+    footerCopy: 'Jose x Jocelyn © 2026',
+    footerHome: 'Home',
+    footerArticles: 'La Voz del Día',
+    footerLinkedIn: 'LinkedIn Series',
+  },
 }
