@@ -714,8 +714,8 @@ export default function CoffeeChat() {
           <div>
             <h3 className="cc-reach__col-title">{t.reachCol2Title}</h3>
             <div className="cc-do-list">
-              {t.reachDoDont.map((item, i) => (
-                <div key={i} className="cc-do-item">
+              {t.reachDoDont.map((item) => (
+                <div key={item.strongText} className="cc-do-item">
                   <span className={`cc-do-item__icon cc-do-item__icon--${item.type}`}>{item.type === 'do' ? '✓' : '✕'}</span>
                   <span><strong>{item.strongText}</strong>{item.rest}</span>
                 </div>
