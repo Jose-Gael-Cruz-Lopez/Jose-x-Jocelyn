@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
+import { useT } from '../hooks/useT'
 
 
 const TEMPLATE_TEXT = `Hi [Name],
@@ -164,6 +165,7 @@ function dbProfileToCard(row) {
 }
 
 export default function CoffeeChat() {
+  const t = useT('coffeeChat')
   const [search, setSearch] = useState('')
   const [filterRole, setFilterRole] = useState('')
   const [filterFunc, setFilterFunc] = useState('')
@@ -279,11 +281,11 @@ export default function CoffeeChat() {
     e.preventDefault()
     const { name, email, linkedin, role, topics, capacity, consent1, consent2 } = formData
     if (!name || !email || !linkedin || !role || !topics || !capacity || funcChips.length === 0) {
-      setFormError('Please fill in all required fields before submitting.')
+      setFormError(t.formErrorRequired)
       return
     }
     if (!consent1 || !consent2) {
-      setFormError('Please check both consent boxes before submitting.')
+      setFormError(t.formErrorConsent)
       return
     }
     setFormLoading(true)
@@ -318,14 +320,14 @@ export default function CoffeeChat() {
     })
     setFormLoading(false)
     if (error) {
-      setFormError('Something went wrong. Please try again.')
+      setFormError(t.formErrorGeneric)
     } else {
       setFormSubmitted(true)
     }
   }
 
   return (
-    <ArticleLayout title="Coffee Chat Network">
+    <ArticleLayout title={t.pageTitle}>
       <style>{`
         html, body { background: var(--color-cream); }
 
@@ -514,15 +516,15 @@ export default function CoffeeChat() {
       `}</style>
 
       <header className="cc-hero" id="top">
-        <p className="cc-hero__kicker">From Campus to Career · Community</p>
-        <h1 className="cc-hero__title">Coffee Chat <em>Network</em></h1>
-        <p className="cc-hero__sub">A live directory of students, grads, and professionals who actually want to be reached out to.</p>
+        <p className="cc-hero__kicker">{t.heroKicker}</p>
+        <h1 className="cc-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
+        <p className="cc-hero__sub">{t.heroSub}</p>
         <p className="cc-hero__body">
-          Cold outreach is hard when you don't know who is open to talking. The Coffee Chat Network is a self-serve directory of people who have raised their hand to say, <strong>"Yes, you can reach out to me."</strong> Everyone listed here has opted in to be contacted for 15–30 minute conversations about career paths, recruiting, internships, apprenticeships, and early-career life in tech and related fields. You can browse profiles, find people whose journeys look like the future you want, and click straight into their LinkedIn to request a chat using our templates.
+          {t.heroBody1} <strong>{t.heroBodyQuote}</strong> {t.heroBody2}
         </p>
         <div className="cc-hero__ctas">
-          <a href="#browse" className="cc-btn-primary">Browse profiles</a>
-          <a href="#apply" className="cc-btn-secondary">Apply to join the network</a>
+          <a href="#browse" className="cc-btn-primary">{t.heroCta1}</a>
+          <a href="#apply" className="cc-btn-secondary">{t.heroCta2}</a>
         </div>
       </header>
 
@@ -530,23 +532,18 @@ export default function CoffeeChat() {
 
       <section className="cc-how" id="how-it-works">
         <div>
-          <p className="cc-kicker">Section 01</p>
-          <h2 className="cc-section-title">How this network works</h2>
-          <p className="cc-section-sub">No guessing. No cold-messaging strangers. Just a directory of people who said yes.</p>
+          <p className="cc-kicker">{t.howKicker}</p>
+          <h2 className="cc-section-title">{t.howTitle}</h2>
+          <p className="cc-section-sub">{t.howSub}</p>
         </div>
         <p className="cc-section-body">
-          Everyone in this directory has filled out a short form and agreed to be listed as a connection. That means you are not guessing if someone is open to messages — you already know they are. The goal is to make networking feel less random and more like a structured, human directory you can navigate by interest, role, identity, and location.
+          {t.howBody1}
         </p>
         <p className="cc-section-body" style={{ marginTop: '16px' }}>
-          You pick who to reach out to, you send the request directly (usually via LinkedIn), and you schedule time that works for both of you. <strong>Jose and Jocelyn are not brokering introductions in the middle</strong> — this is a self-serve network designed to scale and stay lightweight.
+          {t.howBody2Part1} <strong>{t.howBody2Strong}</strong> {t.howBody2Part2}
         </p>
         <div className="cc-how__grid">
-          {[
-            { num: 'Step 01', title: 'Browse the directory', body: 'Use the search bar and filters to find people whose backgrounds, roles, or paths align with where you are trying to go. Read their cards carefully before reaching out.' },
-            { num: 'Step 02', title: 'Read their profile', body: "Every card shows their current role, their path, what topics they can talk about, and how many chats per month they can take. Use all of that before you write your message." },
-            { num: 'Step 03', title: 'Send a personalized message', body: 'Use our coffee chat request templates as a starting point. Keep it short, specific, and respectful of their time. Under 80 words is a good rule of thumb.' },
-            { num: 'Step 04', title: 'Show up prepared', body: 'If they accept, come ready with 3–5 real questions. Do your research. Be on time. Send a thank-you after. These small things matter more than most people think.' },
-          ].map(s => (
+          {t.howSteps.map(s => (
             <div key={s.num} className="cc-how__step">
               <span className="cc-how__num">{s.num}</span>
               <h3 className="cc-how__step-title">{s.title}</h3>
@@ -560,9 +557,9 @@ export default function CoffeeChat() {
 
       <section className="cc-browse" id="browse">
         <div className="cc-browse__head">
-          <p className="cc-kicker">Section 02</p>
-          <h2 className="cc-section-title">Browse the Coffee Chat Network</h2>
-          <p className="cc-section-sub">Filter by role, background, stage, or what you need help with.</p>
+          <p className="cc-kicker">{t.browseKicker}</p>
+          <h2 className="cc-section-title">{t.browseTitle}</h2>
+          <p className="cc-section-sub">{t.browseSub}</p>
         </div>
 
         <div className="cc-filter-bar">
@@ -574,78 +571,78 @@ export default function CoffeeChat() {
             <input
               type="text"
               className="cc-search"
-              placeholder="Search by name, role, company, school, or keyword…"
-              aria-label="Search profiles"
+              placeholder={t.searchPlaceholder}
+              aria-label={t.searchAriaLabel}
               autoComplete="off"
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
           </div>
           <div className="cc-filters">
-            <select className="cc-filter-select" aria-label="Role type" value={filterRole} onChange={e => setFilterRole(e.target.value)}>
-              <option value="">All Role Types</option>
-              <option value="student">Student</option>
-              <option value="new-grad">New Grad</option>
-              <option value="early-career">Early Career</option>
-              <option value="mid-career">Mid-Career</option>
-              <option value="recruiter">Recruiter</option>
-              <option value="career-changer">Career Changer</option>
+            <select className="cc-filter-select" aria-label={t.filterRoleLabel} value={filterRole} onChange={e => setFilterRole(e.target.value)}>
+              <option value="">{t.filterRoleAll}</option>
+              <option value="student">{t.filterRoleStudent}</option>
+              <option value="new-grad">{t.filterRoleNewGrad}</option>
+              <option value="early-career">{t.filterRoleEarlyCareer}</option>
+              <option value="mid-career">{t.filterRoleMidCareer}</option>
+              <option value="recruiter">{t.filterRoleRecruiter}</option>
+              <option value="career-changer">{t.filterRoleCareerChanger}</option>
             </select>
-            <select className="cc-filter-select" aria-label="Function" value={filterFunc} onChange={e => setFilterFunc(e.target.value)}>
-              <option value="">All Functions</option>
-              <option value="software engineering">Software Engineering</option>
-              <option value="data">Data / Analytics</option>
-              <option value="product">Product Management</option>
-              <option value="design">UX / UI Design</option>
-              <option value="research">Research</option>
-              <option value="business">Business / Operations</option>
-              <option value="recruiting">Recruiting / HR</option>
-              <option value="marketing">Marketing</option>
-              <option value="sales">Sales</option>
-              <option value="finance">Finance / Accounting</option>
-              <option value="consulting">Consulting</option>
-              <option value="legal">Legal</option>
-              <option value="healthcare">Healthcare / Medicine</option>
-              <option value="education">Education / Teaching</option>
-              <option value="cybersecurity">Cybersecurity</option>
-              <option value="devops">DevOps / Infrastructure</option>
-              <option value="machine learning">Machine Learning / AI</option>
-              <option value="mobile">Mobile Development</option>
-              <option value="qa">QA / Testing</option>
-              <option value="program management">Project / Program Management</option>
-              <option value="social work">Social Work / Nonprofit</option>
-              <option value="journalism">Journalism / Media</option>
-              <option value="architecture">Architecture / Engineering</option>
-              <option value="customer success">Customer Success</option>
+            <select className="cc-filter-select" aria-label={t.filterFuncLabel} value={filterFunc} onChange={e => setFilterFunc(e.target.value)}>
+              <option value="">{t.filterFuncAll}</option>
+              <option value="software engineering">{t.filterFuncSWE}</option>
+              <option value="data">{t.filterFuncData}</option>
+              <option value="product">{t.filterFuncProduct}</option>
+              <option value="design">{t.filterFuncDesign}</option>
+              <option value="research">{t.filterFuncResearch}</option>
+              <option value="business">{t.filterFuncBusiness}</option>
+              <option value="recruiting">{t.filterFuncRecruiting}</option>
+              <option value="marketing">{t.filterFuncMarketing}</option>
+              <option value="sales">{t.filterFuncSales}</option>
+              <option value="finance">{t.filterFuncFinance}</option>
+              <option value="consulting">{t.filterFuncConsulting}</option>
+              <option value="legal">{t.filterFuncLegal}</option>
+              <option value="healthcare">{t.filterFuncHealthcare}</option>
+              <option value="education">{t.filterFuncEducation}</option>
+              <option value="cybersecurity">{t.filterFuncCyber}</option>
+              <option value="devops">{t.filterFuncDevOps}</option>
+              <option value="machine learning">{t.filterFuncML}</option>
+              <option value="mobile">{t.filterFuncMobile}</option>
+              <option value="qa">{t.filterFuncQA}</option>
+              <option value="program management">{t.filterFuncPM}</option>
+              <option value="social work">{t.filterFuncSocialWork}</option>
+              <option value="journalism">{t.filterFuncJournalism}</option>
+              <option value="architecture">{t.filterFuncArch}</option>
+              <option value="customer success">{t.filterFuncCS}</option>
             </select>
-            <select className="cc-filter-select" aria-label="Stage" value={filterStage} onChange={e => setFilterStage(e.target.value)}>
-              <option value="">All Stages</option>
-              <option value="first-internship">First Internship</option>
-              <option value="apprenticeship">Apprenticeship</option>
-              <option value="first-full-time">First Full-Time</option>
-              <option value="transitioned">Transitioned into Tech</option>
+            <select className="cc-filter-select" aria-label={t.filterStageLabel} value={filterStage} onChange={e => setFilterStage(e.target.value)}>
+              <option value="">{t.filterStageAll}</option>
+              <option value="first-internship">{t.filterStageInternship}</option>
+              <option value="apprenticeship">{t.filterStageApprenticeship}</option>
+              <option value="first-full-time">{t.filterStageFirstFullTime}</option>
+              <option value="transitioned">{t.filterStageTransitioned}</option>
             </select>
-            <select className="cc-filter-select" aria-label="Identity" value={filterIdentity} onChange={e => setFilterIdentity(e.target.value)}>
-              <option value="">All Identities</option>
-              <option value="first-gen">First-Gen</option>
-              <option value="low-income">Low-Income Background</option>
-              <option value="transfer">Transfer Student</option>
-              <option value="community college">Community College</option>
-              <option value="international">International Student</option>
-              <option value="nontraditional">Nontraditional Path</option>
-              <option value="daca">DACA / Undocumented</option>
-              <option value="black">Black / African American</option>
-              <option value="latinx">Latinx / Hispanic</option>
-              <option value="indigenous">Indigenous / Native American</option>
-              <option value="asian">Asian / Pacific Islander</option>
-              <option value="lgbtq">LGBTQ+</option>
-              <option value="veteran">Veteran</option>
-              <option value="disability">Person with Disability</option>
-              <option value="single parent">Single Parent</option>
-              <option value="rural">Rural Background</option>
-              <option value="career changer">Career Changer</option>
-              <option value="returning adult">Returning Adult Student</option>
-              <option value="foster">Foster Care Alumni</option>
+            <select className="cc-filter-select" aria-label={t.filterIdentityLabel} value={filterIdentity} onChange={e => setFilterIdentity(e.target.value)}>
+              <option value="">{t.filterIdentityAll}</option>
+              <option value="first-gen">{t.filterIdentityFirstGen}</option>
+              <option value="low-income">{t.filterIdentityLowIncome}</option>
+              <option value="transfer">{t.filterIdentityTransfer}</option>
+              <option value="community college">{t.filterIdentityCC}</option>
+              <option value="international">{t.filterIdentityInternational}</option>
+              <option value="nontraditional">{t.filterIdentityNontraditional}</option>
+              <option value="daca">{t.filterIdentityDACA}</option>
+              <option value="black">{t.filterIdentityBlack}</option>
+              <option value="latinx">{t.filterIdentityLatinx}</option>
+              <option value="indigenous">{t.filterIdentityIndigenous}</option>
+              <option value="asian">{t.filterIdentityAsian}</option>
+              <option value="lgbtq">{t.filterIdentityLGBTQ}</option>
+              <option value="veteran">{t.filterIdentityVeteran}</option>
+              <option value="disability">{t.filterIdentityDisability}</option>
+              <option value="single parent">{t.filterIdentitySingleParent}</option>
+              <option value="rural">{t.filterIdentityRural}</option>
+              <option value="career changer">{t.filterIdentityCareerChanger}</option>
+              <option value="returning adult">{t.filterIdentityReturning}</option>
+              <option value="foster">{t.filterIdentityFoster}</option>
             </select>
           </div>
         </div>
@@ -656,25 +653,27 @@ export default function CoffeeChat() {
             onClick={() => { setSearch(''); setFilterRole(''); setFilterFunc(''); setFilterStage(''); setFilterIdentity('') }}
             style={{ background: 'none', border: 'none', color: 'var(--color-accent)', fontSize: '13px', fontWeight: 600, cursor: 'pointer', padding: '0 0 14px', fontFamily: 'var(--font-body)' }}
           >
-            Clear all filters ×
+            {t.clearFilters}
           </button>
         )}
-        {!profilesLoading && !profilesError && <p className="cc-results-count"><span>{visibleProfiles.length}</span> people in the network</p>}
+        {!profilesLoading && !profilesError && <p className="cc-results-count"><span>{visibleProfiles.length}</span> {t.resultsCount}</p>}
 
         <div className="cc-grid">
           {profilesLoading ? (
-            <p className="cc-no-results" style={{ fontStyle: 'italic' }}>Loading profiles…</p>
+            <p className="cc-no-results" style={{ fontStyle: 'italic' }}>{t.profilesLoading}</p>
           ) : profilesError ? (
-            <p className="cc-no-results">Something went wrong loading profiles. Please refresh the page.</p>
+            <p className="cc-no-results">{t.profilesError}</p>
           ) : visibleProfiles.length === 0 ? (
-            <p className="cc-no-results">No profiles match your filters. Try adjusting your search.</p>
+            <p className="cc-no-results">{t.noResults}</p>
           ) : visibleProfiles.map(p => (
             <article key={p.id} className="cc-card">
               <div className="cc-card__top">
                 <div className="cc-card__avatar">
                   {p.avatarUrl ? <img src={p.avatarUrl} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} /> : p.initial}
                 </div>
-                <span className={`cc-card__badge${p.badge === 'New' ? ' cc-card__badge--new' : ''}`}>{p.badge}</span>
+                <span className={`cc-card__badge${p.badge === 'New' ? ' cc-card__badge--new' : ''}`}>
+                  {p.badge === 'New' ? t.cardBadgeNew : t.cardBadgeActive}
+                </span>
               </div>
               <div>
                 <div className="cc-card__name">{p.name}</div>
@@ -682,17 +681,17 @@ export default function CoffeeChat() {
               </div>
               <div className="cc-card__headline">{p.headline}</div>
               <div>
-                <div className="cc-card__topics-label">Topics</div>
+                <div className="cc-card__topics-label">{t.cardTopicsLabel}</div>
                 <div className="cc-card__topics">{p.topics}</div>
               </div>
               <div className="cc-card__tags">
-                {p.tags.map(t => <span key={t.label} className={`cc-tag ${t.cls}`}>{t.label}</span>)}
+                {p.tags.map(tag => <span key={tag.label} className={`cc-tag ${tag.cls}`}>{tag.label}</span>)}
               </div>
               <div className="cc-card__capacity">{p.capacity}</div>
               <div className="cc-card__updated">{p.updated}</div>
               <div className="cc-card__actions">
-                {p.linkedIn && <a href={p.linkedIn} target="_blank" rel="noopener noreferrer" className="cc-card__cta-primary">Connect on LinkedIn ↗</a>}
-                <button className="cc-card__cta-secondary" onClick={() => openModal(p.name.split(' ')[0])}>Copy template</button>
+                {p.linkedIn && <a href={p.linkedIn} target="_blank" rel="noopener noreferrer" className="cc-card__cta-primary">{t.cardCtaPrimary}</a>}
+                <button className="cc-card__cta-secondary" onClick={() => openModal(p.name.split(' ')[0])}>{t.cardCtaSecondary}</button>
               </div>
             </article>
           ))}
@@ -702,32 +701,23 @@ export default function CoffeeChat() {
       <hr className="cc-divider" />
 
       <section className="cc-reach" id="how-to-reach-out">
-        <p className="cc-kicker">Section 03</p>
-        <h2 className="cc-section-title">How to reach out (without being awkward)</h2>
-        <p className="cc-section-sub">A strong first message is short, specific, and human.</p>
+        <p className="cc-kicker">{t.reachKicker}</p>
+        <h2 className="cc-section-title">{t.reachTitle}</h2>
+        <p className="cc-section-sub">{t.reachSub}</p>
         <div className="cc-reach__grid">
           <div>
-            <h3 className="cc-reach__col-title">What makes a good message</h3>
-            <p className="cc-reach__body">Before you message anyone in the network, read their card and only reach out if something about their path actually connects to where you are trying to go. Your first message should be <strong>under 80 words</strong>, mention something specific about their background, and ask for a simple 15–30 minute chat — not "can you mentor me forever?"</p>
-            <p className="cc-reach__body">A strong message usually includes three things: <strong>who you are</strong>, <strong>why you are reaching out to them specifically</strong>, and a <strong>clear, respectful ask</strong>. The Career Templates page has ready-to-use coffee chat request templates you can copy and personalize for each person you contact.</p>
-            <Link to="/career-templates" className="cc-reach__templates-link">See coffee chat templates</Link>
+            <h3 className="cc-reach__col-title">{t.reachCol1Title}</h3>
+            <p className="cc-reach__body">{t.reachCol1Body1Part1} <strong>{t.reachCol1Body1Strong}</strong>{t.reachCol1Body1Part2}</p>
+            <p className="cc-reach__body">{t.reachCol1Body2Part1} <strong>{t.reachCol1Body2Strong1}</strong>, <strong>{t.reachCol1Body2Strong2}</strong>, and a <strong>{t.reachCol1Body2Strong3}</strong>{t.reachCol1Body2Part2}</p>
+            <Link to="/career-templates" className="cc-reach__templates-link">{t.reachTemplatesLink}</Link>
           </div>
           <div>
-            <h3 className="cc-reach__col-title">The do / don't list</h3>
+            <h3 className="cc-reach__col-title">{t.reachCol2Title}</h3>
             <div className="cc-do-list">
-              {[
-                { type: 'do', text: <><strong>Do</strong> read their profile and LinkedIn before messaging.</> },
-                { type: 'do', text: <><strong>Do</strong> personalize at least one sentence to their specific background.</> },
-                { type: 'do', text: <><strong>Do</strong> show up on time and prepared with real questions.</> },
-                { type: 'do', text: <><strong>Do</strong> send a short thank-you within 24 hours.</> },
-                { type: 'dont', text: <><strong>Don't</strong> ask them to get you a job or a referral in the first message.</> },
-                { type: 'dont', text: <><strong>Don't</strong> send copy-paste messages to ten people in one hour.</> },
-                { type: 'dont', text: <><strong>Don't</strong> ask questions you could have Googled in 30 seconds.</> },
-                { type: 'dont', text: <><strong>Don't</strong> ghost after they accept — that harms everyone in the network.</> },
-              ].map((item, i) => (
-                <div key={i} className="cc-do-item">
+              {t.reachDoDont.map((item) => (
+                <div key={item.strongText} className="cc-do-item">
                   <span className={`cc-do-item__icon cc-do-item__icon--${item.type}`}>{item.type === 'do' ? '✓' : '✕'}</span>
-                  <span>{item.text}</span>
+                  <span><strong>{item.strongText}</strong>{item.rest}</span>
                 </div>
               ))}
             </div>
@@ -740,16 +730,16 @@ export default function CoffeeChat() {
       <section className="cc-apply" id="apply">
         <div className="cc-apply__layout">
           <div>
-            <p className="cc-apply__intro-kicker">Section 04</p>
-            <h2 className="cc-apply__intro-title">Want to be listed in the Coffee Chat Network?</h2>
+            <p className="cc-apply__intro-kicker">{t.applyKicker}</p>
+            <h2 className="cc-apply__intro-title">{t.applyTitle}</h2>
             <p className="cc-apply__intro-body">
-              If you are a student, recent grad, or professional who wants to give back — especially if you are <strong>first-gen, from an underrepresented group, or took a nontraditional route into tech</strong> — you can add yourself to the Coffee Chat Network. Your profile will show up in the directory so others can reach out for short conversations, questions, and perspective.
+              {t.applyBody1Part1} <strong>{t.applyBody1Strong}</strong> {t.applyBody1Part2}
             </p>
             <div className="cc-apply__perks">
-              {['You control your own availability and capacity', 'New listings stay highlighted for 30 days', 'Your email is never displayed publicly', 'You are never obligated to accept every request'].map(p => (
-                <div key={p} className="cc-apply__perk">
+              {t.applyPerks.map(perk => (
+                <div key={perk} className="cc-apply__perk">
                   <span className="cc-apply__perk-icon">✓</span>
-                  <span>{p}</span>
+                  <span>{perk}</span>
                 </div>
               ))}
             </div>
@@ -759,13 +749,13 @@ export default function CoffeeChat() {
             {formSubmitted ? (
               <div className="cc-form-success">
                 <div className="cc-form-success__icon">✓</div>
-                <div className="cc-form-success__title">You're on the list!</div>
-                <p className="cc-form-success__body">Your profile is now live on the Coffee Chat Network. Students and peers can already find you and reach out. Thank you for being someone who gives back.</p>
+                <div className="cc-form-success__title">{t.formSuccessTitle}</div>
+                <p className="cc-form-success__body">{t.formSuccessBody}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
                 <div className="cc-form-row">
-                  <label className="cc-form-label">Profile Photo <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
+                  <label className="cc-form-label">{t.formLabelPhoto} <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.formPhotoOptional}</span></label>
                   <div className="cc-photo-upload">
                     {photoPreview ? (
                       <img src={photoPreview} alt="Preview" className="cc-photo-preview" />
@@ -775,12 +765,12 @@ export default function CoffeeChat() {
                       </div>
                     )}
                     <div className="cc-photo-right">
-                      <label htmlFor="ccPhoto" className="cc-photo-btn">Choose photo</label>
+                      <label htmlFor="ccPhoto" className="cc-photo-btn">{t.formPhotoChoose}</label>
                       <input id="ccPhoto" type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
                         const file = e.target.files?.[0]
                         if (!file) return
                         if (file.size > 2 * 1024 * 1024) {
-                          setPhotoError('Photo must be under 2MB.')
+                          setPhotoError(t.formPhotoErrorSize)
                           e.target.value = ''
                           return
                         }
@@ -788,54 +778,54 @@ export default function CoffeeChat() {
                         setPhotoFile(file)
                         setPhotoPreview(URL.createObjectURL(file))
                       }} />
-                      <p className="cc-photo-hint">JPG, PNG or GIF · Max 2MB</p>
+                      <p className="cc-photo-hint">{t.formPhotoHint}</p>
                       {photoError && <p style={{ color: 'var(--color-accent)', fontSize: '12px', margin: 0 }}>{photoError}</p>}
-                      {photoPreview && <button type="button" className="cc-photo-remove" onClick={() => { setPhotoFile(null); setPhotoPreview(null); setPhotoError('') }}>Remove</button>}
+                      {photoPreview && <button type="button" className="cc-photo-remove" onClick={() => { setPhotoFile(null); setPhotoPreview(null); setPhotoError('') }}>{t.formPhotoRemove}</button>}
                     </div>
                   </div>
                 </div>
                 <div className="cc-form-row cc-form-row-2">
                   <div>
-                    <label className="cc-form-label" htmlFor="ccName">Full Name <span>*</span></label>
-                    <input className="cc-form-input" type="text" id="ccName" placeholder="Your full name" value={formData.name} onChange={e => setFormData(d => ({ ...d, name: e.target.value }))} />
+                    <label className="cc-form-label" htmlFor="ccName">{t.formLabelName} <span>*</span></label>
+                    <input className="cc-form-input" type="text" id="ccName" placeholder={t.formPlaceholderName} value={formData.name} onChange={e => setFormData(d => ({ ...d, name: e.target.value }))} />
                   </div>
                   <div>
-                    <label className="cc-form-label" htmlFor="ccPronouns">Pronouns</label>
-                    <input className="cc-form-input" type="text" id="ccPronouns" placeholder="e.g. she/her" value={formData.pronouns} onChange={e => setFormData(d => ({ ...d, pronouns: e.target.value }))} />
+                    <label className="cc-form-label" htmlFor="ccPronouns">{t.formLabelPronouns}</label>
+                    <input className="cc-form-input" type="text" id="ccPronouns" placeholder={t.formPlaceholderPronouns} value={formData.pronouns} onChange={e => setFormData(d => ({ ...d, pronouns: e.target.value }))} />
                   </div>
                 </div>
                 <div className="cc-form-row">
-                  <label className="cc-form-label" htmlFor="ccEmail">Email <span>*</span> <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(for internal use only)</span></label>
-                  <input className="cc-form-input" type="email" id="ccEmail" placeholder="your@email.com" value={formData.email} onChange={e => setFormData(d => ({ ...d, email: e.target.value }))} />
+                  <label className="cc-form-label" htmlFor="ccEmail">{t.formLabelEmail} <span>*</span> <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.formEmailNote}</span></label>
+                  <input className="cc-form-input" type="email" id="ccEmail" placeholder={t.formPlaceholderEmail} value={formData.email} onChange={e => setFormData(d => ({ ...d, email: e.target.value }))} />
                 </div>
                 <div className="cc-form-row">
-                  <label className="cc-form-label" htmlFor="ccLinkedIn">LinkedIn URL <span>*</span></label>
-                  <input className="cc-form-input" type="url" id="ccLinkedIn" placeholder="https://linkedin.com/in/yourname" value={formData.linkedin} onChange={e => setFormData(d => ({ ...d, linkedin: e.target.value }))} />
+                  <label className="cc-form-label" htmlFor="ccLinkedIn">{t.formLabelLinkedIn} <span>*</span></label>
+                  <input className="cc-form-input" type="url" id="ccLinkedIn" placeholder={t.formPlaceholderLinkedIn} value={formData.linkedin} onChange={e => setFormData(d => ({ ...d, linkedin: e.target.value }))} />
                 </div>
                 <div className="cc-form-row cc-form-row-2">
                   <div>
-                    <label className="cc-form-label" htmlFor="ccCurrentRole">Current Role + Company/School <span>*</span></label>
-                    <input className="cc-form-input" type="text" id="ccCurrentRole" placeholder="e.g. SWE @ Stripe" value={formData.role} onChange={e => setFormData(d => ({ ...d, role: e.target.value }))} />
+                    <label className="cc-form-label" htmlFor="ccCurrentRole">{t.formLabelRole} <span>*</span></label>
+                    <input className="cc-form-input" type="text" id="ccCurrentRole" placeholder={t.formPlaceholderRole} value={formData.role} onChange={e => setFormData(d => ({ ...d, role: e.target.value }))} />
                   </div>
                   <div>
-                    <label className="cc-form-label" htmlFor="ccLocation">City / Time Zone</label>
-                    <input className="cc-form-input" type="text" id="ccLocation" placeholder="e.g. Boston, ET" value={formData.location} onChange={e => setFormData(d => ({ ...d, location: e.target.value }))} />
+                    <label className="cc-form-label" htmlFor="ccLocation">{t.formLabelLocation}</label>
+                    <input className="cc-form-input" type="text" id="ccLocation" placeholder={t.formPlaceholderLocation} value={formData.location} onChange={e => setFormData(d => ({ ...d, location: e.target.value }))} />
                   </div>
                 </div>
                 <div className="cc-form-row">
-                  <label className="cc-form-label">Role / Function <span>*</span></label>
+                  <label className="cc-form-label">{t.formLabelFunction} <span>*</span></label>
                   <MultiSelectDropdown
                     options={FUNCTION_OPTIONS}
                     selected={funcChips}
                     onChange={setFuncChips}
-                    placeholder="Select all that apply…"
+                    placeholder={t.formFunctionPlaceholder}
                   />
                   {funcChips.length > 0 && <div className="cc-selected-tags">{funcChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => { setFuncChips(p => p.filter(v => v !== c)); if (c === 'Other') setFuncOtherText('') }}>×</button></span>)}</div>}
                   {funcChips.includes('Other') && (
                     <input
                       className="cc-form-input"
                       type="text"
-                      placeholder="Please describe your role / function…"
+                      placeholder={t.formFunctionOtherPlaceholder}
                       value={funcOtherText}
                       onChange={e => setFuncOtherText(e.target.value)}
                       style={{ marginTop: '10px' }}
@@ -843,19 +833,19 @@ export default function CoffeeChat() {
                   )}
                 </div>
                 <div className="cc-form-row">
-                  <label className="cc-form-label">Identity Tags <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
+                  <label className="cc-form-label">{t.formLabelIdentity} <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.formIdentityOptional}</span></label>
                   <MultiSelectDropdown
                     options={IDENTITY_OPTIONS}
                     selected={identityChips}
                     onChange={setIdentityChips}
-                    placeholder="Select all that apply…"
+                    placeholder={t.formIdentityPlaceholder}
                   />
                   {identityChips.length > 0 && <div className="cc-selected-tags">{identityChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => { setIdentityChips(p => p.filter(v => v !== c)); if (c === 'Other') setIdentityOtherText('') }}>×</button></span>)}</div>}
                   {identityChips.includes('Other') && (
                     <input
                       className="cc-form-input"
                       type="text"
-                      placeholder="Please describe your identity…"
+                      placeholder={t.formIdentityOtherPlaceholder}
                       value={identityOtherText}
                       onChange={e => setIdentityOtherText(e.target.value)}
                       style={{ marginTop: '10px' }}
@@ -863,30 +853,30 @@ export default function CoffeeChat() {
                   )}
                 </div>
                 <div className="cc-form-row">
-                  <label className="cc-form-label" htmlFor="ccTopics">What topics can you talk about? <span>*</span></label>
-                  <textarea className="cc-form-textarea" id="ccTopics" placeholder="e.g. First internships, technical interviews, navigating being first-gen at a big company…" value={formData.topics} onChange={e => setFormData(d => ({ ...d, topics: e.target.value }))}></textarea>
+                  <label className="cc-form-label" htmlFor="ccTopics">{t.formLabelTopics} <span>*</span></label>
+                  <textarea className="cc-form-textarea" id="ccTopics" placeholder={t.formPlaceholderTopics} value={formData.topics} onChange={e => setFormData(d => ({ ...d, topics: e.target.value }))}></textarea>
                 </div>
                 <div className="cc-form-row">
-                  <label className="cc-form-label" htmlFor="ccCapacity">How many chats per month can you take? <span>*</span></label>
+                  <label className="cc-form-label" htmlFor="ccCapacity">{t.formLabelCapacity} <span>*</span></label>
                   <select className="cc-form-select" id="ccCapacity" value={formData.capacity} onChange={e => setFormData(d => ({ ...d, capacity: e.target.value }))}>
-                    <option value="">Select capacity…</option>
-                    <option value="1-2">1–2 chats / month</option>
-                    <option value="3-5">3–5 chats / month</option>
-                    <option value="6+">6+ chats / month</option>
+                    <option value="">{t.formCapacityDefault}</option>
+                    <option value="1-2">{t.formCapacity1}</option>
+                    <option value="3-5">{t.formCapacity2}</option>
+                    <option value="6+">{t.formCapacity3}</option>
                   </select>
                 </div>
                 <div className="cc-form-row" style={{ marginBottom: '20px' }}>
                   <div className="cc-form-check">
                     <input type="checkbox" id="ccConsent1" checked={formData.consent1} onChange={e => setFormData(d => ({ ...d, consent1: e.target.checked }))} />
-                    <label className="cc-form-check-label" htmlFor="ccConsent1">I am okay being listed publicly on the Coffee Chat Network.</label>
+                    <label className="cc-form-check-label" htmlFor="ccConsent1">{t.formConsent1}</label>
                   </div>
                   <div className="cc-form-check">
                     <input type="checkbox" id="ccConsent2" checked={formData.consent2} onChange={e => setFormData(d => ({ ...d, consent2: e.target.checked }))} />
-                    <label className="cc-form-check-label" htmlFor="ccConsent2">I understand this is not a job placement service and I am not required to say yes to every request.</label>
+                    <label className="cc-form-check-label" htmlFor="ccConsent2">{t.formConsent2}</label>
                   </div>
                 </div>
                 {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
-                <button className="cc-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit my profile'}</button>
+                <button className="cc-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
               </form>
             )}
           </div>
@@ -903,7 +893,7 @@ export default function CoffeeChat() {
             </svg>
           </span>
           <p className="cc-safety__text">
-            <strong>A note on safety and boundaries.</strong> This network is for informational conversations only. Always protect your personal information, never send money, and remember that you are not obligated to answer any question that makes you uncomfortable. If any interaction feels off, you can block or report the person on LinkedIn and <a href="mailto:campustocareerteam@gmail.com" style={{ color: 'var(--color-navy)', fontWeight: 600 }}>let us know</a> so we can review their listing. We take this seriously.
+            <strong>{t.safetyStrong}</strong>{t.safetyBody}<a href="mailto:campustocareerteam@gmail.com" style={{ color: 'var(--color-navy)', fontWeight: 600 }}>{t.safetyLinkText}</a>{t.safetySuffix}
           </p>
         </div>
       </section>
@@ -912,17 +902,11 @@ export default function CoffeeChat() {
 
       <section className="cc-eco">
         <div className="cc-eco__inner">
-          <p className="cc-eco__kicker">The J&amp;J Ecosystem</p>
-          <h2 className="cc-eco__title">The network is one part of a bigger system.</h2>
-          <p className="cc-eco__body">The Coffee Chat Network connects you with people. The rest of the ecosystem helps you prepare to make the most of those conversations.</p>
+          <p className="cc-eco__kicker">{t.ecoKicker}</p>
+          <h2 className="cc-eco__title">{t.ecoTitle}</h2>
+          <p className="cc-eco__body">{t.ecoBody}</p>
           <div className="cc-eco__grid">
-            {[
-              { to: '/opportunity-board', title: 'Opportunity Board', desc: 'Curated internships, apprenticeships & roles' },
-              { to: '/bridge-year', title: 'Bridge Year Hub', desc: "Your path when the offer didn't come yet" },
-              { to: '/career-templates', title: 'Career Templates', desc: 'Scripts & trackers for outreach & applications' },
-              { to: '/interview-prep', title: 'Interview Prep Hub', desc: 'Structured prep for every stage and interview type' },
-              { to: '/articles', title: 'La Voz del Día', desc: 'Weekly essays on careers, identity & early-career life' },
-            ].map(link => (
+            {t.ecoLinks.map(link => (
               <Link key={link.to} to={link.to} className="cc-eco__link">
                 <div className="cc-eco__link-title">{link.title}</div>
                 <div className="cc-eco__link-desc">{link.desc}</div>
@@ -935,13 +919,13 @@ export default function CoffeeChat() {
       {/* Template Modal */}
       <div className={`cc-modal-overlay${modalOpen ? ' open' : ''}`} onClick={e => { if (e.target === e.currentTarget) closeModal() }}>
         <div className="cc-modal" role="dialog" aria-modal="true" aria-labelledby="cc-modal-title" ref={ccModalRef} onKeyDown={handleCcModalKeyDown}>
-          <button className="cc-modal__close" onClick={closeModal} aria-label="Close">✕</button>
-          <p className="cc-modal__kicker">Coffee Chat Templates</p>
-          <h2 id="cc-modal-title" className="cc-modal__title">Coffee Chat Request — Reaching out to {modalName}</h2>
-          <p className="cc-modal__sub">Personalize the bracketed fields before sending. Keep your final message under 80 words.</p>
+          <button className="cc-modal__close" onClick={closeModal} aria-label={t.modalClose}>✕</button>
+          <p className="cc-modal__kicker">{t.modalKicker}</p>
+          <h2 id="cc-modal-title" className="cc-modal__title">{t.modalTitlePrefix} {modalName}</h2>
+          <p className="cc-modal__sub">{t.modalSub}</p>
           <div className="cc-modal__template">{TEMPLATE_TEXT.replace('[Name]', modalName)}</div>
           <button className={`cc-modal__copy-btn${copied ? ' copied' : ''}`} onClick={copyTemplate}>
-            {copied ? 'Copied!' : 'Copy to clipboard'}
+            {copied ? t.modalCopied : t.modalCopyBtn}
           </button>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
+import { useT } from '../hooks/useT'
 
 const COMPANIES = {
   google:    { name: 'Google',    slug: 'google',    hex: '4285F4' },
@@ -23,13 +24,26 @@ const COMPANIES = {
   anthropic: { name: 'Anthropic',slug: null, letter: 'A',  color: '#C4602D', bg: 'rgba(196,96,45,.1)' },
 }
 
-const STAGE_META = {
-  intern:        { label: 'INTERN',        cls: 'intern',        tagCls: 'rr-tag--blue' },
-  newgrad:       { label: 'NEW GRAD',      cls: 'newgrad',       tagCls: 'rr-tag--teal' },
-  fulltime:      { label: 'FULL-TIME',     cls: 'fulltime',      tagCls: 'rr-tag--navy' },
-  pivot:         { label: 'CAREER PIVOT',  cls: 'pivot',         tagCls: 'rr-tag--accent' },
-  contract:      { label: 'CONTRACT',      cls: 'contract',      tagCls: 'rr-tag--muted' },
-  apprenticeship:{ label: 'APPRENTICESHIP',cls: 'apprenticeship',tagCls: 'rr-tag--gold' },
+const STAGE_META_STYLE = {
+  intern:        { cls: 'intern',        tagCls: 'rr-tag--blue' },
+  newgrad:       { cls: 'newgrad',       tagCls: 'rr-tag--teal' },
+  fulltime:      { cls: 'fulltime',      tagCls: 'rr-tag--navy' },
+  pivot:         { cls: 'pivot',         tagCls: 'rr-tag--accent' },
+  contract:      { cls: 'contract',      tagCls: 'rr-tag--muted' },
+  apprenticeship:{ cls: 'apprenticeship',tagCls: 'rr-tag--gold' },
+}
+
+function getStageMeta(stage, t) {
+  const style = STAGE_META_STYLE[stage] || { cls: 'contract', tagCls: 'rr-tag--muted' }
+  const labelMap = {
+    intern:         t.stageInternLabel,
+    newgrad:        t.stageNewGradLabel,
+    fulltime:       t.stageFullTimeLabel,
+    pivot:          t.stageCareerPivotLabel,
+    contract:       t.stageContractLabel,
+    apprenticeship: t.stageApprenticeshipLabel,
+  }
+  return { ...style, label: labelMap[stage] || stage.toUpperCase() }
 }
 
 const TAG_LABELS = {
@@ -74,20 +88,10 @@ const TAG_COLOR_MAP = {
   'foster':              'muted',
 }
 
-const ROLE_LABELS = { swe: 'Software Engineer', data: 'Data / DS', pm: 'Product', biz: 'Business', design: 'Design', research: 'Research', other: 'Other' }
-const STAGE_LABELS = { intern: 'Intern', newgrad: 'New Grad', fulltime: 'Full-Time', pivot: 'Career Pivot', contract: 'Contract' }
 
 
 const SIDEBAR_COMPANIES = ['google','microsoft','meta','apple','amazon','stripe','pinterest','reddit','dropbox','fidelity','jpmorgan','anthropic']
 
-const ECO_LINKS = [
-  { to: '/career-templates', title: 'Career Templates', desc: 'Scripts, trackers, and outreach tools' },
-  { to: '/interview-prep', title: 'Interview Prep Hub', desc: 'Structured prep for every stage and type' },
-  { to: '/opportunity-board', title: 'Opportunity Board', desc: 'Curated internships, apprenticeships & roles' },
-  { to: '/coffee-chat', title: 'Coffee Chat Network', desc: "Meet people who've walked this path" },
-  { to: '/partner-panels', title: 'Partner Panels', desc: 'Live conversations with practitioners' },
-  { to: '/bridge-year', title: 'Bridge Year Hub', desc: "Your path when the offer didn't come yet" },
-]
 
 function CoLogo({ coKey, size = 18 }) {
   const c = COMPANIES[coKey]
@@ -96,11 +100,11 @@ function CoLogo({ coKey, size = 18 }) {
   return <span className="rr-co-letter" style={{ background: c.bg, color: c.color, fontSize: Math.round(size * 0.44), width: size, height: size }}>{c.letter}</span>
 }
 
-function TagPill({ tag, small = false }) {
-  return <span className={`rr-tag rr-tag--${TAG_COLOR_MAP[tag] || 'muted'}`} style={{ fontSize: small ? '9px' : '10px' }}>{TAG_LABELS[tag] || tag}</span>
+function TagPill({ tag, small = false, labelMap = TAG_LABELS }) {
+  return <span className={`rr-tag rr-tag--${TAG_COLOR_MAP[tag] || 'muted'}`} style={{ fontSize: small ? '9px' : '10px' }}>{labelMap[tag] || tag}</span>
 }
 
-function SidebarFilters({ filter, onFilter }) {
+function SidebarFilters({ filter, onFilter, t }) {
   const [coSearch, setCoSearch] = useState('')
   const visibleCos = SIDEBAR_COMPANIES.filter(co => !coSearch || co.includes(coSearch.toLowerCase()) || (COMPANIES[co]?.name || '').toLowerCase().includes(coSearch.toLowerCase()))
 
@@ -111,28 +115,28 @@ function SidebarFilters({ filter, onFilter }) {
   return (
     <div className="rr-sidebar__block">
       <div className="rr-sidebar__search-wrap">
-        <input className="rr-sidebar__search" type="text" placeholder="Search by company, role, or keyword…" autoComplete="off" value={filter.search} onChange={e => onFilter(f => ({ ...f, search: e.target.value }))} />
+        <input className="rr-sidebar__search" type="text" placeholder={t.filterSearchPlaceholder} autoComplete="off" value={filter.search} onChange={e => onFilter(f => ({ ...f, search: e.target.value }))} />
       </div>
       <div className="rr-filter-group">
-        <span className="rr-filter-label">Role Type</span>
-        {[['swe','Software Engineer'],['data','Data Analyst / Data Scientist'],['pm','Product Manager'],['biz','Business / Operations'],['design','Design'],['research','Research'],['other','Other']].map(([val, label]) => (
-          <label key={val} className="rr-check-row">
-            <input type="checkbox" checked={filter.roles.includes(val)} onChange={() => onFilter(f => ({ ...f, roles: toggle(f.roles, val) }))} />
+        <span className="rr-filter-label">{t.filterRoleTypeLabel}</span>
+        {t.filterRoles.map(({ value, label }) => (
+          <label key={value} className="rr-check-row">
+            <input type="checkbox" checked={filter.roles.includes(value)} onChange={() => onFilter(f => ({ ...f, roles: toggle(f.roles, value) }))} />
             <span>{label}</span>
           </label>
         ))}
       </div>
       <div className="rr-filter-group">
-        <span className="rr-filter-label">Stage</span>
-        {[['intern','Intern'],['newgrad','New Grad'],['fulltime','1–2 Years Experience'],['pivot','Career Pivot / Transition'],['contract','Contract / Other']].map(([val, label]) => (
-          <label key={val} className="rr-check-row">
-            <input type="checkbox" checked={filter.stages.includes(val)} onChange={() => onFilter(f => ({ ...f, stages: toggle(f.stages, val) }))} />
+        <span className="rr-filter-label">{t.filterStageLabel}</span>
+        {t.filterStages.map(({ value, label }) => (
+          <label key={value} className="rr-check-row">
+            <input type="checkbox" checked={filter.stages.includes(value)} onChange={() => onFilter(f => ({ ...f, stages: toggle(f.stages, value) }))} />
             <span>{label}</span>
           </label>
         ))}
       </div>
       <div className="rr-filter-group">
-        <span className="rr-filter-label">Companies</span>
+        <span className="rr-filter-label">{t.filterCompaniesLabel}</span>
         <div className="rr-co-chips">
           {visibleCos.map(co => (
             <button key={co} type="button" className={`rr-co-chip${filter.companies.includes(co) ? ' active' : ''}`} aria-pressed={filter.companies.includes(co)} onClick={() => onFilter(f => ({ ...f, companies: toggle(f.companies, co) }))}>
@@ -144,28 +148,27 @@ function SidebarFilters({ filter, onFilter }) {
             </button>
           ))}
         </div>
-        <input className="rr-co-search" type="text" placeholder="Search for a company…" autoComplete="off" value={coSearch} onChange={e => setCoSearch(e.target.value)} />
+        <input className="rr-co-search" type="text" placeholder={t.filterCompanySearchPlaceholder} autoComplete="off" value={coSearch} onChange={e => setCoSearch(e.target.value)} />
       </div>
       <div className="rr-filter-group">
-        <span className="rr-filter-label">Background</span>
-        {[['first-gen','First-Gen'],['non-cs','Non-CS Major'],['nontraditional','Nontraditional Path'],['transfer','Transfer Student'],['career-changer','Career Changer'],['community-college','Community College']].map(([val, label]) => (
-          <label key={val} className="rr-check-row">
-            <input type="checkbox" checked={filter.tags.includes(val)} onChange={() => onFilter(f => ({ ...f, tags: toggle(f.tags, val) }))} />
+        <span className="rr-filter-label">{t.filterBackgroundLabel}</span>
+        {t.filterBackgrounds.map(({ value, label }) => (
+          <label key={value} className="rr-check-row">
+            <input type="checkbox" checked={filter.tags.includes(value)} onChange={() => onFilter(f => ({ ...f, tags: toggle(f.tags, value) }))} />
             <span>{label}</span>
           </label>
         ))}
       </div>
       <div className="rr-filter-group">
-        <span className="rr-filter-label">Sort By</span>
+        <span className="rr-filter-label">{t.filterSortLabel}</span>
         <select className="rr-sort-select" value={filter.sort} onChange={e => onFilter(f => ({ ...f, sort: e.target.value }))}>
-          <option value="newest">Newly Added</option>
-          <option value="featured">Featured by J&J</option>
-          <option value="intern">Intern Roles</option>
-          <option value="newgrad">New Grad Roles</option>
+          {t.filterSortOptions.map(({ value, label }) => (
+            <option key={value} value={value}>{label}</option>
+          ))}
         </select>
       </div>
       <div style={{ padding: '12px 16px' }}>
-        <button className="rr-filter-reset" onClick={() => onFilter({ search: '', roles: [], stages: [], companies: [], tags: [], sort: 'newest' })}>Clear all filters</button>
+        <button className="rr-filter-reset" onClick={() => onFilter({ search: '', roles: [], stages: [], companies: [], tags: [], sort: 'newest' })}>{t.filterClearAll}</button>
       </div>
     </div>
   )
@@ -198,6 +201,7 @@ function dbResumeToCard(row) {
 }
 
 export default function ResumeReviews() {
+  const t = useT('resumeReviews')
   const [dbResumes, setDbResumes] = useState([])
   const [filter, setFilter] = useState({ search: '', roles: [], stages: [], companies: [], tags: [], sort: 'newest' })
   const [panelId, setPanelId] = useState(null)
@@ -225,7 +229,7 @@ export default function ResumeReviews() {
       if (filter.roles.length && !filter.roles.includes(r.roleType)) return false
       if (filter.stages.length && !filter.stages.includes(r.stage)) return false
       if (filter.companies.length && !filter.companies.some(c => r.companies.includes(c))) return false
-      if (filter.tags.length && !filter.tags.every(t => r.tags.includes(t))) return false
+      if (filter.tags.length && !filter.tags.every(tag => r.tags.includes(tag))) return false
       return true
     })
     if (filter.sort === 'featured') result = [...result].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
@@ -234,15 +238,19 @@ export default function ResumeReviews() {
     return result
   }, [filter, allResumes])
 
+  const tRoleLabelMap = useMemo(() => Object.fromEntries((t.filterRoles || []).map(({ value, label }) => [value, label])), [t])
+  const tStageLabelMap = useMemo(() => Object.fromEntries((t.filterStages || []).map(({ value, label }) => [value, label])), [t])
+  const tTagLabelMap = useMemo(() => Object.fromEntries((t.formBgTagOptions || []).map(({ value, label }) => [value, label])), [t])
+
   const activeFilters = useMemo(() => {
     const all = []
-    filter.roles.forEach(v => all.push({ type: 'role', val: v, label: ROLE_LABELS[v] || v }))
-    filter.stages.forEach(v => all.push({ type: 'stage', val: v, label: STAGE_LABELS[v] || v }))
+    filter.roles.forEach(v => all.push({ type: 'role', val: v, label: tRoleLabelMap[v] || v }))
+    filter.stages.forEach(v => all.push({ type: 'stage', val: v, label: tStageLabelMap[v] || v }))
     filter.companies.forEach(v => all.push({ type: 'company', val: v, label: COMPANIES[v]?.name || v }))
-    filter.tags.forEach(v => all.push({ type: 'tag', val: v, label: TAG_LABELS[v] || v }))
+    filter.tags.forEach(v => all.push({ type: 'tag', val: v, label: tTagLabelMap[v] || v }))
     if (filter.search) all.push({ type: 'search', val: filter.search, label: `"${filter.search}"` })
     return all
-  }, [filter])
+  }, [filter, tRoleLabelMap, tStageLabelMap, tTagLabelMap])
 
   function removeFilter(type, val) {
     setFilter(f => {
@@ -308,11 +316,11 @@ export default function ResumeReviews() {
     e.preventDefault()
     const file = fileRef.current?.files?.[0]
     if (!submitForm.handle || !submitForm.email || !submitForm.roleType || !submitForm.stage || !submitForm.companies) {
-      setSubmitError('Please fill in all required fields before submitting.')
+      setSubmitError(t.formErrorRequired)
       return
     }
     if (!file) {
-      setSubmitError('Please select your resume PDF before submitting.')
+      setSubmitError(t.formErrorNoFile)
       return
     }
     setSubmitLoading(true)
@@ -324,7 +332,7 @@ export default function ResumeReviews() {
       .upload(storagePath, file, { contentType: 'application/pdf', upsert: false })
     if (uploadError) {
       setSubmitLoading(false)
-      setSubmitError('File upload failed. Please try again.')
+      setSubmitError(t.formErrorUpload)
       return
     }
     let avatar_url = null
@@ -354,7 +362,7 @@ export default function ResumeReviews() {
       avatar_url,
     })
     setSubmitLoading(false)
-    if (error) { setSubmitError('Something went wrong. Please try again.') }
+    if (error) { setSubmitError(t.formErrorGeneric) }
     else { setSubmitSubmitted(true) }
   }
 
@@ -366,7 +374,7 @@ export default function ResumeReviews() {
   }
 
   return (
-    <ArticleLayout title="Resume Reviews">
+    <ArticleLayout title={`${t.heroTitle} ${t.heroTitleEm}`}>
       <style>{`
         html, body { background: var(--color-cream); }
 
@@ -633,21 +641,21 @@ export default function ResumeReviews() {
 
       {/* HERO */}
       <header className="rr-hero" id="top">
-        <p className="rr-hero__kicker">Community · Resume Library</p>
-        <h1 className="rr-hero__title">Resume <em>Reviews</em></h1>
-        <p className="rr-hero__sub">Real resumes. Real outcomes. See what actually works.</p>
+        <p className="rr-hero__kicker">{t.heroKicker}</p>
+        <h1 className="rr-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
+        <p className="rr-hero__sub">{t.heroSub}</p>
         <p className="rr-hero__body">
-          This is a community-built library of resumes submitted by students and early-career candidates who have used them to land internships, new grad roles, apprenticeships, and first full-time positions in tech and adjacent fields. Browse by role, experience level, company, and background to see what <strong>strong resumes look like in practice - not theory.</strong>
+          {t.heroBody} <strong>{t.heroBodyStrong}</strong>
         </p>
         <div className="rr-hero__ctas">
-          <a href="#browse" className="rr-btn-primary">Browse Resumes</a>
-          <a href="#submit" className="rr-btn-secondary">Submit Your Resume</a>
+          <a href="#browse" className="rr-btn-primary">{t.heroCta1}</a>
+          <a href="#submit" className="rr-btn-secondary">{t.heroCta2}</a>
         </div>
         <div className="rr-stats">
-          <div><div className="rr-stat__num">9<em>+</em></div><div className="rr-stat__label">Resumes submitted</div></div>
-          <div><div className="rr-stat__num">12<em>+</em></div><div className="rr-stat__label">Companies represented</div></div>
-          <div><div className="rr-stat__num">5<em>+</em></div><div className="rr-stat__label">Role types covered</div></div>
-          <div><div className="rr-stat__num">↗</div><div className="rr-stat__label">Updated weekly</div></div>
+          <div><div className="rr-stat__num">{t.statResumesNum}</div><div className="rr-stat__label">{t.statResumesLabel}</div></div>
+          <div><div className="rr-stat__num">{t.statCompaniesNum}</div><div className="rr-stat__label">{t.statCompaniesLabel}</div></div>
+          <div><div className="rr-stat__num">{t.statRolesNum}</div><div className="rr-stat__label">{t.statRolesLabel}</div></div>
+          <div><div className="rr-stat__num">{t.statUpdatedNum}</div><div className="rr-stat__label">{t.statUpdatedLabel}</div></div>
         </div>
       </header>
 
@@ -656,18 +664,18 @@ export default function ResumeReviews() {
       {/* MAIN LAYOUT */}
       <div className="rr-layout" id="browse">
         <aside className="rr-sidebar">
-          <SidebarFilters filter={filter} onFilter={setFilter} />
+          <SidebarFilters filter={filter} onFilter={setFilter} t={t} />
         </aside>
 
         <div className="rr-grid-area">
           <button className="rr-mobile-filter-btn" onClick={() => setSheetOpen(true)}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3h12M3 7h8M5 11h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></svg>
-            Filters
+            {t.mobileFilterBtn}
           </button>
 
           {activeFilters.length > 0 && (
             <div className="rr-active-bar">
-              <span className="rr-active-bar__label">Active:</span>
+              <span className="rr-active-bar__label">{t.activeFiltersLabel}</span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
                 {activeFilters.map(item => (
                   <button key={`${item.type}-${item.val}`} className="rr-active-chip" onClick={() => removeFilter(item.type, item.val)}>
@@ -675,34 +683,34 @@ export default function ResumeReviews() {
                   </button>
                 ))}
               </div>
-              <button className="rr-active-bar__clear" onClick={() => setFilter({ search: '', roles: [], stages: [], companies: [], tags: [], sort: 'newest' })}>Clear all</button>
+              <button className="rr-active-bar__clear" onClick={() => setFilter({ search: '', roles: [], stages: [], companies: [], tags: [], sort: 'newest' })}>{t.clearAll}</button>
             </div>
           )}
 
           <div className="rr-grid-meta">
-            <p className="rr-grid-count"><strong>{visibleResumes.length}</strong> of <strong>{allResumes.length}</strong> resumes</p>
+            <p className="rr-grid-count"><strong>{visibleResumes.length}</strong> {t.gridCountOf} <strong>{allResumes.length}</strong> {t.gridCountResumes}</p>
           </div>
 
           <div className="rr-grid">
             {visibleResumes.length === 0 ? (
               <div className="rr-grid--empty">
-                <strong>No resumes match your filters.</strong>
-                Try adjusting your selections - or be the first to submit one in this category.
+                <strong>{t.gridEmptyStrong}</strong>
+                {t.gridEmptyBody}
               </div>
             ) : visibleResumes.map(r => {
-              const sm = STAGE_META[r.stage] || { label: r.stage.toUpperCase(), cls: 'contract', tagCls: 'rr-tag--muted' }
+              const sm = getStageMeta(r.stage, t)
               return (
-                <article key={r.id} className="rr-card" onClick={() => { panelTriggerRef.current = document.activeElement; setPanelId(r.id) }} tabIndex={0} role="button" aria-label={`View resume by ${r.handle}`} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { panelTriggerRef.current = e.currentTarget; setPanelId(r.id) } }}>
+                <article key={r.id} className="rr-card" onClick={() => { panelTriggerRef.current = document.activeElement; setPanelId(r.id) }} tabIndex={0} role="button" aria-label={`${t.cardViewBtn} ${r.handle}`} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { panelTriggerRef.current = e.currentTarget; setPanelId(r.id) } }}>
                   <div className="rr-card__stage-wrap">
                     <span className={`rr-card__stage-badge rr-badge--${sm.cls}`}>{sm.label}</span>
-                    {r.featured && <span className="rr-card__featured-badge">★ J&J Pick</span>}
+                    {r.featured && <span className="rr-card__featured-badge">{t.cardFeaturedBadge}</span>}
                     <div className="rr-card__thumb">
                       <div className="rr-card__thumb-paper">
                         <div className="rr-card__thumb-name" />
                         <div className="rr-card__thumb-subname" />
                       </div>
                       <div className="rr-card__thumb-overlay">
-                        <button className="rr-card__thumb-btn">View Resume</button>
+                        <button className="rr-card__thumb-btn">{t.cardViewBtn}</button>
                       </div>
                     </div>
                   </div>
@@ -721,7 +729,7 @@ export default function ResumeReviews() {
                     </div>
                     <div className="rr-card__foot">
                       <div className="rr-card__tags">
-                        {r.tags.map(t => <TagPill key={t} tag={t} small />)}
+                        {r.tags.map(tag => <TagPill key={tag} tag={tag} small labelMap={tTagLabelMap} />)}
                       </div>
                       <span className="rr-card__submitted">{r.submitted}</span>
                     </div>
@@ -738,25 +746,25 @@ export default function ResumeReviews() {
       {/* HOW IT WORKS */}
       <section className="rr-howto">
         <div className="rr-howto__head">
-          <p className="rr-kicker">Section 02 · How It Works</p>
-          <h2 className="rr-section-title">How the Resume Library Works</h2>
-          <p className="rr-section-sub">Community-sourced. Outcome-verified. Completely free.</p>
+          <p className="rr-kicker">{t.howKicker}</p>
+          <h2 className="rr-section-title">{t.howTitle}</h2>
+          <p className="rr-section-sub">{t.howSub}</p>
         </div>
         <div className="rr-howto__grid">
           <div className="rr-howto__card">
-            <div className="rr-howto__num">01</div>
-            <div className="rr-howto__title">Browse real submissions</div>
-            <p className="rr-howto__body">Every resume in this library was submitted by a real student or early-career candidate who used it to get a response. Filter by role, company, background, and stage to find examples that match where you are in the process.</p>
+            <div className="rr-howto__num">{t.howStep1Num}</div>
+            <div className="rr-howto__title">{t.howStep1Title}</div>
+            <p className="rr-howto__body">{t.howStep1Body}</p>
           </div>
           <div className="rr-howto__card">
-            <div className="rr-howto__num">02</div>
-            <div className="rr-howto__title">Learn what works</div>
-            <p className="rr-howto__body">Seeing real resumes is more useful than a template. You can look at formatting, bullet structure, experience framing, and project descriptions from people who were recently in your exact position.</p>
+            <div className="rr-howto__num">{t.howStep2Num}</div>
+            <div className="rr-howto__title">{t.howStep2Title}</div>
+            <p className="rr-howto__body">{t.howStep2Body}</p>
           </div>
           <div className="rr-howto__card">
-            <div className="rr-howto__num">03</div>
-            <div className="rr-howto__title">Submit yours</div>
-            <p className="rr-howto__body">If your resume helped you land an interview, an offer, or a callback, you can contribute it to the library so others can learn from it. You control your name visibility and whether downloads are allowed.</p>
+            <div className="rr-howto__num">{t.howStep3Num}</div>
+            <div className="rr-howto__title">{t.howStep3Title}</div>
+            <p className="rr-howto__body">{t.howStep3Body}</p>
           </div>
         </div>
       </section>
@@ -767,90 +775,77 @@ export default function ResumeReviews() {
       <section className="rr-submit" id="submit">
         <div className="rr-submit__layout">
           <div>
-            <p className="rr-submit__intro-kicker">Section 03 · Contribute</p>
-            <h2 className="rr-submit__intro-title">Submit Your Resume to the Library</h2>
-            <p className="rr-submit__intro-body">Did your resume help you land an interview, a callback, or an offer? Submit it here and become part of the community resource. <strong>You can stay anonymous if you prefer.</strong> Every submission helps another student see what is actually possible.</p>
+            <p className="rr-submit__intro-kicker">{t.submitKicker}</p>
+            <h2 className="rr-submit__intro-title">{t.submitTitle}</h2>
+            <p className="rr-submit__intro-body">{t.submitBody} <strong>{t.submitBodyStrong}</strong> {t.submitBodyTail}</p>
             <div className="rr-submit__bullets">
-              <div className="rr-submit__bullet">You control your name visibility - use a handle like "J.C." or a username</div>
-              <div className="rr-submit__bullet">You decide whether others can download your resume or view only</div>
-              <div className="rr-submit__bullet">Jose or Jocelyn may add a short annotation if your resume is featured</div>
-              <div className="rr-submit__bullet">Redact personal contact info before uploading - we don't verify it</div>
+              <div className="rr-submit__bullet">{t.submitBullet1}</div>
+              <div className="rr-submit__bullet">{t.submitBullet2}</div>
+              <div className="rr-submit__bullet">{t.submitBullet3}</div>
+              <div className="rr-submit__bullet">{t.submitBullet4}</div>
             </div>
           </div>
           <div className="rr-form-box">
             {submitSubmitted ? (
               <div className="rr-form-success">
-                <div className="rr-form-success__icon">✓</div>
-                <div className="rr-form-success__title">Submitted - thank you.</div>
-                <p className="rr-form-success__body">Your resume is under review and will be added to the library shortly. If you opted in for annotation, Jose or Jocelyn will review it and may feature it with a note. Keep an eye on the library.</p>
+                <div className="rr-form-success__icon">{t.formSuccessIcon}</div>
+                <div className="rr-form-success__title">{t.formSuccessTitle}</div>
+                <p className="rr-form-success__body">{t.formSuccessBody}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
                 <div className="rr-form-row rr-form-row-2">
                   <div>
-                    <label className="rr-form-label" htmlFor="sfHandle">Handle / Display Name <span>*</span></label>
-                    <input className="rr-form-input" type="text" id="sfHandle" placeholder="e.g. j.cruz, anonymous22" value={submitForm.handle} onChange={e => setSubmitForm(f => ({ ...f, handle: e.target.value }))} />
+                    <label className="rr-form-label" htmlFor="sfHandle">{t.formLabelHandle} <span>{t.formLabelHandleRequired}</span></label>
+                    <input className="rr-form-input" type="text" id="sfHandle" placeholder={t.formPlaceholderHandle} value={submitForm.handle} onChange={e => setSubmitForm(f => ({ ...f, handle: e.target.value }))} />
                   </div>
                   <div>
-                    <label className="rr-form-label" htmlFor="sfEmail">Email <span>*</span> <em>(internal only)</em></label>
-                    <input className="rr-form-input" type="email" id="sfEmail" placeholder="your@email.com" value={submitForm.email} onChange={e => setSubmitForm(f => ({ ...f, email: e.target.value }))} />
+                    <label className="rr-form-label" htmlFor="sfEmail">{t.formLabelEmail} <span>{t.formLabelEmailRequired}</span> <em>{t.formLabelEmailNote}</em></label>
+                    <input className="rr-form-input" type="email" id="sfEmail" placeholder={t.formPlaceholderEmail} value={submitForm.email} onChange={e => setSubmitForm(f => ({ ...f, email: e.target.value }))} />
                   </div>
                 </div>
                 <div className="rr-form-row">
-                  <label className="rr-form-label" htmlFor="sfLinkedIn">LinkedIn Profile <em>(optional - shown publicly if included)</em></label>
-                  <input className="rr-form-input" type="url" id="sfLinkedIn" placeholder="linkedin.com/in/yourhandle" value={submitForm.linkedin} onChange={e => setSubmitForm(f => ({ ...f, linkedin: e.target.value }))} />
+                  <label className="rr-form-label" htmlFor="sfLinkedIn">{t.formLabelLinkedIn} <em>{t.formLabelLinkedInNote}</em></label>
+                  <input className="rr-form-input" type="url" id="sfLinkedIn" placeholder={t.formPlaceholderLinkedIn} value={submitForm.linkedin} onChange={e => setSubmitForm(f => ({ ...f, linkedin: e.target.value }))} />
                 </div>
                 <div className="rr-form-row rr-form-row-2">
                   <div>
-                    <label className="rr-form-label" htmlFor="sfRoleTitle">Role Title <span>*</span></label>
-                    <input className="rr-form-input" type="text" id="sfRoleTitle" placeholder="e.g. SWE Intern, Data Analyst" value={submitForm.roleTitle} onChange={e => setSubmitForm(f => ({ ...f, roleTitle: e.target.value }))} />
+                    <label className="rr-form-label" htmlFor="sfRoleTitle">{t.formLabelRoleTitle} <span>{t.formLabelRoleTitleRequired}</span></label>
+                    <input className="rr-form-input" type="text" id="sfRoleTitle" placeholder={t.formPlaceholderRoleTitle} value={submitForm.roleTitle} onChange={e => setSubmitForm(f => ({ ...f, roleTitle: e.target.value }))} />
                   </div>
                   <div>
-                    <label className="rr-form-label" htmlFor="sfRoleType">Role Type <span>*</span></label>
+                    <label className="rr-form-label" htmlFor="sfRoleType">{t.formLabelRoleType} <span>{t.formLabelRoleTypeRequired}</span></label>
                     <select className="rr-form-select" id="sfRoleType" value={submitForm.roleType} onChange={e => setSubmitForm(f => ({ ...f, roleType: e.target.value }))}>
-                      <option value="">Select…</option>
-                      <option value="swe">Software Engineer</option>
-                      <option value="data">Data / Analytics</option>
-                      <option value="pm">Product Management</option>
-                      <option value="design">Design</option>
-                      <option value="research">Research</option>
-                      <option value="biz">Business / Operations</option>
-                      <option value="other">Other</option>
+                      <option value="">{t.formSelectRoleTypePlaceholder}</option>
+                      {t.formRoleOptions.map(({ value, label }) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
                 <div className="rr-form-row">
-                  <label className="rr-form-label" htmlFor="sfStage">Stage <span>*</span></label>
+                  <label className="rr-form-label" htmlFor="sfStage">{t.formLabelStage} <span>{t.formLabelStageRequired}</span></label>
                   <select className="rr-form-select" id="sfStage" value={submitForm.stage} onChange={e => setSubmitForm(f => ({ ...f, stage: e.target.value }))}>
-                    <option value="">Select your stage…</option>
-                    <option value="intern">Intern</option>
-                    <option value="newgrad">New Grad</option>
-                    <option value="fulltime">1–2 Years Experience</option>
-                    <option value="pivot">Career Pivot / Transition</option>
-                    <option value="contract">Bridge Year / Contract</option>
+                    <option value="">{t.formSelectStagePlaceholder}</option>
+                    {t.formStageOptions.map(({ value, label }) => (
+                      <option key={value} value={value}>{label}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="rr-form-row">
-                  <label className="rr-form-label" htmlFor="sfCompanies">Companies where this resume got traction <span>*</span></label>
-                  <input className="rr-form-input" type="text" id="sfCompanies" placeholder="e.g. Google, Fidelity, JPMorgan (comma-separated)" value={submitForm.companies} onChange={e => setSubmitForm(f => ({ ...f, companies: e.target.value }))} />
+                  <label className="rr-form-label" htmlFor="sfCompanies">{t.formLabelCompanies} <span>{t.formLabelCompaniesRequired}</span></label>
+                  <input className="rr-form-input" type="text" id="sfCompanies" placeholder={t.formPlaceholderCompanies} value={submitForm.companies} onChange={e => setSubmitForm(f => ({ ...f, companies: e.target.value }))} />
                 </div>
                 <div className="rr-form-row">
-                  <label className="rr-form-label" style={{ marginBottom: '10px' }}>Background Tags <em>(optional - select all that apply)</em></label>
+                  <label className="rr-form-label" style={{ marginBottom: '10px' }}>{t.formLabelBgTags} <em>{t.formLabelBgTagsNote}</em></label>
                   <div className="rr-tag-toggles">
-                    {[
-                      ['first-gen','First-Gen'],['non-cs','Non-CS Major'],['nontraditional','Nontraditional Path'],
-                      ['transfer','Transfer Student'],['career-changer','Career Changer'],['community-college','Community College'],
-                      ['lgbtq','LGBTQ+'],['veteran','Veteran'],['first-gen-immigrant','First-Gen Immigrant'],
-                      ['disability','Person with Disability'],['rural','Rural Background'],['returning-adult','Returning Adult'],
-                      ['international','International Student'],['black','Black / African American'],['latinx','Latinx / Hispanic'],
-                      ['indigenous','Indigenous / Native American'],['asian','Asian / Pacific Islander'],['foster','Foster Care Alumni'],
-                    ].map(([tag, label]) => (
-                      <button key={tag} type="button" className={`rr-tag-toggle${submitForm.bgTags.includes(tag) ? ' active' : ''}`} aria-pressed={submitForm.bgTags.includes(tag)} onClick={() => toggleBgTag(tag)}>{label}</button>
+                    {t.formBgTagOptions.map(({ value, label }) => (
+                      <button key={value} type="button" className={`rr-tag-toggle${submitForm.bgTags.includes(value) ? ' active' : ''}`} aria-pressed={submitForm.bgTags.includes(value)} onClick={() => toggleBgTag(value)}>{label}</button>
                     ))}
                   </div>
                 </div>
                 <div className="rr-form-row">
-                  <label className="rr-form-label">Profile Photo <em>(optional - shown on your card)</em></label>
+                  <label className="rr-form-label">{t.formLabelAvatar} <em>{t.formLabelAvatarNote}</em></label>
                   <div className="rr-upload-zone" style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px', cursor: 'pointer' }} onClick={() => avatarRef.current?.click()}>
                     <input ref={avatarRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
                       const f = e.target.files?.[0]
@@ -861,42 +856,42 @@ export default function ResumeReviews() {
                       : <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: 'var(--color-muted)', flexShrink: 0 }} aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                     }
                     <div>
-                      <span className="rr-upload-label" style={{ display: 'block', textAlign: 'left' }}>{avatarFile ? avatarFile.name : 'Add a profile photo'}</span>
-                      <span className="rr-upload-hint">JPG or PNG · Optional</span>
+                      <span className="rr-upload-label" style={{ display: 'block', textAlign: 'left' }}>{avatarFile ? avatarFile.name : t.formAvatarLabel}</span>
+                      <span className="rr-upload-hint">{t.formAvatarHint}</span>
                     </div>
                   </div>
                 </div>
                 <div className="rr-form-row">
-                  <label className="rr-form-label">Resume File <span>*</span> <em>(PDF only, max 5MB)</em></label>
+                  <label className="rr-form-label">{t.formLabelResume} <span>{t.formLabelResumeRequired}</span> <em>{t.formLabelResumeNote}</em></label>
                   <div className="rr-upload-zone">
                     <input ref={fileRef} type="file" id="sfFile" accept=".pdf" onChange={e => { if (e.target.files[0]) setFileName(e.target.files[0].name) }} />
                     <svg className="rr-upload-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                    <span className="rr-upload-label">Drop your PDF here or click to browse</span>
-                    <span className="rr-upload-hint">PDF only · Max 5MB</span>
+                    <span className="rr-upload-label">{t.formResumeUploadLabel}</span>
+                    <span className="rr-upload-hint">{t.formResumeUploadHint}</span>
                     {fileName && <div className="rr-upload-filename"><span>✓</span><span>{fileName}</span></div>}
                   </div>
                 </div>
                 <div className="rr-form-row">
-                  <label className="rr-form-label">Allow others to download? <span>*</span></label>
+                  <label className="rr-form-label">{t.formLabelDownload} <span>{t.formLabelDownloadRequired}</span></label>
                   <div className="rr-radio-row">
-                    <label className="rr-radio-option"><input type="radio" name="sfDownload" value="yes" checked={submitForm.download === 'yes'} onChange={() => setSubmitForm(f => ({ ...f, download: 'yes' }))} /> Yes, downloads allowed</label>
-                    <label className="rr-radio-option"><input type="radio" name="sfDownload" value="no" checked={submitForm.download === 'no'} onChange={() => setSubmitForm(f => ({ ...f, download: 'no' }))} /> View only</label>
+                    <label className="rr-radio-option"><input type="radio" name="sfDownload" value="yes" checked={submitForm.download === 'yes'} onChange={() => setSubmitForm(f => ({ ...f, download: 'yes' }))} /> {t.formDownloadYes}</label>
+                    <label className="rr-radio-option"><input type="radio" name="sfDownload" value="no" checked={submitForm.download === 'no'} onChange={() => setSubmitForm(f => ({ ...f, download: 'no' }))} /> {t.formDownloadNo}</label>
                   </div>
                 </div>
                 <div className="rr-form-row">
-                  <label className="rr-form-label" htmlFor="sfStory">Your story in 1–2 sentences <em>(optional)</em></label>
-                  <textarea className="rr-form-textarea" id="sfStory" placeholder="What did this resume help you land? What was your situation at the time?" value={submitForm.story} onChange={e => setSubmitForm(f => ({ ...f, story: e.target.value }))} />
+                  <label className="rr-form-label" htmlFor="sfStory">{t.formLabelStory} <em>{t.formLabelStoryNote}</em></label>
+                  <textarea className="rr-form-textarea" id="sfStory" placeholder={t.formPlaceholderStory} value={submitForm.story} onChange={e => setSubmitForm(f => ({ ...f, story: e.target.value }))} />
                 </div>
                 <div className="rr-form-row">
-                  <label className="rr-form-label">Want J&J to review and annotate your resume? <em>(optional)</em></label>
+                  <label className="rr-form-label">{t.formLabelAnnotate} <em>{t.formLabelAnnotateNote}</em></label>
                   <div className="rr-radio-row">
-                    <label className="rr-radio-option"><input type="radio" name="sfAnnotate" value="yes" checked={submitForm.annotate === 'yes'} onChange={() => setSubmitForm(f => ({ ...f, annotate: 'yes' }))} /> Yes - feature and annotate it</label>
-                    <label className="rr-radio-option"><input type="radio" name="sfAnnotate" value="no" checked={submitForm.annotate === 'no'} onChange={() => setSubmitForm(f => ({ ...f, annotate: 'no' }))} /> No thanks, just add it</label>
+                    <label className="rr-radio-option"><input type="radio" name="sfAnnotate" value="yes" checked={submitForm.annotate === 'yes'} onChange={() => setSubmitForm(f => ({ ...f, annotate: 'yes' }))} /> {t.formAnnotateYes}</label>
+                    <label className="rr-radio-option"><input type="radio" name="sfAnnotate" value="no" checked={submitForm.annotate === 'no'} onChange={() => setSubmitForm(f => ({ ...f, annotate: 'no' }))} /> {t.formAnnotateNo}</label>
                   </div>
                 </div>
                 {submitError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{submitError}</p>}
-                <button className="rr-form-btn" type="submit" disabled={submitLoading}>{submitLoading ? 'Submitting…' : 'Add My Resume to the Library'}</button>
-                <p className="rr-form-note">By submitting, you agree to have your resume displayed publicly on this page. Personal contact information visible on the resume is your responsibility to redact before uploading. We do not display full names unless you explicitly include them in your handle field.</p>
+                <button className="rr-form-btn" type="submit" disabled={submitLoading}>{submitLoading ? t.formSubmitting : t.formSubmit}</button>
+                <p className="rr-form-note">{t.formNote}</p>
               </form>
             )}
           </div>
@@ -906,11 +901,11 @@ export default function ResumeReviews() {
       {/* ECOSYSTEM */}
       <section className="rr-eco">
         <div className="rr-eco__inner">
-          <p className="rr-eco__kicker">The J&J Ecosystem</p>
-          <h2 className="rr-eco__title">Resume Reviews is one part of the bigger picture.</h2>
-          <p className="rr-eco__body">The Resume Library helps you see what real resumes look like. The Career Templates page gives you the scripts, trackers, and outreach tools to act on what you learn. The Interview Prep Hub gets you ready for the room once you land the interview. Partner Panels let you hear the full story from people who have been in your seat. The Opportunity Board shows you what's open right now.</p>
+          <p className="rr-eco__kicker">{t.ecoKicker}</p>
+          <h2 className="rr-eco__title">{t.ecoTitle}</h2>
+          <p className="rr-eco__body">{t.ecoBody}</p>
           <div className="rr-eco__grid">
-            {ECO_LINKS.map(link => (
+            {t.ecoLinks.map(link => (
               <Link key={link.to} to={link.to} className="rr-eco__link">
                 <div className="rr-eco__link-title">{link.title}</div>
                 <div className="rr-eco__link-desc">{link.desc}</div>
@@ -923,20 +918,20 @@ export default function ResumeReviews() {
       {/* CLOSING */}
       <section className="rr-closing">
         <div className="rr-closing__inner">
-          <h2 className="rr-closing__headline">See what a strong resume actually looks like. Then build yours.</h2>
+          <h2 className="rr-closing__headline">{t.closingHeadline}</h2>
           <div className="rr-closing__btns">
-            <a href="#browse" className="rr-closing__btn-p">Browse the Library</a>
-            <a href="#submit" className="rr-closing__btn-s">Submit Your Resume</a>
+            <a href="#browse" className="rr-closing__btn-p">{t.closingBtn1}</a>
+            <a href="#submit" className="rr-closing__btn-s">{t.closingBtn2}</a>
           </div>
         </div>
       </section>
 
       {/* RESUME DETAIL PANEL */}
       <div className={`rr-overlay${panelId ? ' open' : ''}`} onClick={() => setPanelId(null)} />
-      <div className={`rr-panel${panelId ? ' open' : ''}`} role="dialog" aria-modal="true" aria-label="Resume detail" ref={panelRef} onKeyDown={handlePanelKeyDown}>
+      <div className={`rr-panel${panelId ? ' open' : ''}`} role="dialog" aria-modal="true" aria-label={t.panelTitle} ref={panelRef} onKeyDown={handlePanelKeyDown}>
         <div className="rr-panel__head">
-          <span className="rr-panel__title">Resume Preview</span>
-          <button className="rr-panel__close" onClick={() => setPanelId(null)} aria-label="Close">✕</button>
+          <span className="rr-panel__title">{t.panelTitle}</span>
+          <button className="rr-panel__close" onClick={() => setPanelId(null)} aria-label={t.panelCloseLabel}>✕</button>
         </div>
         {panelResume && (
           <>
@@ -948,25 +943,25 @@ export default function ResumeReviews() {
                 </div>
                 <div className="rr-panel__no-preview">
                   <svg className="rr-panel__no-preview-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-                  <span>Resume preview placeholder</span>
-                  <span style={{ fontSize: '11px', opacity: .6 }}>Real PDF will display here</span>
+                  <span>{t.panelNoPreview}</span>
+                  <span style={{ fontSize: '11px', opacity: .6 }}>{t.panelNoPreviewSub}</span>
                 </div>
               </div>
               <div className="rr-panel__meta">
                 <div className="rr-panel__meta-row">
-                  <span className="rr-panel__meta-label">Submitted by</span>
+                  <span className="rr-panel__meta-label">{t.panelMetaSubmittedBy}</span>
                   <span className="rr-panel__meta-val">@{panelResume.handle}</span>
                 </div>
                 <div className="rr-panel__meta-row">
-                  <span className="rr-panel__meta-label">Applied Role</span>
+                  <span className="rr-panel__meta-label">{t.panelMetaAppliedRole}</span>
                   <span className="rr-panel__meta-val">{panelResume.appliedRole}</span>
                 </div>
                 <div className="rr-panel__meta-row">
-                  <span className="rr-panel__meta-label">Stage</span>
-                  <span className={`rr-tag ${(STAGE_META[panelResume.stage] || {}).tagCls || 'rr-tag--muted'}`}>{(STAGE_META[panelResume.stage] || {}).label || panelResume.stage.toUpperCase()}</span>
+                  <span className="rr-panel__meta-label">{t.panelMetaStage}</span>
+                  <span className={`rr-tag ${getStageMeta(panelResume.stage, t).tagCls}`}>{getStageMeta(panelResume.stage, t).label}</span>
                 </div>
                 <div className="rr-panel__meta-row">
-                  <span className="rr-panel__meta-label">Got traction at</span>
+                  <span className="rr-panel__meta-label">{t.panelMetaTraction}</span>
                   <div className="rr-panel__meta-co">
                     {panelResume.companies.map(co => <CoLogo key={co} coKey={co} size={22} />)}
                     {panelResume.companyExtra > 0 && <span className="rr-co-extra">+{panelResume.companyExtra}</span>}
@@ -974,33 +969,33 @@ export default function ResumeReviews() {
                 </div>
                 {panelResume.tags.length > 0 && (
                   <div className="rr-panel__meta-row">
-                    <span className="rr-panel__meta-label">Background</span>
-                    <div className="rr-panel__meta-tags">{panelResume.tags.map(t => <TagPill key={t} tag={t} />)}</div>
+                    <span className="rr-panel__meta-label">{t.panelMetaBackground}</span>
+                    <div className="rr-panel__meta-tags">{panelResume.tags.map(tag => <TagPill key={tag} tag={tag} labelMap={tTagLabelMap} />)}</div>
                   </div>
                 )}
                 <div className="rr-panel__meta-row">
-                  <span className="rr-panel__meta-label">Submitted</span>
+                  <span className="rr-panel__meta-label">{t.panelMetaSubmitted}</span>
                   <span className="rr-panel__meta-val">{panelResume.submitted}</span>
                 </div>
               </div>
               {panelResume.featured && (
                 <div className="rr-panel__annotation">
-                  <div className="rr-panel__annotation-label">★ J&J Annotation</div>
+                  <div className="rr-panel__annotation-label">{t.panelAnnotationLabel}</div>
                   <div className="rr-panel__annotation-text">"{panelResume.featured.annotation}"</div>
                 </div>
               )}
               {panelResume.story && (
                 <div className="rr-panel__story">
-                  <div className="rr-panel__story-label">Their Story</div>
+                  <div className="rr-panel__story-label">{t.panelStoryLabel}</div>
                   {panelResume.story}
                 </div>
               )}
             </div>
             <div className="rr-panel__foot">
               <button className="rr-panel__dl-btn" disabled={!panelResume.allowDownload}>
-                {panelResume.allowDownload ? '⬇ Download Resume' : 'Download disabled by submitter'}
+                {panelResume.allowDownload ? t.panelDownloadBtn : t.panelDownloadDisabled}
               </button>
-              <button className="rr-panel__share-btn" onClick={() => setPanelId(null)}>← Back</button>
+              <button className="rr-panel__share-btn" onClick={() => setPanelId(null)}>{t.panelBackBtn}</button>
             </div>
           </>
         )}
@@ -1011,11 +1006,11 @@ export default function ResumeReviews() {
       <div className={`rr-sheet${sheetOpen ? ' open' : ''}`}>
         <div className="rr-sheet__handle" />
         <div className="rr-sheet__head">
-          <span className="rr-sheet__title">Filter Resumes</span>
+          <span className="rr-sheet__title">{t.sheetTitle}</span>
           <button className="rr-sheet__close" onClick={() => setSheetOpen(false)}>✕</button>
         </div>
         <div className="rr-sheet__body">
-          <SidebarFilters filter={filter} onFilter={setFilter} />
+          <SidebarFilters filter={filter} onFilter={setFilter} t={t} />
         </div>
       </div>
     </ArticleLayout>

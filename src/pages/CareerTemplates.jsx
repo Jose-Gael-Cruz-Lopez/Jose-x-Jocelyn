@@ -2,122 +2,7 @@ import { useState, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
-
-const TEMPLATES = [
-  {
-    id: 1, cat: 'outreach', stage: 'outreach', author: 'jose',
-    num: '01',
-    title: 'Cold LinkedIn DM - Student to Professional',
-    desc: 'Three versions: to a recruiter, to an engineer, and to an alum. Short, specific, non-desperate. The exact messages that actually get replies.',
-    ctaLabel: 'Copy Template', ctaIcon: 'copy',
-  },
-  {
-    id: 2, cat: 'outreach', stage: 'outreach', author: 'jose',
-    num: '02',
-    title: 'Coffee Chat Request Email',
-    desc: 'One template with customizable fields - intro, specific ask, and availability block. Turns cold outreach into warm conversations without sounding transactional.',
-    ctaLabel: 'Copy Template', ctaIcon: 'copy',
-  },
-  {
-    id: 3, cat: 'outreach', stage: 'outreach', author: 'jose',
-    num: '03',
-    title: 'Follow-Up After No Response (3-Step Sequence)',
-    desc: 'Day 1, Day 7, Day 14 follow-up messages that don\'t sound needy or desperate. The system Jose uses to follow up on every outreach without burning bridges.',
-    ctaLabel: 'Copy Template', ctaIcon: 'copy',
-  },
-  {
-    id: 4, cat: 'outreach', stage: 'outreach', author: 'both',
-    num: '04',
-    title: 'Recruiter Outreach on LinkedIn',
-    desc: 'Specific to early-career - how to express genuine interest in a role without formally applying yet, and how to position yourself before the application portal even opens.',
-    ctaLabel: 'Copy Template', ctaIcon: 'copy',
-  },
-  {
-    id: 5, cat: 'apply', stage: 'apply', author: 'both',
-    num: '05',
-    title: 'Internship Application Tracker',
-    desc: 'Spreadsheet layout: company, role, deadline, application status, contact name, follow-up date, and notes column. The system that turns chaotic applying into a real pipeline.',
-    ctaLabel: 'Open Tracker', ctaIcon: 'external',
-  },
-  {
-    id: 6, cat: 'apply', stage: 'apply', author: 'both',
-    num: '06',
-    title: 'Resume Bullet Formula',
-    desc: 'A STAR-lite formula with 10 filled-in examples from CS, data, and engineering roles. Converts vague experience descriptions into specific, measurable bullet points that recruiters actually read.',
-    ctaLabel: 'Open Framework', ctaIcon: 'external',
-  },
-  {
-    id: 7, cat: 'interview', stage: 'interview', author: 'both',
-    num: '07',
-    title: '"Tell Me About Yourself" Script',
-    desc: 'A 3-part framework: who you are, what you\'ve done, why this role - with a student version and a post-grad version. Converts generic self-introductions into confident, specific narratives.',
-    ctaLabel: 'Copy Template', ctaIcon: 'copy',
-  },
-  {
-    id: 8, cat: 'interview', stage: 'interview', author: 'both',
-    num: '08',
-    title: 'STAR Story Bank Template',
-    desc: 'A blank template for 6–8 stories covering leadership, failure, teamwork, and problem-solving. Build your whole story library once, then pull from it in every interview.',
-    ctaLabel: 'Open Framework', ctaIcon: 'external',
-  },
-  {
-    id: 9, cat: 'interview', stage: 'interview', author: 'both',
-    num: '09',
-    title: 'Post-Interview Thank You Note',
-    desc: 'Two versions: one for after a recruiter screen, one for after a technical or panel round. Specific, warm, and short - the kind that actually gets forwarded.',
-    ctaLabel: 'Copy Template', ctaIcon: 'copy',
-  },
-  {
-    id: 10, cat: 'interview', stage: 'interview', author: 'jocelyn',
-    num: '10',
-    title: 'Questions to Ask at the End of an Interview',
-    desc: '15 specific, non-generic questions organized by who you\'re talking to: recruiter, engineer, or hiring manager. The questions that actually show you\'ve thought about the role.',
-    ctaLabel: 'Open Framework', ctaIcon: 'external',
-  },
-  {
-    id: 11, cat: 'offers', stage: 'offers', author: 'jocelyn',
-    num: '11',
-    title: 'How to Compare Two Offers',
-    desc: 'A weighted decision matrix template - base, bonus, equity, growth trajectory, culture signals, and location. Makes the decision visible and less emotionally driven.',
-    ctaLabel: 'Open Tracker', ctaIcon: 'external',
-  },
-  {
-    id: 12, cat: 'offers', stage: 'offers', author: 'jocelyn',
-    num: '12',
-    title: 'Offer Negotiation Email',
-    desc: 'A copy-paste script for asking for more comp with a specific number already filled in. Professional, direct, and warm - the version that doesn\'t risk the offer.',
-    ctaLabel: 'Copy Template', ctaIcon: 'copy',
-  },
-  {
-    id: 13, cat: 'job', stage: 'job', author: 'jocelyn',
-    num: '13',
-    title: 'First Week Check-In Message to Manager',
-    desc: 'How to set up your first 1:1, what to say in it, and how to start the relationship on the right note without being over-eager or under-prepared.',
-    ctaLabel: 'Copy Template', ctaIcon: 'copy',
-  },
-  {
-    id: 14, cat: 'job', stage: 'job', author: 'jocelyn',
-    num: '14',
-    title: '30-60-90 Day Plan Template',
-    desc: 'A three-phase plan for your first three months - goals, key relationships to build, and deliverables at each stage. The document that turns a good first impression into a strong first year.',
-    ctaLabel: 'Open Framework', ctaIcon: 'external',
-  },
-  {
-    id: 15, cat: 'job', stage: 'job', author: 'both',
-    num: '15',
-    title: 'End-of-Internship Reflection Doc',
-    desc: 'A self-evaluation template to fill out before your last week - documenting your impact, the relationships you built, and how to prep for the return offer conversation.',
-    ctaLabel: 'Open Framework', ctaIcon: 'external',
-  },
-]
-
-const STAGE_LABELS = {
-  outreach: 'Outreach',
-  apply: 'Apply Better',
-  interview: 'Interviews',
-  offers: 'Offers',
-  job: 'On the Job',
-}
+import { useT } from '../hooks/useT'
 
 const CopyIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -135,6 +20,7 @@ const ExternalIcon = () => (
 )
 
 export default function CareerTemplates() {
+  const t = useT('careerTemplates')
   const [activeFilter, setActiveFilter] = useState('all')
   const [request, setRequest] = useState('')
   const [reqEmail, setReqEmail] = useState('')
@@ -147,7 +33,7 @@ export default function CareerTemplates() {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if (!request.trim()) { setFormError('Please describe the template you need.'); return }
+    if (!request.trim()) { setFormError(t.formErrorRequired); return }
     setFormLoading(true)
     setFormError('')
     const { error } = await supabase.from('template_requests').insert({
@@ -156,16 +42,47 @@ export default function CareerTemplates() {
       category: reqCategory || null,
     })
     setFormLoading(false)
-    if (error) { setFormError('Something went wrong. Please try again.') }
+    if (error) { setFormError(t.formErrorGeneric) }
     else { setFormSubmitted(true) }
+  }
+
+  const TEMPLATES = t.templates
+
+  const STAGE_LABELS = {
+    outreach: t.stageOutreach,
+    apply: t.stageApply,
+    interview: t.stageInterview,
+    offers: t.stageOffers,
+    job: t.stageJob,
+  }
+
+  const FILTERS = [
+    { key: 'all', label: t.filterAll },
+    { key: 'outreach', label: t.filterOutreach },
+    { key: 'apply', label: t.filterApply },
+    { key: 'interview', label: t.filterInterview },
+    { key: 'offers', label: t.filterOffers },
+    { key: 'job', label: t.filterJob },
+  ]
+
+  const LEGEND_LABELS = {
+    outreach: t.filterOutreach,
+    apply: t.filterApply,
+    interview: t.filterInterview,
+    offers: t.filterOffers,
+    job: t.filterJob,
   }
 
   const visible = activeFilter === 'all'
     ? TEMPLATES
-    : TEMPLATES.filter(t => t.cat === activeFilter)
+    : TEMPLATES.filter(tmpl => tmpl.cat === activeFilter)
+
+  const countLabel = visible.length === 1
+    ? t.countOne
+    : t.countMany.replace('{n}', visible.length)
 
   return (
-    <ArticleLayout title="Career Templates">
+    <ArticleLayout title={t.heroTitle}>
       <style>{`
         html, body { background: var(--color-cream); }
 
@@ -480,25 +397,18 @@ export default function CareerTemplates() {
       `}</style>
 
       <header className="ct-hero">
-        <p className="ct-hero__kicker">From Campus to Career · Resource Library</p>
-        <h1 className="ct-hero__title">Career Templates</h1>
-        <p className="ct-hero__tagline">Copy. Edit. Send.</p>
+        <p className="ct-hero__kicker">{t.heroKicker}</p>
+        <h1 className="ct-hero__title">{t.heroTitle}</h1>
+        <p className="ct-hero__tagline">{t.heroTagline}</p>
         <p className="ct-hero__sub">
-          Real scripts, trackers, and frameworks from{' '}
-          <strong>two people who are actually doing this</strong> - not career coaches who haven't applied in a decade. Every template maps to a real moment in the journey from campus to career.
+          {t.heroSub}{' '}
+          <strong>{t.heroSubStrong}</strong>{' '}{t.heroSubSuffix}
         </p>
       </header>
 
       <div className="ct-controls">
-        <div className="ct-filters" role="group" aria-label="Filter by pipeline stage">
-          {[
-            { key: 'all', label: 'All' },
-            { key: 'outreach', label: 'Outreach & Networking' },
-            { key: 'apply', label: 'Applications' },
-            { key: 'interview', label: 'Interviews' },
-            { key: 'offers', label: 'Offers & Negotiation' },
-            { key: 'job', label: 'On the Job' },
-          ].map(({ key, label }) => (
+        <div className="ct-filters" role="group" aria-label={t.filterAriaLabel}>
+          {FILTERS.map(({ key, label }) => (
             <button
               key={key}
               data-key={key}
@@ -515,36 +425,36 @@ export default function CareerTemplates() {
         {['outreach', 'apply', 'interview', 'offers', 'job'].map(s => (
           <div key={s} className="ct-legend__item">
             <span className={`ct-legend__dot ct-legend__dot--${s}`}></span>
-            {s === 'outreach' ? 'Outreach & Networking' : s === 'apply' ? 'Applications' : s === 'interview' ? 'Interviews' : s === 'offers' ? 'Offers & Negotiation' : 'On the Job'}
+            {LEGEND_LABELS[s]}
           </div>
         ))}
       </div>
 
       <div className="ct-meta">
-        <p className="ct-count">{visible.length === 1 ? '1 template' : `${visible.length} templates`}</p>
+        <p className="ct-count">{countLabel}</p>
       </div>
 
-      <div className="ct-grid" aria-label="Template library">
+      <div className="ct-grid" aria-label={t.gridAriaLabel}>
         {visible.length === 0 ? (
-          <div className="ct-empty" aria-live="polite">No templates in this category yet.</div>
+          <div className="ct-empty" aria-live="polite">{t.emptyState}</div>
         ) : (
-          visible.map(t => (
-            <div key={t.id} className="ct-card">
-              <div className={`ct-card__bar ct-card__bar--${t.stage}`}></div>
+          visible.map(tmpl => (
+            <div key={tmpl.id} className="ct-card">
+              <div className={`ct-card__bar ct-card__bar--${tmpl.stage}`}></div>
               <div className="ct-card__top">
-                <span className="ct-card__num">{t.num}</span>
+                <span className="ct-card__num">{tmpl.num}</span>
                 <div className="ct-card__badges">
-                  <span className={`ct-card__stage ct-card__stage--${t.stage}`}>{STAGE_LABELS[t.stage]}</span>
-                  <span className={`ct-card__author ct-card__author--${t.author}`}>
-                    {t.author === 'jose' ? 'Jose' : t.author === 'jocelyn' ? 'Jocelyn' : 'Both'}
+                  <span className={`ct-card__stage ct-card__stage--${tmpl.stage}`}>{STAGE_LABELS[tmpl.stage]}</span>
+                  <span className={`ct-card__author ct-card__author--${tmpl.author}`}>
+                    {tmpl.author === 'jose' ? t.authorJose : tmpl.author === 'jocelyn' ? t.authorJocelyn : t.authorBoth}
                   </span>
                 </div>
               </div>
-              <h2 className="ct-card__title">{t.title}</h2>
-              <p className="ct-card__desc">{t.desc}</p>
-              <a href="#" className={`ct-card__cta ct-card__cta--${t.stage}`}>
-                {t.ctaLabel}
-                {t.ctaIcon === 'copy' ? <CopyIcon /> : <ExternalIcon />}
+              <h2 className="ct-card__title">{tmpl.title}</h2>
+              <p className="ct-card__desc">{tmpl.desc}</p>
+              <a href="#" className={`ct-card__cta ct-card__cta--${tmpl.stage}`}>
+                {tmpl.ctaLabel}
+                {tmpl.ctaIcon === 'copy' ? <CopyIcon /> : <ExternalIcon />}
               </a>
             </div>
           ))
@@ -554,40 +464,40 @@ export default function CareerTemplates() {
       <section className="ct-form-wrap">
         <div className="ct-form-inner">
           <div className="ct-form-copy">
-            <p className="ct-form-copy__kicker">Shape the Library</p>
-            <h2 className="ct-form-copy__title">What part of the campus-to-career process feels unclear right now?</h2>
-            <p className="ct-form-copy__sub">Every template on this page started with a question someone couldn't find a good answer to. Tell us where you're stuck and we'll build the tool for it.</p>
+            <p className="ct-form-copy__kicker">{t.formKicker}</p>
+            <h2 className="ct-form-copy__title">{t.formTitle}</h2>
+            <p className="ct-form-copy__sub">{t.formSub}</p>
           </div>
           <div className="ct-form-box">
             {formSubmitted ? (
               <div style={{ padding: '32px 0', textAlign: 'center' }}>
                 <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(58,125,107,.1)', color: 'var(--color-teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, margin: '0 auto 14px' }}>✓</div>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--color-dark)', marginBottom: 6 }}>Request submitted!</p>
-                <p style={{ fontSize: 14, color: 'var(--color-muted)' }}>Thanks — we'll build it if enough people ask for the same thing.</p>
+                <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--color-dark)', marginBottom: 6 }}>{t.formSuccessTitle}</p>
+                <p style={{ fontSize: 14, color: 'var(--color-muted)' }}>{t.formSuccessBody}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
                 <div className="ct-form-row">
-                  <label className="ct-form-label" htmlFor="reqField">What template do you wish existed?</label>
-                  <textarea className="ct-form-textarea" id="reqField" placeholder="e.g. A script for asking for a deadline extension on an offer…" value={request} onChange={e => setRequest(e.target.value)}></textarea>
+                  <label className="ct-form-label" htmlFor="reqField">{t.formLabelRequest}</label>
+                  <textarea className="ct-form-textarea" id="reqField" placeholder={t.formPlaceholderRequest} value={request} onChange={e => setRequest(e.target.value)}></textarea>
                 </div>
                 <div className="ct-form-row">
-                  <label className="ct-form-label" htmlFor="reqEmailField">Your email</label>
-                  <input className="ct-form-input" type="email" id="reqEmailField" placeholder="you@school.edu" value={reqEmail} onChange={e => setReqEmail(e.target.value)} />
+                  <label className="ct-form-label" htmlFor="reqEmailField">{t.formLabelEmail}</label>
+                  <input className="ct-form-input" type="email" id="reqEmailField" placeholder={t.formPlaceholderEmail} value={reqEmail} onChange={e => setReqEmail(e.target.value)} />
                 </div>
                 <div className="ct-form-row">
-                  <label className="ct-form-label" htmlFor="reqCat">Pipeline stage (optional)</label>
+                  <label className="ct-form-label" htmlFor="reqCat">{t.formLabelCategory}</label>
                   <select className="ct-form-select" id="reqCat" value={reqCategory} onChange={e => setReqCategory(e.target.value)}>
-                    <option value="">Select a stage…</option>
-                    <option>Internship search</option>
-                    <option>Networking &amp; outreach</option>
-                    <option>Interview prep</option>
-                    <option>Offers &amp; negotiation</option>
-                    <option>First job &amp; onboarding</option>
+                    <option value="">{t.formCategoryPlaceholder}</option>
+                    <option value="internship-search">{t.catInternshipSearch}</option>
+                    <option value="networking-outreach">{t.catNetworkingOutreach}</option>
+                    <option value="interview-prep">{t.catInterviewPrep}</option>
+                    <option value="offers-negotiation">{t.catOffersNegotiation}</option>
+                    <option value="first-job-onboarding">{t.catFirstJobOnboarding}</option>
                   </select>
                 </div>
                 {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
-                <button className="ct-form-btn" type="submit" disabled={formLoading}>{formLoading ? 'Submitting…' : 'Submit Request'}</button>
+                <button className="ct-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
               </form>
             )}
           </div>
@@ -595,11 +505,11 @@ export default function CareerTemplates() {
       </section>
 
       <footer className="art-footer" style={{ maxWidth: '1040px' }}>
-        <span className="art-footer__copy">Jose x Jocelyn &copy; 2026</span>
+        <span className="art-footer__copy">{t.footerCopy}</span>
         <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">Home</Link>
-          <Link to="/articles" className="art-footer__link">La Voz del Día</Link>
-          <Link to="/linkedin-series" className="art-footer__link">LinkedIn Series</Link>
+          <Link to="/" className="art-footer__link">{t.footerHome}</Link>
+          <Link to="/articles" className="art-footer__link">{t.footerArticles}</Link>
+          <Link to="/linkedin-series" className="art-footer__link">{t.footerLinkedIn}</Link>
         </div>
       </footer>
     </ArticleLayout>

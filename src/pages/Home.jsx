@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import { supabase } from '../lib/supabase'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useLang } from '../context/LanguageContext'
+import { useT } from '../hooks/useT'
 gsap.registerPlugin(ScrollTrigger)
 
 const SEARCH_INDEX = [
@@ -33,10 +35,13 @@ const SEARCH_INDEX = [
 const CONFETTI_COLORS = ['#E8A838','#B34539','#3A7D6B','#5B8EC2','#F2E4CE','#f5c026','#ff6b6b','#ff9ff3','#54a0ff','#5f27cd','#01a3a4','#feca57','#ff6348','#7bed9f']
 const PINATA_STAGES = [{ at: 0, src: '/pinanta/step1.png' },{ at: 3, src: '/pinanta/step2.png' },{ at: 5, src: '/pinanta/step3.png' }]
 const HITS_TO_BREAK = 7
-const BREAK_MSGS = ["Echale ganas, you already took the first step.","Nobody gave us the blueprint either. That's why we built this.","Ya llegaste. The sun rises for you too.","First-gen is not a limitation. It's the origin story.","No palancas needed. Just you and this community."]
 
 export default function Home() {
   const navigate = useNavigate()
+  const { lang, setLang } = useLang()
+  const t = useT('home')
+  const tNav = useT('nav')
+
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const searchInputRef = useRef(null)
@@ -103,10 +108,10 @@ export default function Home() {
       if (!res.ok) throw new Error('Failed to send')
       setModalSent(true)
     } catch {
-      setModalError('Something went wrong. Please try again.')
+      setModalError(t.modalError)
     }
     setModalLoading(false)
-  }, [modalName, modalEmail, modalMessage])
+  }, [modalName, modalEmail, modalMessage, t])
 
   const handleModalKeyDown = useCallback((e) => {
     if (e.key !== 'Tab' || !modalRef.current) return
@@ -544,7 +549,8 @@ export default function Home() {
 
         setTimeout(() => {
           setPinataVisible(false)
-          const msg = BREAK_MSGS[(Math.random() * BREAK_MSGS.length) | 0]
+          const msgs = t.breakMsgs
+          const msg = msgs[(Math.random() * msgs.length) | 0]
           setPinataMsg(msg)
 
           setTimeout(() => {
@@ -627,7 +633,7 @@ export default function Home() {
               <input
                 ref={searchInputRef}
                 className="search-palette__input"
-                placeholder="Search pages & sections…"
+                placeholder={tNav.searchPlaceholder}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 autoComplete="off"
@@ -636,7 +642,7 @@ export default function Home() {
             </div>
             <ul className="search-palette__results">
               {searchResults.length === 0
-                ? <li className="search-palette__empty">No results for "{searchQuery}"</li>
+                ? <li className="search-palette__empty">{tNav.searchNoResults} &ldquo;{searchQuery}&rdquo;</li>
                 : searchResults.map(item => (
                   <li key={item.label}>
                     <button className="search-palette__result" onClick={() => handleSearchSelect(item)}>
@@ -655,48 +661,57 @@ export default function Home() {
       {/* NAV */}
       <nav className={navClass} id="nav">
         <div className="nav__links">
-          <button className="nav__search-btn" aria-label="Search" onClick={openSearch}>
+          <button
+            className="nav__lang-btn"
+            onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
+            aria-label={tNav.langToggleLabel}
+          >
+            <span className={lang === 'en' ? 'nav__lang-active' : 'nav__lang-inactive'}>EN</span>
+            <span className="nav__lang-sep"> · </span>
+            <span className={lang === 'es' ? 'nav__lang-active' : 'nav__lang-inactive'}>ES</span>
+          </button>
+          <button className="nav__search-btn" aria-label={tNav.searchBtnLabel} onClick={openSearch}>
             <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="17" height="17"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
           </button>
-          <a href="#about" className="nav__link">About</a>
+          <a href="#about" className="nav__link">{tNav.about}</a>
           <div className="nav__services-wrap">
             <a href="#services" className="nav__link" onClick={e => {
               e.preventDefault()
               document.getElementById('services')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
-            }}>Services</a>
+            }}>{tNav.services}</a>
             <div className="nav__services-dropdown">
               <div className="nav__services-group">
-                <span className="nav__services-label">Content</span>
-                <Link to="/linkedin-series" className="nav__services-item">LinkedIn Series</Link>
-                <Link to="/career-templates" className="nav__services-item">Career Templates</Link>
+                <span className="nav__services-label">{tNav.contentLabel}</span>
+                <Link to="/linkedin-series" className="nav__services-item">{tNav.linkedInSeries}</Link>
+                <Link to="/career-templates" className="nav__services-item">{tNav.careerTemplates}</Link>
               </div>
               <div className="nav__services-group">
-                <span className="nav__services-label">Sprints</span>
-                <Link to="/bridge-year" className="nav__services-item">Bridge Year Sprint</Link>
-                <Link to="/interview-prep" className="nav__services-item">Interview Prep</Link>
+                <span className="nav__services-label">{tNav.sprintsLabel}</span>
+                <Link to="/bridge-year" className="nav__services-item">{tNav.bridgeYearSprint}</Link>
+                <Link to="/interview-prep" className="nav__services-item">{tNav.interviewPrep}</Link>
               </div>
               <div className="nav__services-group">
-                <span className="nav__services-label">Community</span>
-                <Link to="/opportunity-board" className="nav__services-item">Opportunity Board</Link>
-                <Link to="/coffee-chat" className="nav__services-item">Coffee Chat Network</Link>
-                <Link to="/resume-reviews" className="nav__services-item">Resume Reviews</Link>
-                <Link to="/partner-panels" className="nav__services-item">Partner Panels</Link>
+                <span className="nav__services-label">{tNav.communityLabel}</span>
+                <Link to="/opportunity-board" className="nav__services-item">{tNav.opportunityBoard}</Link>
+                <Link to="/coffee-chat" className="nav__services-item">{tNav.coffeeChatNetwork}</Link>
+                <Link to="/resume-reviews" className="nav__services-item">{tNav.resumeReviews}</Link>
+                <Link to="/partner-panels" className="nav__services-item">{tNav.partnerPanels}</Link>
               </div>
             </div>
           </div>
-          <a href="#editorial" className="nav__link">La Voz del Día</a>
+          <a href="#editorial" className="nav__link">{tNav.laVoz}</a>
           <button className="nav__link nav__link--cta" onClick={openModal}>
             <span className="nav__link-accent" aria-hidden="true" />
-            <span className="nav__link-label">Get in Touch</span>
+            <span className="nav__link-label">{tNav.getInTouch}</span>
           </button>
         </div>
-        <button className="nav__search-btn nav__search-btn--mobile" aria-label="Search" onClick={openSearch}>
+        <button className="nav__search-btn nav__search-btn--mobile" aria-label={tNav.searchBtnLabel} onClick={openSearch}>
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="19" height="19"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
         </button>
         <button
           className={`nav__burger${menuOpen ? ' nav__burger--open' : ''}`}
           id="navBurger"
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-label={menuOpen ? tNav.closeMenu : tNav.openMenu}
           aria-expanded={menuOpen}
           aria-controls="mobileNav"
           onClick={() => setMenuOpen(o => !o)}
@@ -707,14 +722,24 @@ export default function Home() {
 
       {/* MOBILE NAV */}
       <div className={`mobile-nav${menuOpen ? ' mobile-nav--open' : ''}`} id="mobileNav" role="navigation" aria-label="Mobile navigation" aria-hidden={!menuOpen}>
-        <button className="mobile-nav__search" aria-label="Open search" onClick={() => { setMenuOpen(false); openSearch() }}>
+        <button className="mobile-nav__search" aria-label={tNav.searchBtnLabel} onClick={() => { setMenuOpen(false); openSearch() }}>
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="20" height="20"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.7"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
-          <span>Search</span>
+          <span>{tNav.mobileSearch}</span>
         </button>
-        <a href="#about" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>About</a>
-        <a href="#services" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>Services</a>
-        <a href="#editorial" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>La Voz del Día</a>
-        <button className="mobile-nav__link" onClick={() => { setMenuOpen(false); openModal() }}>Get in Touch</button>
+        <button
+          className="nav__lang-btn mobile-nav__link"
+          onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
+          aria-label={tNav.langToggleLabel}
+          style={{ fontSize: 'clamp(22px, 4.5vw, 32px)', fontWeight: 500 }}
+        >
+          <span className={lang === 'en' ? 'nav__lang-active' : 'nav__lang-inactive'}>EN</span>
+          <span className="nav__lang-sep"> · </span>
+          <span className={lang === 'es' ? 'nav__lang-active' : 'nav__lang-inactive'}>ES</span>
+        </button>
+        <a href="#about" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.about}</a>
+        <a href="#services" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.services}</a>
+        <a href="#editorial" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.laVoz}</a>
+        <button className="mobile-nav__link" onClick={() => { setMenuOpen(false); openModal() }}>{tNav.getInTouch}</button>
       </div>
 
       <main>
@@ -748,11 +773,11 @@ export default function Home() {
           <p className="hero__tagline" lang="es">El sol sale para todos…</p>
           <div className="hero__rule" aria-hidden="true" />
           <p className="hero__foot">
-            <span className="hero__foot-phrase">First-gen</span>
+            <span className="hero__foot-phrase">{t.heroFoot1}</span>
             <span className="hero__foot-sep" aria-hidden="true"> · </span>
-            <span className="hero__foot-phrase">Mexican-American</span>
+            <span className="hero__foot-phrase">{t.heroFoot2}</span>
             <span className="hero__foot-sep" aria-hidden="true"> · </span>
-            <span className="hero__foot-phrase">Tech careers</span>
+            <span className="hero__foot-phrase">{t.heroFoot3}</span>
           </p>
         </div>
         <div className="hero__chrome-strip hero__chrome-strip--bottom" aria-hidden="true" />
@@ -770,7 +795,7 @@ export default function Home() {
         </div>
         <div className="intro__right">
           <div className="intro__dot" aria-hidden="true" />
-          <p className="intro__text">We are two first-generation Mexican-Americans in tech who navigated every career milestone without a blueprint. No legacy connections. No family in the industry. No one to call when the offer letter made no sense. This platform exists to build what we never had: a visible pipeline from campus to career, told by two people at different stages of the same journey.</p>
+          <p className="intro__text">{t.introText}</p>
           <img src="/images/sun.png" alt="" className="mascot mascot--sun mascot--intro" aria-hidden="true" loading="lazy" decoding="async" />
         </div>
       </section>
@@ -778,8 +803,8 @@ export default function Home() {
       {/* ABOUT */}
       <section className="about" id="about">
         <div className="about__header">
-          <span className="about__number">02</span>
-          <h2 className="about__title">Who We Are</h2>
+          <span className="about__number">{t.aboutNumber}</span>
+          <h2 className="about__title">{t.aboutTitle}</h2>
         </div>
         <div className="about__tabs" role="tablist" onKeyDown={e => {
           const KEYS = ['who-we-are', 'mission', 'vision']
@@ -804,27 +829,27 @@ export default function Home() {
                 tabIndex={aboutTab === tab ? 0 : -1}
                 onClick={() => setAboutTab(tab)}
               >
-                {tab === 'who-we-are' ? 'Who We Are' : tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {tab === 'who-we-are' ? t.aboutTabWhoWeAre : tab === 'mission' ? t.aboutTabMission : t.aboutTabVision}
               </button>
             </>
           ))}
         </div>
 
         <div id="about-panel-who-we-are" role="tabpanel" aria-labelledby="about-tab-who-we-are" className={`about__panel${aboutTab === 'who-we-are' ? ' about__panel--active' : ''}`}>
-          <p className="about__panel-subtitle">One pipeline, two perspectives</p>
-          <p className="about__intro"><em>From Campus to Career</em> is a collaborative initiative led by Jose G. Cruz&#8209;Lopez and Jocelyn Vazquez. Together, they turn lived experience into a roadmap that helps first&#8209;gen and underrepresented students move confidently from campus to career.</p>
+          <p className="about__panel-subtitle">{t.aboutSubtitle}</p>
+          <p className="about__intro" dangerouslySetInnerHTML={{ __html: t.aboutIntro }} />
           <div className="about__cards">
             <div className="about__card about__card--jose">
-              <span className="about__card-label">The Student Perspective</span>
+              <span className="about__card-label">{t.joseLabel}</span>
               <div className="about__card-identity">
                 <div className="about__card-photo-wrap">
                   <img src="/images/jose.jpeg" alt="Jose G. Cruz-Lopez" className="about__card-photo about__card-photo--base" width="96" height="96" decoding="async" />
                   <img src="/images/JOSE.png" alt="" className="about__card-photo about__card-photo--alt" width="96" height="96" decoding="async" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="about__card-name">Jose G. Cruz&#8209;Lopez</h3>
+                  <h3 className="about__card-name">{t.joseName}</h3>
                   <div className="about__card-role-row">
-                    <p className="about__card-role">Breaking in</p>
+                    <p className="about__card-role">{t.joseRole}</p>
                     <div className="about__card-socials">
                       <a href="https://www.linkedin.com/in/cjxsez/" className="about__card-social about__card-social--linkedin" target="_blank" rel="noopener noreferrer" aria-label="Jose G. Cruz-Lopez on LinkedIn">
                         <img src="/images/linkedin_logo.png" alt="" decoding="async" loading="lazy" />
@@ -836,22 +861,22 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <p className="about__card-desc">A first&#8209;generation college student helping peers land internships and early opportunities. Actively recruiting and documenting every step of the student journey in real time.</p>
+              <p className="about__card-desc">{t.joseDesc}</p>
               <div className="about__card-tags">
-                <span>Internships</span><span>Applications</span><span>Fellowships</span><span>Student Life</span>
+                {t.joseTags.map((tag) => <span key={tag}>{tag}</span>)}
               </div>
             </div>
             <div className="about__card about__card--jocelyn">
-              <span className="about__card-label">The Post&#8209;Grad Perspective</span>
+              <span className="about__card-label">{t.jocelynLabel}</span>
               <div className="about__card-identity">
                 <div className="about__card-photo-wrap">
                   <img src="/images/jocelyn.jpeg" alt="Jocelyn Vazquez" className="about__card-photo about__card-photo--base" width="96" height="96" decoding="async" />
                   <img src="/images/JOSECELYN.png" alt="" className="about__card-photo about__card-photo--alt" width="96" height="96" decoding="async" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="about__card-name">Jocelyn Vazquez</h3>
+                  <h3 className="about__card-name">{t.jocelynName}</h3>
                   <div className="about__card-role-row">
-                    <p className="about__card-role">Leveling up</p>
+                    <p className="about__card-role">{t.jocelynRole}</p>
                     <div className="about__card-socials">
                       <a href="https://www.linkedin.com/in/jocelyn-vazquez/?skipRedirect=true" className="about__card-social about__card-social--linkedin" target="_blank" rel="noopener noreferrer" aria-label="Jocelyn Vazquez on LinkedIn">
                         <img src="/images/linkedin_logo.png" alt="" decoding="async" loading="lazy" />
@@ -863,24 +888,24 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <p className="about__card-desc">A first&#8209;generation Information Systems graduate now working in tech and data. Translating the &quot;mystery&quot; parts (compensation, corporate culture, career growth) into first&#8209;gen&#8209;friendly guidance.</p>
+              <p className="about__card-desc">{t.jocelynDesc}</p>
               <div className="about__card-tags">
-                <span>Full&#8209;Time Roles</span><span>Negotiation</span><span>Career Growth</span><span>Onboarding</span>
+                {t.jocelynTags.map((tag) => <span key={tag}>{tag}</span>)}
               </div>
             </div>
           </div>
-          <p className="about__closing">More than an idea, <em>From Campus to Career</em> is a movement driven by clarity, opportunity, and community.</p>
+          <p className="about__closing" dangerouslySetInnerHTML={{ __html: t.aboutClosing }} />
         </div>
 
         <div id="about-panel-mission" role="tabpanel" aria-labelledby="about-tab-mission" className={`about__panel${aboutTab === 'mission' ? ' about__panel--active' : ''}`}>
-          <p className="about__label">Why we built this and who it is for</p>
-          <blockquote className="about__quote">No one should have to <em>guess</em> their way from first internship to first offer. Every step should be <em>visible, mapped,</em> and <em>community&#8209;supported.</em></blockquote>
-          <p className="about__attribution">Jose &amp; Jocelyn</p>
-          <p className="about__body">Our mission is to empower first&#8209;generation and underrepresented students to confidently navigate every step from their first internship search to their first full&#8209;time role in tech and data. We make the journey transparent, actionable, and community&#8209;powered because no one should have to guess their way to opportunity.</p>
+          <p className="about__label">{t.missionLabel}</p>
+          <blockquote className="about__quote" dangerouslySetInnerHTML={{ __html: t.missionQuote }} />
+          <p className="about__attribution">{t.missionAttribution}</p>
+          <p className="about__body">{t.missionBody}</p>
         </div>
 
         <div id="about-panel-vision" role="tabpanel" aria-labelledby="about-tab-vision" className={`about__panel${aboutTab === 'vision' ? ' about__panel--active' : ''}`}>
-          <p className="about__body">We envision a future where every first&#8209;generation student graduates with not only skills but direction, supported by a network that transforms uncertainty into possibility and ambition into long&#8209;term success.</p>
+          <p className="about__body">{t.visionBody}</p>
         </div>
       </section>
 
@@ -891,22 +916,20 @@ export default function Home() {
             <img src="/images/c2c-title-collab.png" alt="From Campus to Career" className="c2c__title-img" loading="lazy" decoding="async" />
           </div>
           <div className="c2c__content">
-            <p className="c2c__lead">A structured ecosystem that turns first&#8209;gen ambition into real career outcomes.</p>
+            <p className="c2c__lead">{t.c2cLead}</p>
             <div className="c2c__grid">
-              {[
-                { n: '01', t: 'Content', d: 'Split-screen LinkedIn series and plug-and-play career templates. Real talk from both sides of the pipeline, without the fluff.', cls: 'c2c__card--navy' },
-                { n: '02', t: 'Sprints', d: 'Small-cohort programs built around a single career milestone. Bridge Year Sprint and Interview Prep keep you accountable and moving forward.', cls: 'c2c__card--teal' },
-                { n: '03', t: 'Community', d: 'Curated opportunity board, partner panels, coffee chat networks, and resume review circles. Real connections, not just a group chat.', cls: 'c2c__card--accent' },
-                { n: '04', t: 'La Voz del Día', d: 'Articles on recruiting, internships, full-time offers, and first-gen survival. Written by both of us from both sides of the bridge.', cls: 'c2c__card--gold' },
-              ].map(({ n, t, d, cls }) => (
-                <div key={n} className={`c2c__card ${cls}`}>
-                  <span className="c2c__card-number">{n}</span>
-                  <h3 className="c2c__card-title">{t}</h3>
-                  <p className="c2c__card-desc">{d}</p>
-                </div>
-              ))}
+              {t.c2cCards.map(({ n, t: title, d }, idx) => {
+                const cls = ['c2c__card--navy', 'c2c__card--teal', 'c2c__card--accent', 'c2c__card--gold'][idx]
+                return (
+                  <div key={n} className={`c2c__card ${cls}`}>
+                    <span className="c2c__card-number">{n}</span>
+                    <h3 className="c2c__card-title">{title}</h3>
+                    <p className="c2c__card-desc">{d}</p>
+                  </div>
+                )
+              })}
             </div>
-            <p className="c2c__closing">&ldquo;El camino no se encuentra, se construye. Paso a paso, juntos.&rdquo;</p>
+            <p className="c2c__closing">{t.c2cClosing}</p>
           </div>
         </div>
       </section>
@@ -945,10 +968,10 @@ export default function Home() {
           <div className="services__image-inner">
             <div className="services__pattern" aria-hidden="true">
               <div className={`pinata ${pinataWrapClass}`} id="pinata" ref={pinataRef} style={{ visibility: pinataVisible ? 'visible' : 'hidden' }}>
-                <button className="pinata__body" id="pinataBody" aria-label="Hit the piñata" onClick={handlePinataClick}>
+                <button className="pinata__body" id="pinataBody" aria-label={t.pinataAriaLabel} onClick={handlePinataClick}>
                   <img src="/pinanta/step1.png" alt="" className="pinata__img" id="pinataImg" ref={pinataImgRef} draggable="false" />
                 </button>
-                <p className="pinata__prompt" id="pinataPrompt">Click to hit!</p>
+                <p className="pinata__prompt" id="pinataPrompt">{t.pinataPrompt}</p>
               </div>
               {pinataMsg && <p className="pinata__break-msg" role="status">{pinataMsg}</p>}
             </div>
@@ -965,7 +988,7 @@ export default function Home() {
             if (e.key === 'End')        { e.preventDefault(); next = KEYS[KEYS.length - 1] }
             if (next) { setServicesTab(next); setTimeout(() => document.getElementById(`services-tab-${next}`)?.focus(), 0) }
           }}>
-            {[['content','Content'],['sprints','Sprints'],['community','Community']].map(([key, label], i) => (
+            {[['content', t.servicesTabContent], ['sprints', t.servicesTabSprints], ['community', t.servicesTabCommunity]].map(([key, label], i) => (
               <>
                 {i > 0 && <span key={`sep-${key}`} className="services__tab-sep" aria-hidden="true">|</span>}
                 <button
@@ -985,31 +1008,31 @@ export default function Home() {
           </div>
 
           <div id="services-panel-content" role="tabpanel" aria-labelledby="services-tab-content" className={`services__panel${servicesTab === 'content' ? ' services__panel--active' : ''}`}>
-            <p className="services__body">Our content strategy prioritizes clarity, shareability, and real value. That means split-screen perspectives, actionable templates, and honest recruiting insights, without the fluff.</p>
+            <p className="services__body">{t.servicesContentBody}</p>
             <div className="services__list">
               <div className="services__list-col services__list-col--inline">
-                <Link to="/linkedin-series" className="services__list-btn">LinkedIn Series &rarr;</Link>
-                <Link to="/career-templates" className="services__list-btn">Career Templates &rarr;</Link>
+                <Link to="/linkedin-series" className="services__list-btn">{tNav.linkedInSeries} →</Link>
+                <Link to="/career-templates" className="services__list-btn">{tNav.careerTemplates} →</Link>
               </div>
             </div>
           </div>
           <div id="services-panel-sprints" role="tabpanel" aria-labelledby="services-tab-sprints" className={`services__panel${servicesTab === 'sprints' ? ' services__panel--active' : ''}`}>
-            <p className="services__body">Sprint-based programs that move small cohorts through a specific career milestone. Weekly application blocks, accountability sessions, interview prep, and storytelling workshops.</p>
+            <p className="services__body">{t.servicesSprintsBody}</p>
             <div className="services__list">
               <div className="services__list-col services__list-col--inline">
-                <Link to="/bridge-year" className="services__list-btn">Bridge Year Sprint &rarr;</Link>
-                <Link to="/interview-prep" className="services__list-btn">Interview Prep &rarr;</Link>
+                <Link to="/bridge-year" className="services__list-btn">{tNav.bridgeYearSprint} →</Link>
+                <Link to="/interview-prep" className="services__list-btn">{tNav.interviewPrep} →</Link>
               </div>
             </div>
           </div>
           <div id="services-panel-community" role="tabpanel" aria-labelledby="services-tab-community" className={`services__panel${servicesTab === 'community' ? ' services__panel--active' : ''}`}>
-            <p className="services__body">Community-driven support built on accountability and real connections. Opportunity boards, partnership panels, coffee chat networks, and resume review circles.</p>
+            <p className="services__body">{t.servicesCommunityBody}</p>
             <div className="services__list">
               <div className="services__list-col services__list-col--grid-2">
-                <Link to="/opportunity-board" className="services__list-btn">Opportunity Board &rarr;</Link>
-                <Link to="/coffee-chat" className="services__list-btn">Coffee Chat Network &rarr;</Link>
-                <Link to="/resume-reviews" className="services__list-btn">Resume Reviews &rarr;</Link>
-                <Link to="/partner-panels" className="services__list-btn">Partner Panels &rarr;</Link>
+                <Link to="/opportunity-board" className="services__list-btn">{tNav.opportunityBoard} →</Link>
+                <Link to="/coffee-chat" className="services__list-btn">{tNav.coffeeChatNetwork} →</Link>
+                <Link to="/resume-reviews" className="services__list-btn">{tNav.resumeReviews} →</Link>
+                <Link to="/partner-panels" className="services__list-btn">{tNav.partnerPanels} →</Link>
               </div>
             </div>
           </div>
@@ -1023,7 +1046,7 @@ export default function Home() {
           <div className="interr__bar interr__bar--accent" />
         </div>
         <div className="interr__text">
-          {['Transparent.', 'Actionable.', 'Community', 'Powered.'].map((line, li) => (
+          {t.interrLines.map((line, li) => (
             <span key={li} className="interr__line">
               {line.split('').map((char, ci) => (
                 <span key={ci} className="interr__char">{char}</span>
@@ -1038,52 +1061,52 @@ export default function Home() {
         <div className="editorial__showcase">
           <div className="editorial__showcase-inner">
             <div className="editorial__showcase-content">
-              <span className="editorial__showcase-label">Knowledge Hub</span>
-              <h2 className="editorial__showcase-title">La Voz del Día</h2>
-              <p className="editorial__showcase-desc">Articles on recruiting, internships, full-time offers, and early-career survival, written by both of us from both sides of the bridge.</p>
+              <span className="editorial__showcase-label">{t.editorialLabel}</span>
+              <h2 className="editorial__showcase-title">{t.editorialTitle}</h2>
+              <p className="editorial__showcase-desc">{t.editorialDesc}</p>
             </div>
             <img src="/images/moon_2.png" alt="" className="mascot mascot--moon2 mascot--editorial" aria-hidden="true" loading="eager" decoding="async" width="96" height="96" />
           </div>
         </div>
         <div className="editorial__grid">
           <Link to="/articles/late-cycle-internships" className="editorial__card editorial__card--link">
-            <div className="editorial__card-tag">Jose</div>
-            <h3 className="editorial__card-title">Late-Cycle Internships: Where to Look When Everyone Says It's Over</h3>
-            <p className="editorial__card-excerpt">It is April and you still don't have an internship. Here is what to do right now.</p>
+            <div className="editorial__card-tag">{t.card1Tag}</div>
+            <h3 className="editorial__card-title">{t.card1Title}</h3>
+            <p className="editorial__card-excerpt">{t.card1Excerpt}</p>
           </Link>
           <Link to="/articles/first-90-days" className="editorial__card editorial__card--dark editorial__card--link">
-            <div className="editorial__card-tag">Jocelyn</div>
-            <h3 className="editorial__card-title">Your First 90 Days: A Survival Guide for First-Gen Professionals</h3>
-            <p className="editorial__card-excerpt">No one teaches you how to read benefits, navigate office politics, or build a career ladder. Until now.</p>
+            <div className="editorial__card-tag">{t.card2Tag}</div>
+            <h3 className="editorial__card-title">{t.card2Title}</h3>
+            <p className="editorial__card-excerpt">{t.card2Excerpt}</p>
           </Link>
         </div>
         <div className="editorial__grid">
           <Link to="/articles/first-gen-internship-playbook" className="editorial__card editorial__card--dark editorial__card--link">
-            <div className="editorial__card-tag">Both</div>
-            <h3 className="editorial__card-title">The Complete First-Gen Internship Playbook</h3>
-            <p className="editorial__card-excerpt">From discovery to signed offer, with no sugar-coating. Everything we learned.</p>
+            <div className="editorial__card-tag">{t.card3Tag}</div>
+            <h3 className="editorial__card-title">{t.card3Title}</h3>
+            <p className="editorial__card-excerpt">{t.card3Excerpt}</p>
           </Link>
           <Link to="/articles/coffee-chat-framework" className="editorial__card editorial__card--link">
-            <div className="editorial__card-tag">Jose</div>
-            <h3 className="editorial__card-title">The Coffee Chat Framework That Actually Gets Responses</h3>
-            <p className="editorial__card-excerpt">A step-by-step system for reaching out to professionals and turning conversations into opportunities.</p>
+            <div className="editorial__card-tag">{t.card4Tag}</div>
+            <h3 className="editorial__card-title">{t.card4Title}</h3>
+            <p className="editorial__card-excerpt">{t.card4Excerpt}</p>
           </Link>
         </div>
         <div className="editorial__grid">
           <Link to="/articles/negotiate-salary" className="editorial__card editorial__card--link">
-            <div className="editorial__card-tag">Jocelyn</div>
-            <h3 className="editorial__card-title">How to Negotiate When You've Never Seen a Six-Figure Salary</h3>
-            <p className="editorial__card-excerpt">Compensation is benefits, equity, signing bonuses, and leverage you didn't know you had.</p>
+            <div className="editorial__card-tag">{t.card5Tag}</div>
+            <h3 className="editorial__card-title">{t.card5Title}</h3>
+            <p className="editorial__card-excerpt">{t.card5Excerpt}</p>
           </Link>
           <Link to="/articles/rejection" className="editorial__card editorial__card--dark editorial__card--link">
-            <div className="editorial__card-tag">Both</div>
-            <h3 className="editorial__card-title">Rejection Doesn't Mean You Did It Wrong</h3>
-            <p className="editorial__card-excerpt">You can do everything right and still get rejected. How to process it and keep moving.</p>
+            <div className="editorial__card-tag">{t.card6Tag}</div>
+            <h3 className="editorial__card-title">{t.card6Title}</h3>
+            <p className="editorial__card-excerpt">{t.card6Excerpt}</p>
           </Link>
         </div>
         <div className="editorial__more">
           <Link to="/articles" className="editorial__more-btn">
-            View All Articles
+            {t.editorialViewAll}
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
             </svg>
@@ -1106,13 +1129,13 @@ export default function Home() {
           </svg>
         </div>
         <button className="footer__cta" id="footerCta" onClick={openModal}>
-          <span className="footer__cta-text">Let&apos;s<br/>connect</span>
+          <span className="footer__cta-text" dangerouslySetInnerHTML={{ __html: t.footerCta }} />
         </button>
         <div className="footer__bottom">
-          <span className="footer__credit">Jose x Jocelyn &copy; 2026</span>
+          <span className="footer__credit">{t.footerCredit}</span>
           <div className="footer__legal">
-            <a href="#" className="footer__legal-link">Privacy</a>
-            <a href="#" className="footer__legal-link">Terms</a>
+            <a href="#" className="footer__legal-link">{t.footerPrivacy}</a>
+            <a href="#" className="footer__legal-link">{t.footerTerms}</a>
           </div>
         </div>
       </footer>
@@ -1121,26 +1144,26 @@ export default function Home() {
       <div className={`modal${modalOpen ? ' modal--open' : ''}`} id="modal">
         <div className="modal__bg" onClick={closeModal} />
         <div className="modal__box" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef} onKeyDown={handleModalKeyDown}>
-          <button className="modal__close" id="modalClose" onClick={closeModal} aria-label="Close dialog">&times;</button>
+          <button className="modal__close" id="modalClose" onClick={closeModal} aria-label={t.modalClose}>&times;</button>
           {!modalSent ? (
             <>
-              <h3 className="modal__title" id="modal-title">Get in touch</h3>
-              <label className="sr-only" htmlFor="modalName">Full name</label>
-              <input type="text" id="modalName" className="modal__input" placeholder="Your full name" value={modalName} onChange={e => setModalName(e.target.value)} />
-              <label className="sr-only" htmlFor="modalEmail">Email address</label>
-              <input type="email" id="modalEmail" className="modal__input" placeholder="Your email" value={modalEmail} onChange={e => setModalEmail(e.target.value)} />
-              <label className="sr-only" htmlFor="modalMessage">Message</label>
-              <textarea id="modalMessage" className="modal__input modal__textarea" placeholder="What's on your mind?" value={modalMessage} onChange={e => setModalMessage(e.target.value)} rows={5} />
+              <h3 className="modal__title" id="modal-title">{t.modalTitle}</h3>
+              <label className="sr-only" htmlFor="modalName">{t.modalNameLabel}</label>
+              <input type="text" id="modalName" className="modal__input" placeholder={t.modalNamePlaceholder} value={modalName} onChange={e => setModalName(e.target.value)} />
+              <label className="sr-only" htmlFor="modalEmail">{t.modalEmailLabel}</label>
+              <input type="email" id="modalEmail" className="modal__input" placeholder={t.modalEmailPlaceholder} value={modalEmail} onChange={e => setModalEmail(e.target.value)} />
+              <label className="sr-only" htmlFor="modalMessage">{t.modalMessageLabel}</label>
+              <textarea id="modalMessage" className="modal__input modal__textarea" placeholder={t.modalMessagePlaceholder} value={modalMessage} onChange={e => setModalMessage(e.target.value)} rows={5} />
               {modalError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginTop: '8px' }}>{modalError}</p>}
               <button className="modal__btn" disabled={modalLoading || !modalEmail.trim() || !modalMessage.trim()} onClick={handleModalSubmit}>
-                {modalLoading ? 'Sending…' : 'Send message →'}
+                {modalLoading ? t.modalSending : t.modalSend}
               </button>
             </>
           ) : (
             <>
-              <h3 className="modal__title" id="modal-title">Message sent.</h3>
-              <p className="modal__msg">Thanks for reaching out! We'll get back to you soon.</p>
-              <button className="modal__btn modal__btn--done" onClick={closeModal}>Close</button>
+              <h3 className="modal__title" id="modal-title">{t.modalSentTitle}</h3>
+              <p className="modal__msg">{t.modalSentMsg}</p>
+              <button className="modal__btn modal__btn--done" onClick={closeModal}>{t.modalClose}</button>
             </>
           )}
         </div>

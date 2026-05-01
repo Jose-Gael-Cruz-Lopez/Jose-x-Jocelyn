@@ -1,24 +1,27 @@
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../../components/ArticleLayout'
 import ArticleSubscribe from '../../components/ArticleSubscribe'
+import { useT } from '../../hooks/useT'
 
 export default function First90Days() {
+  const t = useT('first90Days')
+
   const handleShare = () => {
-    if (navigator.share) navigator.share({ title: 'Your First 90 Days', url: window.location.href })
+    if (navigator.share) navigator.share({ title: t.shareTitle, url: window.location.href })
     else navigator.clipboard?.writeText(window.location.href)
   }
 
   return (
-    <ArticleLayout title="Your First 90 Days: A Survival Guide for First-Gen Professionals | La Voz del Día">
+    <ArticleLayout title={t.pageTitle}>
       <header className="art-header">
-        <span className="art-header__label art-header__label--jocelyn">Jocelyn</span>
-        <h1 className="art-header__title">Your First 90 Days: A Survival Guide for First-Gen Professionals</h1>
-        <p className="art-header__subtitle">No one teaches you how to read benefits, navigate office politics, or build a career ladder. Until now.</p>
+        <span className="art-header__label art-header__label--jocelyn">{t.headerLabel}</span>
+        <h1 className="art-header__title">{t.headerTitle}</h1>
+        <p className="art-header__subtitle">{t.headerSubtitle}</p>
         <div className="art-header__meta">
-          <img src="/images/jocelyn.jpeg" alt="Jocelyn Vazquez" className="art-header__avatar" />
+          <img src="/images/jocelyn.jpeg" alt={t.authorAlt} className="art-header__avatar" />
           <div className="art-header__author-info">
-            <span className="art-header__author-name">Jocelyn Vazquez</span>
-            <span className="art-header__date">April 2026 · 10 min read</span>
+            <span className="art-header__author-name">{t.authorName}</span>
+            <span className="art-header__date">{t.authorDate}</span>
           </div>
         </div>
       </header>
@@ -44,81 +47,74 @@ export default function First90Days() {
               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
             </svg>
-            Share
+            {t.shareBtn}
           </button>
         </div>
       </div>
 
       <article className="art-body">
-        <p>You got the job. The offer letter is signed. You're about to start your first full-time role in tech. Congratulations.</p>
-        <p>Now here's the part nobody told you about.</p>
-        <p>The first 90 days of a full-time role are the most disorienting period of your career, and it's ten times harder when you're the first person in your family to do this. There's no one at home to call when your benefits portal looks like a foreign language, when your manager gives you vague feedback, or when you realize corporate culture has its own unwritten rulebook.</p>
-        <p>I wrote this because I lived it. And I want you to walk in prepared.</p>
+        <p>{t.p1}</p>
+        <p>{t.p2}</p>
+        <p>{t.p3}</p>
+        <p>{t.p4}</p>
 
-        <h2>Before Day 1: the paperwork no one explains</h2>
+        <h2>{t.h2Before}</h2>
 
-        <h3>Benefits enrollment</h3>
-        <p>You will have a window (usually 30 days) to choose your health insurance, dental, vision, and retirement plan. Here is what to actually do:</p>
+        <h3>{t.h3Benefits}</h3>
+        <p>{t.pBenefits}</p>
         <ul>
-          <li><strong>Health insurance:</strong> If you're healthy and young, the high-deductible plan (HDHP) paired with an HSA is usually the most cost-effective. The HSA money is yours forever and grows tax-free.</li>
-          <li><strong>401(k):</strong> Contribute at least enough to get the full employer match. That is free money. If your company matches 4%, contribute 4% minimum on day one.</li>
-          <li><strong>Life and disability insurance:</strong> The basic plan your company provides for free is usually enough to start.</li>
+          {t.benefitsList.map(item => (
+            <li key={item} dangerouslySetInnerHTML={{ __html: item }} />
+          ))}
         </ul>
 
-        <h3>Equity and stock options</h3>
-        <p>If your company offers RSUs (Restricted Stock Units) or stock options, learn your vesting schedule. Most vest over 4 years with a 1-year cliff, meaning you get nothing if you leave before 12 months. This matters for career planning.</p>
+        <h3>{t.h3Equity}</h3>
+        <p>{t.pEquity}</p>
 
-        <h2>Days 1 through 30: learn, don't perform</h2>
-        <p>Your only job for the first month is to absorb. Resist the urge to prove yourself immediately. Instead:</p>
+        <h2>{t.h2Days1}</h2>
+        <p>{t.pDays1}</p>
         <ul>
-          <li><strong>Map the people.</strong> Who makes decisions? Who influences decisions but doesn't have the title? Who is respected across teams?</li>
-          <li><strong>Learn the communication style.</strong> Does your team prefer Slack or email? Are meetings where decisions happen, or just where decisions get announced?</li>
-          <li><strong>Ask questions relentlessly.</strong> You have a limited window where asking "basic" questions is expected and encouraged. Use it.</li>
-          <li><strong>Document everything.</strong> Keep a running log of what you learn, who you meet, and what processes exist. This will be invaluable later.</li>
+          {t.days1List.map(item => (
+            <li key={item} dangerouslySetInnerHTML={{ __html: item }} />
+          ))}
         </ul>
 
-        <h2>Days 30 through 60: build relationships</h2>
-        <p>The number one predictor of success in a new role is relationships, not technical skill. Schedule 1:1 coffee chats with people on your team and adjacent teams. Ask them:</p>
+        <h2>{t.h2Days30}</h2>
+        <p>{t.pDays30}</p>
         <ul>
-          <li>What is the biggest challenge the team is facing right now?</li>
-          <li>What do you wish someone had told you when you started?</li>
-          <li>What does success look like in this role from your perspective?</li>
+          {t.days30List.map(item => <li key={item}>{item}</li>)}
         </ul>
 
         <blockquote>
-          <p>Your network inside the company is your safety net. Build it before you need it.</p>
+          <p>{t.blockquote}</p>
         </blockquote>
 
-        <h2>Days 60 through 90: deliver and communicate</h2>
-        <p>By now you should have a clear picture of where you can contribute. Pick one project or area and deliver a visible win. It doesn't have to be huge. It has to be clear, complete, and communicated.</p>
+        <h2>{t.h2Days60}</h2>
+        <p>{t.pDays60}</p>
 
-        <h3>The communication part matters most</h3>
-        <p>In corporate environments, work that isn't visible doesn't count. Send a brief update to your manager about what you delivered. Mention it in your team standup. This isn't bragging. It's how the game works.</p>
+        <h3>{t.h3Comms}</h3>
+        <p>{t.pComms}</p>
 
-        <h2>Things I wish someone had told me</h2>
+        <h2>{t.h2Wishes}</h2>
         <ul>
-          <li>Imposter syndrome is normal. It does not mean you don't belong.</li>
-          <li>You will not understand everything in every meeting. That's fine. Write down what confused you and look it up later.</li>
-          <li>Saying "I don't know, but I'll find out" is always better than pretending.</li>
-          <li>Your manager is not your parent. They want to help you succeed because it makes them look good. Use that alignment.</li>
-          <li>Corporate culture rewards visibility. Do good work, and make sure people know about it.</li>
+          {t.wishesList.map(item => <li key={item}>{item}</li>)}
         </ul>
 
-        <p>Your first 90 days set the foundation for everything that follows. Take them seriously, but don't take yourself too seriously. You earned this seat. Now make it yours.</p>
+        <p>{t.pClose}</p>
       </article>
 
       <ArticleSubscribe source="article_first_90_days" />
 
       <section className="art-recs">
-        <h3 className="art-recs__title">Recommended reading</h3>
+        <h3 className="art-recs__title">{t.recsTitle}</h3>
         <div className="art-recs__grid">
           <Link to="/articles/negotiate-salary" className="art-recs__card">
-            <div className="art-recs__card-tag">Jocelyn</div>
-            <h4 className="art-recs__card-title">How to Negotiate When You've Never Seen a Six-Figure Salary</h4>
+            <div className="art-recs__card-tag">{t.rec1Tag}</div>
+            <h4 className="art-recs__card-title">{t.rec1Title}</h4>
           </Link>
           <Link to="/articles/rejection" className="art-recs__card">
-            <div className="art-recs__card-tag">Both</div>
-            <h4 className="art-recs__card-title">Rejection Doesn't Mean You Did It Wrong</h4>
+            <div className="art-recs__card-tag">{t.rec2Tag}</div>
+            <h4 className="art-recs__card-title">{t.rec2Title}</h4>
           </Link>
         </div>
       </section>
