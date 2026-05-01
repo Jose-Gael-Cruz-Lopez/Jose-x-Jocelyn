@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
+import { useT } from '../hooks/useT'
 
 const FEATURED = [
   {
@@ -109,14 +110,7 @@ const MAIN_CARDS = [
   },
 ]
 
-const TABS = [
-  { key: 'all', label: 'All' },
-  { key: 'internship', label: 'Internships' },
-  { key: 'apprenticeship', label: 'Apprenticeships & Fellowships' },
-  { key: 'new-grad', label: 'New Grad / Early Career' },
-  { key: 'program', label: 'Campus Programs & Scholarships' },
-  { key: 'bridge', label: 'Bridge Year Friendly' },
-]
+const TAB_KEYS = ['all', 'internship', 'apprenticeship', 'new-grad', 'program', 'bridge']
 
 function matchCard(card, { tab, query, stage, location, deadline }) {
   if (tab !== 'all') {
@@ -164,11 +158,11 @@ function dbOpportunityToCard(row) {
   }
 }
 
-function OBCard({ card, featured }) {
+function OBCard({ card, featured, t }) {
   const isExternal = card.postLink.startsWith('http')
   return (
     <article className={`ob-card${featured ? ' featured' : ''}`}>
-      {featured && <span className="ob-card__featured-badge">Featured</span>}
+      {featured && <span className="ob-card__featured-badge">{t.cardFeaturedBadge}</span>}
       <div className="ob-card__top">
         <div className="ob-card__company-logo" style={card.logoStyle}>{card.logo}</div>
         <span className={`ob-card__deadline${card.deadlineCls ? ' ' + card.deadlineCls : ''}`}>{card.deadlineLabel}</span>
@@ -178,7 +172,7 @@ function OBCard({ card, featured }) {
         <div className="ob-card__company">{card.company}</div>
       </div>
       <div className="ob-card__tags">
-        {card.tags.map(t => <span key={t.l} className={`ob-tag ${t.c}`}>{t.l}</span>)}
+        {card.tags.map(tag => <span key={tag.l} className={`ob-tag ${tag.c}`}>{tag.l}</span>)}
       </div>
       <div className="ob-card__meta">
         {card.meta.map(m => { const chars = [...m]; return <span key={m} className="ob-card__meta-item"><span aria-hidden="true">{chars[0]}</span>{chars.slice(1).join('')}</span> })}
@@ -186,7 +180,7 @@ function OBCard({ card, featured }) {
       <div className="ob-card__desc">{card.desc}</div>
       <div className="ob-card__source"><span className="ob-card__source-dot"></span> {card.source}</div>
       <div className="ob-card__actions">
-        <a href={card.viewLink} className="ob-card__cta-primary" target="_blank" rel="noopener">View role ↗</a>
+        <a href={card.viewLink} className="ob-card__cta-primary" target="_blank" rel="noopener">{t.cardViewRole}</a>
         {isExternal
           ? <a href={card.postLink} className="ob-card__cta-secondary" target="_blank" rel="noopener">{card.postLabel}</a>
           : <Link to={card.postLink} className="ob-card__cta-secondary">{card.postLabel}</Link>
@@ -197,6 +191,7 @@ function OBCard({ card, featured }) {
 }
 
 export default function OpportunityBoard() {
+  const t = useT('opportunityBoard')
   const [tab, setTab] = useState('all')
   const [search, setSearch] = useState('')
   const [stage, setStage] = useState('')
@@ -231,7 +226,7 @@ export default function OpportunityBoard() {
     e.preventDefault()
     const { role, company, type, link, why } = form
     if (!role || !company || !type || !link || !why) {
-      setFormError('Please fill in all required fields before submitting.')
+      setFormError(t.formErrorRequired)
       return
     }
     setFormLoading(true)
@@ -251,11 +246,17 @@ export default function OpportunityBoard() {
     })
     setFormLoading(false)
     if (error) {
-      setFormError('Something went wrong. Please try again.')
+      setFormError(t.formErrorGeneric)
     } else {
       setFormSubmitted(true)
     }
   }
+
+  const SOURCE_ITEM_STYLES = [
+    {},
+    { background: 'rgba(22,43,68,.1)', color: 'var(--color-navy)' },
+    { background: 'rgba(232,168,56,.12)', color: 'var(--color-gold-dark)' },
+  ]
 
   return (
     <ArticleLayout title="Opportunity Board">
@@ -396,16 +397,16 @@ export default function OpportunityBoard() {
       `}</style>
 
       <header className="ob-hero" id="top">
-        <p className="ob-hero__kicker">From Campus to Career · Curated Roles</p>
-        <h1 className="ob-hero__title">Opportunity <em>Board</em></h1>
-        <p className="ob-hero__sub">A living board of internships, apprenticeships, new grad roles, and programs curated by J&amp;J.</p>
+        <p className="ob-hero__kicker">{t.heroKicker}</p>
+        <h1 className="ob-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
+        <p className="ob-hero__sub">{t.heroSub}</p>
         <p className="ob-hero__body">
-          Every week, Jose and Jocelyn surface roles, programs, and apprenticeships on LinkedIn - from TikTok internship alerts to Pinterest apprenticeships to local research fellowships. The Opportunity Board pulls those into one place, with filters that actually make sense for students and early-career talent: stage, role type, eligibility, and timeline. <strong>This is where you go when you want to stop scrolling random feeds</strong> and start seeing concrete options that match where you are in the campus-to-career journey.
+          {t.heroBody1} <strong>{t.heroBodyStrong}</strong>{t.heroBody2}
         </p>
         <div className="ob-hero__stats">
-          <div><div className="ob-hero__stat-num">10<em>+</em></div><div className="ob-hero__stat-label">Live opportunities</div></div>
-          <div><div className="ob-hero__stat-num">5</div><div className="ob-hero__stat-label">Categories</div></div>
-          <div><div className="ob-hero__stat-num">100<em>%</em></div><div className="ob-hero__stat-label">Curated by J&amp;J</div></div>
+          <div><div className="ob-hero__stat-num">{t.heroStatNum1}<em>{t.heroStatNumEm1}</em></div><div className="ob-hero__stat-label">{t.heroStatLabel1}</div></div>
+          <div><div className="ob-hero__stat-num">{t.heroStatNum2}</div><div className="ob-hero__stat-label">{t.heroStatLabel2}</div></div>
+          <div><div className="ob-hero__stat-num">{t.heroStatNum3}<em>{t.heroStatNumEm3}</em></div><div className="ob-hero__stat-label">{t.heroStatLabel3}</div></div>
         </div>
       </header>
 
@@ -413,15 +414,18 @@ export default function OpportunityBoard() {
 
       <section className="ob-board" id="board">
         <div className="ob-board__head">
-          <p className="ob-kicker">Section 01</p>
-          <h2 className="ob-section-title">Browse Opportunities</h2>
-          <p className="ob-section-sub">Filter by type, stage, eligibility, or just search.</p>
+          <p className="ob-kicker">{t.boardKicker}</p>
+          <h2 className="ob-section-title">{t.boardTitle}</h2>
+          <p className="ob-section-sub">{t.boardSub}</p>
         </div>
 
-        <div className="ob-tabs" role="group" aria-label="Filter by type">
-          {TABS.map(t => (
-            <button key={t.key} id={`ob-tab-${t.key}`} className={`ob-tab${tab === t.key ? ' active' : ''}`} aria-pressed={tab === t.key} onClick={() => setTab(t.key)}>{t.label}</button>
-          ))}
+        <div className="ob-tabs" role="group" aria-label={t.tabGroupAriaLabel}>
+          {TAB_KEYS.map(key => {
+            const labelMap = { all: t.tabAll, internship: t.tabInternship, apprenticeship: t.tabApprenticeship, 'new-grad': t.tabNewGrad, program: t.tabProgram, bridge: t.tabBridge }
+            return (
+              <button key={key} id={`ob-tab-${key}`} className={`ob-tab${tab === key ? ' active' : ''}`} aria-pressed={tab === key} onClick={() => setTab(key)}>{labelMap[key]}</button>
+            )
+          })}
         </div>
 
         <div className="ob-filter-bar">
@@ -430,54 +434,54 @@ export default function OpportunityBoard() {
               <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5"/>
               <path d="M10 10L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
-            <input type="text" className="ob-search" placeholder="Search opportunities, companies, or keywords…" aria-label="Search opportunities" autoComplete="off" value={search} onChange={e => setSearch(e.target.value)} />
+            <input type="text" className="ob-search" placeholder={t.searchPlaceholder} aria-label={t.searchAriaLabel} autoComplete="off" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
-          <select className="ob-filter-select" aria-label="Stage" value={stage} onChange={e => setStage(e.target.value)}>
-            <option value="">All Stages</option>
-            <option value="first-second">First / Second Year</option>
-            <option value="junior">Junior</option>
-            <option value="senior">Senior</option>
-            <option value="recent-grad">Recent Grad</option>
-            <option value="transition">Career Transition</option>
-            <option value="phd">PhD</option>
+          <select className="ob-filter-select" aria-label={t.filterStageAriaLabel} value={stage} onChange={e => setStage(e.target.value)}>
+            <option value="">{t.filterStageAll}</option>
+            <option value="first-second">{t.filterStageFirstSecond}</option>
+            <option value="junior">{t.filterStageJunior}</option>
+            <option value="senior">{t.filterStageSenior}</option>
+            <option value="recent-grad">{t.filterStageRecentGrad}</option>
+            <option value="transition">{t.filterStageTransition}</option>
+            <option value="phd">{t.filterStagePhD}</option>
           </select>
-          <select className="ob-filter-select" aria-label="Location" value={location} onChange={e => setLocation(e.target.value)}>
-            <option value="">All Locations</option>
-            <option value="remote">Remote</option>
-            <option value="us">US</option>
-            <option value="canada">Canada</option>
-            <option value="international">International</option>
+          <select className="ob-filter-select" aria-label={t.filterLocationAriaLabel} value={location} onChange={e => setLocation(e.target.value)}>
+            <option value="">{t.filterLocationAll}</option>
+            <option value="remote">{t.filterLocationRemote}</option>
+            <option value="us">{t.filterLocationUS}</option>
+            <option value="canada">{t.filterLocationCanada}</option>
+            <option value="international">{t.filterLocationInternational}</option>
           </select>
-          <select className="ob-filter-select" aria-label="Deadline" value={deadline} onChange={e => setDeadline(e.target.value)}>
-            <option value="">Any Deadline</option>
-            <option value="this-week">This Week</option>
-            <option value="this-month">This Month</option>
-            <option value="rolling">Rolling</option>
+          <select className="ob-filter-select" aria-label={t.filterDeadlineAriaLabel} value={deadline} onChange={e => setDeadline(e.target.value)}>
+            <option value="">{t.filterDeadlineAny}</option>
+            <option value="this-week">{t.filterDeadlineThisWeek}</option>
+            <option value="this-month">{t.filterDeadlineThisMonth}</option>
+            <option value="rolling">{t.filterDeadlineRolling}</option>
           </select>
         </div>
 
-        <div className="ob-results-count"><span>{totalVisible}</span>&nbsp;opportunities shown</div>
+        <div className="ob-results-count"><span>{totalVisible}</span>&nbsp;{t.opportunitiesShown}</div>
 
         {visibleFeatured.length > 0 && (
           <div className="ob-featured-strip">
-            <p className="ob-featured-label">Featured - closing soon or especially strong for first-gen students</p>
+            <p className="ob-featured-label">{t.featuredLabel}</p>
             <div className="ob-featured-grid">
-              {visibleFeatured.map(c => <OBCard key={c.id} card={c} featured />)}
+              {visibleFeatured.map(c => <OBCard key={c.id} card={c} featured t={t} />)}
             </div>
           </div>
         )}
 
         <div className="ob-main-grid">
           {visibleMain.length === 0 && visibleFeatured.length === 0
-            ? <p className="ob-no-results">No opportunities match your filters. Try adjusting your search or tab.</p>
-            : visibleMain.map(c => <OBCard key={c.id} card={c} featured={false} />)
+            ? <p className="ob-no-results">{t.noResults}</p>
+            : visibleMain.map(c => <OBCard key={c.id} card={c} featured={false} t={t} />)
           }
         </div>
 
         <div className="ob-archive-strip">
           <p className="ob-archive-label">
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ flexShrink: 0, color: 'var(--color-muted)' }}><rect x="1" y="4" width="12" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M5 4V3a2 2 0 1 1 4 0v1" stroke="currentColor" strokeWidth="1.3"/></svg>
-            Just closed - keep an eye out next cycle
+            {t.archiveLabel}
           </p>
           <div className="ob-archive-grid">
             {[
@@ -493,9 +497,9 @@ export default function OpportunityBoard() {
                   <div className="ob-card__title">{a.title}</div>
                   <div className="ob-card__company">{a.company}</div>
                 </div>
-                <div className="ob-card__tags">{a.tags.map(t => <span key={t} className="ob-tag ob-tag--muted">{t}</span>)}</div>
+                <div className="ob-card__tags">{a.tags.map(tag => <span key={tag} className="ob-tag ob-tag--muted">{tag}</span>)}</div>
                 <div className="ob-card__desc">{a.desc}</div>
-                <div className="ob-card__source"><span className="ob-card__source-dot" style={{ background: 'var(--color-muted)' }}></span> J&amp;J LinkedIn post</div>
+                <div className="ob-card__source"><span className="ob-card__source-dot" style={{ background: 'var(--color-muted)' }}></span> {t.archiveSource}</div>
               </article>
             ))}
           </div>
@@ -505,22 +509,18 @@ export default function OpportunityBoard() {
       <hr className="ob-divider" />
 
       <section className="ob-source" id="source">
-        <p className="ob-kicker">Section 02</p>
-        <h2 className="ob-section-title">Where these opportunities come from</h2>
-        <p className="ob-section-sub">Not scraped, not auto-filled. Every listing starts with a human decision.</p>
+        <p className="ob-kicker">{t.sourceKicker}</p>
+        <h2 className="ob-section-title">{t.sourceTitle}</h2>
+        <p className="ob-section-sub">{t.sourceSub}</p>
         <div className="ob-source__layout">
           <div>
-            <p className="ob-source__body">The board is not scraped from the internet or auto-filled from job APIs. <strong>Every listing begins as a role Jose or Jocelyn has found, vetted, and shared</strong> - usually on LinkedIn - or as a program surfaced on the Bridge Year Hub.</p>
-            <p className="ob-source__body" style={{ marginTop: '16px' }}>When you see something here, you know it has already passed a basic <strong>"would we send this to our own friends?"</strong> filter. We don't post roles we wouldn't apply to ourselves or recommend to a first-gen student still figuring things out.</p>
+            <p className="ob-source__body">{t.sourceBody1Part1} <strong>{t.sourceBody1Strong}</strong>{t.sourceBody1Part2}</p>
+            <p className="ob-source__body" style={{ marginTop: '16px' }}>{t.sourceBody2Part1} <strong>{t.sourceBody2Strong}</strong>{t.sourceBody2Part2}</p>
           </div>
           <div className="ob-source__list">
-            {[
-              { icon: 'JJ', style: {}, title: 'J&J LinkedIn posts', desc: 'Jose and Jocelyn post roles weekly. The board pulls those into one searchable place so nothing gets buried in the feed.' },
-              { icon: 'BY', style: { background: 'rgba(22,43,68,.1)', color: 'var(--color-navy)' }, title: 'Bridge Year Hub', desc: 'Apprenticeships and programs from the Bridge Year Hub are cross-listed here, tagged as Bridge Year Friendly.' },
-              { icon: 'CM', style: { background: 'rgba(232,168,56,.12)', color: 'var(--color-gold-dark)' }, title: 'Community submissions', desc: 'Roles submitted by the community that pass our review filter. Use the form below to suggest something we should add.' },
-            ].map(s => (
+            {t.sourceItems.map((s, i) => (
               <div key={s.title} className="ob-source__item">
-                <span className="ob-source__item-icon" style={s.style}>{s.icon}</span>
+                <span className="ob-source__item-icon" style={SOURCE_ITEM_STYLES[i]}>{s.icon}</span>
                 <div>
                   <div className="ob-source__item-title">{s.title}</div>
                   <div className="ob-source__item-desc">{s.desc}</div>
@@ -536,72 +536,76 @@ export default function OpportunityBoard() {
       <section className="ob-submit" id="submit">
         <div className="ob-submit__layout">
           <div>
-            <p className="ob-submit__intro-kicker">Section 03</p>
-            <h2 className="ob-submit__intro-title">Know an opportunity we should add?</h2>
-            <p className="ob-submit__intro-body">We don't see everything. If you come across an internship, apprenticeship, new grad role, fellowship, or campus program that would be <strong>especially helpful for first-gen and early-career students</strong>, send it our way.</p>
+            <p className="ob-submit__intro-kicker">{t.submitKicker}</p>
+            <h2 className="ob-submit__intro-title">{t.submitTitle}</h2>
+            <p className="ob-submit__intro-body">{t.submitBody} <strong>{t.submitBodyStrong}</strong>{t.submitBodySuffix}</p>
           </div>
           <div className="ob-form-box">
             {formSubmitted ? (
               <div className="ob-form-success">
                 <div className="ob-form-success__icon">✓</div>
-                <div className="ob-form-success__title">Received - thank you!</div>
-                <p className="ob-form-success__body">We'll review your submission and reach out if we add it to the board. Community submissions are how the board stays current.</p>
+                <div className="ob-form-success__title">{t.formSuccessTitle}</div>
+                <p className="ob-form-success__body">{t.formSuccessBody}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
                 <div className="ob-form-row">
-                  <label className="ob-form-label" htmlFor="obRoleName">Role / Program Name <span>*</span></label>
-                  <input className="ob-form-input" type="text" id="obRoleName" placeholder="e.g. STEP Internship - Software Engineering" value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} />
+                  <label className="ob-form-label" htmlFor="obRoleName">{t.formLabelRole} <span>{t.formLabelRoleRequired}</span></label>
+                  <input className="ob-form-input" type="text" id="obRoleName" placeholder={t.formPlaceholderRole} value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} />
                 </div>
                 <div className="ob-form-row ob-form-row-2">
                   <div>
-                    <label className="ob-form-label" htmlFor="obCompany">Company / Organization <span>*</span></label>
-                    <input className="ob-form-input" type="text" id="obCompany" placeholder="e.g. Google" value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} />
+                    <label className="ob-form-label" htmlFor="obCompany">{t.formLabelCompany} <span>{t.formLabelCompanyRequired}</span></label>
+                    <input className="ob-form-input" type="text" id="obCompany" placeholder={t.formPlaceholderCompany} value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} />
                   </div>
                   <div>
-                    <label className="ob-form-label" htmlFor="obRoleType">Role Type <span>*</span></label>
+                    <label className="ob-form-label" htmlFor="obRoleType">{t.formLabelType} <span>{t.formLabelTypeRequired}</span></label>
                     <select className="ob-form-select" id="obRoleType" value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
-                      <option value="">Select type…</option>
-                      <option>Internship</option><option>Apprenticeship</option><option>New Grad</option>
-                      <option>Fellowship</option><option>Program</option><option>Scholarship</option>
+                      <option value="">{t.formTypeDefault}</option>
+                      <option>{t.formTypeInternship}</option>
+                      <option>{t.formTypeApprenticeship}</option>
+                      <option>{t.formTypeNewGrad}</option>
+                      <option>{t.formTypeFellowship}</option>
+                      <option>{t.formTypeProgram}</option>
+                      <option>{t.formTypeScholarship}</option>
                     </select>
                   </div>
                 </div>
                 <div className="ob-form-row">
-                  <label className="ob-form-label" htmlFor="obLink">Link to Job Description / Program Page <span>*</span></label>
-                  <input className="ob-form-input" type="url" id="obLink" placeholder="https://…" value={form.link} onChange={e => setForm(f => ({ ...f, link: e.target.value }))} />
+                  <label className="ob-form-label" htmlFor="obLink">{t.formLabelLink} <span>{t.formLabelLinkRequired}</span></label>
+                  <input className="ob-form-input" type="url" id="obLink" placeholder={t.formPlaceholderLink} value={form.link} onChange={e => setForm(f => ({ ...f, link: e.target.value }))} />
                 </div>
                 <div className="ob-form-row ob-form-row-2">
                   <div>
-                    <label className="ob-form-label" htmlFor="obDeadline">Application Deadline</label>
-                    <input className="ob-form-input" type="text" id="obDeadline" placeholder="e.g. May 15, or Rolling" value={form.deadline} onChange={e => setForm(f => ({ ...f, deadline: e.target.value }))} />
+                    <label className="ob-form-label" htmlFor="obDeadline">{t.formLabelDeadline}</label>
+                    <input className="ob-form-input" type="text" id="obDeadline" placeholder={t.formPlaceholderDeadline} value={form.deadline} onChange={e => setForm(f => ({ ...f, deadline: e.target.value }))} />
                   </div>
                   <div>
-                    <label className="ob-form-label" htmlFor="obEligibility">Eligibility Notes</label>
-                    <input className="ob-form-input" type="text" id="obEligibility" placeholder="e.g. Open to non-CS, US only" value={form.eligibility} onChange={e => setForm(f => ({ ...f, eligibility: e.target.value }))} />
+                    <label className="ob-form-label" htmlFor="obEligibility">{t.formLabelEligibility}</label>
+                    <input className="ob-form-input" type="text" id="obEligibility" placeholder={t.formPlaceholderEligibility} value={form.eligibility} onChange={e => setForm(f => ({ ...f, eligibility: e.target.value }))} />
                   </div>
                 </div>
                 <div className="ob-form-row ob-form-row-2">
                   <div>
-                    <label className="ob-form-label" htmlFor="obLocation">Location</label>
-                    <input className="ob-form-input" type="text" id="obLocation" placeholder="e.g. Remote / US, New York, Hybrid" value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} />
+                    <label className="ob-form-label" htmlFor="obLocation">{t.formLabelLocation}</label>
+                    <input className="ob-form-input" type="text" id="obLocation" placeholder={t.formPlaceholderLocation} value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} />
                   </div>
                   <div>
-                    <label className="ob-form-label" htmlFor="obPay">Pay / Compensation</label>
-                    <input className="ob-form-input" type="text" id="obPay" placeholder="e.g. $45/hr, $7,500/mo, Paid" value={form.pay} onChange={e => setForm(f => ({ ...f, pay: e.target.value }))} />
+                    <label className="ob-form-label" htmlFor="obPay">{t.formLabelPay}</label>
+                    <input className="ob-form-input" type="text" id="obPay" placeholder={t.formPlaceholderPay} value={form.pay} onChange={e => setForm(f => ({ ...f, pay: e.target.value }))} />
                   </div>
                 </div>
                 <div className="ob-form-row">
-                  <label className="ob-form-label" htmlFor="obWhy">Why does it belong here? <span>*</span></label>
-                  <textarea className="ob-form-textarea" id="obWhy" placeholder="Who is it especially good for? What makes it worth highlighting for first-gen or early-career students?" value={form.why} onChange={e => setForm(f => ({ ...f, why: e.target.value }))}></textarea>
+                  <label className="ob-form-label" htmlFor="obWhy">{t.formLabelWhy} <span>{t.formLabelWhyRequired}</span></label>
+                  <textarea className="ob-form-textarea" id="obWhy" placeholder={t.formPlaceholderWhy} value={form.why} onChange={e => setForm(f => ({ ...f, why: e.target.value }))}></textarea>
                 </div>
                 <div className="ob-form-row">
-                  <label className="ob-form-label" htmlFor="obEmail">Your Email <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional)</span></label>
-                  <input className="ob-form-input" type="email" id="obEmail" placeholder="your@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+                  <label className="ob-form-label" htmlFor="obEmail">{t.formLabelEmail} <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.formEmailOptional}</span></label>
+                  <input className="ob-form-input" type="email" id="obEmail" placeholder={t.formPlaceholderEmail} value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
                 </div>
                 {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{formError}</p>}
                 <button className="ob-form-btn" type="submit" disabled={formLoading}>
-                  {formLoading ? 'Submitting…' : 'Submit this opportunity'}
+                  {formLoading ? t.formSubmitting : t.formSubmit}
                 </button>
               </form>
             )}
@@ -613,17 +617,11 @@ export default function OpportunityBoard() {
 
       <section className="ob-eco">
         <div className="ob-eco__inner">
-          <p className="ob-eco__kicker">The J&amp;J Ecosystem</p>
-          <h2 className="ob-eco__title">The board tells you what's open. The rest of the system helps you get there.</h2>
-          <p className="ob-eco__body">The Opportunity Board tells you what is open. The Bridge Year Hub helps you figure out which options make sense for your timeline. The Career Templates page gives you the scripts and trackers to actually apply.</p>
+          <p className="ob-eco__kicker">{t.ecoKicker}</p>
+          <h2 className="ob-eco__title">{t.ecoTitle}</h2>
+          <p className="ob-eco__body">{t.ecoBody}</p>
           <div className="ob-eco__grid">
-            {[
-              { to: '/bridge-year', title: 'Bridge Year Hub', desc: "Your path when the offer didn't come yet" },
-              { to: '/career-templates', title: 'Career Templates', desc: 'Scripts & trackers for outreach & applications' },
-              { to: '/interview-prep', title: 'Interview Prep Hub', desc: 'Structured prep for every stage and interview type' },
-              { to: '/coffee-chat', title: 'Coffee Chat Network', desc: "Connect with people who've walked this path" },
-              { to: '/articles', title: 'La Voz del Día', desc: 'Weekly essays on careers, identity & early-career life' },
-            ].map(l => (
+            {t.ecoLinks.map(l => (
               <Link key={l.to} to={l.to} className="ob-eco__link">
                 <div className="ob-eco__link-title">{l.title}</div>
                 <div className="ob-eco__link-desc">{l.desc}</div>

@@ -1020,4 +1020,154 @@ export const es = {
     modalCopied: '¡Copiado!',
     modalClose: 'Cerrar',
   },
+
+  opportunityBoard: {
+    // ── Hero ─────────────────────────────────────────────────────────────
+    heroKicker: 'Del Campus a la Carrera · Roles Seleccionados',
+    heroTitle: 'Tablero de',
+    heroTitleEm: 'Oportunidades',
+    heroSub: 'Un tablero vivo de pasantías, aprendizajes, roles para recién graduados y programas seleccionados por J&J.',
+    heroBody1: 'Cada semana, Jose y Jocelyn destacan roles, programas y aprendizajes en LinkedIn — desde alertas de pasantías en TikTok hasta aprendizajes en Pinterest y becas de investigación locales. El Tablero de Oportunidades los reúne en un solo lugar, con filtros que realmente tienen sentido para estudiantes y talento al inicio de carrera: etapa, tipo de rol, elegibilidad y tiempo.',
+    heroBodyStrong: 'Aquí es donde vas cuando quieres dejar de desplazarte por feeds aleatorios',
+    heroBody2: ' y empezar a ver opciones concretas que coincidan con donde estás en tu camino del campus a la carrera.',
+    heroStatNum1: '10',
+    heroStatNumEm1: '+',
+    heroStatLabel1: 'Oportunidades activas',
+    heroStatNum2: '5',
+    heroStatLabel2: 'Categorías',
+    heroStatNum3: '100',
+    heroStatNumEm3: '%',
+    heroStatLabel3: 'Seleccionadas por J&J',
+
+    // ── Board section ─────────────────────────────────────────────────────
+    boardKicker: 'Sección 01',
+    boardTitle: 'Explorar Oportunidades',
+    boardSub: 'Filtra por tipo, etapa, elegibilidad o simplemente busca.',
+
+    // Tabs
+    tabAll: 'Todas',
+    tabInternship: 'Pasantías',
+    tabApprenticeship: 'Aprendizajes y Becas',
+    tabNewGrad: 'Recién Graduado / Inicio de Carrera',
+    tabProgram: 'Programas Universitarios y Becas',
+    tabBridge: 'Amigable con el Año Puente',
+    tabGroupAriaLabel: 'Filtrar por tipo',
+
+    // Search & filters
+    searchPlaceholder: 'Buscar oportunidades, empresas o palabras clave…',
+    searchAriaLabel: 'Buscar oportunidades',
+    filterStageAriaLabel: 'Etapa',
+    filterStageAll: 'Todas las Etapas',
+    filterStageFirstSecond: 'Primero / Segundo Año',
+    filterStageJunior: 'Junior',
+    filterStageSenior: 'Senior',
+    filterStageRecentGrad: 'Recién Graduado',
+    filterStageTransition: 'Transición de Carrera',
+    filterStagePhD: 'Doctorado',
+    filterLocationAriaLabel: 'Ubicación',
+    filterLocationAll: 'Todas las Ubicaciones',
+    filterLocationRemote: 'Remoto',
+    filterLocationUS: 'EE. UU.',
+    filterLocationCanada: 'Canadá',
+    filterLocationInternational: 'Internacional',
+    filterDeadlineAriaLabel: 'Fecha límite',
+    filterDeadlineAny: 'Cualquier Fecha Límite',
+    filterDeadlineThisWeek: 'Esta Semana',
+    filterDeadlineThisMonth: 'Este Mes',
+    filterDeadlineRolling: 'Convocatoria Abierta',
+
+    // Results count
+    opportunitiesShown: 'oportunidades mostradas',
+
+    // Featured strip
+    featuredLabel: 'Destacadas - cierra pronto o especialmente buenas para estudiantes de primera generación',
+
+    // Card UI
+    cardFeaturedBadge: 'Destacada',
+    cardViewRole: 'Ver rol ↗',
+
+    // No results
+    noResults: 'Ninguna oportunidad coincide con tus filtros. Intenta ajustar tu búsqueda o pestaña.',
+
+    // Archive strip
+    archiveLabel: 'Recién cerradas - mantente al tanto para el próximo ciclo',
+    archiveSource: 'Publicación de LinkedIn de J&J',
+
+    // ── Source section ────────────────────────────────────────────────────
+    sourceKicker: 'Sección 02',
+    sourceTitle: 'De dónde vienen estas oportunidades',
+    sourceSub: 'No son extraídas automáticamente. Cada listado comienza con una decisión humana.',
+    sourceBody1Part1: 'El tablero no extrae datos de internet ni se llena automáticamente con APIs de empleos.',
+    sourceBody1Strong: 'Cada listado comienza como un rol que Jose o Jocelyn ha encontrado, verificado y compartido',
+    sourceBody1Part2: ' — generalmente en LinkedIn — o como un programa descubierto en el Hub del Año Puente.',
+    sourceBody2Part1: 'Cuando ves algo aquí, sabes que ya pasó un filtro básico de',
+    sourceBody2Strong: '"¿lo enviaríamos a nuestros propios amigos?"',
+    sourceBody2Part2: '. No publicamos roles que no solicitaríamos nosotros mismos ni recomendaríamos a un estudiante de primera generación que aún está encontrando su camino.',
+    sourceItems: [
+      { icon: 'JJ', title: 'Publicaciones de LinkedIn de J&J', desc: 'Jose y Jocelyn publican roles semanalmente. El tablero los reúne en un lugar con búsqueda para que nada se pierda en el feed.' },
+      { icon: 'BY', title: 'Hub del Año Puente', desc: 'Los aprendizajes y programas del Hub del Año Puente se listan aquí también, etiquetados como Amigable con el Año Puente.' },
+      { icon: 'CM', title: 'Envíos de la comunidad', desc: 'Roles enviados por la comunidad que pasan nuestro filtro de revisión. Usa el formulario de abajo para sugerir algo que deberíamos agregar.' },
+    ],
+
+    // ── Submit section ────────────────────────────────────────────────────
+    submitKicker: 'Sección 03',
+    submitTitle: '¿Conoces una oportunidad que deberíamos agregar?',
+    submitBody: 'No lo vemos todo. Si encuentras una pasantía, aprendizaje, rol para recién graduado, beca o programa universitario que sería',
+    submitBodyStrong: 'especialmente útil para estudiantes de primera generación y al inicio de carrera',
+    submitBodySuffix: ', háznoslo saber.',
+
+    // Form labels & placeholders
+    formLabelRole: 'Nombre del Rol / Programa',
+    formLabelRoleRequired: '*',
+    formPlaceholderRole: 'ej. Pasantía STEP - Ingeniería de Software',
+    formLabelCompany: 'Empresa / Organización',
+    formLabelCompanyRequired: '*',
+    formPlaceholderCompany: 'ej. Google',
+    formLabelType: 'Tipo de Rol',
+    formLabelTypeRequired: '*',
+    formTypeDefault: 'Selecciona tipo…',
+    formTypeInternship: 'Pasantía',
+    formTypeApprenticeship: 'Aprendizaje',
+    formTypeNewGrad: 'Recién Graduado',
+    formTypeFellowship: 'Beca de formación',
+    formTypeProgram: 'Programa',
+    formTypeScholarship: 'Beca',
+    formLabelLink: 'Enlace a la Descripción del Puesto / Página del Programa',
+    formLabelLinkRequired: '*',
+    formPlaceholderLink: 'https://…',
+    formLabelDeadline: 'Fecha Límite de Solicitud',
+    formPlaceholderDeadline: 'ej. 15 de mayo, o Convocatoria abierta',
+    formLabelEligibility: 'Notas de Elegibilidad',
+    formPlaceholderEligibility: 'ej. Abierto a no-CS, solo EE. UU.',
+    formLabelLocation: 'Ubicación',
+    formPlaceholderLocation: 'ej. Remoto / EE. UU., Nueva York, Híbrido',
+    formLabelPay: 'Salario / Compensación',
+    formPlaceholderPay: 'ej. $45/hr, $7,500/mes, Pagado',
+    formLabelWhy: '¿Por qué pertenece aquí?',
+    formLabelWhyRequired: '*',
+    formPlaceholderWhy: '¿Para quién es especialmente bueno? ¿Qué lo hace valioso para estudiantes de primera generación o al inicio de carrera?',
+    formLabelEmail: 'Tu Correo Electrónico',
+    formEmailOptional: '(opcional)',
+    formPlaceholderEmail: 'tu@correo.com',
+    formErrorRequired: 'Por favor completa todos los campos requeridos antes de enviar.',
+    formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    formSubmit: 'Enviar esta oportunidad',
+    formSubmitting: 'Enviando…',
+
+    // Form success
+    formSuccessTitle: '¡Recibido, gracias!',
+    formSuccessBody: 'Revisaremos tu envío y te avisaremos si lo agregamos al tablero. Los envíos de la comunidad son lo que mantiene el tablero actualizado.',
+
+    // ── Ecosystem section ─────────────────────────────────────────────────
+    ecoKicker: 'El Ecosistema J&J',
+    ecoTitle: 'El tablero te dice qué está abierto. El resto del sistema te ayuda a llegar ahí.',
+    ecoBody: 'El Tablero de Oportunidades te dice qué está abierto. El Hub del Año Puente te ayuda a descubrir qué opciones tienen sentido para tu cronograma. La página de Plantillas de Carrera te da los scripts y rastreadores para realmente aplicar.',
+    ecoLinks: [
+      { to: '/bridge-year',       title: 'Hub del Año Puente',    desc: 'Tu camino cuando la oferta aún no llegó' },
+      { to: '/career-templates',  title: 'Plantillas de Carrera', desc: 'Scripts y rastreadores para contactos y solicitudes' },
+      { to: '/interview-prep',    title: 'Hub de Preparación para Entrevistas', desc: 'Preparación estructurada para cada etapa y tipo de entrevista' },
+      { to: '/coffee-chat',       title: 'Red de Conversaciones Informativas', desc: 'Conecta con personas que han recorrido este camino' },
+      { to: '/articles',          title: 'La Voz del Día',        desc: 'Ensayos semanales sobre carreras, identidad y vida al inicio de carrera' },
+    ],
+  },
 }

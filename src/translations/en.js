@@ -1020,4 +1020,154 @@ export const en = {
     modalCopied: 'Copied!',
     modalClose: 'Close',
   },
+
+  opportunityBoard: {
+    // ── Hero ─────────────────────────────────────────────────────────────
+    heroKicker: 'From Campus to Career · Curated Roles',
+    heroTitle: 'Opportunity',
+    heroTitleEm: 'Board',
+    heroSub: 'A living board of internships, apprenticeships, new grad roles, and programs curated by J&J.',
+    heroBody1: 'Every week, Jose and Jocelyn surface roles, programs, and apprenticeships on LinkedIn - from TikTok internship alerts to Pinterest apprenticeships to local research fellowships. The Opportunity Board pulls those into one place, with filters that actually make sense for students and early-career talent: stage, role type, eligibility, and timeline.',
+    heroBodyStrong: 'This is where you go when you want to stop scrolling random feeds',
+    heroBody2: ' and start seeing concrete options that match where you are in the campus-to-career journey.',
+    heroStatNum1: '10',
+    heroStatNumEm1: '+',
+    heroStatLabel1: 'Live opportunities',
+    heroStatNum2: '5',
+    heroStatLabel2: 'Categories',
+    heroStatNum3: '100',
+    heroStatNumEm3: '%',
+    heroStatLabel3: 'Curated by J&J',
+
+    // ── Board section ─────────────────────────────────────────────────────
+    boardKicker: 'Section 01',
+    boardTitle: 'Browse Opportunities',
+    boardSub: 'Filter by type, stage, eligibility, or just search.',
+
+    // Tabs
+    tabAll: 'All',
+    tabInternship: 'Internships',
+    tabApprenticeship: 'Apprenticeships & Fellowships',
+    tabNewGrad: 'New Grad / Early Career',
+    tabProgram: 'Campus Programs & Scholarships',
+    tabBridge: 'Bridge Year Friendly',
+    tabGroupAriaLabel: 'Filter by type',
+
+    // Search & filters
+    searchPlaceholder: 'Search opportunities, companies, or keywords…',
+    searchAriaLabel: 'Search opportunities',
+    filterStageAriaLabel: 'Stage',
+    filterStageAll: 'All Stages',
+    filterStageFirstSecond: 'First / Second Year',
+    filterStageJunior: 'Junior',
+    filterStageSenior: 'Senior',
+    filterStageRecentGrad: 'Recent Grad',
+    filterStageTransition: 'Career Transition',
+    filterStagePhD: 'PhD',
+    filterLocationAriaLabel: 'Location',
+    filterLocationAll: 'All Locations',
+    filterLocationRemote: 'Remote',
+    filterLocationUS: 'US',
+    filterLocationCanada: 'Canada',
+    filterLocationInternational: 'International',
+    filterDeadlineAriaLabel: 'Deadline',
+    filterDeadlineAny: 'Any Deadline',
+    filterDeadlineThisWeek: 'This Week',
+    filterDeadlineThisMonth: 'This Month',
+    filterDeadlineRolling: 'Rolling',
+
+    // Results count
+    opportunitiesShown: 'opportunities shown',
+
+    // Featured strip
+    featuredLabel: 'Featured - closing soon or especially strong for first-gen students',
+
+    // Card UI
+    cardFeaturedBadge: 'Featured',
+    cardViewRole: 'View role ↗',
+
+    // No results
+    noResults: 'No opportunities match your filters. Try adjusting your search or tab.',
+
+    // Archive strip
+    archiveLabel: 'Just closed - keep an eye out next cycle',
+    archiveSource: 'J&J LinkedIn post',
+
+    // ── Source section ────────────────────────────────────────────────────
+    sourceKicker: 'Section 02',
+    sourceTitle: 'Where these opportunities come from',
+    sourceSub: 'Not scraped, not auto-filled. Every listing starts with a human decision.',
+    sourceBody1Part1: 'The board is not scraped from the internet or auto-filled from job APIs.',
+    sourceBody1Strong: 'Every listing begins as a role Jose or Jocelyn has found, vetted, and shared',
+    sourceBody1Part2: ' - usually on LinkedIn - or as a program surfaced on the Bridge Year Hub.',
+    sourceBody2Part1: 'When you see something here, you know it has already passed a basic',
+    sourceBody2Strong: '"would we send this to our own friends?"',
+    sourceBody2Part2: ' filter. We don\'t post roles we wouldn\'t apply to ourselves or recommend to a first-gen student still figuring things out.',
+    sourceItems: [
+      { icon: 'JJ', title: 'J&J LinkedIn posts', desc: 'Jose and Jocelyn post roles weekly. The board pulls those into one searchable place so nothing gets buried in the feed.' },
+      { icon: 'BY', title: 'Bridge Year Hub', desc: 'Apprenticeships and programs from the Bridge Year Hub are cross-listed here, tagged as Bridge Year Friendly.' },
+      { icon: 'CM', title: 'Community submissions', desc: 'Roles submitted by the community that pass our review filter. Use the form below to suggest something we should add.' },
+    ],
+
+    // ── Submit section ────────────────────────────────────────────────────
+    submitKicker: 'Section 03',
+    submitTitle: 'Know an opportunity we should add?',
+    submitBody: 'We don\'t see everything. If you come across an internship, apprenticeship, new grad role, fellowship, or campus program that would be',
+    submitBodyStrong: 'especially helpful for first-gen and early-career students',
+    submitBodySuffix: ', send it our way.',
+
+    // Form labels & placeholders
+    formLabelRole: 'Role / Program Name',
+    formLabelRoleRequired: '*',
+    formPlaceholderRole: 'e.g. STEP Internship - Software Engineering',
+    formLabelCompany: 'Company / Organization',
+    formLabelCompanyRequired: '*',
+    formPlaceholderCompany: 'e.g. Google',
+    formLabelType: 'Role Type',
+    formLabelTypeRequired: '*',
+    formTypeDefault: 'Select type…',
+    formTypeInternship: 'Internship',
+    formTypeApprenticeship: 'Apprenticeship',
+    formTypeNewGrad: 'New Grad',
+    formTypeFellowship: 'Fellowship',
+    formTypeProgram: 'Program',
+    formTypeScholarship: 'Scholarship',
+    formLabelLink: 'Link to Job Description / Program Page',
+    formLabelLinkRequired: '*',
+    formPlaceholderLink: 'https://…',
+    formLabelDeadline: 'Application Deadline',
+    formPlaceholderDeadline: 'e.g. May 15, or Rolling',
+    formLabelEligibility: 'Eligibility Notes',
+    formPlaceholderEligibility: 'e.g. Open to non-CS, US only',
+    formLabelLocation: 'Location',
+    formPlaceholderLocation: 'e.g. Remote / US, New York, Hybrid',
+    formLabelPay: 'Pay / Compensation',
+    formPlaceholderPay: 'e.g. $45/hr, $7,500/mo, Paid',
+    formLabelWhy: 'Why does it belong here?',
+    formLabelWhyRequired: '*',
+    formPlaceholderWhy: 'Who is it especially good for? What makes it worth highlighting for first-gen or early-career students?',
+    formLabelEmail: 'Your Email',
+    formEmailOptional: '(optional)',
+    formPlaceholderEmail: 'your@email.com',
+    formErrorRequired: 'Please fill in all required fields before submitting.',
+    formErrorGeneric: 'Something went wrong. Please try again.',
+    formSubmit: 'Submit this opportunity',
+    formSubmitting: 'Submitting…',
+
+    // Form success
+    formSuccessTitle: 'Received - thank you!',
+    formSuccessBody: 'We\'ll review your submission and reach out if we add it to the board. Community submissions are how the board stays current.',
+
+    // ── Ecosystem section ─────────────────────────────────────────────────
+    ecoKicker: 'The J&J Ecosystem',
+    ecoTitle: 'The board tells you what\'s open. The rest of the system helps you get there.',
+    ecoBody: 'The Opportunity Board tells you what is open. The Bridge Year Hub helps you figure out which options make sense for your timeline. The Career Templates page gives you the scripts and trackers to actually apply.',
+    ecoLinks: [
+      { to: '/bridge-year',       title: 'Bridge Year Hub',       desc: "Your path when the offer didn't come yet" },
+      { to: '/career-templates',  title: 'Career Templates',      desc: 'Scripts & trackers for outreach & applications' },
+      { to: '/interview-prep',    title: 'Interview Prep Hub',    desc: 'Structured prep for every stage and interview type' },
+      { to: '/coffee-chat',       title: 'Coffee Chat Network',   desc: "Connect with people who've walked this path" },
+      { to: '/articles',          title: 'La Voz del Día',        desc: 'Weekly essays on careers, identity & early-career life' },
+    ],
+  },
 }
