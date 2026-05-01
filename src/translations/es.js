@@ -2013,6 +2013,7 @@ export const es = {
     filterJocelyn: 'Jocelyn',
     filterBoth: 'Ambos',
     countSingular: '1 artículo',
+    countPlural: 'artículos',
     listAriaLabel: 'Lista de artículos',
     emptyState: 'Ningún artículo coincide con tu búsqueda.',
     authorJose: 'Jose',

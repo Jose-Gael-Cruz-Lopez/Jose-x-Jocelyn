@@ -34,7 +34,7 @@ export default function ArticlesIndex() {
     })
   }, [activeFilter, search, t])
 
-  const countText = visible.length === 1 ? t.countSingular : `${visible.length} ${t.filterAll === 'Todos' ? 'artículos' : 'articles'}`
+  const countText = visible.length === 1 ? t.countSingular : `${visible.length} ${t.countPlural}`
 
   return (
     <ArticleLayout title={t.pageTitle} footerWidth={900}>

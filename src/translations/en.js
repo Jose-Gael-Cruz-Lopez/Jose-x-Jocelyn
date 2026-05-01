@@ -2013,6 +2013,7 @@ export const en = {
     filterJocelyn: 'Jocelyn',
     filterBoth: 'Both',
     countSingular: '1 article',
+    countPlural: 'articles',
     listAriaLabel: 'Article list',
     emptyState: 'No articles match your search.',
     authorJose: 'Jose',
