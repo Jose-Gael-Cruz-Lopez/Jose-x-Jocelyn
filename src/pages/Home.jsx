@@ -894,12 +894,12 @@ export default function Home() {
             <p className="c2c__lead">A structured pipeline that turns first&#8209;gen ambition into real career outcomes.</p>
             <div className="c2c__grid">
               {[
-                { n: '01', t: 'Content', d: 'Split-screen LinkedIn series and plug-and-play career templates. Real talk from both sides of the pipeline, without the fluff.' },
-                { n: '02', t: 'Sprints', d: 'Small-cohort programs built around a single career milestone. Bridge Year Sprint and Interview Prep keep you accountable and moving forward.' },
-                { n: '03', t: 'Community', d: 'Curated opportunity board, partner panels, coffee chat networks, and resume review circles. Real connections, not just a group chat.' },
-                { n: '04', t: 'La Voz del Día', d: 'Articles on recruiting, internships, full-time offers, and first-gen survival. Written by both of us from both sides of the bridge.' },
-              ].map(({ n, t, d }) => (
-                <div key={n} className="c2c__card">
+                { n: '01', t: 'Content', d: 'Split-screen LinkedIn series and plug-and-play career templates. Real talk from both sides of the pipeline, without the fluff.', cls: 'c2c__card--navy' },
+                { n: '02', t: 'Sprints', d: 'Small-cohort programs built around a single career milestone. Bridge Year Sprint and Interview Prep keep you accountable and moving forward.', cls: 'c2c__card--teal' },
+                { n: '03', t: 'Community', d: 'Curated opportunity board, partner panels, coffee chat networks, and resume review circles. Real connections, not just a group chat.', cls: 'c2c__card--accent' },
+                { n: '04', t: 'La Voz del Día', d: 'Articles on recruiting, internships, full-time offers, and first-gen survival. Written by both of us from both sides of the bridge.', cls: 'c2c__card--gold' },
+              ].map(({ n, t, d, cls }) => (
+                <div key={n} className={`c2c__card ${cls}`}>
                   <span className="c2c__card-number">{n}</span>
                   <h3 className="c2c__card-title">{t}</h3>
                   <p className="c2c__card-desc">{d}</p>

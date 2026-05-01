@@ -171,13 +171,6 @@ export default function ArticlesIndex() {
         }
         .arc-card:last-child { border-bottom: none; }
         .arc-card:hover { transform: translateX(4px); }
-        .arc-card__accent {
-          width: 4px; min-width: 4px; height: 52px; border-radius: 2px;
-          margin-top: 4px; flex-shrink: 0;
-        }
-        .arc-card__accent--jose    { background: var(--color-teal); }
-        .arc-card__accent--jocelyn { background: var(--color-accent); }
-        .arc-card__accent--both    { background: var(--color-navy); }
         .arc-card__body { flex: 1; min-width: 0; }
         .arc-card__meta {
           display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap;
@@ -272,7 +265,6 @@ export default function ArticlesIndex() {
                 <p className="arc-month-label">{month}</p>
                 {monthArticles.map(a => (
                   <Link key={a.id} to={a.to} className="arc-card">
-                    <span className={`arc-card__accent arc-card__accent--${a.author}`} aria-hidden="true" />
                     <div className="arc-card__body">
                       <div className="arc-card__meta">
                         <span className={`arc-card__tag arc-card__tag--${a.author}`}>{AUTHOR_LABEL[a.author]}</span>

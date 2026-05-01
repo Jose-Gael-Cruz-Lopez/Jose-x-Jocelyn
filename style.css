@@ -231,7 +231,8 @@ ul { list-style: none; }
   transition: opacity 0.18s, transform 0.18s;
   z-index: 200;
 }
-.nav__services-wrap:hover .nav__services-dropdown {
+.nav__services-wrap:hover .nav__services-dropdown,
+.nav__services-wrap:focus-within .nav__services-dropdown {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
@@ -260,6 +261,7 @@ ul { list-style: none; }
   padding: 2px 0;
 }
 .nav__services-item:hover { color: var(--hero-gold); }
+.nav__services-item:focus-visible { outline: 2px solid var(--hero-gold); outline-offset: 2px; border-radius: 3px; }
 
 .nav__link--cta {
   position: relative;
@@ -1156,46 +1158,60 @@ ul { list-style: none; }
 
 /* ---- Solid accent cards ---- */
 .c2c__card {
-  background: var(--color-paper);
   border-radius: clamp(12px, 1.6vw, 18px);
   padding: clamp(24px, 3vw, 40px) clamp(20px, 2.5vw, 32px);
   display: flex;
   flex-direction: column;
   gap: 12px;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-  transition: transform 0.3s var(--ease-out), box-shadow 0.3s ease;
+  transition: transform 0.3s var(--ease-out);
 }
 
 .c2c__card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }
+
+.c2c__card--navy   { background: var(--color-navy); }
+.c2c__card--teal   { background: var(--color-teal); }
+.c2c__card--accent { background: var(--color-accent); }
+.c2c__card--gold   { background: var(--color-gold); }
 
 .c2c__card-number {
   font-family: var(--font-serif);
   font-size: clamp(28px, 3.5vw, 40px);
   font-weight: 400;
   font-style: italic;
-  color: var(--color-gold);
   line-height: 1;
 }
+
+.c2c__card--navy .c2c__card-number,
+.c2c__card--teal .c2c__card-number,
+.c2c__card--accent .c2c__card-number { color: rgba(232, 168, 56, 0.9); }
+.c2c__card--gold .c2c__card-number   { color: rgba(26, 25, 22, 0.5); }
 
 .c2c__card-title {
   font-family: var(--font-display);
   font-size: clamp(18px, 2vw, 24px);
   font-weight: 600;
-  color: var(--color-dark);
   margin: 0;
 }
+
+.c2c__card--navy .c2c__card-title,
+.c2c__card--teal .c2c__card-title,
+.c2c__card--accent .c2c__card-title { color: var(--color-cream); }
+.c2c__card--gold .c2c__card-title   { color: var(--color-dark); }
 
 .c2c__card-desc {
   font-family: var(--font-body);
   font-size: clamp(13px, 1.4vw, 15px);
   font-weight: 400;
   line-height: 1.6;
-  color: var(--color-muted);
   margin: 0;
 }
+
+.c2c__card--navy .c2c__card-desc,
+.c2c__card--teal .c2c__card-desc,
+.c2c__card--accent .c2c__card-desc { color: rgba(242, 228, 206, 0.78); }
+.c2c__card--gold .c2c__card-desc   { color: rgba(26, 25, 22, 0.72); }
 
 .c2c__closing {
   font-family: var(--font-serif);

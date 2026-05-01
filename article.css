@@ -317,11 +317,11 @@ body {
 }
 
 .art-body blockquote {
-  border-left: 3px solid var(--color-gold);
   margin: 32px 0;
-  padding: 16px 24px;
-  background: rgba(232, 168, 56, 0.06);
-  border-radius: 0 8px 8px 0;
+  padding: 20px 28px;
+  background: rgba(232, 168, 56, 0.1);
+  border: 1px solid rgba(232, 168, 56, 0.22);
+  border-radius: 10px;
 }
 
 .art-body blockquote p {
@@ -799,7 +799,7 @@ body {
   pointer-events: none;
   transition: opacity 0.25s;
 }
-.art-nav__mobile.open {
+.art-nav__mobile--open {
   opacity: 1;
   pointer-events: all;
 }
@@ -814,7 +814,7 @@ body {
   transition: transform 0.3s var(--ease-out);
   box-shadow: 0 8px 32px rgba(0,0,0,0.12);
 }
-.art-nav__mobile.open .art-nav__mobile-panel {
+.art-nav__mobile--open .art-nav__mobile-panel {
   transform: translateY(0);
 }
 .art-nav__mobile-link {

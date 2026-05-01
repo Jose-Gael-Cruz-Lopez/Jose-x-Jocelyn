@@ -303,8 +303,8 @@ export default function OpportunityBoard() {
         .ob-featured-label::before { content: ''; display: inline-block; width: 20px; height: 2px; background: var(--color-gold); border-radius: 1px; }
         .ob-featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px,1fr)); gap: 16px; }
 
-        .ob-card { background: var(--color-white); border: 1px solid rgba(0,0,0,.08); border-radius: 16px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s; position: relative; }
-        .ob-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
+        .ob-card { background: var(--color-paper); border: 1px solid rgba(26,25,22,.08); border-radius: 10px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s; position: relative; }
+        .ob-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,25,22,.1); }
         .ob-card.featured { border-color: rgba(232,168,56,.35); }
         .ob-card.archived { opacity: .55; pointer-events: none; }
         .ob-card__featured-badge { position: absolute; top: -1px; right: 18px; background: var(--color-gold); color: var(--color-dark); font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 0 0 6px 6px; }
@@ -360,7 +360,7 @@ export default function OpportunityBoard() {
         .ob-submit__intro-title { font-family: var(--font-display); font-size: clamp(22px,3vw,32px); font-weight: 700; color: var(--color-dark); line-height: 1.2; margin-bottom: 16px; }
         .ob-submit__intro-body { font-size: clamp(14px,1.6vw,15px); color: var(--color-muted); line-height: 1.75; }
         .ob-submit__intro-body strong { color: var(--color-dark); font-weight: 600; }
-        .ob-form-box { background: var(--color-white); border: 1px solid rgba(0,0,0,.07); border-radius: 16px; padding: clamp(28px,4vw,44px); }
+        .ob-form-box { background: var(--color-paper); border: 1px solid rgba(26,25,22,.07); border-radius: 10px; padding: clamp(28px,4vw,44px); }
         .ob-form-row { margin-bottom: 16px; }
         .ob-form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .ob-form-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--color-muted); margin-bottom: 6px; }
