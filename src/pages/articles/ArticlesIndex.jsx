@@ -99,7 +99,7 @@ export default function ArticlesIndex() {
   const countText = visible.length === 1 ? '1 article' : `${visible.length} articles`
 
   return (
-    <ArticleLayout title="La Voz del Día - All Articles | Jose x Jocelyn">
+    <ArticleLayout title="La Voz del Día - All Articles | Jose x Jocelyn" footerWidth={900}>
       <style>{`
         html, body { background: var(--color-cream); }
         .arc-hero {
@@ -285,13 +285,6 @@ export default function ArticlesIndex() {
         )}
       </div>
 
-      <footer className="art-footer--wide" style={{ maxWidth: 900 }}>
-        <span className="art-footer__copy">Jose x Jocelyn © 2026</span>
-        <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">Home</Link>
-          <Link to="/#contact" className="art-footer__link">Contact</Link>
-        </div>
-      </footer>
     </ArticleLayout>
   )
 }
