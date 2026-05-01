@@ -1250,6 +1250,14 @@ export const en = {
     gridEmptyStrong: 'No resumes match your filters.',
     gridEmptyBody: 'Try adjusting your selections - or be the first to submit one in this category.',
 
+    // Stage badge labels
+    stageInternLabel: 'Intern',
+    stageNewGradLabel: 'New Grad',
+    stageFullTimeLabel: 'Full-Time',
+    stageCareerPivotLabel: 'Career Pivot',
+    stageContractLabel: 'Contract',
+    stageApprenticeshipLabel: 'Apprenticeship',
+
     // Card / Panel
     cardViewBtn: 'View Resume',
     cardFeaturedBadge: '★ J&J Pick',
@@ -1831,6 +1839,9 @@ export const en = {
     upcomingPanelistsLabel: 'Panelists',
     upcomingBtnCalendar: 'Calendar',
     upcomingBtnFlyer: 'Flyer',
+    ctaReserve: 'Reserve Your Spot',
+    ctaRsvpZoom: 'RSVP on Zoom',
+    ctaSaveSpot: 'Save My Spot',
 
     // ── Past panels archive ───────────────────────────────────────────────────
     archiveKicker: 'Section 03',

@@ -1250,6 +1250,14 @@ export const es = {
     gridEmptyStrong: 'Ningún currículum coincide con tus filtros.',
     gridEmptyBody: 'Intenta ajustar tus selecciones, o sé el primero en enviar uno en esta categoría.',
 
+    // Stage badge labels
+    stageInternLabel: 'Pasantía',
+    stageNewGradLabel: 'Recién Egresado',
+    stageFullTimeLabel: 'Tiempo Completo',
+    stageCareerPivotLabel: 'Cambio de Carrera',
+    stageContractLabel: 'Contrato',
+    stageApprenticeshipLabel: 'Aprendizaje',
+
     // Card / Panel
     cardViewBtn: 'Ver Currículum',
     cardFeaturedBadge: '★ Selección J&J',
@@ -1831,6 +1839,9 @@ export const es = {
     upcomingPanelistsLabel: 'Panelistas',
     upcomingBtnCalendar: 'Calendario',
     upcomingBtnFlyer: 'Volante',
+    ctaReserve: 'Reserva Tu Lugar',
+    ctaRsvpZoom: 'RSVP en Zoom',
+    ctaSaveSpot: 'Guarda Mi Lugar',
 
     // ── Past panels archive ───────────────────────────────────────────────────
     archiveKicker: 'Sección 03',

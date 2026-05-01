@@ -16,7 +16,7 @@ const UPCOMING_PANELS = [
     bestFor: 'Juniors, Seniors, Recent Grads',
     panelists: ['Campus recruiter at a major company', 'Recent graduate in a first full-time role', 'Student who converted an internship into an offer'],
     tags: [{ label: 'Internships', type: 'blue' }, { label: 'New Grad', type: 'gold' }, { label: 'Recruiting', type: 'muted' }],
-    cta: 'Reserve Your Spot',
+    ctaKey: 'ctaReserve',
   },
   {
     id: 'up2',
@@ -29,7 +29,7 @@ const UPCOMING_PANELS = [
     bestFor: 'First-Gen, Transfer, Underrepresented',
     panelists: ['First-gen software engineer', 'First-gen product or data professional', 'Student leader or community advocate'],
     tags: [{ label: 'First-Gen in Tech', type: 'teal' }, { label: 'Community', type: 'blue' }, { label: 'Identity', type: 'muted' }],
-    cta: 'RSVP on Zoom',
+    ctaKey: 'ctaRsvpZoom',
   },
   {
     id: 'up3',
@@ -42,7 +42,7 @@ const UPCOMING_PANELS = [
     bestFor: 'Anyone in internship or new grad recruiting',
     panelists: ['University recruiter', 'Program manager or talent partner', 'Early-career professional on what worked'],
     tags: [{ label: 'Recruiting', type: 'navy' }, { label: 'Interviewing', type: 'blue' }, { label: 'Resume', type: 'muted' }],
-    cta: 'Save My Spot',
+    ctaKey: 'ctaSaveSpot',
   },
 ]
 
@@ -913,7 +913,7 @@ export default function PartnerPanels() {
                 ))}
               </div>
               <div className="pp-panel-card__actions">
-                <a href="#" className="pp-panel-card__cta-primary">{panel.cta}</a>
+                <a href="#" className="pp-panel-card__cta-primary">{t[panel.ctaKey]}</a>
                 <button className="pp-panel-card__cta-sm" onClick={() => addToCalendar(panel.title, panel.calStart, panel.calEnd)}>{t.upcomingBtnCalendar}</button>
                 <a href="#" className="pp-panel-card__cta-sm">{t.upcomingBtnFlyer}</a>
               </div>
