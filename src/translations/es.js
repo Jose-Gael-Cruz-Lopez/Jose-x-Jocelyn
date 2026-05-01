@@ -391,5 +391,10 @@ export const es = {
       { name: 'Cómo Comparar Dos Ofertas', desc: 'Una matriz de decisión ponderada para el momento en que empiezan a llegar decisiones: evalúa opciones claramente en base, bono, acciones, crecimiento, cultura y ubicación en lugar de emocionalmente.', linkLabel: 'Abrir Rastreador →' },
       { name: 'Plantilla del Plan 30-60-90 Días', desc: 'Para quien consigue un rol durante el sprint y quiere empezar con fuerza. Tres fases, tres mentalidades, tres conjuntos de metas - estructurado para los primeros tres meses.', linkLabel: 'Abrir Marco →' },
     ],
+    footerCopy: 'Jose x Jocelyn © 2026',
+    footerHome: 'Inicio',
+    footerLaVoz: 'La Voz del Día',
+    footerTemplates: 'Plantillas',
+    footerLinkedIn: 'Serie de LinkedIn',
   },
 }

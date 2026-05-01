@@ -391,5 +391,10 @@ export const en = {
       { name: 'How to Compare Two Offers', desc: 'A weighted decision matrix for the moment decisions start coming in - evaluate options clearly on base, bonus, equity, growth, culture, and location instead of emotionally.', linkLabel: 'Open Tracker →' },
       { name: '30-60-90 Day Plan Template', desc: 'For anyone who lands a role during the sprint and wants to start strong. Three phases, three mindsets, three sets of goals - structured for the first three months.', linkLabel: 'Open Framework →' },
     ],
+    footerCopy: 'Jose x Jocelyn © 2026',
+    footerHome: 'Home',
+    footerLaVoz: 'La Voz del Día',
+    footerTemplates: 'Templates',
+    footerLinkedIn: 'LinkedIn Series',
   },
 }
