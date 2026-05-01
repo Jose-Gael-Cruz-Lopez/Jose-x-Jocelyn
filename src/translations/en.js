@@ -90,7 +90,7 @@ export const en = {
     card6Tag: 'Both',
     card6Title: "Rejection Doesn't Mean You Did It Wrong",
     card6Excerpt: 'You can do everything right and still get rejected. How to process it and keep moving.',
-    footerCta: "Let's connect",
+    footerCta: "Let's<br/>connect",
     footerCredit: 'Jose x Jocelyn © 2026',
     footerPrivacy: 'Privacy',
     footerTerms: 'Terms',

@@ -111,7 +111,7 @@ export default function Home() {
       setModalError(t.modalError)
     }
     setModalLoading(false)
-  }, [modalName, modalEmail, modalMessage])
+  }, [modalName, modalEmail, modalMessage, t])
 
   const handleModalKeyDown = useCallback((e) => {
     if (e.key !== 'Tab' || !modalRef.current) return
@@ -1129,7 +1129,7 @@ export default function Home() {
           </svg>
         </div>
         <button className="footer__cta" id="footerCta" onClick={openModal}>
-          <span className="footer__cta-text">{t.footerCta}</span>
+          <span className="footer__cta-text" dangerouslySetInnerHTML={{ __html: t.footerCta }} />
         </button>
         <div className="footer__bottom">
           <span className="footer__credit">{t.footerCredit}</span>
