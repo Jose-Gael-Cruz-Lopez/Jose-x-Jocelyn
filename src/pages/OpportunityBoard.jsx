@@ -127,7 +127,7 @@ function matchCard(card, { tab, query, stage, location, deadline }) {
   return true
 }
 
-function dbOpportunityToCard(row) {
+function dbOpportunityToCard(row, t) {
   const abbr = row.company.replace(/\s+/g, '').slice(0, 2).toUpperCase() || '??'
   const typeKey = (row.role_type || '').toLowerCase()
   const tagTypeMap = {
@@ -135,11 +135,11 @@ function dbOpportunityToCard(row) {
     'new grad': 'ob-tag--newgrad', fellowship: 'ob-tag--fellowship',
     program: 'ob-tag--program', scholarship: 'ob-tag--program',
   }
-  let deadlineLabel = 'Rolling', deadlineCls = 'rolling', deadlineFilter = 'rolling'
+  let deadlineLabel = t.deadlineRolling, deadlineCls = 'rolling', deadlineFilter = 'rolling'
   if (row.deadline) {
     const d = new Date(row.deadline)
     const diffDays = (d - new Date()) / 86400000
-    deadlineLabel = `Closes ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+    deadlineLabel = `${t.deadlineCloses} ${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
     deadlineCls = diffDays < 30 ? 'urgent' : ''
     deadlineFilter = diffDays < 30 ? 'this-month' : 'rolling'
   }
@@ -150,8 +150,8 @@ function dbOpportunityToCard(row) {
     deadlineLabel, deadlineCls,
     title: row.role, company: row.company,
     tags, meta: [...(row.location ? [row.location] : []), ...(row.pay ? [row.pay] : [])], desc: row.why || '',
-    source: 'Community submission',
-    viewLink: row.link, postLink: row.link, postLabel: 'View role ↗',
+    source: t.cardCommunitySource,
+    viewLink: row.link, postLink: row.link, postLabel: t.cardViewRole,
     type: typeKey, stage: '', location: '', deadline: deadlineFilter, bridge: false,
     keywords: `${row.role} ${row.company} ${row.eligibility || ''}`.toLowerCase(),
     _featured: row.status === 'featured',
@@ -210,9 +210,9 @@ export default function OpportunityBoard() {
       .in('status', ['approved', 'featured'])
       .order('created_at', { ascending: false })
       .then(({ data }) => {
-        if (data?.length) setDbOpportunities(data.map(dbOpportunityToCard))
+        if (data?.length) setDbOpportunities(data.map(row => dbOpportunityToCard(row, t)))
       })
-  }, [])
+  }, [t])
 
   const filters = { tab, query: search.toLowerCase().trim(), stage, location, deadline }
 
@@ -484,11 +484,8 @@ export default function OpportunityBoard() {
             {t.archiveLabel}
           </p>
           <div className="ob-archive-grid">
-            {[
-              { logo: 'Am', title: 'SWE Internship - Early Career (SDE I)', company: 'Amazon', closed: 'Closed Apr 1', tags: ['Internship', 'SWE', 'Summer 2026'], desc: 'Typically opens again in September for the following summer. Set a calendar reminder for August 15.' },
-              { logo: 'As', title: 'Diversity & Inclusion Scholarship', company: 'Asana', closed: 'Closed Mar 20', tags: ['Scholarship', 'Underrepresented Students'], desc: 'Usually reopens each fall. Watch for the announcement in October - often tied to Grace Hopper / NSBE / SHPE season.' },
-            ].map(a => (
-              <article key={a.logo} className="ob-card archived">
+            {t.archiveCards.map(a => (
+              <article key={a.title} className="ob-card archived">
                 <div className="ob-card__top">
                   <div className="ob-card__company-logo" style={{ background: 'rgba(0,0,0,.05)', color: 'var(--color-muted)' }}>{a.logo}</div>
                   <span className="ob-card__deadline" style={{ color: 'var(--color-muted)' }}>{a.closed}</span>

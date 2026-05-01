@@ -1092,6 +1092,15 @@ export const es = {
     // Archive strip
     archiveLabel: 'Recién cerradas - mantente al tanto para el próximo ciclo',
     archiveSource: 'Publicación de LinkedIn de J&J',
+    archiveCards: [
+      { logo: 'Am', title: 'SWE Internship - Early Career (SDE I)', company: 'Amazon', closed: 'Cerrado 1 abr', tags: ['Pasantía', 'Ing. de Software', 'Verano 2026'], desc: 'Typically opens again in September for the following summer. Set a calendar reminder for August 15.' },
+      { logo: 'As', title: 'Diversity & Inclusion Scholarship', company: 'Asana', closed: 'Cerrado 20 mar', tags: ['Beca', 'Estudiantes Subrepresentados'], desc: 'Usually reopens each fall. Watch for the announcement in October - often tied to Grace Hopper / NSBE / SHPE season.' },
+    ],
+
+    // dbOpportunityToCard dynamic labels
+    deadlineRolling: 'Convocatoria abierta',
+    deadlineCloses: 'Cierra',
+    cardCommunitySource: 'Enviado por la comunidad',
 
     // ── Source section ────────────────────────────────────────────────────
     sourceKicker: 'Sección 02',
