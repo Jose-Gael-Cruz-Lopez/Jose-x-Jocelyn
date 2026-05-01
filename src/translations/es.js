@@ -1603,4 +1603,187 @@ export const es = {
     footerArticles: 'La Voz del Día',
     footerTemplates: 'Plantillas',
   },
+
+  careerTemplates: {
+    // ── Hero ─────────────────────────────────────────────────────────────────
+    heroKicker: 'Del Campus a la Carrera · Biblioteca de Recursos',
+    heroTitle: 'Plantillas de Carrera',
+    heroTagline: 'Copia. Edita. Envía.',
+    heroSub: 'Scripts reales, rastreadores y marcos de trabajo de',
+    heroSubStrong: 'dos personas que realmente están haciendo esto',
+    heroSubSuffix: '— no coaches de carrera que no han aplicado en una década. Cada plantilla corresponde a un momento real en el camino del campus a la carrera.',
+
+    // ── Filter labels ─────────────────────────────────────────────────────────
+    filterAll: 'Todas',
+    filterOutreach: 'Contacto y Networking',
+    filterApply: 'Aplicaciones',
+    filterInterview: 'Entrevistas',
+    filterOffers: 'Ofertas y Negociación',
+    filterJob: 'En el Trabajo',
+    filterAriaLabel: 'Filtrar por etapa del proceso',
+
+    // ── Stage labels (used in card badges) ───────────────────────────────────
+    stageOutreach: 'Contacto',
+    stageApply: 'Aplica Mejor',
+    stageInterview: 'Entrevistas',
+    stageOffers: 'Ofertas',
+    stageJob: 'En el Trabajo',
+
+    // ── Author badge labels ───────────────────────────────────────────────────
+    authorJose: 'Jose',
+    authorJocelyn: 'Jocelyn',
+    authorBoth: 'Ambos',
+
+    // ── Count line ────────────────────────────────────────────────────────────
+    countOne: '1 plantilla',
+    countMany: '{n} plantillas',
+
+    // ── Grid aria label ───────────────────────────────────────────────────────
+    gridAriaLabel: 'Biblioteca de plantillas',
+
+    // ── Empty state ───────────────────────────────────────────────────────────
+    emptyState: 'No hay plantillas en esta categoría todavía.',
+
+    // ── CTA button labels ─────────────────────────────────────────────────────
+    ctaCopyTemplate: 'Copiar Plantilla',
+    ctaOpenTracker: 'Abrir Rastreador',
+    ctaOpenFramework: 'Abrir Marco',
+
+    // ── Templates ─────────────────────────────────────────────────────────────
+    templates: [
+      {
+        id: 1, cat: 'outreach', stage: 'outreach', author: 'jose',
+        num: '01',
+        title: 'DM en Frío en LinkedIn - Estudiante a Profesional',
+        desc: 'Tres versiones: para un reclutador, para un ingeniero y para un egresado. Corto, específico, sin desesperación. Los mensajes exactos que realmente obtienen respuestas.',
+        ctaLabel: 'Copiar Plantilla', ctaIcon: 'copy',
+      },
+      {
+        id: 2, cat: 'outreach', stage: 'outreach', author: 'jose',
+        num: '02',
+        title: 'Correo de Solicitud de Coffee Chat',
+        desc: 'Una plantilla con campos personalizables: introducción, solicitud específica y bloque de disponibilidad. Convierte el contacto en frío en conversaciones cálidas sin sonar transaccional.',
+        ctaLabel: 'Copiar Plantilla', ctaIcon: 'copy',
+      },
+      {
+        id: 3, cat: 'outreach', stage: 'outreach', author: 'jose',
+        num: '03',
+        title: 'Seguimiento Sin Respuesta (Secuencia de 3 Pasos)',
+        desc: 'Mensajes de seguimiento para el Día 1, Día 7 y Día 14 que no suenan necesitados ni desesperados. El sistema que usa Jose para hacer seguimiento de cada contacto sin quemar puentes.',
+        ctaLabel: 'Copiar Plantilla', ctaIcon: 'copy',
+      },
+      {
+        id: 4, cat: 'outreach', stage: 'outreach', author: 'both',
+        num: '04',
+        title: 'Contacto a Reclutador en LinkedIn',
+        desc: 'Específico para inicio de carrera: cómo expresar interés genuino en un rol sin aplicar formalmente aún, y cómo posicionarte antes de que abra el portal de aplicación.',
+        ctaLabel: 'Copiar Plantilla', ctaIcon: 'copy',
+      },
+      {
+        id: 5, cat: 'apply', stage: 'apply', author: 'both',
+        num: '05',
+        title: 'Rastreador de Solicitudes de Pasantía',
+        desc: 'Diseño de hoja de cálculo: empresa, rol, fecha límite, estado de la solicitud, nombre de contacto, fecha de seguimiento y columna de notas. El sistema que convierte una aplicación caótica en un pipeline real.',
+        ctaLabel: 'Abrir Rastreador', ctaIcon: 'external',
+      },
+      {
+        id: 6, cat: 'apply', stage: 'apply', author: 'both',
+        num: '06',
+        title: 'Fórmula de Puntos para el Currículum',
+        desc: 'Una fórmula STAR simplificada con 10 ejemplos completados de roles en CS, datos e ingeniería. Convierte descripciones de experiencia vagas en puntos específicos y medibles que los reclutadores realmente leen.',
+        ctaLabel: 'Abrir Marco', ctaIcon: 'external',
+      },
+      {
+        id: 7, cat: 'interview', stage: 'interview', author: 'both',
+        num: '07',
+        title: 'Script "Háblame de Ti"',
+        desc: 'Un marco de 3 partes: quién eres, qué has hecho, por qué este rol — con una versión para estudiante y una para egresado. Convierte las autointroducciones genéricas en narrativas seguras y específicas.',
+        ctaLabel: 'Copiar Plantilla', ctaIcon: 'copy',
+      },
+      {
+        id: 8, cat: 'interview', stage: 'interview', author: 'both',
+        num: '08',
+        title: 'Plantilla de Banco de Historias STAR',
+        desc: 'Una plantilla en blanco para 6–8 historias sobre liderazgo, fracaso, trabajo en equipo y resolución de problemas. Construye toda tu biblioteca de historias una vez y úsala en cada entrevista.',
+        ctaLabel: 'Abrir Marco', ctaIcon: 'external',
+      },
+      {
+        id: 9, cat: 'interview', stage: 'interview', author: 'both',
+        num: '09',
+        title: 'Nota de Agradecimiento Post-Entrevista',
+        desc: 'Dos versiones: una para después de una pantalla de reclutador, otra para después de una ronda técnica o de panel. Específica, cálida y corta — el tipo que realmente se reenvía.',
+        ctaLabel: 'Copiar Plantilla', ctaIcon: 'copy',
+      },
+      {
+        id: 10, cat: 'interview', stage: 'interview', author: 'jocelyn',
+        num: '10',
+        title: 'Preguntas para Hacer al Final de una Entrevista',
+        desc: '15 preguntas específicas y no genéricas organizadas por con quién estás hablando: reclutador, ingeniero o gerente de contratación. Las preguntas que realmente muestran que has pensado en el rol.',
+        ctaLabel: 'Abrir Marco', ctaIcon: 'external',
+      },
+      {
+        id: 11, cat: 'offers', stage: 'offers', author: 'jocelyn',
+        num: '11',
+        title: 'Cómo Comparar Dos Ofertas',
+        desc: 'Una plantilla de matriz de decisión ponderada: base, bono, capital, trayectoria de crecimiento, señales culturales y ubicación. Hace la decisión visible y menos impulsada por emociones.',
+        ctaLabel: 'Abrir Rastreador', ctaIcon: 'external',
+      },
+      {
+        id: 12, cat: 'offers', stage: 'offers', author: 'jocelyn',
+        num: '12',
+        title: 'Correo de Negociación de Oferta',
+        desc: 'Un script de copiar y pegar para pedir más compensación con un número específico ya incluido. Profesional, directo y cálido — la versión que no arriesga la oferta.',
+        ctaLabel: 'Copiar Plantilla', ctaIcon: 'copy',
+      },
+      {
+        id: 13, cat: 'job', stage: 'job', author: 'jocelyn',
+        num: '13',
+        title: 'Mensaje de Check-In de la Primera Semana al Gerente',
+        desc: 'Cómo configurar tu primer 1:1, qué decir en él y cómo comenzar la relación con buen pie sin ser demasiado entusiasta ni estar poco preparado.',
+        ctaLabel: 'Copiar Plantilla', ctaIcon: 'copy',
+      },
+      {
+        id: 14, cat: 'job', stage: 'job', author: 'jocelyn',
+        num: '14',
+        title: 'Plantilla de Plan 30-60-90 Días',
+        desc: 'Un plan de tres fases para tus primeros tres meses: objetivos, relaciones clave a construir y entregables en cada etapa. El documento que convierte una buena primera impresión en un primer año sólido.',
+        ctaLabel: 'Abrir Marco', ctaIcon: 'external',
+      },
+      {
+        id: 15, cat: 'job', stage: 'job', author: 'both',
+        num: '15',
+        title: 'Documento de Reflexión de Fin de Pasantía',
+        desc: 'Una plantilla de autoevaluación para completar antes de tu última semana: documentando tu impacto, las relaciones que construiste y cómo prepararte para la conversación sobre la oferta de regreso.',
+        ctaLabel: 'Abrir Marco', ctaIcon: 'external',
+      },
+    ],
+
+    // ── Request form ──────────────────────────────────────────────────────────
+    formKicker: 'Dale Forma a la Biblioteca',
+    formTitle: '¿Qué parte del proceso del campus a la carrera te parece poco clara ahora mismo?',
+    formSub: 'Cada plantilla en esta página comenzó con una pregunta a la que alguien no podía encontrar una buena respuesta. Cuéntanos dónde estás atascado y construiremos la herramienta para eso.',
+    formLabelRequest: '¿Qué plantilla desearías que existiera?',
+    formPlaceholderRequest: 'ej. Un script para pedir una extensión de plazo en una oferta…',
+    formLabelEmail: 'Tu correo electrónico',
+    formPlaceholderEmail: 'tu@escuela.edu',
+    formLabelCategory: 'Etapa del proceso (opcional)',
+    formCategoryPlaceholder: 'Selecciona una etapa…',
+    catInternshipSearch: 'Búsqueda de pasantías',
+    catNetworkingOutreach: 'Networking y contacto',
+    catInterviewPrep: 'Preparación para entrevistas',
+    catOffersNegotiation: 'Ofertas y negociación',
+    catFirstJobOnboarding: 'Primer trabajo e incorporación',
+    formErrorRequired: 'Por favor describe la plantilla que necesitas.',
+    formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    formBtnSubmit: 'Enviar Solicitud',
+    formBtnSubmitting: 'Enviando…',
+    formSuccessTitle: '¡Solicitud enviada!',
+    formSuccessBody: 'Gracias — la construiremos si suficientes personas piden lo mismo.',
+
+    // ── Footer ────────────────────────────────────────────────────────────────
+    footerCopy: 'Jose x Jocelyn © 2026',
+    footerHome: 'Inicio',
+    footerArticles: 'La Voz del Día',
+    footerLinkedIn: 'Serie de LinkedIn',
+  },
 }
