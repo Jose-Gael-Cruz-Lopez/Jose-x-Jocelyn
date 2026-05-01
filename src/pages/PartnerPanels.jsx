@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
+import { useT } from '../hooks/useT'
 
 const UPCOMING_PANELS = [
   {
@@ -93,31 +94,6 @@ const ARCHIVE_CARDS = [
   },
 ]
 
-const TOPIC_CHIPS = [
-  { key: 'all', label: 'All Topics' },
-  { key: 'internships', label: 'Internships' },
-  { key: 'new-grad', label: 'New Grad Roles' },
-  { key: 'bridge-year', label: 'Bridge Year' },
-  { key: 'first-gen', label: 'First-Gen in Tech' },
-  { key: 'apprenticeships', label: 'Apprenticeships' },
-  { key: 'interviewing', label: 'Interviewing' },
-  { key: 'recruiting', label: 'Recruiting' },
-  { key: 'networking', label: 'Networking' },
-  { key: 'pivots', label: 'Career Pivots' },
-  { key: 'workplace', label: 'Workplace Readiness' },
-  { key: 'data', label: 'Data Careers' },
-  { key: 'community', label: 'Community Building' },
-]
-
-const ECO_LINKS = [
-  { to: '/opportunity-board', title: 'Opportunity Board', desc: 'Curated internships, apprenticeships & roles' },
-  { to: '/coffee-chat', title: 'Coffee Chat Network', desc: 'Connect with people who\'ve walked this path' },
-  { to: '/bridge-year', title: 'Bridge Year Hub', desc: 'Your path when the offer didn\'t come yet' },
-  { to: '/career-templates', title: 'Career Templates', desc: 'Scripts & trackers for outreach & applications' },
-  { to: '/interview-prep', title: 'Interview Prep Hub', desc: 'Structured prep for every stage and type' },
-  { to: '/articles', title: 'La Voz del Día', desc: 'Weekly essays on careers, identity & early-career life' },
-]
-
 function addToCalendar(title, start, end) {
   const startStr = start.replace(/[-:]/g, '') + '00'
   const endStr = end.replace(/[-:]/g, '') + '00'
@@ -140,6 +116,7 @@ function addToCalendar(title, start, end) {
 }
 
 export default function PartnerPanels() {
+  const t = useT('partnerPanels')
   const [openTakeaway, setOpenTakeaway] = useState(null)
   const [activeTopic, setActiveTopic] = useState('all')
   const [suggestSubmitted, setSuggestSubmitted] = useState(false)
@@ -150,6 +127,8 @@ export default function PartnerPanels() {
   const [panelistError, setPanelistError] = useState('')
   const [suggestForm, setSuggestForm] = useState({ topic: '', why: '', stage: '', category: '', email: '' })
   const [panelistForm, setPanelistForm] = useState({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '', notes: '' })
+
+  const topicChips = t.topicChips
 
   const filteredArchive = activeTopic === 'all'
     ? ARCHIVE_CARDS
@@ -162,7 +141,7 @@ export default function PartnerPanels() {
   async function submitSuggest(e) {
     e.preventDefault()
     if (!suggestForm.topic || !suggestForm.why || !suggestForm.stage || !suggestForm.category) {
-      setSuggestError('Please fill in all required fields before submitting.')
+      setSuggestError(t.suggestErrorRequired)
       return
     }
     setSuggestLoading(true)
@@ -176,7 +155,7 @@ export default function PartnerPanels() {
     })
     setSuggestLoading(false)
     if (error) {
-      setSuggestError('Something went wrong. Please try again.')
+      setSuggestError(t.suggestErrorGeneric)
     } else {
       setSuggestSubmitted(true)
     }
@@ -185,7 +164,7 @@ export default function PartnerPanels() {
   async function submitPanelist(e) {
     e.preventDefault()
     if (!panelistForm.name || !panelistForm.email || !panelistForm.linkedin || !panelistForm.role || !panelistForm.topic || !panelistForm.interest) {
-      setPanelistError('Please fill in all required fields before submitting.')
+      setPanelistError(t.panelistErrorRequired)
       return
     }
     setPanelistLoading(true)
@@ -201,14 +180,14 @@ export default function PartnerPanels() {
     })
     setPanelistLoading(false)
     if (error) {
-      setPanelistError('Something went wrong. Please try again.')
+      setPanelistError(t.panelistErrorGeneric)
     } else {
       setPanelistSubmitted(true)
     }
   }
 
   return (
-    <ArticleLayout title="Partner Panels">
+    <ArticleLayout title={`${t.heroTitlePrefix}${t.heroTitleEm}`}>
       <style>{`
         html, body { background: var(--color-cream); }
 
@@ -797,32 +776,32 @@ export default function PartnerPanels() {
 
       {/* HERO */}
       <header className="pp-hero" id="top">
-        <p className="pp-hero__kicker">Community · Live Conversations</p>
-        <h1 className="pp-hero__title">Partner <em>Panels</em></h1>
-        <p className="pp-hero__sub">Live conversations with people who have actually walked the path.</p>
+        <p className="pp-hero__kicker">{t.heroKicker}</p>
+        <h1 className="pp-hero__title">{t.heroTitlePrefix}<em>{t.heroTitleEm}</em></h1>
+        <p className="pp-hero__sub">{t.heroSub}</p>
         <p className="pp-hero__body">
-          Partner Panels are live Zoom conversations hosted by Jose and Jocelyn with students, recent grads, professionals, recruiters, founders, and community leaders across tech, data, and adjacent career spaces. These sessions are built to <strong>make career paths more visible, more honest, and more actionable</strong> for people navigating the journey from campus to career.
+          {t.heroBody} <strong>{t.heroBodyStrong}</strong> {t.heroBodyTail}
         </p>
         <div className="pp-hero__ctas">
-          <a href="#upcoming" className="pp-btn-primary">View Upcoming Panels</a>
-          <a href="#archive" className="pp-btn-secondary">Watch Past Panels</a>
+          <a href="#upcoming" className="pp-btn-primary">{t.heroCtaUpcoming}</a>
+          <a href="#archive" className="pp-btn-secondary">{t.heroCtaArchive}</a>
         </div>
         <div className="pp-stats">
           <div>
-            <div className="pp-stat__num">12<em>+</em></div>
-            <div className="pp-stat__label">Panels hosted</div>
+            <div className="pp-stat__num">{t.stat1Num}</div>
+            <div className="pp-stat__label">{t.stat1Label}</div>
           </div>
           <div>
-            <div className="pp-stat__num">35<em>+</em></div>
-            <div className="pp-stat__label">Speakers featured</div>
+            <div className="pp-stat__num">{t.stat2Num}</div>
+            <div className="pp-stat__label">{t.stat2Label}</div>
           </div>
           <div>
-            <div className="pp-stat__num">8<em>+</em></div>
-            <div className="pp-stat__label">Career topics covered</div>
+            <div className="pp-stat__num">{t.stat3Num}</div>
+            <div className="pp-stat__label">{t.stat3Label}</div>
           </div>
           <div>
-            <div className="pp-stat__num">↗</div>
-            <div className="pp-stat__label">Growing archive of recordings & flyers</div>
+            <div className="pp-stat__num">{t.stat4Num}</div>
+            <div className="pp-stat__label">{t.stat4Label}</div>
           </div>
         </div>
       </header>
@@ -832,59 +811,59 @@ export default function PartnerPanels() {
       {/* FEATURED PANEL */}
       <section className="pp-featured" id="featured">
         <div className="pp-featured__head">
-          <p className="pp-kicker">Section 01 · Next Up</p>
-          <h2 className="pp-section-title">Featured Next Panel</h2>
+          <p className="pp-kicker">{t.featuredKicker}</p>
+          <h2 className="pp-section-title">{t.featuredTitle}</h2>
         </div>
         <div className="pp-featured-card">
           <div className="pp-featured-card__body">
             <div className="pp-featured-card__eyebrow">
               <span className="pp-featured-card__live-badge">
                 <span className="pp-featured-card__live-dot" />
-                Coming up
+                {t.featuredLiveBadge}
               </span>
               <span className="pp-tag pp-tag--gold">May 8, 2026</span>
               <span className="pp-tag pp-tag--muted">Zoom</span>
             </div>
             <h3 className="pp-featured-card__title">Breaking Into Tech Without a Traditional Path</h3>
             <p className="pp-featured-card__desc">
-              A live conversation with apprentices, career changers, first-generation professionals, and early-career technologists about how they found their way into tech without a perfectly linear path. This session is designed for students and recent grads who feel like they are behind, off-track, or trying to enter the industry without the <strong>"usual" credentials</strong>.
+              A live conversation with apprentices, career changers, first-generation professionals, and early-career technologists about how they found their way into tech without a perfectly linear path. This session is designed for students and recent grads who feel like they are behind, off-track, or trying to enter the industry without the <strong>&ldquo;usual&rdquo; credentials</strong>.
             </p>
             <div className="pp-featured-card__panelists">
-              <p className="pp-featured-card__panelists-label">Panelists</p>
+              <p className="pp-featured-card__panelists-label">{t.featuredPanelistsLabel}</p>
               <div className="pp-featured-card__panelist">A first-gen software engineer who landed through an apprenticeship</div>
               <div className="pp-featured-card__panelist">A recent grad working in data analytics</div>
               <div className="pp-featured-card__panelist">A professional who pivoted into tech from another field</div>
               <div className="pp-featured-card__panelist">A recruiter focused on early-career access and inclusion</div>
             </div>
             <div className="pp-featured-card__actions">
-              <a href="#" className="pp-btn-primary">RSVP on Zoom</a>
-              <button className="pp-btn-secondary" onClick={() => addToCalendar('Breaking Into Tech Without a Traditional Path', '2026-05-08T19:00', '2026-05-08T20:30')}>Add to Calendar</button>
-              <a href="#" className="pp-btn-secondary">View Flyer</a>
+              <a href="#" className="pp-btn-primary">{t.featuredBtnRsvp}</a>
+              <button className="pp-btn-secondary" onClick={() => addToCalendar('Breaking Into Tech Without a Traditional Path', '2026-05-08T19:00', '2026-05-08T20:30')}>{t.featuredBtnCalendar}</button>
+              <a href="#" className="pp-btn-secondary">{t.featuredBtnFlyer}</a>
             </div>
-            <p className="pp-featured-card__note">Can't make it live? Register anyway to get the recording if it becomes available.</p>
+            <p className="pp-featured-card__note">{t.featuredNote}</p>
           </div>
           <div className="pp-featured-card__sidebar">
             <div>
-              <p className="pp-featured-card__detail-label">Date</p>
+              <p className="pp-featured-card__detail-label">{t.featuredDetailDate}</p>
               <p className="pp-featured-card__detail-value">Thursday, May 8, 2026</p>
             </div>
             <div>
-              <p className="pp-featured-card__detail-label">Time</p>
+              <p className="pp-featured-card__detail-label">{t.featuredDetailTime}</p>
               <p className="pp-featured-card__detail-value">7:00 PM ET</p>
               <p className="pp-featured-card__detail-sub">4:00 PM PT · 6:00 PM CT</p>
             </div>
             <div>
-              <p className="pp-featured-card__detail-label">Format</p>
-              <p className="pp-featured-card__detail-value">Live on Zoom</p>
-              <p className="pp-featured-card__detail-sub">Free to attend</p>
+              <p className="pp-featured-card__detail-label">{t.featuredDetailFormat}</p>
+              <p className="pp-featured-card__detail-value">{t.featuredFormatValue}</p>
+              <p className="pp-featured-card__detail-sub">{t.featuredFormatFree}</p>
             </div>
             <div>
-              <p className="pp-featured-card__detail-label">Hosted by</p>
+              <p className="pp-featured-card__detail-label">{t.featuredDetailHosted}</p>
               <p className="pp-featured-card__detail-value">Jose Cruz-Lopez</p>
-              <p className="pp-featured-card__detail-sub">+ Jocelyn Vazquez</p>
+              <p className="pp-featured-card__detail-sub">{t.featuredDetailHostedSub}</p>
             </div>
             <div>
-              <p className="pp-featured-card__detail-label">Best for</p>
+              <p className="pp-featured-card__detail-label">{t.featuredDetailBestFor}</p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: '6px' }}>
                 <span className="pp-tag pp-tag--teal">Students</span>
                 <span className="pp-tag pp-tag--gold">Recent Grads</span>
@@ -901,10 +880,10 @@ export default function PartnerPanels() {
       {/* UPCOMING PANELS */}
       <section className="pp-upcoming" id="upcoming">
         <div className="pp-upcoming__head">
-          <p className="pp-kicker">Section 02</p>
-          <h2 className="pp-section-title">Upcoming Panels</h2>
-          <p className="pp-section-sub">Register. Show up. Ask the questions you never had the chance to ask.</p>
-          <p className="pp-section-body">Join live conversations designed to help students and early-career talent hear directly from people who have navigated the internships, first offers, pivots, rejections, and wins that shape the road from campus to career. Each session is built around <strong>practical insight, not generic advice.</strong></p>
+          <p className="pp-kicker">{t.upcomingKicker}</p>
+          <h2 className="pp-section-title">{t.upcomingTitle}</h2>
+          <p className="pp-section-sub">{t.upcomingSub}</p>
+          <p className="pp-section-body">{t.upcomingBody} <strong>{t.upcomingBodyStrong}</strong></p>
         </div>
         <div className="pp-upcoming__grid">
           {UPCOMING_PANELS.map(panel => (
@@ -915,28 +894,28 @@ export default function PartnerPanels() {
               <div className="pp-panel-card__meta">
                 <div className="pp-panel-card__meta-row">
                   <span className="pp-panel-card__meta-icon">–</span>
-                  <span>{panel.time} &nbsp;·&nbsp; <span className="pp-panel-card__meta-val">Zoom</span></span>
+                  <span>{panel.time} &nbsp;·&nbsp; <span className="pp-panel-card__meta-val">{t.upcomingMetaZoom}</span></span>
                 </div>
                 <div className="pp-panel-card__meta-row">
                   <span className="pp-panel-card__meta-icon">–</span>
-                  <span>Best for: <span className="pp-panel-card__meta-val">{panel.bestFor}</span></span>
+                  <span>{t.upcomingMetaBestFor} <span className="pp-panel-card__meta-val">{panel.bestFor}</span></span>
                 </div>
               </div>
               <div className="pp-panel-card__panelists">
-                <strong>Panelists</strong>
-                {panel.panelists.join('\n').split('\n').map((p, i) => (
-                  <span key={i}>{p}<br /></span>
+                <strong>{t.upcomingPanelistsLabel}</strong>
+                {panel.panelists.map((p) => (
+                  <span key={p}>{p}<br /></span>
                 ))}
               </div>
               <div className="pp-panel-card__tags">
-                {panel.tags.map(t => (
-                  <span key={t.label} className={`pp-tag pp-tag--${t.type}`}>{t.label}</span>
+                {panel.tags.map(tag => (
+                  <span key={tag.label} className={`pp-tag pp-tag--${tag.type}`}>{tag.label}</span>
                 ))}
               </div>
               <div className="pp-panel-card__actions">
                 <a href="#" className="pp-panel-card__cta-primary">{panel.cta}</a>
-                <button className="pp-panel-card__cta-sm" onClick={() => addToCalendar(panel.title, panel.calStart, panel.calEnd)}>Calendar</button>
-                <a href="#" className="pp-panel-card__cta-sm">Flyer</a>
+                <button className="pp-panel-card__cta-sm" onClick={() => addToCalendar(panel.title, panel.calStart, panel.calEnd)}>{t.upcomingBtnCalendar}</button>
+                <a href="#" className="pp-panel-card__cta-sm">{t.upcomingBtnFlyer}</a>
               </div>
             </article>
           ))}
@@ -948,14 +927,14 @@ export default function PartnerPanels() {
       {/* PAST PANELS ARCHIVE */}
       <section className="pp-archive" id="archive">
         <div className="pp-archive__head">
-          <p className="pp-kicker">Section 03</p>
-          <h2 className="pp-section-title">Past Panels</h2>
-          <p className="pp-section-sub">A growing archive of conversations you can come back to.</p>
-          <p className="pp-section-body">Missed a live session? Past panels live here as a growing archive of conversations, recordings, flyers, and takeaways. Every session is meant to stay useful after the event ends, so you can come back to the conversations <strong>most relevant to where you are right now.</strong></p>
+          <p className="pp-kicker">{t.archiveKicker}</p>
+          <h2 className="pp-section-title">{t.archiveTitle}</h2>
+          <p className="pp-section-sub">{t.archiveSub}</p>
+          <p className="pp-section-body">{t.archiveBody} <strong>{t.archiveBodyStrong}</strong></p>
         </div>
         <div className="pp-archive__list">
           {filteredArchive.length === 0 && (
-            <p style={{ color: 'var(--color-muted)', fontSize: 15, padding: '40px 0' }}>No past panels match this topic yet. Check back as the archive grows.</p>
+            <p style={{ color: 'var(--color-muted)', fontSize: 15, padding: '40px 0' }}>{t.archiveEmptyState}</p>
           )}
           {filteredArchive.map(card => (
             <article key={card.id} className="pp-archive-card">
@@ -965,32 +944,32 @@ export default function PartnerPanels() {
                   <h3 className="pp-archive-card__title">{card.title}</h3>
                   <p className="pp-archive-card__recap">{card.recap}</p>
                   <p className="pp-archive-card__panelists">
-                    <strong>Panelists:</strong> {card.panelists}
+                    <strong>{t.archivePanelistsLabel}</strong> {card.panelists}
                   </p>
                   <div className="pp-archive-card__tags">
-                    {card.tags.map(t => (
-                      <span key={t.label} className={`pp-tag pp-tag--${t.type}`}>{t.label}</span>
+                    {card.tags.map(tag => (
+                      <span key={tag.label} className={`pp-tag pp-tag--${tag.type}`}>{tag.label}</span>
                     ))}
                   </div>
                 </div>
                 <div className="pp-archive-card__actions">
-                  <a href="#" className="pp-archive-card__cta pp-archive-card__cta--watch">▶ Watch Recording</a>
-                  <a href="#" className="pp-archive-card__cta pp-archive-card__cta--flyer">View Flyer</a>
+                  <a href="#" className="pp-archive-card__cta pp-archive-card__cta--watch">{t.archiveBtnWatch}</a>
+                  <a href="#" className="pp-archive-card__cta pp-archive-card__cta--flyer">{t.archiveBtnFlyer}</a>
                   <button
                     className="pp-archive-card__cta pp-archive-card__cta--takeaways"
                     aria-expanded={openTakeaway === card.id}
                     onClick={() => toggleTakeaway(card.id)}
                   >
-                    ✦ {openTakeaway === card.id ? 'Hide Takeaways' : 'Key Takeaways'}
+                    {openTakeaway === card.id ? t.archiveBtnHideTakeaways : t.archiveBtnShowTakeaways}
                   </button>
                 </div>
               </div>
               <div className={`pp-takeaways${openTakeaway === card.id ? ' open' : ''}`}>
                 <div className="pp-takeaways__inner">
-                  <p className="pp-takeaways__title">Key Takeaways from This Session</p>
+                  <p className="pp-takeaways__title">{t.archiveTakeawaysTitle}</p>
                   <div className="pp-takeaways__list">
-                    {card.takeaways.map((t, i) => (
-                      <div key={i} className="pp-takeaways__item">{t}</div>
+                    {card.takeaways.map((takeaway) => (
+                      <div key={takeaway} className="pp-takeaways__item">{takeaway}</div>
                     ))}
                   </div>
                 </div>
@@ -1005,13 +984,13 @@ export default function PartnerPanels() {
       {/* TOPIC BROWSE */}
       <section className="pp-topics" id="topics">
         <div className="pp-topics__head">
-          <p className="pp-kicker">Section 04</p>
-          <h2 className="pp-section-title">Browse by Topic</h2>
-          <p className="pp-section-sub">Find the conversations that match where you are right now.</p>
-          <p className="pp-section-body">Not every panel is for everyone. Browse the archive by topic to find the conversations most relevant to what you are navigating.</p>
+          <p className="pp-kicker">{t.topicsKicker}</p>
+          <h2 className="pp-section-title">{t.topicsTitle}</h2>
+          <p className="pp-section-sub">{t.topicsSub}</p>
+          <p className="pp-section-body">{t.topicsBody}</p>
         </div>
         <div className="pp-topics__chips">
-          {TOPIC_CHIPS.map(chip => (
+          {topicChips.map(chip => (
             <button
               key={chip.key}
               type="button"
@@ -1023,7 +1002,7 @@ export default function PartnerPanels() {
             </button>
           ))}
         </div>
-        <p className="pp-topics__note">Whether you are preparing for your first internship, trying to land your first full-time role, or figuring out how to keep going after a hard recruiting season - there is a panel path here for you.</p>
+        <p className="pp-topics__note">{t.topicsNote}</p>
       </section>
 
       <hr className="pp-divider" />
@@ -1032,70 +1011,54 @@ export default function PartnerPanels() {
       <section className="pp-suggest" id="suggest">
         <div className="pp-suggest__layout">
           <div>
-            <p className="pp-suggest__intro-kicker">Section 05</p>
-            <h2 className="pp-suggest__intro-title">What panel should we host next?</h2>
+            <p className="pp-suggest__intro-kicker">{t.suggestKicker}</p>
+            <h2 className="pp-suggest__intro-title">{t.suggestTitle}</h2>
             <p className="pp-suggest__intro-body">
-              The best panel ideas come directly from the questions people are already living through. If there is a conversation, role, industry, or perspective you want us to feature in a future Partner Panel, <strong>send it here.</strong> We use community feedback to shape what we host next.
+              {t.suggestBody} <strong>{t.suggestBodyStrong}</strong> {t.suggestBodyTail}
             </p>
           </div>
           <div className="pp-form-box">
             {suggestSubmitted ? (
               <div className="pp-form-success">
-                <div className="pp-form-success__icon pp-form-success__icon--gold">✓</div>
-                <div className="pp-form-success__title">Suggestion received!</div>
-                <p className="pp-form-success__body">Thank you - we read every submission. If we host a panel on your topic, we'll let you know if you left an email. Keep an eye on upcoming panels.</p>
+                <div className="pp-form-success__icon pp-form-success__icon--gold">{t.suggestSuccessIcon}</div>
+                <div className="pp-form-success__title">{t.suggestSuccessTitle}</div>
+                <p className="pp-form-success__body">{t.suggestSuccessBody}</p>
               </div>
             ) : (
               <form onSubmit={submitSuggest}>
                 <div className="pp-form-row">
-                  <label className="pp-form-label" htmlFor="suggestTopic">Panel topic you want to see <span>*</span></label>
-                  <input className="pp-form-input" type="text" id="suggestTopic" placeholder="Ex: Breaking into product management without prior experience" value={suggestForm.topic} onChange={e => setSuggestForm(f => ({ ...f, topic: e.target.value }))} />
+                  <label className="pp-form-label" htmlFor="suggestTopic">{t.suggestLabelTopic} <span>{t.suggestLabelTopicRequired}</span></label>
+                  <input className="pp-form-input" type="text" id="suggestTopic" placeholder={t.suggestPlaceholderTopic} value={suggestForm.topic} onChange={e => setSuggestForm(f => ({ ...f, topic: e.target.value }))} />
                 </div>
                 <div className="pp-form-row">
-                  <label className="pp-form-label" htmlFor="suggestWhy">Why would this be helpful? <span>*</span></label>
-                  <textarea className="pp-form-textarea" id="suggestWhy" placeholder="Tell us what question, challenge, or gap this panel would help address…" value={suggestForm.why} onChange={e => setSuggestForm(f => ({ ...f, why: e.target.value }))} />
+                  <label className="pp-form-label" htmlFor="suggestWhy">{t.suggestLabelWhy} <span>{t.suggestLabelWhyRequired}</span></label>
+                  <textarea className="pp-form-textarea" id="suggestWhy" placeholder={t.suggestPlaceholderWhy} value={suggestForm.why} onChange={e => setSuggestForm(f => ({ ...f, why: e.target.value }))} />
                 </div>
                 <div className="pp-form-row pp-form-row-2">
                   <div>
-                    <label className="pp-form-label" htmlFor="suggestStage">Your stage <span>*</span></label>
+                    <label className="pp-form-label" htmlFor="suggestStage">{t.suggestLabelStage} <span>{t.suggestLabelStageRequired}</span></label>
                     <select className="pp-form-select" id="suggestStage" value={suggestForm.stage} onChange={e => setSuggestForm(f => ({ ...f, stage: e.target.value }))}>
-                      <option value="">Select stage…</option>
-                      <option>First-Year</option>
-                      <option>Sophomore</option>
-                      <option>Junior</option>
-                      <option>Senior</option>
-                      <option>Recent Grad</option>
-                      <option>Bridge Year</option>
-                      <option>Career Transition</option>
-                      <option>Other</option>
+                      {t.suggestStageOptions.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
                     </select>
                   </div>
                   <div>
-                    <label className="pp-form-label" htmlFor="suggestCategory">Category <span>*</span></label>
+                    <label className="pp-form-label" htmlFor="suggestCategory">{t.suggestLabelCategory} <span>{t.suggestLabelCategoryRequired}</span></label>
                     <select className="pp-form-select" id="suggestCategory" value={suggestForm.category} onChange={e => setSuggestForm(f => ({ ...f, category: e.target.value }))}>
-                      <option value="">Select category…</option>
-                      <option>Internships</option>
-                      <option>New Grad Roles</option>
-                      <option>Apprenticeships</option>
-                      <option>Interviewing</option>
-                      <option>Networking</option>
-                      <option>First-Gen Experience</option>
-                      <option>Data Careers</option>
-                      <option>Software Engineering</option>
-                      <option>Recruiting</option>
-                      <option>Career Pivots</option>
-                      <option>Workplace Readiness</option>
-                      <option>Other</option>
+                      {t.suggestCategoryOptions.map(opt => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
                     </select>
                   </div>
                 </div>
                 <div className="pp-form-row">
-                  <label className="pp-form-label" htmlFor="suggestEmail">Email <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(optional - if you want a heads-up when we host it)</span></label>
-                  <input className="pp-form-input" type="email" id="suggestEmail" placeholder="your@email.com" value={suggestForm.email} onChange={e => setSuggestForm(f => ({ ...f, email: e.target.value }))} />
+                  <label className="pp-form-label" htmlFor="suggestEmail">{t.suggestLabelEmail} <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.suggestEmailNote}</span></label>
+                  <input className="pp-form-input" type="email" id="suggestEmail" placeholder={t.suggestPlaceholderEmail} value={suggestForm.email} onChange={e => setSuggestForm(f => ({ ...f, email: e.target.value }))} />
                 </div>
                 {suggestError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{suggestError}</p>}
-                <button className="pp-form-btn" type="submit" disabled={suggestLoading}>{suggestLoading ? 'Submitting…' : 'Send Topic Suggestion'}</button>
-                <p className="pp-form-note">Not every idea becomes a panel immediately, but every submission helps shape what we build next.</p>
+                <button className="pp-form-btn" type="submit" disabled={suggestLoading}>{suggestLoading ? t.suggestBtnSubmitting : t.suggestBtnSubmit}</button>
+                <p className="pp-form-note">{t.suggestFormNote}</p>
               </form>
             )}
           </div>
@@ -1108,78 +1071,75 @@ export default function PartnerPanels() {
       <section className="pp-panelist" id="panelist">
         <div className="pp-panelist__inner">
           <div>
-            <p className="pp-panelist__intro-kicker">Section 06</p>
-            <h2 className="pp-panelist__intro-title">Want to speak or partner with us?</h2>
+            <p className="pp-panelist__intro-kicker">{t.panelistKicker}</p>
+            <h2 className="pp-panelist__intro-title">{t.panelistTitle}</h2>
             <p className="pp-panelist__intro-body">
-              If you are a student leader, recent grad, professional, recruiter, founder, or community builder who wants to join a future panel or co-host a conversation with us, <strong>we would love to hear from you.</strong> We are especially interested in voices that bring lived experience, honest perspective, and practical value for students navigating the path from campus to career.
+              {t.panelistBody} <strong>{t.panelistBodyStrong}</strong> {t.panelistBodyTail}
             </p>
             <div className="pp-panelist__perks">
               <div className="pp-panelist__perk">
                 <span className="pp-panelist__perk-icon">✓</span>
-                <span>We actively seek first-gen, underrepresented, and nontraditional voices</span>
+                <span>{t.panelistPerk1}</span>
               </div>
               <div className="pp-panelist__perk">
                 <span className="pp-panelist__perk-icon">✓</span>
-                <span>You don't need a big platform - just real experience and genuine perspective</span>
+                <span>{t.panelistPerk2}</span>
               </div>
               <div className="pp-panelist__perk">
                 <span className="pp-panelist__perk-icon">✓</span>
-                <span>Partnership and sponsorship inquiries also welcome</span>
+                <span>{t.panelistPerk3}</span>
               </div>
               <div className="pp-panelist__perk">
                 <span className="pp-panelist__perk-icon">✓</span>
-                <span>All panels are free for attendees - we keep it accessible intentionally</span>
+                <span>{t.panelistPerk4}</span>
               </div>
             </div>
           </div>
           <div className="pp-form-box pp-form-box--dark">
             {panelistSubmitted ? (
               <div className="pp-form-success">
-                <div className="pp-form-success__icon pp-form-success__icon--teal">✓</div>
-                <div className="pp-form-success__title">We'd love to connect.</div>
-                <p className="pp-form-success__body">Thank you for your interest in speaking or partnering. We'll be in touch at your email within a few days to learn more.</p>
+                <div className="pp-form-success__icon pp-form-success__icon--teal">{t.panelistSuccessIcon}</div>
+                <div className="pp-form-success__title">{t.panelistSuccessTitle}</div>
+                <p className="pp-form-success__body">{t.panelistSuccessBody}</p>
               </div>
             ) : (
               <form onSubmit={submitPanelist}>
                 <div className="pp-form-row pp-form-row-2">
                   <div>
-                    <label className="pp-form-label" htmlFor="plName">Full Name <span>*</span></label>
-                    <input className="pp-form-input" type="text" id="plName" placeholder="Your name" value={panelistForm.name} onChange={e => setPanelistForm(f => ({ ...f, name: e.target.value }))} />
+                    <label className="pp-form-label" htmlFor="plName">{t.panelistLabelName} <span>{t.panelistLabelNameRequired}</span></label>
+                    <input className="pp-form-input" type="text" id="plName" placeholder={t.panelistPlaceholderName} value={panelistForm.name} onChange={e => setPanelistForm(f => ({ ...f, name: e.target.value }))} />
                   </div>
                   <div>
-                    <label className="pp-form-label" htmlFor="plEmail">Email <span>*</span></label>
-                    <input className="pp-form-input" type="email" id="plEmail" placeholder="your@email.com" value={panelistForm.email} onChange={e => setPanelistForm(f => ({ ...f, email: e.target.value }))} />
+                    <label className="pp-form-label" htmlFor="plEmail">{t.panelistLabelEmail} <span>{t.panelistLabelEmailRequired}</span></label>
+                    <input className="pp-form-input" type="email" id="plEmail" placeholder={t.panelistPlaceholderEmail} value={panelistForm.email} onChange={e => setPanelistForm(f => ({ ...f, email: e.target.value }))} />
                   </div>
                 </div>
                 <div className="pp-form-row">
-                  <label className="pp-form-label" htmlFor="plLinkedIn">LinkedIn Profile <span>*</span></label>
-                  <input className="pp-form-input" type="url" id="plLinkedIn" placeholder="linkedin.com/in/yourname" value={panelistForm.linkedin} onChange={e => setPanelistForm(f => ({ ...f, linkedin: e.target.value }))} />
+                  <label className="pp-form-label" htmlFor="plLinkedIn">{t.panelistLabelLinkedIn} <span>{t.panelistLabelLinkedInRequired}</span></label>
+                  <input className="pp-form-input" type="url" id="plLinkedIn" placeholder={t.panelistPlaceholderLinkedIn} value={panelistForm.linkedin} onChange={e => setPanelistForm(f => ({ ...f, linkedin: e.target.value }))} />
                 </div>
                 <div className="pp-form-row">
-                  <label className="pp-form-label" htmlFor="plRole">Current Role / Organization <span>*</span></label>
-                  <input className="pp-form-input" type="text" id="plRole" placeholder="e.g. SWE @ Stripe, CS student @ BU" value={panelistForm.role} onChange={e => setPanelistForm(f => ({ ...f, role: e.target.value }))} />
+                  <label className="pp-form-label" htmlFor="plRole">{t.panelistLabelRole} <span>{t.panelistLabelRoleRequired}</span></label>
+                  <input className="pp-form-input" type="text" id="plRole" placeholder={t.panelistPlaceholderRole} value={panelistForm.role} onChange={e => setPanelistForm(f => ({ ...f, role: e.target.value }))} />
                 </div>
                 <div className="pp-form-row">
-                  <label className="pp-form-label" htmlFor="plTopic">What topic could you speak on? <span>*</span></label>
-                  <textarea className="pp-form-textarea" id="plTopic" placeholder="What experience, perspective, or insight would you bring to a panel?" value={panelistForm.topic} onChange={e => setPanelistForm(f => ({ ...f, topic: e.target.value }))} />
+                  <label className="pp-form-label" htmlFor="plTopic">{t.panelistLabelTopic} <span>{t.panelistLabelTopicRequired}</span></label>
+                  <textarea className="pp-form-textarea" id="plTopic" placeholder={t.panelistPlaceholderTopic} value={panelistForm.topic} onChange={e => setPanelistForm(f => ({ ...f, topic: e.target.value }))} />
                 </div>
                 <div className="pp-form-row">
-                  <label className="pp-form-label" htmlFor="plInterest">Interested in… <span>*</span></label>
+                  <label className="pp-form-label" htmlFor="plInterest">{t.panelistLabelInterest} <span>{t.panelistLabelInterestRequired}</span></label>
                   <select className="pp-form-select" id="plInterest" value={panelistForm.interest} onChange={e => setPanelistForm(f => ({ ...f, interest: e.target.value }))}>
-                    <option value="">Select…</option>
-                    <option>Joining as a Panelist</option>
-                    <option>Community Partnership</option>
-                    <option>Sponsorship</option>
-                    <option>Co-hosting a Session</option>
-                    <option>Not sure yet - just want to connect</option>
+                    {t.panelistInterestOptions.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
                   </select>
                 </div>
                 <div className="pp-form-row">
-                  <label className="pp-form-label" htmlFor="plNotes">Anything else we should know?</label>
-                  <textarea className="pp-form-textarea" id="plNotes" placeholder="Optional - any context that helps us understand your interest or background" value={panelistForm.notes} onChange={e => setPanelistForm(f => ({ ...f, notes: e.target.value }))} />
+                  <label className="pp-form-label" htmlFor="plNotes">{t.panelistLabelNotes}</label>
+                  <textarea className="pp-form-textarea" id="plNotes" placeholder={t.panelistPlaceholderNotes} value={panelistForm.notes} onChange={e => setPanelistForm(f => ({ ...f, notes: e.target.value }))} />
                 </div>
                 {panelistError && <p role="alert" style={{ color: 'var(--color-cream)', fontSize: 13, marginBottom: 10, opacity: 0.85 }}>{panelistError}</p>}
-                <button className="pp-form-btn" type="submit" disabled={panelistLoading}>{panelistLoading ? 'Submitting…' : 'Express Interest'}</button>
+                <button className="pp-form-btn" type="submit" disabled={panelistLoading}>{panelistLoading ? t.panelistBtnSubmitting : t.panelistBtnSubmit}</button>
               </form>
             )}
           </div>
@@ -1189,13 +1149,13 @@ export default function PartnerPanels() {
       {/* ECOSYSTEM */}
       <section className="pp-eco" id="ecosystem">
         <div className="pp-eco__inner">
-          <p className="pp-eco__kicker">The J&J Ecosystem</p>
-          <h2 className="pp-eco__title">How Partner Panels fit the bigger picture.</h2>
+          <p className="pp-eco__kicker">{t.ecoKicker}</p>
+          <h2 className="pp-eco__title">{t.ecoTitle}</h2>
           <p className="pp-eco__body">
-            Partner Panels are one part of the larger J&J ecosystem. The Opportunity Board helps you find what is open. The Coffee Chat Network helps you meet people you can learn from directly. The Career Templates page gives you scripts, trackers, and tools you can use immediately. The Interview Prep Hub helps you get ready for the room. Partner Panels sit in the middle of all of that as the <strong>live conversation layer</strong> — the place where questions become dialogue, and information becomes community.
+            {t.ecoBody} <strong>{t.ecoBodyStrong}</strong> {t.ecoBodyTail}
           </p>
           <div className="pp-eco__grid">
-            {ECO_LINKS.map(link => (
+            {t.ecoLinks.map(link => (
               <Link key={link.to} to={link.to} className="pp-eco__link">
                 <div className="pp-eco__link-title">{link.title}</div>
                 <div className="pp-eco__link-desc">{link.desc}</div>
@@ -1208,10 +1168,10 @@ export default function PartnerPanels() {
       {/* CLOSING STRIP */}
       <section className="pp-closing">
         <div className="pp-closing__inner">
-          <h2 className="pp-closing__headline">Come to listen. Come to ask. Come to see what is possible.</h2>
+          <h2 className="pp-closing__headline">{t.closingHeadline}</h2>
           <div className="pp-closing__btns">
-            <a href="#upcoming" className="pp-closing__btn-primary">Browse Upcoming Panels</a>
-            <a href="#archive" className="pp-closing__btn-secondary">Explore the Archive</a>
+            <a href="#upcoming" className="pp-closing__btn-primary">{t.closingBtnUpcoming}</a>
+            <a href="#archive" className="pp-closing__btn-secondary">{t.closingBtnArchive}</a>
           </div>
         </div>
       </section>
