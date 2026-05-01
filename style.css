@@ -1245,7 +1245,7 @@ ul { list-style: none; }
 .gallery {
   position: relative;
   min-height: 70vh;
-  background: var(--color-cream);
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
