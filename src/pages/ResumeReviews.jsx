@@ -197,6 +197,8 @@ function dbResumeToCard(row) {
     appliedRole: row.role_title || row.role_type || '',
     _storagePath: row.file_name || null,
     avatarUrl: row.avatar_url || null,
+    likeCount: row.like_count || 0,
+    viewCount: row.view_count || 0,
   }
 }
 
