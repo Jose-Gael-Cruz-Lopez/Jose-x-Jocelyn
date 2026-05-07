@@ -1416,6 +1416,23 @@ export const en = {
     closingHeadline: 'See what a strong resume actually looks like. Then build yours.',
     closingBtn1: 'Browse the Library',
     closingBtn2: 'Submit Your Resume',
+
+    // ── Sort dropdown (resumes.fyi-style) ────────────────────────────────────
+    sortByLabel: 'Sort by:',
+    sortMostScreened: 'Most Screened',
+    sortMostLiked: 'Most Liked',
+    sortMostViewed: 'Most Viewed',
+    sortNewlyAdded: 'Newly Added',
+    sortFeatured: 'Featured by J&J',
+
+    // ── New card meta ────────────────────────────────────────────────────────
+    cardLikeAria: 'Likes',
+    cardViewAria: 'Views',
+    cardLikeAction: 'Like resume',
+    cardUnlikeAction: 'Unlike resume',
+    foundCount: 'resumes found',
+    hiddenFooter: 'resumes are hidden',
+    hiddenFooterCta: 'Sign up to see all resumes',
   },
 
   resumeSubnav: {
