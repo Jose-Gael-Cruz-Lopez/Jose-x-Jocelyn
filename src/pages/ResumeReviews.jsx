@@ -93,10 +93,13 @@ const TAG_COLOR_MAP = {
 const SIDEBAR_COMPANIES = ['google','microsoft','meta','apple','amazon','stripe','pinterest','reddit','dropbox','fidelity','jpmorgan','anthropic']
 
 
-function CoLogo({ coKey, size = 18 }) {
+function CoLogo({ coKey, size = 18, fullColor = false }) {
   const c = COMPANIES[coKey]
   if (!c) return <span className="rr-co-letter" style={{ background: 'rgba(0,0,0,.08)', color: 'var(--color-muted)', fontSize: '8px', width: size, height: size }}>{(coKey[0] || '?').toUpperCase()}</span>
-  if (c.slug) return <img className="rr-co-logo" src={`https://cdn.simpleicons.org/${c.slug}/8A7E72`} alt={c.name} width={size} height={size} loading="lazy" onError={e => { e.target.outerHTML = `<span class="rr-co-letter" style="background:rgba(0,0,0,.08);color:var(--color-muted);font-size:8px;width:${size}px;height:${size}px;">${c.name[0]}</span>` }} />
+  if (c.slug) {
+    const url = fullColor ? `https://cdn.simpleicons.org/${c.slug}` : `https://cdn.simpleicons.org/${c.slug}/8A7E72`
+    return <img className="rr-co-logo" style={{ width: size, height: size }} src={url} alt={c.name} width={size} height={size} loading="lazy" onError={e => { e.target.outerHTML = `<span class="rr-co-letter" style="background:rgba(0,0,0,.08);color:var(--color-muted);font-size:${Math.round(size * 0.44)}px;width:${size}px;height:${size}px;">${c.name[0]}</span>` }} />
+  }
   return <span className="rr-co-letter" style={{ background: c.bg, color: c.color, fontSize: Math.round(size * 0.44), width: size, height: size }}>{c.letter}</span>
 }
 
