@@ -1442,6 +1442,30 @@ export const es = {
     builder: 'Generador',
   },
 
+  resumeCompanies: {
+    pageTitle: 'Directorio de Empresas · Biblioteca de Currículums',
+    heroTitle: 'Directorio de Empresas',
+    heroBody: 'Explora nuestra lista de empresas y descubre currículums que pasaron sus filtros con éxito.',
+    searchPlaceholder: 'Buscar empresa',
+    trendingTitle: 'Empresas Populares',
+    allCompaniesTitle: 'Todas las Empresas',
+    notListedTitle: '¿Empresa no listada?',
+    notListedBody: 'Pídenos que añadamos la empresa que buscas.',
+    notListedNameLabel: 'Nombre de la Empresa',
+    notListedNamePlaceholder: 'Resumes.fyi',
+    notListedWebsiteLabel: 'Sitio Web',
+    notListedWebsitePlaceholder: 'https://ejemplo.com/',
+    notListedSubmit: 'Enviar',
+    notListedSubmitting: 'Enviando…',
+    notListedSuccess: 'Gracias — la revisaremos y añadiremos pronto.',
+    notListedError: 'Algo salió mal. Inténtalo de nuevo.',
+    emptyForLetter: 'No hay empresas que empiecen con',
+    backToAll: 'Mostrar todas',
+    countResumes: 'currículums',
+    countResume: 'currículum',
+    viewCompanyAria: 'Ver currículums de',
+  },
+
   linkedInSeries: {
     // ── Hero ─────────────────────────────────────────────────────────────────
     heroKicker: 'Del Campus a la Carrera · Serie de Contenido',
