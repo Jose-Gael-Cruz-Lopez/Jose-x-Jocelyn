@@ -137,6 +137,7 @@ export default function LinkedInSeries() {
   const [topic, setTopic] = useState('')
   const [email, setEmail] = useState('')
   const [category, setCategory] = useState('')
+  const [categoryOther, setCategoryOther] = useState('')
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
   const [formSubmitted, setFormSubmitted] = useState(false)
@@ -155,12 +156,16 @@ export default function LinkedInSeries() {
   const handleSubmit = async e => {
     e.preventDefault()
     if (!topic.trim()) { setFormError(t.formErrorTopic); return }
+    if (category === 'other' && !categoryOther.trim()) { setFormError(t.formErrorCategoryOther); return }
     setFormLoading(true)
     setFormError('')
+    const categoryValue = category === 'other'
+      ? `other: ${categoryOther.trim()}`
+      : (category || null)
     const { error } = await supabase.from('linkedin_episode_requests').insert({
       topic: topic.trim(),
       email: email.trim() || null,
-      category: category || null,
+      category: categoryValue,
     })
     setFormLoading(false)
     if (error) { setFormError(t.formErrorGeneric) }
@@ -289,12 +294,26 @@ export default function LinkedInSeries() {
                 <select className="ls-form-select" id="topicCat" value={category} onChange={e => setCategory(e.target.value)}>
                   <option value="">{t.formCategoryPlaceholder}</option>
                   <option value="internship-search">{t.catInternshipSearch}</option>
+                  <option value="full-time-search">{t.catFullTimeSearch}</option>
+                  <option value="resume-cover-letter">{t.catResumeCoverLetter}</option>
+                  <option value="interviews">{t.catInterviews}</option>
                   <option value="offers-negotiation">{t.catOffersNegotiation}</option>
                   <option value="recruiting-outreach">{t.catRecruitingOutreach}</option>
+                  <option value="networking-mentorship">{t.catNetworkingMentorship}</option>
+                  <option value="linkedin-brand">{t.catLinkedInBrand}</option>
                   <option value="workplace-onboarding">{t.catWorkplaceOnboarding}</option>
+                  <option value="career-pivots">{t.catCareerPivots}</option>
+                  <option value="grad-school-gap">{t.catGradSchoolGap}</option>
                   <option value="mindset-rejection">{t.catMindsetRejection}</option>
+                  <option value="other">{t.catOther}</option>
                 </select>
               </div>
+              {category === 'other' && (
+                <div className="ls-form-row">
+                  <label className="ls-form-label" htmlFor="topicCatOther">{t.formLabelCategoryOther}</label>
+                  <input className="ls-form-input" type="text" id="topicCatOther" placeholder={t.formPlaceholderCategoryOther} value={categoryOther} onChange={e => setCategoryOther(e.target.value)} maxLength={120} />
+                </div>
+              )}
               {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
               <button className="ls-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
             </form>
