@@ -1442,6 +1442,30 @@ export const en = {
     builder: 'Builder',
   },
 
+  resumeCompanies: {
+    pageTitle: 'Company Directory · Resume Library',
+    heroTitle: 'Company Directory',
+    heroBody: 'Explore our list of companies and discover resumes that successfully passed their resume screen.',
+    searchPlaceholder: 'Search for company',
+    trendingTitle: 'Trending Companies',
+    allCompaniesTitle: 'All Companies',
+    notListedTitle: 'Company not listed?',
+    notListedBody: "Request for us to add the company you're searching for.",
+    notListedNameLabel: 'Company Name',
+    notListedNamePlaceholder: 'Resumes.fyi',
+    notListedWebsiteLabel: 'Company Website',
+    notListedWebsitePlaceholder: 'https://example.com/',
+    notListedSubmit: 'Submit',
+    notListedSubmitting: 'Submitting…',
+    notListedSuccess: 'Thanks — we\'ll review and add it soon.',
+    notListedError: 'Something went wrong. Please try again.',
+    emptyForLetter: 'No companies starting with',
+    backToAll: 'Show all',
+    countResumes: 'resumes',
+    countResume: 'resume',
+    viewCompanyAria: 'View resumes for',
+  },
+
   linkedInSeries: {
     // ── Hero ─────────────────────────────────────────────────────────────────
     heroKicker: 'From Campus to Career · Content Series',
