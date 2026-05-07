@@ -1416,6 +1416,23 @@ export const es = {
     closingHeadline: 'Ve cómo es un currículum sólido en la práctica. Luego construye el tuyo.',
     closingBtn1: 'Ver la Biblioteca',
     closingBtn2: 'Enviar tu Currículum',
+
+    // ── Sort dropdown (resumes.fyi-style) ────────────────────────────────────
+    sortByLabel: 'Ordenar por:',
+    sortMostScreened: 'Más Filtrados',
+    sortMostLiked: 'Más Gustados',
+    sortMostViewed: 'Más Vistos',
+    sortNewlyAdded: 'Recién Añadidos',
+    sortFeatured: 'Destacados por J&J',
+
+    // ── New card meta ────────────────────────────────────────────────────────
+    cardLikeAria: 'Me gusta',
+    cardViewAria: 'Vistas',
+    cardLikeAction: 'Dar me gusta al currículum',
+    cardUnlikeAction: 'Quitar me gusta',
+    foundCount: 'currículums encontrados',
+    hiddenFooter: 'currículums ocultos',
+    hiddenFooterCta: 'Regístrate para ver todos',
   },
 
   resumeSubnav: {
