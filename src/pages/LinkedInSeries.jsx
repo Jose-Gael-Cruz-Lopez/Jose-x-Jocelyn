@@ -91,14 +91,14 @@ const PAGE_CSS = `
   .ls-post__author--both { background:var(--color-navy); }
   .ls-post__status { font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--color-muted);padding:3px 9px;border-radius:999px;background:rgba(26,25,22,.06); }
   .ls-how { position:relative;overflow:hidden;background:var(--color-navy);padding:clamp(64px,8vw,104px) clamp(20px,5vw,56px); }
-  .ls-how::before { content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 18% 24%,rgba(232,168,56,.14) 0%,transparent 45%),radial-gradient(circle at 84% 76%,rgba(58,125,107,.1) 0%,transparent 50%);pointer-events:none; }
+  .ls-how::before { content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 84% 76%,rgba(58,125,107,.08) 0%,transparent 50%);pointer-events:none; }
   .ls-how__inner { position:relative;max-width:1040px;margin:0 auto; }
   .ls-how__kicker { font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--color-gold);margin-bottom:16px;display:inline-flex;align-items:center;gap:10px; }
   .ls-how__kicker::after { content:'';width:24px;height:1px;background:var(--color-gold);opacity:.5; }
   .ls-how__title { font-family:var(--font-display);font-size:clamp(28px,4.4vw,46px);font-weight:700;letter-spacing:-0.025em;line-height:1.05;text-wrap:balance;color:var(--color-cream);margin-bottom:48px;max-width:18ch; }
   .ls-how__title em { font-style:italic;font-family:var(--font-serif,var(--font-display));color:var(--color-gold);font-weight:500;padding-right:.04em; }
   .ls-how__grid { display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:32px; }
-  .ls-how__item { position:relative;padding-top:14px;border-top:1px solid rgba(232,168,56,.22); }
+  .ls-how__item { position:relative;padding-top:14px;border-top:1px solid rgba(242,228,206,.18); }
   .ls-how__item-icon { font-family:var(--font-display);font-size:42px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.04em;color:var(--color-gold);margin-bottom:14px;line-height:1; }
   .ls-how__item-title { font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--color-cream);margin-bottom:8px;letter-spacing:-.005em;line-height:1.3; }
   .ls-how__item-desc { font-size:14px;color:rgba(242,228,206,.7);line-height:1.6;text-wrap:pretty; }
