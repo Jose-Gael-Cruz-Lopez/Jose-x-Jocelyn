@@ -681,6 +681,8 @@ export default function ResumeReviews() {
         }
       `}</style>
 
+      <ResumeSubNav />
+
       {/* HERO */}
       <header className="rr-hero" id="top">
         <p className="rr-hero__kicker">{t.heroKicker}</p>
