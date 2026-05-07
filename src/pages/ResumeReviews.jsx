@@ -749,46 +749,91 @@ export default function ResumeReviews() {
                 <strong>{t.gridEmptyStrong}</strong>
                 {t.gridEmptyBody}
               </div>
-            ) : visibleResumes.map(r => {
-              const sm = getStageMeta(r.stage, t)
-              return (
-                <article key={r.id} className="rr-card" onClick={() => { panelTriggerRef.current = document.activeElement; setPanelId(r.id) }} tabIndex={0} role="button" aria-label={`${t.cardViewBtn} ${r.handle}`} onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { panelTriggerRef.current = e.currentTarget; setPanelId(r.id) } }}>
-                  <div className="rr-card__stage-wrap">
-                    <span className={`rr-card__stage-badge rr-badge--${sm.cls}`}>{sm.label}</span>
-                    {r.featured && <span className="rr-card__featured-badge">{t.cardFeaturedBadge}</span>}
-                    <div className="rr-card__thumb">
-                      <div className="rr-card__thumb-paper">
-                        <div className="rr-card__thumb-name" />
-                        <div className="rr-card__thumb-subname" />
+            ) : (
+              <>
+                {visibleResumes.map(r => {
+                  const sm = getStageMeta(r.stage, t)
+                  const liked = likedIds.has(r.id)
+                  const fullCompanies = (r.companies || []).slice(0, 4)
+                  const cells = Array.from({ length: 4 }, (_, i) => fullCompanies[i] || null)
+                  const moreCount = r.companies.length > 4 ? r.companies.length - 3 : 0
+                  return (
+                    <article
+                      key={r.id}
+                      className={`rr-card rr-card--${sm.cls}`}
+                      onClick={() => { panelTriggerRef.current = document.activeElement; setPanelId(r.id) }}
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`${t.cardViewBtn} ${r.handle}`}
+                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); panelTriggerRef.current = e.currentTarget; setPanelId(r.id) } }}
+                    >
+                      <div className="rr-card__visual">
+                        <span className={`rr-card__pill rr-pill--${sm.cls}`}>{sm.label}</span>
+                        {r.featured && <span className="rr-card__featured-badge">{t.cardFeaturedBadge}</span>}
+                        <div className="rr-card__logos">
+                          {cells.map((co, i) => {
+                            if (i === 3 && moreCount > 0) {
+                              return <div key={`more-${i}`} className="rr-card__logo-cell rr-card__logo-cell--more">+{moreCount}</div>
+                            }
+                            if (!co) return <div key={`empty-${i}`} className="rr-card__logo-cell rr-card__logo-cell--empty" aria-hidden="true" />
+                            return (
+                              <div key={co} className="rr-card__logo-cell">
+                                <CoLogo coKey={co} size={28} fullColor />
+                              </div>
+                            )
+                          })}
+                        </div>
+                        <div className="rr-card__lines" aria-hidden="true">
+                          <span /><span /><span />
+                        </div>
                       </div>
-                      <div className="rr-card__thumb-overlay">
-                        <button className="rr-card__thumb-btn">{t.cardViewBtn}</button>
+                      <div className="rr-card__info">
+                        {r.avatarUrl
+                          ? <img className="rr-card__avatar" src={r.avatarUrl} alt="" />
+                          : <span className="rr-card__avatar-fallback">{(r.handle?.[0] || '?').toUpperCase()}</span>
+                        }
+                        <div className="rr-card__id">
+                          <div className="rr-card__handle">{r.role}</div>
+                          <div className="rr-card__role">@{r.handle}</div>
+                        </div>
+                        <div className="rr-card__metrics">
+                          <button
+                            type="button"
+                            className={`rr-card__metric${liked ? ' rr-card__metric--liked' : ''}`}
+                            aria-label={liked ? t.cardUnlikeAction : t.cardLikeAction}
+                            aria-pressed={liked}
+                            onClick={e => { e.stopPropagation(); toggleLike(r.id) }}
+                          >
+                            <svg viewBox="0 0 24 24" fill={liked ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                            </svg>
+                            <span>{(r.likeCount || 0) + (liked ? 1 : 0)}</span>
+                          </button>
+                          <span className="rr-card__metric" aria-label={t.cardViewAria}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                              <circle cx="12" cy="12" r="3" />
+                            </svg>
+                            <span>{r.viewCount > 1000 ? `${(r.viewCount/1000).toFixed(1)}k` : (r.viewCount || 0)}</span>
+                          </span>
+                        </div>
                       </div>
+                    </article>
+                  )
+                })}
+                {hiddenCount > 0 && (
+                  <div className="rr-hidden-card">
+                    <div className="rr-hidden-card__avatars" aria-hidden="true">
+                      <span style={{ background: 'var(--color-blue)' }} />
+                      <span style={{ background: 'var(--color-accent)' }} />
+                      <span style={{ background: 'var(--color-teal)' }} />
+                      <span style={{ background: 'var(--color-gold)' }} />
                     </div>
+                    <p className="rr-hidden-card__text"><strong>{hiddenCount}</strong> {t.hiddenFooter}</p>
                   </div>
-                  <div className="rr-card__info">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                      {r.avatarUrl
-                        ? <img src={r.avatarUrl} alt="" width={28} height={28} style={{ borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                        : <span style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(0,0,0,.07)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, color: 'var(--color-muted)', flexShrink: 0 }}>{(r.handle?.[0] || '?').toUpperCase()}</span>
-                      }
-                      <div className="rr-card__handle">@{r.handle}</div>
-                    </div>
-                    <div className="rr-card__role">{r.role}</div>
-                    <div className="rr-card__companies">
-                      {r.companies.slice(0, 3).map(co => <CoLogo key={co} coKey={co} size={18} />)}
-                      {r.companyExtra > 0 && <span className="rr-co-extra">+{r.companyExtra}</span>}
-                    </div>
-                    <div className="rr-card__foot">
-                      <div className="rr-card__tags">
-                        {r.tags.map(tag => <TagPill key={tag} tag={tag} small labelMap={tTagLabelMap} />)}
-                      </div>
-                      <span className="rr-card__submitted">{r.submitted}</span>
-                    </div>
-                  </div>
-                </article>
-              )
-            })}
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
