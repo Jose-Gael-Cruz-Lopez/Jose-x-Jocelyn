@@ -165,14 +165,6 @@ function SidebarFilters({ filter, onFilter, t }) {
           </label>
         ))}
       </div>
-      <div className="rr-filter-group">
-        <span className="rr-filter-label">{t.filterSortLabel}</span>
-        <select className="rr-sort-select" value={filter.sort} onChange={e => onFilter(f => ({ ...f, sort: e.target.value }))}>
-          {t.filterSortOptions.map(({ value, label }) => (
-            <option key={value} value={value}>{label}</option>
-          ))}
-        </select>
-      </div>
       <div style={{ padding: '12px 16px' }}>
         <button className="rr-filter-reset" onClick={() => onFilter({ search: '', roles: [], stages: [], companies: [], tags: [], sort: 'newest' })}>{t.filterClearAll}</button>
       </div>
