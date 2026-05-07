@@ -1418,6 +1418,13 @@ export const en = {
     closingBtn2: 'Submit Your Resume',
   },
 
+  resumeSubnav: {
+    ariaLabel: 'Resume sections',
+    explore: 'Explore',
+    companies: 'Companies',
+    builder: 'Builder',
+  },
+
   linkedInSeries: {
     // ── Hero ─────────────────────────────────────────────────────────────────
     heroKicker: 'From Campus to Career · Content Series',
