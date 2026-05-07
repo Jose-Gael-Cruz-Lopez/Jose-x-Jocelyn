@@ -479,38 +479,64 @@ export default function ResumeReviews() {
         .rr-grid--empty { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--color-muted); font-size: 15px; line-height: 1.7; }
         .rr-grid--empty strong { display: block; font-family: var(--font-display); font-size: 18px; color: var(--color-dark); margin-bottom: 6px; }
 
-        /* RESUME CARD */
-        .rr-card { background: var(--color-white); border: 1px solid rgba(0,0,0,.08); border-radius: 14px; overflow: hidden; cursor: pointer; transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s; position: relative; }
+        /* RESUME CARD — resumes.fyi-style logo grid */
+        .rr-card { background: var(--color-white); border: 1px solid rgba(0,0,0,.08); border-top-width: 0; border-radius: 14px; overflow: hidden; cursor: pointer; transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s; position: relative; isolation: isolate; }
+        .rr-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(0,0,0,.12); z-index: 1; }
         .rr-card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
-        .rr-card__stage-wrap { position: relative; }
-        .rr-card__stage-badge { position: absolute; top: 10px; left: 10px; z-index: 2; font-size: 9px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; padding: 4px 9px; border-radius: 5px; }
-        .rr-badge--intern     { background: rgba(22,43,68,.1);    color: var(--color-navy); }
-        .rr-badge--newgrad    { background: rgba(58,125,107,.1);  color: var(--color-teal); }
-        .rr-badge--fulltime   { background: rgba(22,43,68,.08);   color: var(--color-navy); }
-        .rr-badge--apprenticeship { background: rgba(232,168,56,.12); color: var(--color-gold-dark); }
-        .rr-badge--pivot      { background: rgba(179,69,57,.08);  color: var(--color-accent); }
-        .rr-badge--contract   { background: rgba(0,0,0,.06);      color: var(--color-muted); }
-        .rr-card__featured-badge { position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; align-items: center; gap: 4px; padding: 4px 9px; border-radius: 5px; background: rgba(232,168,56,.12); color: var(--color-gold-dark); font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
-        .rr-card__thumb { width: 100%; aspect-ratio: 8.5 / 11; background: rgba(0,0,0,.03); position: relative; overflow: hidden; }
-        .rr-card__thumb-paper { position: absolute; inset: 10px 12px; background: var(--color-white); border-radius: 3px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden; }
-        .rr-card__thumb-paper::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 20%; background: linear-gradient(180deg, rgba(0,0,0,.035) 0%, transparent 100%); border-bottom: 1px solid rgba(0,0,0,.04); }
-        .rr-card__thumb-paper::after { content: ''; position: absolute; top: 24%; left: 10%; right: 10%; bottom: 8%; background: repeating-linear-gradient(180deg, rgba(0,0,0,.055) 0px, rgba(0,0,0,.055) 1.5px, transparent 1.5px, transparent 9px); }
-        .rr-card__thumb-name { position: absolute; top: 6%; left: 50%; transform: translateX(-50%); width: 40%; height: 5px; border-radius: 3px; background: rgba(0,0,0,.1); }
-        .rr-card__thumb-subname { position: absolute; top: 13%; left: 50%; transform: translateX(-50%); width: 55%; height: 3px; border-radius: 3px; background: rgba(0,0,0,.06); }
-        .rr-card__thumb-overlay { position: absolute; inset: 0; z-index: 3; background: rgba(26,25,22,.6); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity .2s; backdrop-filter: blur(2px); }
-        .rr-card:hover .rr-card__thumb-overlay { opacity: 1; }
-        .rr-card__thumb-btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px; background: var(--color-cream); color: var(--color-dark); border-radius: 8px; font-family: var(--font-display); font-size: 13px; font-weight: 700; border: none; cursor: pointer; transform: translateY(6px); transition: transform .2s cubic-bezier(.16,1,.3,1); }
-        .rr-card:hover .rr-card__thumb-btn { transform: translateY(0); }
-        .rr-card__info { padding: 12px 14px 14px; border-top: 1px solid rgba(0,0,0,.07); }
-        .rr-card__handle { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--color-dark); margin-bottom: 2px; }
-        .rr-card__role { font-size: 12px; color: var(--color-muted); margin-bottom: 8px; }
-        .rr-card__companies { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; flex-wrap: wrap; }
+        .rr-card--intern::before        { background: var(--color-blue); }
+        .rr-card--newgrad::before       { background: var(--color-accent); }
+        .rr-card--fulltime::before      { background: var(--color-navy); }
+        .rr-card--apprenticeship::before{ background: var(--color-gold); }
+        .rr-card--pivot::before         { background: var(--color-accent); }
+        .rr-card--contract::before      { background: var(--color-muted); }
+
+        .rr-card__visual { position: relative; padding: 40px 18px 18px; background: var(--color-white); }
+        .rr-card__pill { position: absolute; top: 12px; left: 14px; font-family: var(--font-display); font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
+        .rr-pill--intern        { background: rgba(91,142,194,.18); color: var(--color-blue); }
+        .rr-pill--newgrad       { background: rgba(179,69,57,.14); color: var(--color-accent); }
+        .rr-pill--fulltime      { background: rgba(22,43,68,.12); color: var(--color-navy); }
+        .rr-pill--apprenticeship{ background: rgba(232,168,56,.18); color: var(--color-gold-dark); }
+        .rr-pill--pivot         { background: rgba(179,69,57,.10); color: var(--color-accent); }
+        .rr-pill--contract      { background: rgba(0,0,0,.08); color: var(--color-muted); }
+        .rr-card__featured-badge { position: absolute; top: 12px; right: 14px; display: inline-flex; align-items: center; gap: 4px; padding: 4px 9px; border-radius: 999px; background: rgba(232,168,56,.16); color: var(--color-gold-dark); font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+
+        .rr-card__logos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+        .rr-card__logo-cell { aspect-ratio: 1 / 1; background: var(--color-cream); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,.04), inset 0 0 0 1px rgba(0,0,0,.04); overflow: hidden; }
+        .rr-card__logo-cell img { width: 60%; height: 60%; object-fit: contain; }
+        .rr-card__logo-cell--more { background: var(--color-cream); color: var(--color-dark); font-family: var(--font-display); font-size: 13px; font-weight: 800; }
+        .rr-card__logo-cell--empty { background: rgba(0,0,0,.04); box-shadow: none; }
+        .rr-card__lines { display: flex; flex-direction: column; gap: 7px; padding: 6px 4px 0; opacity: .55; }
+        .rr-card__lines span { display: block; height: 6px; border-radius: 3px; background: rgba(0,0,0,.08); }
+        .rr-card__lines span:nth-child(1) { width: 88%; }
+        .rr-card__lines span:nth-child(2) { width: 70%; }
+        .rr-card__lines span:nth-child(3) { width: 78%; }
+
+        .rr-card__info { padding: 14px 16px 16px; border-top: 1px solid rgba(0,0,0,.07); display: flex; align-items: center; gap: 10px; }
+        .rr-card__avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; object-fit: cover; }
+        .rr-card__avatar-fallback { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--color-white); background: var(--color-teal); }
+        .rr-card__id { flex: 1; min-width: 0; }
+        .rr-card__handle { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--color-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .rr-card__role { font-size: 11px; color: var(--color-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .rr-card__metrics { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+        .rr-card__metric { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--color-muted); font-variant-numeric: tabular-nums; background: none; border: none; cursor: pointer; padding: 0; font-family: inherit; }
+        .rr-card__metric:hover { color: var(--color-accent); }
+        .rr-card__metric--liked { color: var(--color-accent); }
+        .rr-card__metric svg { width: 14px; height: 14px; }
         .rr-co-logo { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; flex-shrink: 0; }
         .rr-co-letter { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 3px; font-size: 8px; font-weight: 800; flex-shrink: 0; }
         .rr-co-extra { font-size: 10px; font-weight: 700; color: var(--color-muted); }
-        .rr-card__foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px; }
-        .rr-card__tags { display: flex; gap: 4px; flex-wrap: wrap; }
-        .rr-card__submitted { font-size: 11px; color: var(--color-muted); }
+
+        /* Hidden-resumes footer card */
+        .rr-hidden-card { grid-column: 1 / -1; margin-top: 6px; padding: 16px 18px; background: rgba(91,142,194,.08); border: 1px dashed rgba(91,142,194,.25); border-radius: 14px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .rr-hidden-card__text { font-size: 13px; color: var(--color-dark); font-weight: 600; flex: 1; min-width: 200px; }
+        .rr-hidden-card__avatars { display: flex; align-items: center; gap: 6px; }
+        .rr-hidden-card__avatars > * { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--color-white); margin-left: -8px; }
+        .rr-hidden-card__avatars > *:first-child { margin-left: 0; }
+
+        /* Sort dropdown (top-right of grid) */
+        .rr-sort-wrap { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-muted); }
+        .rr-sort-wrap select { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--color-dark); background: transparent; border: none; cursor: pointer; padding: 4px 0; appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%231A1916' stroke-width='1.5' stroke-linecap='round' fill='none'/></svg>"); background-repeat: no-repeat; background-position: right center; padding-right: 18px; }
+        .rr-sort-wrap select:focus { outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: 4px; }
 
         /* HOW IT WORKS */
         .rr-howto { max-width: 1240px; margin: 0 auto; padding: 80px clamp(20px,5vw,56px); }
