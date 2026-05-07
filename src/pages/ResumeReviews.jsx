@@ -226,7 +226,22 @@ export default function ResumeReviews() {
   const panelRef = useRef(null)
   const panelTriggerRef = useRef(null)
 
+  const [likedIds, setLikedIds] = useState(() => {
+    if (typeof window === 'undefined') return new Set()
+    try { return new Set(JSON.parse(localStorage.getItem(LIKES_KEY) || '[]')) }
+    catch { return new Set() }
+  })
+  function toggleLike(id) {
+    setLikedIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id); else next.add(id)
+      try { localStorage.setItem(LIKES_KEY, JSON.stringify([...next])) } catch {}
+      return next
+    })
+  }
+
   const allResumes = dbResumes
+  const hiddenCount = 0
 
   const visibleResumes = useMemo(() => {
     let result = allResumes.filter(r => {
