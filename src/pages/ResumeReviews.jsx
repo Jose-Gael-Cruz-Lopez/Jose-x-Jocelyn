@@ -1,8 +1,11 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
+import ResumeSubNav from '../components/ResumeSubNav'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
+
+const LIKES_KEY = 'jxj_resume_likes_v1'
 
 const COMPANIES = {
   google:    { name: 'Google',    slug: 'google',    hex: '4285F4' },
