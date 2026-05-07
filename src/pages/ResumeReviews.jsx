@@ -165,7 +165,7 @@ function SidebarFilters({ filter, onFilter, t }) {
           </label>
         ))}
       </div>
-      <div style={{ padding: '12px 16px' }}>
+      <div style={{ paddingTop: 16 }}>
         <button className="rr-filter-reset" onClick={() => onFilter({ search: '', roles: [], stages: [], companies: [], tags: [], sort: 'newest' })}>{t.filterClearAll}</button>
       </div>
     </div>
@@ -203,6 +203,7 @@ function dbResumeToCard(row) {
 export default function ResumeReviews() {
   const t = useT('resumeReviews')
   const [dbResumes, setDbResumes] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter] = useState({ search: '', roles: [], stages: [], companies: [], tags: [], sort: 'newest' })
   const [panelId, setPanelId] = useState(null)
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -288,13 +289,18 @@ export default function ResumeReviews() {
   const panelResume = panelId ? allResumes.find(r => r.id === panelId) : null
 
   useEffect(() => {
+    let active = true
+    setIsLoading(true)
     supabase.from('resume_submissions')
       .select('*')
       .in('status', ['approved', 'featured'])
       .order('created_at', { ascending: false })
       .then(({ data }) => {
+        if (!active) return
         if (data?.length) setDbResumes(data.map(dbResumeToCard))
-      })
+        setIsLoading(false)
+      }, () => { if (active) setIsLoading(false) })
+    return () => { active = false }
   }, [])
 
   useEffect(() => {
@@ -400,10 +406,11 @@ export default function ResumeReviews() {
       <style>{`
         html, body { background: var(--color-cream); }
 
-        .rr-divider { border: none; border-top: 1px solid rgba(0,0,0,.08); margin: 0; }
-        .rr-kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px; }
-        .rr-section-title { font-family: var(--font-display); font-size: clamp(26px,4vw,40px); font-weight: 700; color: var(--color-dark); line-height: 1.15; margin-bottom: 10px; }
-        .rr-section-sub { font-family: var(--font-display); font-size: clamp(16px,2vw,20px); font-weight: 400; color: var(--color-accent); margin-bottom: 18px; }
+        .rr-divider { border: none; border-top: 1px solid rgba(26,25,22,.08); margin: 0; }
+        .rr-kicker { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 10px; }
+        .rr-kicker::after { content: ''; width: 24px; height: 1px; background: var(--color-accent); opacity: .5; }
+        .rr-section-title { font-family: var(--font-display); font-size: clamp(30px,4.6vw,52px); font-weight: 700; color: var(--color-dark); line-height: 1.05; letter-spacing: -.02em; margin-bottom: 14px; max-width: 18ch; }
+        .rr-section-sub { font-family: var(--font-serif, var(--font-display)); font-size: clamp(17px,2vw,22px); font-style: italic; font-weight: 400; color: var(--color-accent); margin-bottom: 18px; max-width: 50ch; }
         .rr-section-body { font-size: clamp(15px,1.8vw,17px); color: var(--color-muted); line-height: 1.75; max-width: 700px; }
         .rr-section-body strong { color: var(--color-dark); font-weight: 600; }
 
@@ -416,38 +423,45 @@ export default function ResumeReviews() {
 
         .rr-tag--muted  { background: rgba(0,0,0,.06);       color: var(--color-muted); }
 
-        .rr-btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; background: var(--color-dark); color: var(--color-cream); border-radius: 8px; font-family: var(--font-display); font-size: 14px; font-weight: 600; text-decoration: none; border: 1.5px solid var(--color-dark); cursor: pointer; transition: background .2s, transform .18s cubic-bezier(.16,1,.3,1); }
-        .rr-btn-primary:hover { background: var(--color-accent); border-color: var(--color-accent); transform: translateY(-1px); }
-        .rr-btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; background: transparent; color: var(--color-dark); border-radius: 8px; font-family: var(--font-display); font-size: 14px; font-weight: 600; text-decoration: none; border: 1.5px solid rgba(0,0,0,.2); cursor: pointer; transition: border-color .2s, color .2s, transform .18s cubic-bezier(.16,1,.3,1); }
-        .rr-btn-secondary:hover { border-color: var(--color-dark); color: var(--color-accent); transform: translateY(-1px); }
+        .rr-btn-primary { display: inline-flex; align-items: center; gap: 10px; padding: 15px 28px; background: var(--color-dark); color: var(--color-cream); border-radius: 10px; font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: -.005em; text-decoration: none; border: 1.5px solid var(--color-dark); cursor: pointer; box-shadow: 0 8px 20px -10px rgba(26,25,22,.4), inset 0 1px 0 rgba(255,255,255,.08); transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s, border-color .25s; }
+        .rr-btn-primary:hover { background: var(--color-accent); border-color: var(--color-accent); transform: translateY(-2px); box-shadow: 0 14px 26px -12px rgba(179,69,57,.5), inset 0 1px 0 rgba(255,255,255,.12); }
+        .rr-btn-primary:active { transform: translateY(0); box-shadow: 0 4px 10px -4px rgba(26,25,22,.3); }
+        .rr-btn-secondary { display: inline-flex; align-items: center; gap: 10px; padding: 15px 28px; background: transparent; color: var(--color-dark); border-radius: 10px; font-family: var(--font-display); font-size: 14px; font-weight: 700; letter-spacing: -.005em; text-decoration: none; border: 1.5px solid rgba(26,25,22,.22); cursor: pointer; transition: border-color .25s, color .25s, background .25s, transform .22s cubic-bezier(.16,1,.3,1); }
+        .rr-btn-secondary:hover { border-color: var(--color-dark); color: var(--color-accent); background: rgba(179,69,57,.04); transform: translateY(-2px); }
+        .rr-btn-secondary:active { transform: translateY(0); }
 
-        /* HERO */
-        .rr-hero { padding: 120px clamp(20px,5vw,56px) 64px; max-width: 1240px; margin: 0 auto; }
-        .rr-hero__kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 18px; }
-        .rr-hero__title { font-family: var(--font-display); font-size: clamp(42px,7vw,80px); font-weight: 700; line-height: 1.04; color: var(--color-dark); margin-bottom: 14px; }
-        .rr-hero__title em { font-style: normal; color: var(--color-gold); }
-        .rr-hero__sub { font-family: var(--font-display); font-size: clamp(18px,2.5vw,24px); font-weight: 400; color: var(--color-dark); line-height: 1.4; max-width: 680px; margin-bottom: 20px; }
-        .rr-hero__body { font-size: clamp(15px,1.8vw,17px); color: var(--color-muted); line-height: 1.8; max-width: 680px; margin-bottom: 36px; }
+        /* HERO — asymmetric, lead with emotional hook */
+        .rr-hero { padding: 96px clamp(20px,5vw,56px) 56px; max-width: 1240px; margin: 0 auto; position: relative; overflow: hidden; }
+        .rr-hero::before { content: ''; position: absolute; top: 96px; left: clamp(20px,5vw,56px); width: 56px; height: 4px; background: var(--color-accent); border-radius: 2px; }
+        .rr-hero::after { content: ''; position: absolute; top: -20%; right: -8%; width: 380px; height: 380px; background: radial-gradient(closest-side, rgba(179,69,57,.13), transparent 70%); pointer-events: none; z-index: -1; }
+        .rr-hero__kicker { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--color-accent); margin: 28px 0 22px; display: inline-flex; align-items: center; gap: 10px; }
+        .rr-hero__kicker::after { content: ''; width: 24px; height: 1px; background: var(--color-accent); opacity: .5; }
+        .rr-hero__title { font-family: var(--font-display); font-size: clamp(46px,7.6vw,92px); font-weight: 700; line-height: .98; letter-spacing: -.025em; color: var(--color-dark); margin-bottom: 22px; max-width: 18ch; }
+        .rr-hero__title em { font-style: italic; font-family: var(--font-serif, var(--font-display)); color: var(--color-gold-dark); font-weight: 500; padding-right: .04em; }
+        .rr-hero__sub { font-family: var(--font-display); font-size: clamp(18px,2.5vw,24px); font-weight: 400; color: var(--color-dark); line-height: 1.4; max-width: 580px; margin-bottom: 18px; }
+        .rr-hero__body { font-size: clamp(15px,1.8vw,17px); color: var(--color-muted); line-height: 1.7; max-width: 560px; margin-bottom: 32px; }
         .rr-hero__body strong { color: var(--color-dark); font-weight: 600; }
-        .rr-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 48px; }
-        .rr-stats { display: flex; flex-wrap: wrap; gap: 36px; padding-top: 32px; border-top: 1px solid rgba(0,0,0,.08); }
-        .rr-stat__num { font-family: var(--font-display); font-size: clamp(26px,3.5vw,38px); font-weight: 700; color: var(--color-dark); line-height: 1; }
+        .rr-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 56px; }
+        .rr-stats { display: flex; flex-wrap: wrap; gap: 0; padding-top: 28px; border-top: 1px solid rgba(26,25,22,.1); }
+        .rr-stats > div { padding: 0 36px 0 0; position: relative; }
+        .rr-stats > div + div { padding-left: 36px; border-left: 1px solid rgba(26,25,22,.08); }
+        .rr-stat__num { font-family: var(--font-display); font-size: clamp(26px,3.5vw,38px); font-weight: 700; color: var(--color-dark); line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
         .rr-stat__num em { font-style: normal; color: var(--color-gold); }
-        .rr-stat__label { font-size: 13px; color: var(--color-muted); margin-top: 5px; }
+        .rr-stat__label { font-size: 12px; color: var(--color-muted); margin-top: 6px; letter-spacing: .04em; }
 
         /* LAYOUT */
         .rr-layout { max-width: 1240px; margin: 0 auto; padding: 48px clamp(20px,5vw,56px) 80px; display: grid; grid-template-columns: 256px 1fr; gap: 40px; align-items: start; }
         .rr-sidebar { position: sticky; top: 80px; max-height: calc(100vh - 100px); overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(0,0,0,.1) transparent; }
         .rr-sidebar::-webkit-scrollbar { width: 4px; }
         .rr-sidebar::-webkit-scrollbar-thumb { background: rgba(0,0,0,.12); border-radius: 4px; }
-        .rr-sidebar__block { background: var(--color-white); border: 1px solid rgba(0,0,0,.08); border-radius: 14px; overflow: hidden; }
-        .rr-sidebar__search-wrap { padding: 14px 16px; border-bottom: 1px solid rgba(0,0,0,.06); }
+        .rr-sidebar__block { background: transparent; border: none; }
+        .rr-sidebar__search-wrap { padding: 0 0 16px; border-bottom: 1px solid rgba(26,25,22,.08); margin-bottom: 4px; }
         .rr-sidebar__search { width: 100%; font-family: var(--font-body); font-size: 13px; padding: 9px 12px 9px 32px; border: 1.5px solid rgba(0,0,0,.1); border-radius: 8px; background: var(--color-cream) url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='6' cy='6' r='4.5' stroke='%238A7E72' stroke-width='1.5'/%3E%3Cpath d='M9.5 9.5L12 12' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat 10px center; color: var(--color-dark); outline: none; transition: border-color .2s; box-sizing: border-box; }
         .rr-sidebar__search:focus { border-color: var(--color-gold); }
         .rr-sidebar__search::placeholder { color: var(--color-muted); }
-        .rr-filter-group { padding: 14px 16px; border-bottom: 1px solid rgba(0,0,0,.06); }
+        .rr-filter-group { padding: 18px 0; border-bottom: 1px solid rgba(26,25,22,.06); }
         .rr-filter-group:last-child { border-bottom: none; }
-        .rr-filter-label { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 10px; display: block; }
+        .rr-filter-label { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 12px; display: block; }
         .rr-check-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; cursor: pointer; }
         .rr-check-row:last-child { margin-bottom: 0; }
         .rr-check-row input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--color-dark); cursor: pointer; flex-shrink: 0; }
@@ -466,15 +480,17 @@ export default function ResumeReviews() {
         .rr-sort-select:focus { border-color: var(--color-gold); }
         .rr-filter-reset { display: block; margin-top: 12px; font-size: 12px; font-weight: 600; color: var(--color-accent); cursor: pointer; text-align: center; padding: 8px; background: rgba(179,69,57,.06); border-radius: 7px; border: none; width: 100%; font-family: var(--font-body); transition: background .2s; }
         .rr-filter-reset:hover { background: rgba(179,69,57,.12); }
-        .rr-mobile-filter-btn { display: none; align-items: center; gap: 8px; padding: 10px 18px; background: var(--color-white); border: 1.5px solid rgba(0,0,0,.12); border-radius: 8px; font-family: var(--font-display); font-size: 13px; font-weight: 600; color: var(--color-dark); cursor: pointer; margin-bottom: 16px; transition: border-color .2s; }
-        .rr-mobile-filter-btn:hover { border-color: var(--color-dark); }
+        .rr-mobile-filter-btn { display: none; align-items: center; gap: 8px; padding: 11px 18px; background: rgba(179,69,57,.06); border: 1.5px solid rgba(179,69,57,.18); border-radius: 999px; font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: -.005em; color: var(--color-accent); cursor: pointer; margin-bottom: 16px; transition: background .2s, border-color .2s, transform .18s cubic-bezier(.16,1,.3,1); }
+        .rr-mobile-filter-btn:hover { background: rgba(179,69,57,.1); border-color: rgba(179,69,57,.32); transform: translateY(-1px); }
+        .rr-mobile-filter-btn:active { transform: translateY(0); }
 
         /* GRID AREA */
         .rr-grid-area { min-width: 0; }
         .rr-active-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px; min-height: 28px; }
         .rr-active-bar__label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--color-muted); flex-shrink: 0; }
-        .rr-active-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; background: rgba(22,43,68,.08); color: var(--color-navy); border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; transition: background .15s; border: none; font-family: var(--font-body); }
-        .rr-active-chip:hover { background: rgba(179,69,57,.1); color: var(--color-accent); }
+        .rr-active-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px; background: rgba(22,43,68,.08); color: var(--color-navy); border-radius: 999px; font-size: 11px; font-weight: 600; cursor: pointer; transition: background .18s, color .18s; border: none; font-family: var(--font-body); }
+        .rr-active-chip:hover { background: rgba(179,69,57,.12); color: var(--color-accent); }
+        .rr-active-chip:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
         .rr-active-chip__x { font-size: 13px; line-height: 1; margin-left: 1px; }
         .rr-active-bar__clear { font-size: 11px; font-weight: 600; color: var(--color-accent); cursor: pointer; margin-left: auto; text-decoration: underline; background: none; border: none; font-family: var(--font-body); }
         .rr-active-bar__clear:hover { color: var(--color-dark); }
@@ -482,44 +498,50 @@ export default function ResumeReviews() {
         .rr-grid-count { font-size: 13px; color: var(--color-muted); font-weight: 500; }
         .rr-grid-count strong { color: var(--color-dark); font-weight: 700; }
         .rr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; contain: layout style; }
-        .rr-grid--empty { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--color-muted); font-size: 15px; line-height: 1.7; }
+        .rr-grid > .rr-card { animation: rr-card-in .55s cubic-bezier(.16,1,.3,1) backwards; animation-delay: calc(var(--rr-i, 0) * 50ms); }
+        @keyframes rr-card-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (prefers-reduced-motion: reduce) { .rr-grid > .rr-card { animation: none; } }
+        .rr-grid--empty { grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: var(--color-muted); font-size: 15px; line-height: 1.7; background: rgba(232,168,56,.05); border-radius: 16px; border: 1px dashed rgba(232,168,56,.25); }
         .rr-grid--empty strong { display: block; font-family: var(--font-display); font-size: 18px; color: var(--color-dark); margin-bottom: 6px; }
 
-        /* RESUME CARD — resumes.fyi-style logo grid */
-        .rr-card { background: var(--color-white); border: 1px solid rgba(0,0,0,.08); border-top-width: 0; border-radius: 14px; overflow: hidden; cursor: pointer; transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s; position: relative; isolation: isolate; }
-        .rr-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: rgba(0,0,0,.12); z-index: 1; }
-        .rr-card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
-        .rr-card--intern::before        { background: var(--color-blue); }
-        .rr-card--newgrad::before       { background: var(--color-accent); }
-        .rr-card--fulltime::before      { background: var(--color-navy); }
-        .rr-card--apprenticeship::before{ background: var(--color-gold); }
-        .rr-card--pivot::before         { background: var(--color-accent); }
-        .rr-card--contract::before      { background: var(--color-muted); }
+        /* RESUME CARD — tinted surface blocks per stage (brand: no white-card + colored-border) */
+        .rr-card { background: var(--color-cream); border: 1px solid rgba(26,25,22,.06); border-radius: 14px; overflow: hidden; cursor: pointer; transition: transform .28s cubic-bezier(.16,1,.3,1), box-shadow .28s cubic-bezier(.16,1,.3,1), border-color .28s; position: relative; isolation: isolate; }
+        .rr-card:hover { transform: translateY(-3px); box-shadow: 0 14px 36px -12px rgba(63,42,28,.16); border-color: rgba(26,25,22,.12); }
+        .rr-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 14px; }
+        .rr-card--intern        { background: rgba(91,142,194,.07);  border-color: rgba(91,142,194,.18); }
+        .rr-card--newgrad       { background: rgba(179,69,57,.05);   border-color: rgba(179,69,57,.18); }
+        .rr-card--fulltime      { background: rgba(22,43,68,.05);    border-color: rgba(22,43,68,.16); }
+        .rr-card--apprenticeship{ background: rgba(232,168,56,.07);  border-color: rgba(232,168,56,.22); }
+        .rr-card--pivot         { background: rgba(179,69,57,.05);   border-color: rgba(179,69,57,.18); }
+        .rr-card--contract      { background: rgba(0,0,0,.03);       border-color: rgba(0,0,0,.1); }
 
-        .rr-card__visual { position: relative; padding: 40px 18px 18px; background: var(--color-white); }
-        .rr-card__pill { position: absolute; top: 12px; left: 14px; font-family: var(--font-display); font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; }
-        .rr-pill--intern        { background: rgba(91,142,194,.18); color: var(--color-blue); }
-        .rr-pill--newgrad       { background: rgba(179,69,57,.14); color: var(--color-accent); }
-        .rr-pill--fulltime      { background: rgba(22,43,68,.12); color: var(--color-navy); }
-        .rr-pill--apprenticeship{ background: rgba(232,168,56,.18); color: var(--color-gold-dark); }
-        .rr-pill--pivot         { background: rgba(179,69,57,.10); color: var(--color-accent); }
-        .rr-pill--contract      { background: rgba(0,0,0,.08); color: var(--color-muted); }
-        .rr-card__featured-badge { position: absolute; top: 12px; right: 14px; display: inline-flex; align-items: center; gap: 4px; padding: 4px 9px; border-radius: 999px; background: rgba(232,168,56,.16); color: var(--color-gold-dark); font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+        .rr-card__visual { position: relative; padding: 36px 18px 14px; }
+        .rr-card__pill { position: absolute; top: 12px; left: 14px; font-family: var(--font-display); font-size: 9px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; backdrop-filter: blur(6px); }
+        .rr-pill--intern        { background: rgba(91,142,194,.22);  color: var(--color-blue); }
+        .rr-pill--newgrad       { background: rgba(179,69,57,.18);   color: var(--color-accent); }
+        .rr-pill--fulltime      { background: rgba(22,43,68,.16);    color: var(--color-navy); }
+        .rr-pill--apprenticeship{ background: rgba(232,168,56,.24);  color: var(--color-gold-dark); }
+        .rr-pill--pivot         { background: rgba(179,69,57,.14);   color: var(--color-accent); }
+        .rr-pill--contract      { background: rgba(0,0,0,.1);        color: var(--color-muted); }
+        .rr-card__featured-badge { position: absolute; top: 12px; right: 14px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 11px 5px 9px; border-radius: 999px; background: var(--color-gold); color: var(--color-dark); font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; box-shadow: 0 2px 6px -2px rgba(232,168,56,.6), inset 0 1px 0 rgba(255,255,255,.3); }
+        .rr-card__featured-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-dark); flex-shrink: 0; }
+        .rr-card:has(.rr-card__featured-badge) { box-shadow: 0 0 0 1.5px rgba(232,168,56,.4), 0 1px 0 rgba(232,168,56,.2) inset; }
+        .rr-card:has(.rr-card__featured-badge):hover { box-shadow: 0 0 0 1.5px rgba(232,168,56,.55), 0 14px 36px -12px rgba(232,168,56,.28); }
 
         .rr-card__logos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
-        .rr-card__logo-cell { aspect-ratio: 1 / 1; background: var(--color-cream); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgba(0,0,0,.04), inset 0 0 0 1px rgba(0,0,0,.04); overflow: hidden; }
+        .rr-card__logo-cell { aspect-ratio: 1 / 1; background: var(--color-white); border-radius: 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 2px rgba(63,42,28,.06), inset 0 0 0 1px rgba(26,25,22,.06); overflow: hidden; transition: transform .28s cubic-bezier(.16,1,.3,1); }
+        .rr-card:hover .rr-card__logo-cell { transform: translateY(-1px); }
         .rr-card__logo-cell img { width: 60%; height: 60%; object-fit: contain; }
-        .rr-card__logo-cell--more { background: var(--color-cream); color: var(--color-dark); font-family: var(--font-display); font-size: 13px; font-weight: 800; }
+        .rr-card__logo-cell--more { background: var(--color-white); color: var(--color-dark); font-family: var(--font-display); font-size: 13px; font-weight: 800; }
         .rr-card__logo-cell--empty { background: rgba(0,0,0,.04); box-shadow: none; }
-        .rr-card__lines { display: flex; flex-direction: column; gap: 7px; padding: 6px 4px 0; opacity: .55; }
-        .rr-card__lines span { display: block; height: 6px; border-radius: 3px; background: rgba(0,0,0,.08); }
-        .rr-card__lines span:nth-child(1) { width: 88%; }
-        .rr-card__lines span:nth-child(2) { width: 70%; }
-        .rr-card__lines span:nth-child(3) { width: 78%; }
+        .rr-card__story { font-size: 12px; color: var(--color-muted); line-height: 1.55; padding: 4px 4px 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 38px; font-style: italic; }
+        .rr-card__story::before { content: '“'; color: var(--color-gold); font-family: var(--font-display); font-size: 16px; font-weight: 700; margin-right: 3px; line-height: 1; }
+        .rr-card__story--empty { color: rgba(63,42,28,.3); font-style: normal; }
+        .rr-card__story--empty::before { content: '—'; color: rgba(63,42,28,.25); margin-right: 6px; }
 
-        .rr-card__info { padding: 14px 16px 16px; border-top: 1px solid rgba(0,0,0,.07); display: flex; align-items: center; gap: 10px; }
-        .rr-card__avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; object-fit: cover; }
-        .rr-card__avatar-fallback { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--color-white); background: var(--color-teal); }
+        .rr-card__info { padding: 14px 16px 16px; border-top: 1px solid rgba(26,25,22,.07); display: flex; align-items: center; gap: 10px; background: linear-gradient(180deg, transparent, rgba(255,255,255,.4)); }
+        .rr-card__avatar { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; object-fit: cover; box-shadow: 0 0 0 2px var(--color-cream), 0 1px 3px rgba(63,42,28,.1); }
+        .rr-card__avatar-fallback { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: var(--color-white); background: var(--color-teal); box-shadow: 0 0 0 2px var(--color-cream); }
         .rr-card__id { flex: 1; min-width: 0; }
         .rr-card__handle { font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--color-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .rr-card__role { font-size: 11px; color: var(--color-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -531,6 +553,22 @@ export default function ResumeReviews() {
         .rr-co-logo { width: 18px; height: 18px; object-fit: contain; border-radius: 3px; flex-shrink: 0; }
         .rr-co-letter { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 3px; font-size: 8px; font-weight: 800; flex-shrink: 0; }
         .rr-co-extra { font-size: 10px; font-weight: 700; color: var(--color-muted); }
+
+        /* Skeleton loader (matches card layout, no spinner) */
+        .rr-card-skel { background: var(--color-cream); border: 1px solid rgba(26,25,22,.06); border-radius: 14px; overflow: hidden; padding: 36px 18px 18px; }
+        .rr-card-skel__pill { width: 64px; height: 16px; border-radius: 999px; background: rgba(26,25,22,.06); margin-bottom: 18px; }
+        .rr-card-skel__logos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+        .rr-card-skel__logo { aspect-ratio: 1 / 1; background: rgba(26,25,22,.04); border-radius: 10px; }
+        .rr-card-skel__line { height: 8px; border-radius: 4px; background: rgba(26,25,22,.05); margin-top: 10px; }
+        .rr-card-skel__line--w70 { width: 70%; }
+        .rr-card-skel__info { margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(26,25,22,.06); display: flex; align-items: center; gap: 10px; }
+        .rr-card-skel__avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(26,25,22,.05); flex-shrink: 0; }
+        .rr-card-skel__id { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .rr-card-skel__id-line { height: 9px; background: rgba(26,25,22,.05); border-radius: 4px; }
+        .rr-card-skel__id-line--w50 { width: 50%; }
+        .rr-card-skel { animation: rr-shimmer 1.6s ease-in-out infinite; }
+        @keyframes rr-shimmer { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+        @media (prefers-reduced-motion: reduce) { .rr-card-skel { animation: none; } }
 
         /* Hidden-resumes footer card */
         .rr-hidden-card { grid-column: 1 / -1; margin-top: 6px; padding: 16px 18px; background: rgba(91,142,194,.08); border: 1px dashed rgba(91,142,194,.25); border-radius: 14px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
@@ -548,8 +586,14 @@ export default function ResumeReviews() {
         .rr-howto { max-width: 1240px; margin: 0 auto; padding: 80px clamp(20px,5vw,56px); }
         .rr-howto__head { margin-bottom: 36px; }
         .rr-howto__grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-        .rr-howto__card { background: var(--color-white); border: 1px solid rgba(0,0,0,.08); border-radius: 16px; padding: 28px 26px; }
-        .rr-howto__num { font-family: var(--font-display); font-size: 36px; font-weight: 700; color: rgba(0,0,0,.06); line-height: 1; margin-bottom: 14px; }
+        .rr-howto__card { background: transparent; border: none; padding: 28px 26px 28px 0; position: relative; transition: transform .28s cubic-bezier(.16,1,.3,1); }
+        .rr-howto__card + .rr-howto__card { padding-left: 26px; border-left: 1px solid rgba(26,25,22,.1); }
+        .rr-howto__card:hover { transform: translateY(-2px); }
+        .rr-howto__card:nth-child(1) .rr-howto__num { color: var(--color-accent); }
+        .rr-howto__card:nth-child(2) .rr-howto__num { color: var(--color-teal); }
+        .rr-howto__card:nth-child(3) .rr-howto__num { color: var(--color-gold-dark); }
+        .rr-howto__num { font-family: var(--font-display); font-size: 48px; font-weight: 700; line-height: 1; margin-bottom: 14px; opacity: .9; letter-spacing: -.02em; }
+        @media (max-width: 700px) { .rr-howto__card + .rr-howto__card { padding-left: 0; border-left: none; border-top: 1px solid rgba(26,25,22,.1); padding-top: 24px; } }
         .rr-howto__title { font-family: var(--font-display); font-size: 17px; font-weight: 700; color: var(--color-dark); margin-bottom: 10px; line-height: 1.3; }
         .rr-howto__body { font-size: 14px; color: var(--color-muted); line-height: 1.75; }
         @media (max-width: 700px) { .rr-howto__grid { grid-template-columns: 1fr; } }
@@ -564,7 +608,7 @@ export default function ResumeReviews() {
         .rr-submit__bullets { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; }
         .rr-submit__bullet { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--color-muted); line-height: 1.5; }
         .rr-submit__bullet::before { content: '→'; color: var(--color-teal); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-        .rr-form-box { background: var(--color-white); border: 1px solid rgba(0,0,0,.07); border-radius: 18px; padding: clamp(24px,4vw,44px); }
+        .rr-form-box { background: linear-gradient(180deg, rgba(255,255,255,.7) 0%, rgba(232,168,56,.04) 100%); border: 1px solid rgba(26,25,22,.08); border-radius: 18px; padding: clamp(24px,4vw,44px); position: relative; box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 24px 48px -28px rgba(63,42,28,.18); }
         .rr-form-row { margin-bottom: 14px; }
         .rr-form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .rr-form-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--color-muted); margin-bottom: 6px; }
@@ -660,9 +704,11 @@ export default function ResumeReviews() {
         .rr-eco__link-desc { font-size: 12px; color: rgba(242,228,206,.45); line-height: 1.5; }
 
         /* CLOSING */
-        .rr-closing { background: var(--color-teal); padding: 64px clamp(20px,5vw,56px); text-align: center; }
-        .rr-closing__inner { max-width: 640px; margin: 0 auto; }
-        .rr-closing__headline { font-family: var(--font-display); font-size: clamp(22px,4vw,34px); font-weight: 700; color: var(--color-cream); line-height: 1.2; margin-bottom: 28px; }
+        .rr-closing { background: var(--color-teal); padding: 84px clamp(20px,5vw,56px) 76px; text-align: center; position: relative; overflow: hidden; }
+        .rr-closing::before { content: ''; position: absolute; top: -40px; left: 50%; transform: translateX(-50%); width: 240px; height: 240px; background: radial-gradient(closest-side, rgba(232,168,56,.18), transparent 70%); pointer-events: none; }
+        .rr-closing__inner { max-width: 640px; margin: 0 auto; position: relative; }
+        .rr-closing__headline { font-family: var(--font-display); font-size: clamp(28px,5vw,46px); font-weight: 700; color: var(--color-cream); line-height: 1.08; letter-spacing: -.02em; margin-bottom: 32px; }
+        .rr-closing__headline em { font-family: var(--font-serif, var(--font-display)); font-style: italic; font-weight: 500; color: var(--color-gold); padding: 0 .04em; }
         .rr-closing__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
         .rr-closing__btn-p { display: inline-flex; align-items: center; gap: 8px; padding: 13px 26px; background: var(--color-cream); color: var(--color-teal); border-radius: 8px; font-family: var(--font-display); font-size: 14px; font-weight: 700; text-decoration: none; border: 1.5px solid var(--color-cream); transition: background .2s, color .2s, transform .18s; }
         .rr-closing__btn-p:hover { background: var(--color-dark); color: var(--color-cream); border-color: var(--color-dark); transform: translateY(-1px); }
@@ -683,7 +729,16 @@ export default function ResumeReviews() {
           .rr-hero__ctas { flex-direction: column; }
           .rr-hero__ctas a { justify-content: center; }
           .rr-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+          .rr-stats > div { padding: 0; border: none !important; }
           .rr-panel { top: auto; bottom: 0; right: 0; left: 0; width: 100vw; height: 85vh; border-radius: 16px 16px 0 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .rr-card, .rr-btn-primary, .rr-btn-secondary, .rr-howto__card, .rr-eco__link, .rr-mobile-filter-btn,
+          .rr-card__logo-cell, .rr-closing__btn-p, .rr-closing__btn-s, .rr-card-skel { transition: none !important; }
+          .rr-card:hover, .rr-btn-primary:hover, .rr-btn-secondary:hover, .rr-mobile-filter-btn:hover,
+          .rr-howto__card:hover, .rr-eco__link:hover, .rr-closing__btn-p:hover, .rr-closing__btn-s:hover { transform: none !important; }
+          .rr-overlay, .rr-panel, .rr-sheet-overlay, .rr-sheet { transition-duration: .01ms !important; }
         }
       `}</style>
 
@@ -752,14 +807,32 @@ export default function ResumeReviews() {
           </div>
 
           <div className="rr-grid">
-            {visibleResumes.length === 0 ? (
+            {isLoading ? (
+              Array.from({ length: 6 }).map((_, i) => (
+                <div key={`skel-${i}`} className="rr-card-skel" style={{ animationDelay: `${i * 80}ms` }} aria-hidden="true">
+                  <div className="rr-card-skel__pill" />
+                  <div className="rr-card-skel__logos">
+                    <div className="rr-card-skel__logo" /><div className="rr-card-skel__logo" /><div className="rr-card-skel__logo" /><div className="rr-card-skel__logo" />
+                  </div>
+                  <div className="rr-card-skel__line" />
+                  <div className="rr-card-skel__line rr-card-skel__line--w70" />
+                  <div className="rr-card-skel__info">
+                    <div className="rr-card-skel__avatar" />
+                    <div className="rr-card-skel__id">
+                      <div className="rr-card-skel__id-line" />
+                      <div className="rr-card-skel__id-line rr-card-skel__id-line--w50" />
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : visibleResumes.length === 0 ? (
               <div className="rr-grid--empty">
                 <strong>{t.gridEmptyStrong}</strong>
                 {t.gridEmptyBody}
               </div>
             ) : (
               <>
-                {visibleResumes.map(r => {
+                {visibleResumes.map((r, idx) => {
                   const sm = getStageMeta(r.stage, t)
                   const liked = likedIds.has(r.id)
                   const fullCompanies = (r.companies || []).slice(0, 4)
@@ -769,6 +842,7 @@ export default function ResumeReviews() {
                     <article
                       key={r.id}
                       className={`rr-card rr-card--${sm.cls}`}
+                      style={{ '--rr-i': idx % 12 }}
                       onClick={() => { panelTriggerRef.current = document.activeElement; setPanelId(r.id) }}
                       tabIndex={0}
                       role="button"
@@ -791,9 +865,10 @@ export default function ResumeReviews() {
                             )
                           })}
                         </div>
-                        <div className="rr-card__lines" aria-hidden="true">
-                          <span /><span /><span />
-                        </div>
+                        {r.story
+                          ? <p className="rr-card__story">{r.story}</p>
+                          : <p className="rr-card__story rr-card__story--empty">{r.submitted}</p>
+                        }
                       </div>
                       <div className="rr-card__info">
                         {r.avatarUrl
