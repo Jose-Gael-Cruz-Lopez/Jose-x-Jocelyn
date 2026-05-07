@@ -5,6 +5,8 @@ import CoffeeChat from './pages/CoffeeChat'
 import OpportunityBoard from './pages/OpportunityBoard'
 import InterviewPrep from './pages/InterviewPrep'
 import ResumeReviews from './pages/ResumeReviews'
+import ResumeCompanies from './pages/ResumeCompanies'
+import ResumeBuilder from './pages/ResumeBuilder'
 import PartnerPanels from './pages/PartnerPanels'
 import LinkedInSeries from './pages/LinkedInSeries'
 import CareerTemplates from './pages/CareerTemplates'
@@ -42,6 +44,8 @@ export default function App() {
         <Route path="/opportunity-board" element={<OpportunityBoard />} />
         <Route path="/interview-prep" element={<InterviewPrep />} />
         <Route path="/resume-reviews" element={<ResumeReviews />} />
+        <Route path="/resume-reviews/companies" element={<ResumeCompanies />} />
+        <Route path="/resume-reviews/builder" element={<ResumeBuilder />} />
         <Route path="/partner-panels" element={<PartnerPanels />} />
         <Route path="/linkedin-series" element={<LinkedInSeries />} />
         <Route path="/career-templates" element={<CareerTemplates />} />
