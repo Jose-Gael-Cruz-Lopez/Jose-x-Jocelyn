@@ -730,7 +730,17 @@ export default function ResumeReviews() {
           )}
 
           <div className="rr-grid-meta">
-            <p className="rr-grid-count"><strong>{visibleResumes.length}</strong> {t.gridCountOf} <strong>{allResumes.length}</strong> {t.gridCountResumes}</p>
+            <p className="rr-grid-count"><strong>{visibleResumes.length}</strong> {t.foundCount}</p>
+            <label className="rr-sort-wrap">
+              {t.sortByLabel}
+              <select value={filter.sort} onChange={e => setFilter(f => ({ ...f, sort: e.target.value }))}>
+                <option value="newest">{t.sortNewlyAdded}</option>
+                <option value="screened">{t.sortMostScreened}</option>
+                <option value="liked">{t.sortMostLiked}</option>
+                <option value="viewed">{t.sortMostViewed}</option>
+                <option value="featured">{t.sortFeatured}</option>
+              </select>
+            </label>
           </div>
 
           <div className="rr-grid">
