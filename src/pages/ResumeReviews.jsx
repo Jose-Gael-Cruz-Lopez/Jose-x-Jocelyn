@@ -232,6 +232,12 @@ export default function ResumeReviews() {
     })
   }
 
+  const [searchParams] = useSearchParams()
+  useEffect(() => {
+    const co = searchParams.get('company')
+    if (co) setFilter(f => (f.companies.includes(co) ? f : { ...f, companies: [...f.companies, co] }))
+  }, [searchParams])
+
   const allResumes = dbResumes
   const hiddenCount = 0
 
