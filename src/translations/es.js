@@ -1418,6 +1418,13 @@ export const es = {
     closingBtn2: 'Enviar tu Currículum',
   },
 
+  resumeSubnav: {
+    ariaLabel: 'Secciones de currículum',
+    explore: 'Explorar',
+    companies: 'Empresas',
+    builder: 'Generador',
+  },
+
   linkedInSeries: {
     // ── Hero ─────────────────────────────────────────────────────────────────
     heroKicker: 'Del Campus a la Carrera · Serie de Contenido',
