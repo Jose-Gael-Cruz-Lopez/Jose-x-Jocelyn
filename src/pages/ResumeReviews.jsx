@@ -256,8 +256,9 @@ export default function ResumeReviews() {
       return true
     })
     if (filter.sort === 'featured') result = [...result].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
-    if (filter.sort === 'intern') result = result.filter(r => r.stage === 'intern')
-    if (filter.sort === 'newgrad') result = result.filter(r => r.stage === 'newgrad')
+    else if (filter.sort === 'liked')    result = [...result].sort((a, b) => (b.likeCount || 0) - (a.likeCount || 0))
+    else if (filter.sort === 'viewed')   result = [...result].sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0))
+    else if (filter.sort === 'screened') result = [...result].sort((a, b) => ((b.viewCount || 0) + (b.likeCount || 0) * 3) - ((a.viewCount || 0) + (a.likeCount || 0) * 3))
     return result
   }, [filter, allResumes])
 
