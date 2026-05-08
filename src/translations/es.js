@@ -1555,8 +1555,8 @@ export const es = {
     resultsOf: 'de',
     resultsEpisodes: 'episodios mostrados',
     formPerks: [
-      { strong: 'Leemos cada envío.', rest: '' },
-      { strong: 'Si lo construimos, te avisaremos primero.', rest: '' },
+      { strong: 'Leemos cada envío.', rest: ' Los vemos todos, aunque no siempre podamos responder.' },
+      { strong: 'Si lo construimos, te avisaremos primero.', rest: ' Los episodios incluyen crédito cuando usamos tu sugerencia.' },
       { strong: 'Tu correo se queda privado.', rest: ' Solo lo usamos para avisarte sobre tu tema.' },
     ],
     bridgeCopyPrefix: '¿Tienes un tema en mente?',
