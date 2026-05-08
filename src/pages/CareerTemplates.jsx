@@ -375,7 +375,7 @@ export default function CareerTemplates() {
         .ct-legend__dot--job       { background: var(--color-navy); }
 
         .ct-form-wrap {
-          background: var(--color-navy);
+          background: var(--color-teal);
           padding: clamp(56px,8vw,96px) clamp(20px,5vw,56px);
           position: relative;
           overflow: hidden;
@@ -385,7 +385,7 @@ export default function CareerTemplates() {
           content: '';
           position: absolute;
           inset: 0;
-          background-image: radial-gradient(circle at 84% 76%, rgba(232,168,56,.08) 0%, transparent 50%);
+          background-image: radial-gradient(circle at 84% 76%, rgba(232,168,56,.12) 0%, transparent 50%);
           pointer-events: none;
         }
         .ct-form-inner {
