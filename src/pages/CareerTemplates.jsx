@@ -473,7 +473,6 @@ export default function CareerTemplates() {
         .ct-modal__body {
           background: var(--color-white);
           border: 1px solid rgba(26,25,22,.1);
-          border-left: 3px solid var(--color-gold-dark);
           border-radius: 10px;
           padding: 22px 24px;
           font-size: 14px;
