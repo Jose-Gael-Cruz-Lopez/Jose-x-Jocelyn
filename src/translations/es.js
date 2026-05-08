@@ -1549,6 +1549,9 @@ export const es = {
 
     // ── Filters ───────────────────────────────────────────────────────────────
     filtersAriaLabel: 'Filtrar episodios',
+    bridgeCopyPrefix: '¿Tienes un tema en mente?',
+    bridgeCopyEm: 'Cuéntanos dónde estás atascado.',
+    bridgeCtaLabel: 'Sugerir un tema',
     filterAll: 'Todas las publicaciones',
     filterJose: 'Perspectiva de Jose',
     filterJocelyn: 'Perspectiva de Jocelyn',

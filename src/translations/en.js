@@ -1549,6 +1549,9 @@ export const en = {
 
     // ── Filters ───────────────────────────────────────────────────────────────
     filtersAriaLabel: 'Filter episodes',
+    bridgeCopyPrefix: 'Have a topic in mind?',
+    bridgeCopyEm: 'Tell us where you’re stuck.',
+    bridgeCtaLabel: 'Suggest a topic',
     filterAll: 'All Posts',
     filterJose: "Jose's Lens",
     filterJocelyn: "Jocelyn's Lens",

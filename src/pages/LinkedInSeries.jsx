@@ -88,7 +88,9 @@ const PAGE_CSS = `
   .ls-ep__summary { font-size:15px;color:var(--color-muted);line-height:1.65;text-wrap:pretty;max-width:640px;margin-bottom:10px; }
   .ls-ep__why { font-size:13px;color:var(--color-teal);font-weight:500;font-style:italic;font-family:var(--font-serif,var(--font-body));border-left:2px solid rgba(58,125,107,.4);padding-left:10px;line-height:1.55; }
   .ls-ep__why-prefix { font-weight:700;font-style:normal;font-family:var(--font-display);letter-spacing:-.005em; }
-  .ls-ep__posts { display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;min-width:0; }
+  .ls-ep__posts { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;min-width:0; }
+  @media (max-width:960px) { .ls-ep__posts { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media (max-width:560px) { .ls-ep__posts { grid-template-columns:1fr; } }
   .ls-ep__posts > .ls-post { animation: ls-post-in .55s cubic-bezier(.16,1,.3,1) backwards; animation-delay: calc(var(--ls-i, 0) * 50ms); }
   @keyframes ls-post-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   .ls-post { position:relative;background:linear-gradient(180deg,rgba(255,250,242,.85) 0%,rgba(255,250,242,.55) 100%);border:1px solid rgba(26,25,22,.13);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(var(--ls-shadow-warm),.12);transition:transform .28s cubic-bezier(.16,1,.3,1),box-shadow .28s cubic-bezier(.16,1,.3,1),border-color .28s; }
@@ -138,6 +140,17 @@ const PAGE_CSS = `
   .ls-form-success__title { font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--color-dark);margin-bottom:6px;letter-spacing:-.01em; }
   .ls-form-success__body { font-size:14px;color:var(--color-muted);line-height:1.6; }
   .ls-no-results { text-align:center;padding:60px 24px;color:var(--color-muted);background:rgba(232,168,56,.05);border:1px dashed rgba(232,168,56,.25);border-radius:16px;font-size:15px;line-height:1.6; }
+
+  /* CTA bridge — sits between episodes list and the navy "how" band, surfaces the form before users commit to scrolling further */
+  .ls-bridge { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 56px; }
+  .ls-bridge__inner { display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:24px 28px;background:rgba(232,168,56,.06);border:1px solid rgba(232,168,56,.22);border-radius:14px; }
+  .ls-bridge__copy { font-family:var(--font-display);font-size:clamp(17px,2vw,21px);font-weight:600;color:var(--color-dark);line-height:1.3;letter-spacing:-.005em; }
+  .ls-bridge__copy em { font-style:italic;font-family:var(--font-serif,var(--font-display));color:var(--color-gold-dark);font-weight:500; }
+  .ls-bridge__cta { display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:var(--color-dark);color:var(--color-cream);border-radius:999px;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:-.005em;text-decoration:none;box-shadow:0 6px 14px -8px rgba(var(--ls-shadow-warm),.4),inset 0 1px 0 rgba(255,255,255,.08);transition:background .25s,transform .22s cubic-bezier(.16,1,.3,1),box-shadow .25s; }
+  .ls-bridge__cta:hover { background:var(--color-accent);transform:translateY(-1px);box-shadow:0 12px 22px -10px rgba(179,69,57,.5); }
+  .ls-bridge__cta:active { transform:translateY(0); }
+  .ls-bridge__cta::after { content:'↓';font-size:13px;line-height:1; }
+  @media (prefers-reduced-motion: reduce) { .ls-bridge__cta { transition:none !important; } .ls-bridge__cta:hover { transform:none !important; } }
   @media (prefers-reduced-motion: reduce) {
     .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea { transition:none !important; }
     .ls-post:hover,.ls-filter:hover,.ls-form-btn:hover { transform:none !important; }
@@ -186,7 +199,8 @@ const TAG_KEY_MAP = {
 export default function LinkedInSeries() {
   const t = useT('linkedInSeries')
 
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [filterLens, setFilterLens] = useState('')   // '' | 'jose' | 'jocelyn' | 'both'
+  const [filterTopic, setFilterTopic] = useState('') // '' | 'internships' | 'offers' | 'rejection' | 'on-the-job'
   const [topic, setTopic] = useState('')
   const [email, setEmail] = useState('')
   const [category, setCategory] = useState('')
@@ -195,16 +209,18 @@ export default function LinkedInSeries() {
   const [formError, setFormError] = useState('')
   const [formSubmitted, setFormSubmitted] = useState(false)
 
-  const FILTERS = [
-    { f: 'all',        label: t.filterAll },
-    { f: 'jose',       label: t.filterJose },
-    { f: 'jocelyn',    label: t.filterJocelyn },
-    { f: 'both',       label: t.filterBoth },
-    { f: 'internships',label: t.filterInternships },
-    { f: 'offers',     label: t.filterOffers },
-    { f: 'rejection',  label: t.filterRejection },
-    { f: 'on-the-job', label: t.filterOnTheJob },
+  const LENS_OPTIONS = [
+    { v: 'jose',    label: t.filterJose },
+    { v: 'jocelyn', label: t.filterJocelyn },
+    { v: 'both',    label: t.filterBoth },
   ]
+  const TOPIC_OPTIONS = [
+    { v: 'internships', label: t.filterInternships },
+    { v: 'offers',      label: t.filterOffers },
+    { v: 'rejection',   label: t.filterRejection },
+    { v: 'on-the-job',  label: t.filterOnTheJob },
+  ]
+  const noFilters = !filterLens && !filterTopic
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -226,9 +242,8 @@ export default function LinkedInSeries() {
   }
 
   const visibleEps = EPISODES.filter(ep => {
-    if (activeFilter === 'all') return true
-    if (LENS_FILTERS.has(activeFilter)) return ep.lens === activeFilter
-    if (TOPIC_FILTERS.has(activeFilter)) return ep.topics.includes(activeFilter)
+    if (filterLens && ep.lens !== filterLens) return false
+    if (filterTopic && !ep.topics.includes(filterTopic)) return false
     return true
   })
 
@@ -266,12 +281,26 @@ export default function LinkedInSeries() {
 
       <div className="ls-controls">
         <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel}>
-          {FILTERS.slice(0, 4).map(({ f, label }) => (
-            <button key={f} className={`ls-filter${activeFilter === f ? ' ls-filter--active' : ''}`} onClick={() => setActiveFilter(f)}>{label}</button>
+          <button
+            className={`ls-filter${noFilters ? ' ls-filter--active' : ''}`}
+            onClick={() => { setFilterLens(''); setFilterTopic('') }}
+          >{t.filterAll}</button>
+          {LENS_OPTIONS.map(({ v, label }) => (
+            <button
+              key={v}
+              className={`ls-filter${filterLens === v ? ' ls-filter--active' : ''}`}
+              aria-pressed={filterLens === v}
+              onClick={() => setFilterLens(filterLens === v ? '' : v)}
+            >{label}</button>
           ))}
           <span className="ls-filters__rule" aria-hidden="true" />
-          {FILTERS.slice(4).map(({ f, label }) => (
-            <button key={f} className={`ls-filter${activeFilter === f ? ' ls-filter--active' : ''}`} onClick={() => setActiveFilter(f)}>{label}</button>
+          {TOPIC_OPTIONS.map(({ v, label }) => (
+            <button
+              key={v}
+              className={`ls-filter${filterTopic === v ? ' ls-filter--active' : ''}`}
+              aria-pressed={filterTopic === v}
+              onClick={() => setFilterTopic(filterTopic === v ? '' : v)}
+            >{label}</button>
           ))}
         </div>
       </div>
@@ -281,8 +310,9 @@ export default function LinkedInSeries() {
       <div className="ls-episodes">
         {visibleEps.length === 0
           ? <div className="ls-no-results" aria-live="polite"><p>{t.noResults}</p></div>
-          : visibleEps.map(ep => {
+          : visibleEps.map((ep, epIdx) => {
               const epData = t.episodes[parseInt(ep.num, 10) - 1] ?? {}
+              const isNext = epIdx === 0
               return (
                 <div key={ep.num} className="ls-ep">
                   <div className="ls-ep__head">
@@ -294,7 +324,7 @@ export default function LinkedInSeries() {
                       </div>
                       <h2 className="ls-ep__title">{epData.title}</h2>
                       <p className="ls-ep__summary">{epData.summary}</p>
-                      <p className="ls-ep__why"><span className="ls-ep__why-prefix">{t.whyPrefix}</span>{epData.why}</p>
+                      <p className="ls-ep__why">{epData.why}</p>
                     </div>
                   </div>
                   <div className="ls-ep__posts">
@@ -307,7 +337,7 @@ export default function LinkedInSeries() {
                           <div className="ls-post__preview">{postData.preview}</div>
                           <div className="ls-post__footer">
                             <span className={`ls-post__author ${authorClass(p.author)}`}>{getAuthorLabel(p.author)}</span>
-                            <span className="ls-post__status">{t.statusComingSoon}</span>
+                            {isNext && <span className="ls-post__status">{t.statusComingSoon}</span>}
                           </div>
                         </div>
                       )
@@ -317,6 +347,13 @@ export default function LinkedInSeries() {
               )
             })
         }
+      </div>
+
+      <div className="ls-bridge">
+        <div className="ls-bridge__inner">
+          <p className="ls-bridge__copy">{t.bridgeCopyPrefix} <em>{t.bridgeCopyEm}</em></p>
+          <a href="#suggest" className="ls-bridge__cta">{t.bridgeCtaLabel}</a>
+        </div>
       </div>
 
       <section className="ls-how">
@@ -335,7 +372,7 @@ export default function LinkedInSeries() {
         </div>
       </section>
 
-      <div className="ls-form-wrap">
+      <div className="ls-form-wrap" id="suggest">
         <div className="ls-form-box">
           <p className="ls-form-box__kicker">{t.formKicker}</p>
           <h2 className="ls-form-box__title">{t.formTitle}</h2>
