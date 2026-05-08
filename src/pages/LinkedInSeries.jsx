@@ -316,22 +316,6 @@ export default function LinkedInSeries() {
         </div>
       </header>
 
-      <section className="ls-how">
-        <div className="ls-how__inner">
-          <p className="ls-how__kicker">{t.howKicker}</p>
-          <h2 className="ls-how__title">{t.howTitle}</h2>
-          <div className="ls-how__grid">
-            {t.howItems.map(item => (
-              <div key={item.n} className="ls-how__item">
-                <div className="ls-how__item-icon">{item.n}</div>
-                <div className="ls-how__item-title">{item.n === '01' ? <><span className="ls-linkedin">{t.heroTitleLinkedIn}</span> {t.heroTitleEm}</> : item.title}</div>
-                <div className="ls-how__item-desc">{item.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <div className="ls-controls">
         <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel}>
           <button
@@ -432,6 +416,22 @@ export default function LinkedInSeries() {
           <a href="#suggest" className="ls-bridge__cta">{t.bridgeCtaLabel}</a>
         </div>
       </div>
+
+      <section className="ls-how">
+        <div className="ls-how__inner">
+          <p className="ls-how__kicker">{t.howKicker}</p>
+          <h2 className="ls-how__title">{t.howTitle}</h2>
+          <div className="ls-how__grid">
+            {t.howItems.map(item => (
+              <div key={item.n} className="ls-how__item">
+                <div className="ls-how__item-icon">{item.n}</div>
+                <div className="ls-how__item-title">{item.n === '01' ? <><span className="ls-linkedin">{t.heroTitleLinkedIn}</span> {t.heroTitleEm}</> : item.title}</div>
+                <div className="ls-how__item-desc">{item.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <div className="ls-form-wrap" id="suggest">
         <div className="ls-form-layout">
