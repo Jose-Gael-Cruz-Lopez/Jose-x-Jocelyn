@@ -1540,8 +1540,6 @@ export const es = {
     heroSubHTML: 'Un tema. Dos perspectivas. Notas en tiempo real desde ambos lados del puente.<br /><br /><strong>Jose</strong> cubre la perspectiva del estudiante: pasantías, contactos, solicitudes, rechazos y descubrirlo todo en tiempo real. <strong>Jocelyn</strong> cubre la perspectiva posuniversitaria: entrevistas, ofertas, incorporación y crecimiento en los primeros años de carrera. Cada episodio se publica primero en LinkedIn y luego se archiva aquí.',
     stat1Num: '10',
     stat1Label: 'Episodios planeados',
-    stat2Num: '0',
-    stat2Label: 'Publicaciones publicadas',
     stat3Num: '2',
     stat3Label: 'Perspectivas',
     stat4Num: 'Semanal',

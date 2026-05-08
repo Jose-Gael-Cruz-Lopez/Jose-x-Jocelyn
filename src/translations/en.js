@@ -1540,8 +1540,6 @@ export const en = {
     heroSubHTML: 'One topic. Two perspectives. Real-time notes from both sides of the bridge.<br /><br /><strong>Jose</strong> covers the student lens - internships, outreach, applications, rejection, and figuring things out in real time. <strong>Jocelyn</strong> covers the post-grad lens - interviews, offers, onboarding, and early-career growth. Every episode lives on LinkedIn first, then gets archived here.',
     stat1Num: '10',
     stat1Label: 'Episodes planned',
-    stat2Num: '0',
-    stat2Label: 'Posts published',
     stat3Num: '2',
     stat3Label: 'Lenses',
     stat4Num: 'Weekly',
