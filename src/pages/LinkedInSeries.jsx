@@ -466,7 +466,20 @@ export default function LinkedInSeries() {
                 />
                 {fieldErrors.topic && <span id="topicField-error" className="ls-form-row__error" role="alert">{fieldErrors.topic}</span>}
               </div>
-              <div className="ls-form-row"><label className="ls-form-label" htmlFor="emailField">{t.formLabelEmail}</label><input className="ls-form-input" type="email" id="emailField" placeholder={t.formPlaceholderEmail} value={email} onChange={e => setEmail(e.target.value)} /></div>
+              <div className="ls-form-row">
+                <label className="ls-form-label" htmlFor="emailField">{t.formLabelEmail}</label>
+                <input
+                  className={`ls-form-input${fieldErrors.email ? ' is-invalid' : ''}`}
+                  type="email"
+                  id="emailField"
+                  placeholder={t.formPlaceholderEmail}
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); if (fieldErrors.email) setFieldErrors(s => ({ ...s, email: '' })) }}
+                  aria-invalid={!!fieldErrors.email}
+                  aria-describedby={fieldErrors.email ? 'emailField-error' : undefined}
+                />
+                {fieldErrors.email && <span id="emailField-error" className="ls-form-row__error" role="alert">{fieldErrors.email}</span>}
+              </div>
               <div className="ls-form-row">
                 <label className="ls-form-label" htmlFor="topicCat">{t.formLabelCategory}</label>
                 <select className="ls-form-select" id="topicCat" value={category} onChange={e => setCategory(e.target.value)}>
