@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react'
-import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -681,14 +680,6 @@ export default function CareerTemplates() {
         </div>
       </section>
 
-      <footer className="art-footer" style={{ maxWidth: '1040px' }}>
-        <span className="art-footer__copy">{t.footerCopy}</span>
-        <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">{t.footerHome}</Link>
-          <Link to="/articles" className="art-footer__link">{t.footerArticles}</Link>
-          <Link to="/linkedin-series" className="art-footer__link">{t.footerLinkedIn}</Link>
-        </div>
-      </footer>
     </ArticleLayout>
   )
 }
