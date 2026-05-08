@@ -1737,6 +1737,8 @@ export const es = {
     formErrorCategoryOther: 'Por favor describe tu área de tema.',
     formErrorTopic: 'Por favor ingresa un tema o pregunta.',
     formErrorEmail: 'Ese correo no parece válido.',
+    formErrorLabel: 'No se pudo enviar.',
+    formRetryLabel: 'Intentar de nuevo',
     formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
     formBtnSubmit: 'Enviar tema',
     formBtnSubmitting: 'Enviando…',
