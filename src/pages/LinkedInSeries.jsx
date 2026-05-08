@@ -42,19 +42,19 @@ const PAGE_CSS = `
   .ls-hero__title em { font-style:italic;font-family:var(--font-serif,var(--font-display));color:var(--color-gold-dark);font-weight:500;padding-right:.04em; }
   .ls-hero__sub { font-size:clamp(16px,1.8vw,20px);color:var(--color-muted);line-height:1.65;text-wrap:pretty;max-width:62ch;margin-bottom:0; }
   .ls-hero__sub strong { color:var(--color-dark);font-weight:600; }
-  .ls-stats { display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0; }
+  .ls-stats { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0; }
   .ls-stat { padding:0 32px;position:relative; }
   .ls-stat:first-child { padding-left:0; }
   .ls-stat:last-child { padding-right:0; }
   .ls-stat + .ls-stat::before { content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:rgba(26,25,22,.1); }
+  .ls-stat--lead .ls-stat__num::before { content:'';display:inline-block;width:18px;height:2px;background:var(--color-accent);border-radius:2px;margin-right:10px;vertical-align:.32em; }
   .ls-stat__num { font-family:var(--font-display);font-size:clamp(28px,3.4vw,40px);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.03em;color:var(--color-dark);line-height:1;margin-bottom:8px; }
   .ls-stat__label { font-size:12px;color:var(--color-muted);line-height:1.4;letter-spacing:.04em;text-transform:uppercase;font-weight:600; }
   @media (max-width: 640px) {
-    .ls-stats { grid-template-columns: 1fr 1fr; gap: 24px 0; }
-    .ls-stat { padding: 0 16px; }
-    .ls-stat:nth-child(odd) { padding-left: 0; }
-    .ls-stat:nth-child(even) { padding-right: 0; }
-    .ls-stat:nth-child(3)::before, .ls-stat:nth-child(4)::before { display: none; }
+    .ls-stats { grid-template-columns: 1fr; gap: 18px 0; }
+    .ls-stat { padding: 0; }
+    .ls-stat + .ls-stat { padding-top: 18px; }
+    .ls-stat + .ls-stat::before { left:0;right:0;top:0;bottom:auto;width:auto;height:1px; }
   }
   .ls-controls { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 40px; }
   .ls-filters { display:flex;flex-wrap:wrap;gap:8px; }
@@ -272,9 +272,8 @@ export default function LinkedInSeries() {
         <div className="ls-hero__aside">
           <div className="ls-stats">
             <div className="ls-stat"><div className="ls-stat__num">{t.stat1Num}</div><div className="ls-stat__label">{t.stat1Label}</div></div>
-            <div className="ls-stat"><div className="ls-stat__num">{t.stat2Num}</div><div className="ls-stat__label">{t.stat2Label}</div></div>
             <div className="ls-stat"><div className="ls-stat__num">{t.stat3Num}</div><div className="ls-stat__label">{t.stat3Label}</div></div>
-            <div className="ls-stat"><div className="ls-stat__num">{t.stat4Num}</div><div className="ls-stat__label">{t.stat4Label}</div></div>
+            <div className="ls-stat ls-stat--lead"><div className="ls-stat__num">{t.stat4Num}</div><div className="ls-stat__label">{t.stat4Label}</div></div>
           </div>
         </div>
       </header>
