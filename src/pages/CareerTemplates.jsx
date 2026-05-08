@@ -350,15 +350,15 @@ export default function CareerTemplates() {
         }
 
         .ct-legend {
-          max-width: 1040px;
+          max-width: 1240px;
           margin: 0 auto 48px;
           padding: 0 clamp(20px,5vw,56px);
           display: flex;
           flex-wrap: wrap;
           gap: 10px 24px;
         }
-        .ct-legend__item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--color-muted); }
-        .ct-legend__dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .ct-legend__item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--color-muted); letter-spacing: .02em; }
+        .ct-legend__dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; box-shadow: 0 0 0 2px var(--color-cream), 0 0 0 3px rgba(26,25,22,.08); }
         .ct-legend__dot--outreach  { background: var(--color-teal); }
         .ct-legend__dot--apply     { background: var(--color-blue); }
         .ct-legend__dot--interview { background: var(--color-gold); }
