@@ -304,10 +304,11 @@ export default function CareerTemplates() {
         .ct-card__title {
           font-family: var(--font-display);
           font-size: clamp(16px,1.8vw,19px);
-          font-weight: 600;
+          font-weight: 700;
           color: var(--color-dark);
           line-height: 1.3;
-          margin-bottom: 10px;
+          letter-spacing: -.005em;
+          margin: 14px 0 10px;
         }
         .ct-card__desc {
           font-size: 14px;
