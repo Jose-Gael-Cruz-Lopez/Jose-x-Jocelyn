@@ -87,38 +87,83 @@ export default function CareerTemplates() {
         html, body { background: var(--color-cream); }
 
         .ct-hero {
-          max-width: 1040px;
+          max-width: 1240px;
           margin: 0 auto;
-          padding: 120px clamp(20px,5vw,56px) 48px;
+          padding: 96px clamp(20px,5vw,56px) 64px;
+          position: relative;
+          overflow: hidden;
         }
+        .ct-hero::before {
+          content: '';
+          position: absolute;
+          top: 96px;
+          left: clamp(20px,5vw,56px);
+          width: 56px;
+          height: 4px;
+          background: var(--color-accent);
+          border-radius: 2px;
+        }
+        .ct-hero::after {
+          content: '';
+          position: absolute;
+          top: -14%;
+          right: -10%;
+          width: 520px;
+          height: 520px;
+          background: radial-gradient(closest-side, rgba(179,69,57,.1), transparent 70%);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .ct-hero > * { position: relative; z-index: 1; }
         .ct-hero__kicker {
           font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.14em;
+          font-weight: 800;
+          letter-spacing: .2em;
           text-transform: uppercase;
-          color: var(--color-muted);
-          margin-bottom: 18px;
+          color: var(--color-accent);
+          margin: 28px 0 22px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .ct-hero__kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: var(--color-accent);
+          opacity: .5;
         }
         .ct-hero__title {
           font-family: var(--font-display);
-          font-size: clamp(36px,6.5vw,68px);
+          font-size: clamp(44px, 8vw, 96px);
           font-weight: 700;
-          line-height: 1.06;
+          line-height: .98;
+          letter-spacing: -.028em;
           color: var(--color-dark);
-          margin-bottom: 10px;
+          margin-bottom: 18px;
+          max-width: 18ch;
+        }
+        .ct-hero__title em {
+          font-style: italic;
+          font-family: var(--font-serif, var(--font-display));
+          color: var(--color-gold-dark);
+          font-weight: 500;
+          padding-right: .04em;
         }
         .ct-hero__tagline {
-          font-family: var(--font-display);
-          font-size: clamp(17px,2.4vw,24px);
+          font-family: var(--font-serif, var(--font-display));
+          font-size: clamp(18px,2.2vw,24px);
+          font-style: italic;
           font-weight: 400;
           color: var(--color-accent);
-          margin-bottom: 20px;
+          margin-bottom: 22px;
+          letter-spacing: -.005em;
         }
         .ct-hero__sub {
-          font-size: clamp(15px,2vw,17px);
+          font-size: clamp(16px,1.8vw,18px);
           color: var(--color-muted);
           line-height: 1.7;
-          max-width: 640px;
+          max-width: 62ch;
         }
         .ct-hero__sub strong { color: var(--color-dark); font-weight: 600; }
 
