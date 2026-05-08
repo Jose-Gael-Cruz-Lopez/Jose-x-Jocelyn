@@ -368,32 +368,67 @@ export default function CareerTemplates() {
         .ct-form-wrap {
           background: var(--color-navy);
           padding: clamp(56px,8vw,96px) clamp(20px,5vw,56px);
+          position: relative;
+          overflow: hidden;
+          scroll-margin-top: 96px;
+        }
+        .ct-form-wrap::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(circle at 84% 76%, rgba(232,168,56,.08) 0%, transparent 50%);
+          pointer-events: none;
         }
         .ct-form-inner {
-          max-width: 1040px;
+          max-width: 1240px;
           margin: 0 auto;
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 56px;
+          grid-template-columns: minmax(0,1fr) minmax(0,1.4fr);
+          gap: clamp(40px,5vw,72px);
           align-items: start;
+          position: relative;
         }
         .ct-form-copy__kicker {
           font-size: 11px;
-          font-weight: 700;
-          letter-spacing: 0.14em;
+          font-weight: 800;
+          letter-spacing: .2em;
           text-transform: uppercase;
           color: var(--color-gold);
           margin-bottom: 16px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .ct-form-copy__kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: var(--color-gold);
+          opacity: .5;
         }
         .ct-form-copy__title {
           font-family: var(--font-display);
-          font-size: clamp(24px,3.5vw,38px);
+          font-size: clamp(28px,4vw,46px);
           font-weight: 700;
+          letter-spacing: -.025em;
           color: var(--color-cream);
-          line-height: 1.15;
-          margin-bottom: 16px;
+          line-height: 1.05;
+          margin-bottom: 18px;
+          max-width: 18ch;
+          text-wrap: balance;
         }
-        .ct-form-copy__sub { font-size: 15px; color: rgba(242,228,206,0.65); line-height: 1.7; }
+        .ct-form-copy__title em {
+          font-style: italic;
+          font-family: var(--font-serif, var(--font-display));
+          color: var(--color-gold);
+          font-weight: 500;
+          padding-right: .04em;
+        }
+        .ct-form-copy__sub { font-size: 15px; color: rgba(242,228,206,.7); line-height: 1.7; max-width: 50ch; }
+        .ct-form-perks { margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(242,228,206,.18); display: flex; flex-direction: column; gap: 12px; list-style: none; }
+        .ct-form-perk { display: flex; align-items: flex-start; gap: 11px; font-size: 14px; color: rgba(242,228,206,.7); line-height: 1.55; }
+        .ct-form-perk__icon { width: 22px; height: 22px; border-radius: 50%; background: rgba(232,168,56,.16); color: var(--color-gold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; box-shadow: inset 0 0 0 1.5px rgba(232,168,56,.3); }
+        .ct-form-perk strong { color: var(--color-cream); font-weight: 700; }
         .ct-form-row { margin-bottom: 16px; }
         .ct-form-label {
           display: block;
