@@ -181,8 +181,8 @@ const PAGE_CSS = `
   .ls-bridge__cta::after { content:'↓';font-size:13px;line-height:1; }
   @media (prefers-reduced-motion: reduce) { .ls-bridge__cta { transition:none !important; } .ls-bridge__cta:hover { transform:none !important; } }
   @media (prefers-reduced-motion: reduce) {
-    .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea { transition:none !important; }
-    .ls-post:hover,.ls-filter:hover,.ls-form-btn:hover { transform:none !important; }
+    .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea,.ls-form-error-card__retry { transition:none !important; }
+    .ls-post:hover,.ls-filter:hover,.ls-form-btn:hover,.ls-form-error-card__retry:hover { transform:none !important; }
     .ls-ep__posts > .ls-post { animation:none !important; }
   }
   @media (max-width:768px) {
