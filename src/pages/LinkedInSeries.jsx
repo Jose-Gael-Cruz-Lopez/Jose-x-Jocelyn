@@ -453,7 +453,19 @@ export default function LinkedInSeries() {
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
-              <div className="ls-form-row"><label className="ls-form-label" htmlFor="topicField">{t.formLabelTopic}</label><textarea className="ls-form-textarea" id="topicField" placeholder={t.formPlaceholderTopic} value={topic} onChange={e => setTopic(e.target.value)} /></div>
+              <div className="ls-form-row">
+                <label className="ls-form-label" htmlFor="topicField">{t.formLabelTopic}</label>
+                <textarea
+                  className={`ls-form-textarea${fieldErrors.topic ? ' is-invalid' : ''}`}
+                  id="topicField"
+                  placeholder={t.formPlaceholderTopic}
+                  value={topic}
+                  onChange={e => { setTopic(e.target.value); if (fieldErrors.topic) setFieldErrors(s => ({ ...s, topic: '' })) }}
+                  aria-invalid={!!fieldErrors.topic}
+                  aria-describedby={fieldErrors.topic ? 'topicField-error' : undefined}
+                />
+                {fieldErrors.topic && <span id="topicField-error" className="ls-form-row__error" role="alert">{fieldErrors.topic}</span>}
+              </div>
               <div className="ls-form-row"><label className="ls-form-label" htmlFor="emailField">{t.formLabelEmail}</label><input className="ls-form-input" type="email" id="emailField" placeholder={t.formPlaceholderEmail} value={email} onChange={e => setEmail(e.target.value)} /></div>
               <div className="ls-form-row">
                 <label className="ls-form-label" htmlFor="topicCat">{t.formLabelCategory}</label>
