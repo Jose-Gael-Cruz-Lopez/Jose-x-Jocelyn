@@ -307,28 +307,30 @@ export default function CareerTemplates() {
           display: inline-flex;
           align-items: center;
           gap: 7px;
-          padding: 11px 20px;
-          border-radius: 8px;
+          padding: 10px 18px;
+          border-radius: 999px;
           font-family: var(--font-display);
-          font-size: 13px;
-          font-weight: 600;
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: -.005em;
           text-decoration: none;
           cursor: pointer;
           border: 1.5px solid;
-          transition: background 0.2s, color 0.2s, transform 0.18s;
+          transition: background .25s, color .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s;
           align-self: flex-start;
         }
-        .ct-card__cta--outreach  { background: transparent; color: var(--color-teal);      border-color: var(--color-teal); }
-        .ct-card__cta--apply     { background: transparent; color: var(--color-blue);      border-color: var(--color-blue); }
-        .ct-card__cta--interview { background: transparent; color: var(--color-gold);      border-color: var(--color-gold); }
-        .ct-card__cta--offers    { background: transparent; color: var(--color-accent);    border-color: var(--color-accent); }
-        .ct-card__cta--job       { background: transparent; color: var(--color-blue-light); border-color: var(--color-blue-light); }
+        .ct-card__cta--outreach  { background: transparent; color: var(--color-teal);      border-color: rgba(58,125,107,.5); }
+        .ct-card__cta--apply     { background: transparent; color: var(--color-blue);      border-color: rgba(91,142,194,.5); }
+        .ct-card__cta--interview { background: transparent; color: var(--color-gold-dark); border-color: rgba(232,168,56,.6); }
+        .ct-card__cta--offers    { background: transparent; color: var(--color-accent);    border-color: rgba(179,69,57,.5); }
+        .ct-card__cta--job       { background: transparent; color: var(--color-navy);      border-color: rgba(22,43,68,.4); }
         .ct-card__cta:hover { transform: translateY(-1px); }
-        .ct-card__cta--outreach:hover  { background: var(--color-teal);   color: var(--color-cream); }
-        .ct-card__cta--apply:hover     { background: var(--color-blue);   color: var(--color-cream); }
-        .ct-card__cta--interview:hover { background: var(--color-gold);   color: var(--color-dark); }
-        .ct-card__cta--offers:hover    { background: var(--color-accent); color: var(--color-cream); }
-        .ct-card__cta--job:hover       { background: var(--color-navy);   color: var(--color-cream); }
+        .ct-card__cta--outreach:hover  { background: var(--color-teal);   color: var(--color-cream); border-color: var(--color-teal);   box-shadow: 0 8px 16px -8px rgba(58,125,107,.5); }
+        .ct-card__cta--apply:hover     { background: var(--color-blue);   color: var(--color-cream); border-color: var(--color-blue);   box-shadow: 0 8px 16px -8px rgba(91,142,194,.5); }
+        .ct-card__cta--interview:hover { background: var(--color-gold);   color: var(--color-dark);  border-color: var(--color-gold);   box-shadow: 0 8px 16px -8px rgba(232,168,56,.5); }
+        .ct-card__cta--offers:hover    { background: var(--color-accent); color: var(--color-cream); border-color: var(--color-accent); box-shadow: 0 8px 16px -8px rgba(179,69,57,.5); }
+        .ct-card__cta--job:hover       { background: var(--color-navy);   color: var(--color-cream); border-color: var(--color-navy);   box-shadow: 0 8px 16px -8px rgba(22,43,68,.5); }
+        .ct-card__cta:active { transform: translateY(0); }
 
         .ct-empty {
           grid-column: 1 / -1;
