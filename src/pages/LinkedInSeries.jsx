@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -119,7 +118,7 @@ const PAGE_CSS = `
   .ls-how__item-title { font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--color-cream);margin-bottom:8px;letter-spacing:-.005em;line-height:1.3; }
   .ls-how__item-desc { font-size:14px;color:rgba(242,228,206,.7);line-height:1.6;text-wrap:pretty; }
   .ls-form-wrap { max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,56px); }
-  .ls-form-box { background:rgba(255,250,242,.7);border-radius:18px;padding:clamp(32px,4vw,56px);border:1px solid rgba(26,25,22,.13);border-left:3px solid var(--color-accent);max-width:640px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--ls-shadow-warm),.22); }
+  .ls-form-box { background:rgba(255,250,242,.7);border-radius:18px;padding:clamp(32px,4vw,56px);border:1px solid rgba(26,25,22,.13);max-width:640px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--ls-shadow-warm),.22); }
   .ls-form-box__kicker { font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px; }
   .ls-form-box__kicker::after { content:'';width:24px;height:1px;background:var(--color-accent);opacity:.5; }
   .ls-form-box__title { font-family:var(--font-display);font-size:clamp(24px,3.4vw,36px);font-weight:700;letter-spacing:-0.02em;text-wrap:balance;line-height:1.05;color:var(--color-dark);margin-bottom:10px; }
@@ -139,7 +138,6 @@ const PAGE_CSS = `
   .ls-form-success__title { font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--color-dark);margin-bottom:6px;letter-spacing:-.01em; }
   .ls-form-success__body { font-size:14px;color:var(--color-muted);line-height:1.6; }
   .ls-no-results { text-align:center;padding:60px 24px;color:var(--color-muted);background:rgba(232,168,56,.05);border:1px dashed rgba(232,168,56,.25);border-radius:16px;font-size:15px;line-height:1.6; }
-  .ls-footer { max-width:1040px; }
   @media (prefers-reduced-motion: reduce) {
     .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea { transition:none !important; }
     .ls-post:hover,.ls-filter:hover,.ls-form-btn:hover { transform:none !important; }
@@ -386,14 +384,6 @@ export default function LinkedInSeries() {
         </div>
       </div>
 
-      <footer className="art-footer ls-footer">
-        <span className="art-footer__copy">{t.footerCopy}</span>
-        <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">{t.footerHome}</Link>
-          <Link to="/articles" className="art-footer__link">{t.footerArticles}</Link>
-          <Link to="/career-templates" className="art-footer__link">{t.footerTemplates}</Link>
-        </div>
-      </footer>
     </ArticleLayout>
   )
 }
