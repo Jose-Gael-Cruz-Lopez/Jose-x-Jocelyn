@@ -468,13 +468,13 @@ export default function LinkedInSeries() {
                   id="topicField"
                   placeholder={t.formPlaceholderTopic}
                   value={topic}
-                  maxLength={280}
+                  maxLength={10000}
                   onChange={e => { setTopic(e.target.value); if (fieldErrors.topic) setFieldErrors(s => ({ ...s, topic: '' })) }}
                   aria-invalid={!!fieldErrors.topic}
                   aria-describedby={fieldErrors.topic ? 'topicField-error' : 'topicField-counter'}
                 />
                 {fieldErrors.topic && <span id="topicField-error" className="ls-form-row__error" role="alert">{fieldErrors.topic}</span>}
-                <span id="topicField-counter" className={`ls-form-row__counter${topic.length >= 240 ? ' ls-form-row__counter--warn' : ''}`} aria-live="polite">{topic.length} / 280</span>
+                <span id="topicField-counter" className={`ls-form-row__counter${topic.length >= 9000 ? ' ls-form-row__counter--warn' : ''}`} aria-live="polite">{topic.length} / 10000</span>
               </div>
               <div className="ls-form-row">
                 <label className="ls-form-label" htmlFor="emailField">{t.formLabelEmail}</label>
