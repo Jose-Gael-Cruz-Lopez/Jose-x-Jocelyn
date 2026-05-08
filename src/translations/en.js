@@ -1737,6 +1737,8 @@ export const en = {
     formErrorCategoryOther: 'Please describe your topic area.',
     formErrorTopic: 'Please enter a topic or question.',
     formErrorEmail: "That doesn't look like a valid email.",
+    formErrorLabel: "Couldn't send.",
+    formRetryLabel: 'Try again',
     formErrorGeneric: 'Something went wrong. Please try again.',
     formBtnSubmit: 'Submit Topic',
     formBtnSubmitting: 'Submitting…',
