@@ -490,6 +490,12 @@ export default function LinkedInSeries() {
                   placeholder={t.formPlaceholderEmail}
                   value={email}
                   onChange={e => { setEmail(e.target.value); if (fieldErrors.email) setFieldErrors(s => ({ ...s, email: '' })) }}
+                  onBlur={e => {
+                    const v = e.target.value.trim()
+                    if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                      setFieldErrors(s => ({ ...s, email: t.formErrorEmail }))
+                    }
+                  }}
                   aria-invalid={!!fieldErrors.email}
                   aria-describedby={fieldErrors.email ? 'emailField-error' : undefined}
                 />
