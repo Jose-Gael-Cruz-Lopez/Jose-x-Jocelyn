@@ -252,34 +252,36 @@ export default function CareerTemplates() {
         }
         .ct-card__num {
           font-family: var(--font-display);
-          font-size: 12px;
-          font-weight: 700;
-          color: rgba(0,0,0,.2);
+          font-size: 13px;
+          font-weight: 800;
+          letter-spacing: -.005em;
+          color: rgba(232,168,56,.55);
+          font-variant-numeric: tabular-nums;
           flex-shrink: 0;
           margin-top: 2px;
         }
         .ct-card__badges { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
         .ct-card__stage {
           font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.08em;
+          font-weight: 800;
+          letter-spacing: .12em;
           text-transform: uppercase;
-          padding: 3px 8px;
-          border-radius: 4px;
+          padding: 4px 10px;
+          border-radius: 999px;
         }
-        .ct-card__stage--outreach  { background: rgba(58,125,107,0.12); color: var(--color-teal); }
-        .ct-card__stage--apply     { background: rgba(91,142,194,0.12); color: var(--color-blue); }
-        .ct-card__stage--interview { background: rgba(232,168,56,0.15); color: var(--color-gold); }
-        .ct-card__stage--offers    { background: rgba(179,69,57,0.1);   color: var(--color-accent); }
-        .ct-card__stage--job       { background: rgba(91,142,194,0.15); color: var(--color-blue-light); }
+        .ct-card__stage--outreach  { background: rgba(58,125,107,0.14);  color: var(--color-teal); }
+        .ct-card__stage--apply     { background: rgba(91,142,194,0.14);  color: var(--color-blue); }
+        .ct-card__stage--interview { background: rgba(232,168,56,0.18);  color: var(--color-gold-dark); }
+        .ct-card__stage--offers    { background: rgba(179,69,57,0.12);   color: var(--color-accent); }
+        .ct-card__stage--job       { background: rgba(22,43,68,0.12);    color: var(--color-navy); }
 
         .ct-card__author {
           font-size: 10px;
-          font-weight: 700;
-          letter-spacing: 0.08em;
+          font-weight: 800;
+          letter-spacing: .12em;
           text-transform: uppercase;
-          padding: 3px 8px;
-          border-radius: 4px;
+          padding: 4px 10px;
+          border-radius: 999px;
           color: var(--color-white);
         }
         .ct-card__author--jose    { background: var(--color-teal); }
