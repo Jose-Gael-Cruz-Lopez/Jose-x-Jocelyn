@@ -38,6 +38,7 @@ const PAGE_CSS = `
   .ls-hero__title { font-family:var(--font-display);font-size:clamp(44px,8.4vw,108px);font-weight:700;line-height:.96;letter-spacing:-0.03em;text-wrap:balance;color:var(--color-dark);margin-bottom:24px;max-width:18ch; }
   .ls-hero__title em { font-style:italic;font-family:var(--font-serif,var(--font-display));color:var(--color-gold-dark);font-weight:500;padding-right:.04em; }
   .ls-hero__sub { font-size:clamp(16px,1.8vw,20px);color:var(--color-muted);line-height:1.65;text-wrap:pretty;max-width:62ch;margin-bottom:0; }
+  .ls-hero__sub + .ls-hero__sub { margin-top:18px; }
   .ls-hero__sub strong { color:var(--color-dark);font-weight:600; }
   .ls-stats { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0; }
   .ls-stat { padding:0 32px;position:relative; }
