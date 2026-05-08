@@ -75,7 +75,6 @@ const PAGE_CSS = `
   .ls-toc__chip:hover { background:var(--color-dark);color:var(--color-cream);border-color:var(--color-dark);transform:translateY(-1px);box-shadow:0 6px 12px -6px rgba(var(--ls-shadow-warm),.32); }
   .ls-toc__chip--filtered { opacity:.3;pointer-events:none; }
   .ls-toc__chip:focus-visible { outline:2px solid var(--color-accent);outline-offset:3px; }
-  @media (prefers-reduced-motion: reduce) { .ls-toc__chip { transition:none !important; } .ls-toc__chip:hover { transform:none !important; } }
   .ls-episodes { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 80px;display:flex;flex-direction:column;gap:64px; }
   .ls-ep { display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start;scroll-margin-top:96px; }
   .ls-ep__head { display:flex;align-items:flex-start;gap:24px;margin-bottom:0;position:sticky;top:80px; }
@@ -175,10 +174,11 @@ const PAGE_CSS = `
   .ls-bridge__cta:hover { background:var(--color-accent);transform:translateY(-1px);box-shadow:0 12px 22px -10px rgba(179,69,57,.5); }
   .ls-bridge__cta:active { transform:translateY(0); }
   .ls-bridge__cta::after { content:'↓';font-size:13px;line-height:1; }
-  @media (prefers-reduced-motion: reduce) { .ls-bridge__cta { transition:none !important; } .ls-bridge__cta:hover { transform:none !important; } }
   @media (prefers-reduced-motion: reduce) {
-    .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea,.ls-form-error-card__retry { transition:none !important; }
-    .ls-post:hover,.ls-filter:hover,.ls-form-btn:hover,.ls-form-error-card__retry:hover { transform:none !important; }
+    .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea,
+    .ls-form-error-card__retry,.ls-toc__chip,.ls-bridge__cta { transition:none !important; }
+    .ls-post:hover,.ls-filter:hover,.ls-form-btn:hover,
+    .ls-form-error-card__retry:hover,.ls-toc__chip:hover,.ls-bridge__cta:hover { transform:none !important; }
     .ls-ep__posts > .ls-post { animation:none !important; }
   }
   @media (max-width:768px) {
