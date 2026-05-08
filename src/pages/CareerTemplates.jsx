@@ -346,6 +346,133 @@ export default function CareerTemplates() {
         .ct-card__cta--job:hover       { background: var(--color-navy);   color: var(--color-cream); border-color: var(--color-navy);   box-shadow: 0 8px 16px -8px rgba(22,43,68,.5); }
         .ct-card__cta:active { transform: translateY(0); }
 
+        /* card actions row — Copy Template + Preview side by side */
+        .ct-card__actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: auto; }
+        .ct-card__preview {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 10px 14px;
+          border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: -.005em;
+          text-decoration: none;
+          cursor: pointer;
+          background: transparent;
+          border: 1.5px solid rgba(26,25,22,.18);
+          color: var(--color-muted);
+          transition: background .25s, color .25s, border-color .25s, transform .22s cubic-bezier(.16,1,.3,1);
+        }
+        .ct-card__preview:hover { color: var(--color-dark); border-color: var(--color-dark); background: rgba(26,25,22,.05); transform: translateY(-1px); }
+        .ct-card__preview:active { transform: translateY(0); }
+        .ct-card__preview:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+
+        /* Preview modal */
+        .ct-modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(26,25,22,.55);
+          backdrop-filter: blur(4px);
+          z-index: 500;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity .2s;
+        }
+        .ct-modal-overlay.open { opacity: 1; pointer-events: all; }
+        .ct-modal {
+          background: linear-gradient(180deg, var(--color-cream), rgba(232,168,56,.05));
+          border-radius: 18px;
+          padding: 36px clamp(24px, 4vw, 40px) 32px;
+          max-width: 640px;
+          width: 100%;
+          max-height: 85vh;
+          overflow-y: auto;
+          transform: translateY(12px);
+          transition: transform .3s cubic-bezier(.16,1,.3,1);
+          position: relative;
+          box-shadow: 0 30px 60px -20px rgba(63,42,28,.32);
+          border: 1px solid rgba(26,25,22,.08);
+        }
+        .ct-modal-overlay.open .ct-modal { transform: translateY(0); }
+        .ct-modal__close {
+          position: absolute;
+          top: 14px;
+          right: 14px;
+          min-width: 44px;
+          min-height: 44px;
+          border-radius: 50%;
+          border: none;
+          background: rgba(26,25,22,.06);
+          color: var(--color-muted);
+          font-size: 16px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background .15s, color .15s;
+        }
+        .ct-modal__close:hover { background: rgba(179,69,57,.1); color: var(--color-accent); }
+        .ct-modal__close:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+        .ct-modal__num { font-family: var(--font-display); font-size: 14px; font-weight: 800; letter-spacing: -.005em; color: rgba(232,168,56,.7); font-variant-numeric: tabular-nums; margin-bottom: 8px; }
+        .ct-modal__badges { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+        .ct-modal__title {
+          font-family: var(--font-display);
+          font-size: clamp(22px, 3vw, 30px);
+          font-weight: 700;
+          color: var(--color-dark);
+          margin-bottom: 14px;
+          line-height: 1.15;
+          letter-spacing: -.02em;
+          max-width: 24ch;
+        }
+        .ct-modal__intro { font-size: 14px; color: var(--color-muted); line-height: 1.65; margin-bottom: 18px; max-width: 50ch; }
+        .ct-modal__intro strong { color: var(--color-dark); font-weight: 700; }
+        .ct-modal__body {
+          background: rgba(232,168,56,.07);
+          border: 1px solid rgba(232,168,56,.22);
+          border-left: 3px solid var(--color-gold-dark);
+          border-radius: 10px;
+          padding: 22px 24px;
+          font-size: 14px;
+          line-height: 1.75;
+          color: var(--color-dark);
+          margin-bottom: 18px;
+          white-space: pre-wrap;
+          font-family: var(--font-body);
+          max-height: 280px;
+          overflow-y: auto;
+        }
+        .ct-modal__body--placeholder { font-style: italic; color: var(--color-muted); }
+        .ct-modal__copy-btn {
+          width: 100%;
+          padding: 13px;
+          background: var(--color-dark);
+          color: var(--color-cream);
+          border: none;
+          border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: -.005em;
+          cursor: pointer;
+          box-shadow: 0 8px 20px -10px rgba(26,25,22,.4), inset 0 1px 0 rgba(255,255,255,.08);
+          transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+        .ct-modal__copy-btn:hover { background: var(--color-teal); transform: translateY(-1px); box-shadow: 0 12px 24px -10px rgba(58,125,107,.5); }
+        .ct-modal__copy-btn:active { transform: translateY(0); }
+        .ct-modal__copy-btn.copied { background: var(--color-teal); }
+        .ct-modal__copy-btn:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 999px; }
+
         .ct-empty {
           grid-column: 1 / -1;
           text-align: center;
@@ -518,10 +645,11 @@ export default function CareerTemplates() {
         }
         @media (prefers-reduced-motion: reduce) {
           .ct-card, .ct-filter, .ct-form-btn, .ct-form-input, .ct-form-select, .ct-form-textarea,
-          .ct-form-error-card__retry, .ct-card__cta { transition: none !important; }
+          .ct-form-error-card__retry, .ct-card__cta, .ct-card__preview, .ct-modal__copy-btn { transition: none !important; }
           .ct-card:hover, .ct-filter:hover, .ct-form-btn:hover, .ct-card__cta:hover,
-          .ct-form-error-card__retry:hover { transform: none !important; }
+          .ct-form-error-card__retry:hover, .ct-card__preview:hover, .ct-modal__copy-btn:hover { transform: none !important; }
           .ct-grid > .ct-card { animation: none !important; }
+          .ct-modal-overlay, .ct-modal-overlay.open .ct-modal { transition-duration: .01ms !important; }
         }
       `}</style>
 
