@@ -129,7 +129,7 @@ const PAGE_CSS = `
   .ls-how__item-icon { font-family:var(--font-display);font-size:42px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.04em;color:var(--color-gold);margin-bottom:14px;line-height:1; }
   .ls-how__item-title { font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--color-cream);margin-bottom:8px;letter-spacing:-.005em;line-height:1.3; }
   .ls-how__item-desc { font-size:14px;color:rgba(242,228,206,.7);line-height:1.6;text-wrap:pretty; }
-  .ls-form-wrap { max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,56px); }
+  .ls-form-wrap { max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,56px);scroll-margin-top:96px; }
   .ls-form-layout { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(40px,5vw,72px);align-items:start; }
   @media (max-width: 860px) { .ls-form-layout { grid-template-columns: 1fr; gap: 36px; } }
   .ls-form-intro { max-width: 460px; }
