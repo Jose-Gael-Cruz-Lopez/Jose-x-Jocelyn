@@ -168,7 +168,7 @@ export default function CareerTemplates() {
         .ct-hero__sub strong { color: var(--color-dark); font-weight: 600; }
 
         .ct-controls {
-          max-width: 1040px;
+          max-width: 1240px;
           margin: 0 auto;
           padding: 0 clamp(20px,5vw,56px) 40px;
         }
@@ -178,20 +178,22 @@ export default function CareerTemplates() {
           gap: 8px;
         }
         .ct-filter {
-          padding: 13px 20px;
-          border-radius: 8px;
-          font-family: var(--font-body);
-          font-size: 13px;
-          font-weight: 600;
+          padding: 11px 18px;
+          border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: -.005em;
           cursor: pointer;
-          border: 1.5px solid rgba(0,0,0,0.12);
-          background: var(--color-white);
+          border: 1.5px solid rgba(26,25,22,.1);
+          background: rgba(255,255,255,.55);
           color: var(--color-muted);
-          transition: background 0.2s, color 0.2s, border-color 0.2s;
+          transition: background-color .2s, color .2s, border-color .2s, transform .15s, box-shadow .2s;
         }
-        .ct-filter:hover { color: var(--color-dark); border-color: rgba(0,0,0,0.25); }
-        .ct-filter:focus-visible { outline: 2px solid var(--color-dark); outline-offset: 2px; }
-        .ct-filter--active { background: var(--color-dark); color: var(--color-cream); border-color: var(--color-dark); }
+        .ct-filter:hover { color: var(--color-dark); border-color: rgba(26,25,22,.22); background: rgba(255,255,255,.85); transform: translateY(-1px); box-shadow: 0 4px 12px -4px rgba(63,42,28,.1); }
+        .ct-filter:active { transform: translateY(0); }
+        .ct-filter:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 999px; }
+        .ct-filter--active { background: var(--color-dark); color: var(--color-cream); border-color: var(--color-dark); box-shadow: 0 8px 18px -8px rgba(63,42,28,.32), inset 0 1px 0 rgba(255,255,255,.08); }
         .ct-filter--outreach.ct-filter--active { background: var(--color-teal);  border-color: var(--color-teal); }
         .ct-filter--apply.ct-filter--active    { background: var(--color-blue);  border-color: var(--color-blue); }
         .ct-filter--interview.ct-filter--active { background: var(--color-gold-dark); border-color: var(--color-gold-dark); }
