@@ -229,6 +229,7 @@ export default function LinkedInSeries() {
   const [categoryOther, setCategoryOther] = useState('')
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({ topic: '', email: '', category: '' })
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   const LENS_OPTIONS = [
@@ -246,8 +247,16 @@ export default function LinkedInSeries() {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if (!topic.trim()) { setFormError(t.formErrorTopic); return }
-    if (category === 'other' && !categoryOther.trim()) { setFormError(t.formErrorCategoryOther); return }
+    const errors = { topic: '', email: '', category: '' }
+    if (!topic.trim()) errors.topic = t.formErrorTopic
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errors.email = t.formErrorEmail
+    if (category === 'other' && !categoryOther.trim()) errors.category = t.formErrorCategoryOther
+    if (errors.topic || errors.email || errors.category) {
+      setFieldErrors(errors)
+      setFormError('')
+      return
+    }
+    setFieldErrors({ topic: '', email: '', category: '' })
     setFormLoading(true)
     setFormError('')
     const categoryValue = category === 'other'
