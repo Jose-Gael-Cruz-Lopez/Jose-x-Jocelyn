@@ -442,13 +442,13 @@ export default function CareerTemplates() {
         .ct-form-label {
           display: block;
           font-size: 12px;
-          font-weight: 700;
+          font-weight: 800;
           text-transform: uppercase;
-          letter-spacing: 0.08em;
-          color: rgba(242,228,206,0.5);
-          margin-bottom: 6px;
+          letter-spacing: 0.12em;
+          color: rgba(242,228,206,0.85);
+          margin-bottom: 7px;
         }
-        .ct-form-box { background: rgba(255,255,255,.04); border: 1px solid rgba(242,228,206,.12); border-radius: 14px; padding: clamp(24px,3vw,32px); }
+        .ct-form-box { background: rgba(0,0,0,.12); border: 1px solid rgba(242,228,206,.22); border-radius: 14px; padding: clamp(24px,3vw,32px); box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
         .ct-form-input,
         .ct-form-select,
         .ct-form-textarea {
@@ -456,15 +456,15 @@ export default function CareerTemplates() {
           font-family: var(--font-body);
           font-size: 15px;
           padding: 12px 14px;
-          border: 1.5px solid rgba(242,228,206,.15);
+          border: 1.5px solid rgba(242,228,206,.32);
           border-radius: 10px;
-          background: rgba(255,255,255,.07);
+          background: rgba(0,0,0,.18);
           color: var(--color-cream);
           outline: none;
           transition: border-color .2s, background .2s, box-shadow .2s;
         }
         .ct-form-input::placeholder,
-        .ct-form-textarea::placeholder { color: rgba(242,228,206,.3); }
+        .ct-form-textarea::placeholder { color: rgba(242,228,206,.55); }
         .ct-form-input:focus,
         .ct-form-select:focus,
         .ct-form-textarea:focus { border-color: var(--color-gold); background: rgba(255,255,255,.1); box-shadow: 0 0 0 4px rgba(232,168,56,.16); }
