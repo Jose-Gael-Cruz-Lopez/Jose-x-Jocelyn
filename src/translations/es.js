@@ -1655,7 +1655,7 @@ export const es = {
         ],
       },
       {
-        title: 'GPA bajo, primera generación, sin redes — ¿Y ahora qué?',
+        title: 'GPA bajo, primera generación, sin redes. ¿Y ahora qué?',
         summary: 'Una conversación honesta sobre las desventajas estructurales y lo que realmente mueve la aguja cuando no tienes los marcadores tradicionales de acceso.',
         why: 'Muchos consejos están escritos para personas que están a un buen currículum del éxito. Este episodio es para todos los demás.',
         posts: [
@@ -1727,7 +1727,7 @@ export const es = {
     formBtnSubmit: 'Enviar tema',
     formBtnSubmitting: 'Enviando…',
     formSuccessTitle: '¡Tema enviado!',
-    formSuccessBody: 'Gracias — lo consideraremos para un próximo episodio.',
+    formSuccessBody: 'Gracias. Lo consideraremos para un próximo episodio.',
 
     // ── Footer ────────────────────────────────────────────────────────────────
     footerCopy: 'Jose x Jocelyn © 2026',
@@ -2532,7 +2532,7 @@ export const es = {
     navAriaLabel: 'Menú de navegación',
     // sign-off
     signoffLine: 'Tú perteneces a estos espacios.',
-    signoffSub: 'Construimos esto porque nadie nos entregó el manual. Si algo resonó — o si tienes preguntas — queremos escucharte.',
+    signoffSub: 'Construimos esto porque nadie nos entregó el manual. Si algo resonó, o si tienes preguntas, queremos escucharte.',
     signoffCta: 'Contáctanos ↗',
     // footer
     footerCopy: 'Jose x Jocelyn © 2026',

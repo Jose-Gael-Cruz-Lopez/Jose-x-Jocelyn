@@ -1727,7 +1727,7 @@ export const en = {
     formBtnSubmit: 'Submit Topic',
     formBtnSubmitting: 'Submitting…',
     formSuccessTitle: 'Topic submitted!',
-    formSuccessBody: "Thanks — we'll consider it for an upcoming episode.",
+    formSuccessBody: "Thanks. We'll consider it for an upcoming episode.",
 
     // ── Footer ────────────────────────────────────────────────────────────────
     footerCopy: 'Jose x Jocelyn © 2026',
@@ -2532,7 +2532,7 @@ export const en = {
     navAriaLabel: 'Navigation menu',
     // sign-off
     signoffLine: 'You belong in these rooms.',
-    signoffSub: 'We built this because no one handed us the playbook. If something resonated — or if you have questions — we want to hear from you.',
+    signoffSub: 'We built this because no one handed us the playbook. If something resonated, or if you have questions, we want to hear from you.',
     signoffCta: 'Get in touch ↗',
     // footer
     footerCopy: 'Jose x Jocelyn © 2026',
