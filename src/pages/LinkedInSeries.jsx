@@ -17,9 +17,6 @@ const EPISODES = [
   { num: '10', lens: 'both', topics: 'internships offers rejection on-the-job', tags: ['internships', 'offers', 'rejection', 'on-the-job'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap-cta', author: 'both', status: 'coming-soon' }] },
 ]
 
-const LENS_FILTERS = new Set(['all', 'jose', 'jocelyn', 'both'])
-const TOPIC_FILTERS = new Set(['internships', 'offers', 'rejection', 'on-the-job'])
-
 function lensClass(a) {
   return a === 'jose' ? 'ls-ep__lens--jose' : a === 'jocelyn' ? 'ls-ep__lens--jocelyn' : 'ls-ep__lens--both'
 }
