@@ -219,30 +219,27 @@ export default function CareerTemplates() {
         }
 
         .ct-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: linear-gradient(180deg, rgba(255,250,242,.85) 0%, rgba(255,250,242,.55) 100%);
+          border: 1px solid rgba(26,25,22,.13);
           border-radius: 14px;
-          padding: 28px;
+          padding: 24px 24px 22px;
           display: flex;
           flex-direction: column;
           gap: 0;
-          transition: transform 0.22s cubic-bezier(0.16,1,0.3,1), box-shadow 0.22s;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(63,42,28,.12);
+          transition: transform .28s cubic-bezier(.16,1,.3,1), box-shadow .28s cubic-bezier(.16,1,.3,1), border-color .28s;
         }
         .ct-card:hover {
           transform: translateY(-3px);
-          box-shadow: 0 10px 32px rgba(0,0,0,.09);
+          box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 36px -12px rgba(63,42,28,.22);
+          border-color: rgba(26,25,22,.22);
         }
-
-        .ct-card__bar {
-          height: 3px;
-          border-radius: 2px;
-          margin-bottom: 20px;
-        }
-        .ct-card__bar--outreach  { background: var(--color-teal); }
-        .ct-card__bar--apply     { background: var(--color-blue); }
-        .ct-card__bar--interview { background: var(--color-gold); }
-        .ct-card__bar--offers    { background: var(--color-accent); }
-        .ct-card__bar--job       { background: var(--color-navy); }
+        /* per-stage tint replaces the banned 3px colored top stripe */
+        .ct-card--outreach  { background: linear-gradient(180deg, rgba(58,125,107,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(58,125,107,.22); }
+        .ct-card--apply     { background: linear-gradient(180deg, rgba(91,142,194,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(91,142,194,.22); }
+        .ct-card--interview { background: linear-gradient(180deg, rgba(232,168,56,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(232,168,56,.26); }
+        .ct-card--offers    { background: linear-gradient(180deg, rgba(179,69,57,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(179,69,57,.22); }
+        .ct-card--job       { background: linear-gradient(180deg, rgba(22,43,68,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(22,43,68,.2); }
 
         .ct-card__top {
           display: flex;
@@ -484,8 +481,7 @@ export default function CareerTemplates() {
           <div className="ct-empty" aria-live="polite">{t.emptyState}</div>
         ) : (
           visible.map(tmpl => (
-            <div key={tmpl.id} className="ct-card">
-              <div className={`ct-card__bar ct-card__bar--${tmpl.stage}`}></div>
+            <div key={tmpl.id} className={`ct-card ct-card--${tmpl.stage}`}>
               <div className="ct-card__top">
                 <span className="ct-card__num">{tmpl.num}</span>
                 <div className="ct-card__badges">
