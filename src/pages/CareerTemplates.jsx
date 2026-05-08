@@ -410,8 +410,9 @@ export default function CareerTemplates() {
         .ct-modal-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(26,25,22,.55);
-          backdrop-filter: blur(4px);
+          background: rgba(26,25,22,.7);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
           z-index: 500;
           display: flex;
           align-items: center;
@@ -423,7 +424,7 @@ export default function CareerTemplates() {
         }
         .ct-modal-overlay.open { opacity: 1; pointer-events: all; }
         .ct-modal {
-          background: linear-gradient(180deg, var(--color-cream), rgba(232,168,56,.05));
+          background: var(--color-cream);
           border-radius: 18px;
           padding: 36px clamp(24px, 4vw, 40px) 32px;
           max-width: 640px;
@@ -433,8 +434,7 @@ export default function CareerTemplates() {
           transform: translateY(12px);
           transition: transform .3s cubic-bezier(.16,1,.3,1);
           position: relative;
-          box-shadow: 0 30px 60px -20px rgba(63,42,28,.32);
-          border: 1px solid rgba(26,25,22,.08);
+          box-shadow: 0 36px 72px -24px rgba(26,25,22,.5), 0 0 0 1px rgba(26,25,22,.06);
         }
         .ct-modal-overlay.open .ct-modal { transform: translateY(0); }
         .ct-modal__close {
@@ -471,8 +471,8 @@ export default function CareerTemplates() {
         .ct-modal__intro { font-size: 14px; color: var(--color-muted); line-height: 1.65; margin-bottom: 18px; max-width: 50ch; }
         .ct-modal__intro strong { color: var(--color-dark); font-weight: 700; }
         .ct-modal__body {
-          background: rgba(232,168,56,.07);
-          border: 1px solid rgba(232,168,56,.22);
+          background: var(--color-white);
+          border: 1px solid rgba(26,25,22,.1);
           border-left: 3px solid var(--color-gold-dark);
           border-radius: 10px;
           padding: 22px 24px;
@@ -484,6 +484,7 @@ export default function CareerTemplates() {
           font-family: var(--font-body);
           max-height: 280px;
           overflow-y: auto;
+          box-shadow: 0 1px 3px rgba(63,42,28,.06), inset 0 1px 0 rgba(255,255,255,.6);
         }
         .ct-modal__body--placeholder { font-style: italic; color: var(--color-muted); }
         .ct-modal__copy-btn {
