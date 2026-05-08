@@ -201,7 +201,7 @@ export default function CareerTemplates() {
         .ct-filter--job.ct-filter--active      { background: var(--color-navy);  border-color: var(--color-navy); }
 
         .ct-meta {
-          max-width: 1040px;
+          max-width: 1240px;
           margin: 0 auto;
           padding: 0 clamp(20px,5vw,56px) 24px;
           display: flex;
@@ -210,15 +210,20 @@ export default function CareerTemplates() {
           gap: 16px;
         }
         .ct-count { font-size: 13px; color: var(--color-muted); }
+        .ct-count strong { color: var(--color-dark); font-weight: 700; }
 
         .ct-grid {
-          max-width: 1040px;
+          max-width: 1240px;
           margin: 0 auto;
           padding: 0 clamp(20px,5vw,56px) 80px;
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 20px;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 18px;
         }
+        @media (max-width: 960px) { .ct-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 560px) { .ct-grid { grid-template-columns: 1fr; } }
+        .ct-grid > .ct-card { animation: ct-card-in .55s cubic-bezier(.16,1,.3,1) backwards; animation-delay: calc(var(--ct-i, 0) * 50ms); }
+        @keyframes ct-card-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         .ct-card {
           background: linear-gradient(180deg, rgba(255,250,242,.85) 0%, rgba(255,250,242,.55) 100%);
@@ -335,9 +340,13 @@ export default function CareerTemplates() {
         .ct-empty {
           grid-column: 1 / -1;
           text-align: center;
-          padding: 64px 0;
+          padding: 60px 24px;
           color: var(--color-muted);
-          font-size: 16px;
+          font-size: 15px;
+          line-height: 1.6;
+          background: rgba(232,168,56,.05);
+          border: 1px dashed rgba(232,168,56,.25);
+          border-radius: 16px;
         }
 
         .ct-legend {
@@ -486,8 +495,8 @@ export default function CareerTemplates() {
         {visible.length === 0 ? (
           <div className="ct-empty" aria-live="polite">{t.emptyState}</div>
         ) : (
-          visible.map(tmpl => (
-            <div key={tmpl.id} className={`ct-card ct-card--${tmpl.stage}`}>
+          visible.map((tmpl, idx) => (
+            <div key={tmpl.id} className={`ct-card ct-card--${tmpl.stage}`} style={{ '--ct-i': idx % 12 }}>
               <div className="ct-card__top">
                 <span className="ct-card__num">{tmpl.num}</span>
                 <div className="ct-card__badges">
