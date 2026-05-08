@@ -1798,7 +1798,7 @@ export const es = {
       {
         id: 1, cat: 'outreach', stage: 'outreach', author: 'jose',
         num: '01',
-        title: 'DM en Frío en LinkedIn - Estudiante a Profesional',
+        title: 'DM en Frío en LinkedIn, Estudiante a Profesional',
         desc: 'Tres versiones: para un reclutador, para un ingeniero y para un egresado. Corto, específico, sin desesperación. Los mensajes exactos que realmente obtienen respuestas.',
         ctaLabel: 'Copiar Plantilla', ctaIcon: 'copy',
       },
