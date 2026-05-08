@@ -1736,6 +1736,7 @@ export const en = {
     formPlaceholderCategoryOther: 'e.g. visa sponsorship, study abroad, freelancing…',
     formErrorCategoryOther: 'Please describe your topic area.',
     formErrorTopic: 'Please enter a topic or question.',
+    formErrorEmail: "That doesn't look like a valid email.",
     formErrorGeneric: 'Something went wrong. Please try again.',
     formBtnSubmit: 'Submit Topic',
     formBtnSubmitting: 'Submitting…',
