@@ -1659,7 +1659,7 @@ export const es = {
         summary: 'Jose comparte los sentimientos en tiempo real del rechazo y lo que hace a continuación. Jocelyn explica qué te dice realmente el rechazo, y qué no, y cómo ella lo reencuadra.',
         why: 'El rechazo no es una señal de que lo hiciste mal. Pero nadie te lo dice en el momento. Este episodio es la conversación que deseamos haber tenido cuando nos pasó.',
         posts: [
-          { title: 'Me acaban de rechazar. Esto es lo que realmente hice después.', preview: 'Un relato real de cómo se siente el rechazo en tiempo real, la temptación de espiralizarse y las pequeñas acciones que ayudaron a Jose a seguir avanzando.' },
+          { title: 'Me acaban de rechazar. Esto es lo que realmente hice después.', preview: 'Un relato real de cómo se siente el rechazo en tiempo real, la tentación de espiralizarse y las pequeñas acciones que ayudaron a Jose a seguir avanzando.' },
           { title: 'Lo que el rechazo realmente te está diciendo (no es lo que crees)', preview: 'Tres historias reales de rechazos en ronda final, cuáles fueron las razones reales y por qué ninguna tenía que ver con ser inadecuado.' },
           { title: 'Resumen del Ep. 07 - El rechazo no significa que lo hiciste mal', preview: 'Un resumen directo y fundamentado de ambas perspectivas, con un enlace al artículo completo y un recordatorio de que el proceso es más largo que cualquier resultado individual.' },
         ],
