@@ -1918,11 +1918,19 @@ export const es = {
     catOffersNegotiation: 'Ofertas y negociación',
     catFirstJobOnboarding: 'Primer trabajo e incorporación',
     formErrorRequired: 'Por favor describe la plantilla que necesitas.',
+    formErrorEmail: 'Ese correo no parece válido.',
     formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    formErrorLabel: 'No se pudo enviar.',
+    formRetryLabel: 'Intentar de nuevo',
     formBtnSubmit: 'Enviar Solicitud',
     formBtnSubmitting: 'Enviando…',
     formSuccessTitle: '¡Solicitud enviada!',
-    formSuccessBody: 'Gracias — la construiremos si suficientes personas piden lo mismo.',
+    formSuccessBody: 'Gracias. La construiremos si suficientes personas piden lo mismo.',
+    formPerks: [
+      { strong: 'Leemos cada solicitud.', rest: ' Las vemos todas, aunque no siempre podamos responder.' },
+      { strong: 'Si la construimos, te avisaremos primero.', rest: ' Las plantillas incluyen crédito cuando usamos tu sugerencia.' },
+      { strong: 'Tu correo se queda privado.', rest: ' Solo lo usamos para avisarte sobre tu solicitud.' },
+    ],
 
     // ── Footer ────────────────────────────────────────────────────────────────
     footerCopy: 'Jose x Jocelyn © 2026',
