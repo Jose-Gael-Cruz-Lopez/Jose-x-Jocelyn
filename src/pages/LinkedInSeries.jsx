@@ -153,6 +153,10 @@ const PAGE_CSS = `
   .ls-form-btn:active { transform:translateY(0);box-shadow:0 2px 4px -2px rgba(var(--ls-shadow-warm),.18); }
   .ls-form-btn:disabled { opacity:.55;cursor:not-allowed;transform:none;box-shadow:none; }
   .ls-form-error { color:var(--color-accent);font-size:13px;font-weight:600;margin-bottom:10px; }
+  .ls-form-row__error { display:block;margin-top:6px;font-size:12px;font-weight:600;color:var(--color-accent);line-height:1.4; }
+  .ls-form-row__error::before { content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--color-accent);margin-right:7px;vertical-align:.18em; }
+  .ls-form-input.is-invalid, .ls-form-textarea.is-invalid, .ls-form-select.is-invalid { border-color:rgba(179,69,57,.45); }
+  .ls-form-input.is-invalid:focus, .ls-form-textarea.is-invalid:focus, .ls-form-select.is-invalid:focus { border-color:var(--color-accent);box-shadow:0 0 0 4px rgba(179,69,57,.12); }
   .ls-form-success { padding:32px 0;text-align:center; }
   .ls-form-success__icon { width:52px;height:52px;border-radius:50%;background:rgba(58,125,107,.12);color:var(--color-teal);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:inset 0 0 0 1.5px rgba(58,125,107,.18); }
   .ls-form-success__title { font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--color-dark);margin-bottom:6px;letter-spacing:-.01em; }
