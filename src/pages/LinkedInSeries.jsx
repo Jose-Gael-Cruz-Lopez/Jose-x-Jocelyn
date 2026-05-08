@@ -157,6 +157,8 @@ const PAGE_CSS = `
   .ls-form-row__error::before { content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--color-accent);margin-right:7px;vertical-align:.18em; }
   .ls-form-input.is-invalid, .ls-form-textarea.is-invalid, .ls-form-select.is-invalid { border-color:rgba(179,69,57,.45); }
   .ls-form-input.is-invalid:focus, .ls-form-textarea.is-invalid:focus, .ls-form-select.is-invalid:focus { border-color:var(--color-accent);box-shadow:0 0 0 4px rgba(179,69,57,.12); }
+  .ls-form-row__counter { display:block;margin-top:6px;font-size:11px;color:var(--color-muted);text-align:right;font-variant-numeric:tabular-nums;letter-spacing:.02em; }
+  .ls-form-row__counter--warn { color:var(--color-accent);font-weight:600; }
   .ls-form-success { padding:32px 0;text-align:center; }
   .ls-form-success__icon { width:52px;height:52px;border-radius:50%;background:rgba(58,125,107,.12);color:var(--color-teal);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:inset 0 0 0 1.5px rgba(58,125,107,.18); }
   .ls-form-success__title { font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--color-dark);margin-bottom:6px;letter-spacing:-.01em; }
@@ -460,11 +462,13 @@ export default function LinkedInSeries() {
                   id="topicField"
                   placeholder={t.formPlaceholderTopic}
                   value={topic}
+                  maxLength={280}
                   onChange={e => { setTopic(e.target.value); if (fieldErrors.topic) setFieldErrors(s => ({ ...s, topic: '' })) }}
                   aria-invalid={!!fieldErrors.topic}
-                  aria-describedby={fieldErrors.topic ? 'topicField-error' : undefined}
+                  aria-describedby={fieldErrors.topic ? 'topicField-error' : 'topicField-counter'}
                 />
                 {fieldErrors.topic && <span id="topicField-error" className="ls-form-row__error" role="alert">{fieldErrors.topic}</span>}
+                <span id="topicField-counter" className={`ls-form-row__counter${topic.length >= 240 ? ' ls-form-row__counter--warn' : ''}`} aria-live="polite">{topic.length} / 280</span>
               </div>
               <div className="ls-form-row">
                 <label className="ls-form-label" htmlFor="emailField">{t.formLabelEmail}</label>
