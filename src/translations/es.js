@@ -1575,7 +1575,6 @@ export const es = {
     noResults: 'Ningún episodio coincide con ese filtro.',
 
     // ── Episode display labels ────────────────────────────────────────────────
-    whyPrefix: 'Por qué importa: ',
     authorBoth: 'Ambos',
     authorJose: 'Jose',
     authorJocelyn: 'Jocelyn',

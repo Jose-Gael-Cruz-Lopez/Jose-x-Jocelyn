@@ -1575,7 +1575,6 @@ export const en = {
     noResults: 'No episodes match that filter.',
 
     // ── Episode display labels ────────────────────────────────────────────────
-    whyPrefix: 'Why it matters: ',
     authorBoth: 'Both',
     authorJose: 'Jose',
     authorJocelyn: 'Jocelyn',

@@ -94,7 +94,6 @@ const PAGE_CSS = `
   .ls-ep__title { font-family:var(--font-display);font-size:clamp(22px,3vw,32px);font-weight:700;color:var(--color-dark);line-height:1.15;letter-spacing:-0.02em;text-wrap:balance;margin-bottom:10px; }
   .ls-ep__summary { font-size:15px;color:var(--color-muted);line-height:1.65;text-wrap:pretty;max-width:640px;margin-bottom:10px; }
   .ls-ep__why { font-size:13px;color:var(--color-teal);font-weight:500;font-style:italic;font-family:var(--font-serif,var(--font-body));border-left:3px solid rgba(58,125,107,.5);padding-left:12px;line-height:1.55; }
-  .ls-ep__why-prefix { font-weight:700;font-style:normal;font-family:var(--font-display);letter-spacing:-.005em; }
   .ls-ep__posts { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;min-width:0; }
   @media (max-width:960px) { .ls-ep__posts { grid-template-columns:repeat(2,minmax(0,1fr)); } }
   @media (max-width:560px) { .ls-ep__posts { grid-template-columns:1fr; } }
