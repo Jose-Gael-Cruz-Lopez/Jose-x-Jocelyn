@@ -1918,11 +1918,19 @@ export const en = {
     catOffersNegotiation: 'Offers & negotiation',
     catFirstJobOnboarding: 'First job & onboarding',
     formErrorRequired: 'Please describe the template you need.',
+    formErrorEmail: "That doesn't look like a valid email.",
     formErrorGeneric: 'Something went wrong. Please try again.',
+    formErrorLabel: "Couldn't send.",
+    formRetryLabel: 'Try again',
     formBtnSubmit: 'Submit Request',
     formBtnSubmitting: 'Submitting…',
     formSuccessTitle: 'Request submitted!',
-    formSuccessBody: "Thanks — we'll build it if enough people ask for the same thing.",
+    formSuccessBody: "Thanks. We'll build it if enough people ask for the same thing.",
+    formPerks: [
+      { strong: 'Every request gets read.', rest: ' We see them, even when we can\'t reply.' },
+      { strong: "If we build it, you'll know first.", rest: ' Templates ship with a credit when we use your prompt.' },
+      { strong: 'Your email stays private.', rest: ' We only use it to ping you about your request.' },
+    ],
 
     // ── Footer ────────────────────────────────────────────────────────────────
     footerCopy: 'Jose x Jocelyn © 2026',
