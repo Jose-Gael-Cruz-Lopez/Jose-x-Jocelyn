@@ -542,6 +542,7 @@ export default function CareerTemplates() {
               key={key}
               data-key={key}
               className={`ct-filter${key !== 'all' ? ` ct-filter--${key}` : ''}${activeFilter === key ? ' ct-filter--active' : ''}`}
+              aria-pressed={activeFilter === key}
               onClick={handleFilterClick}
             >
               {label}
