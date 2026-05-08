@@ -301,7 +301,11 @@ export default function LinkedInSeries() {
         <div className="ls-hero__primary">
           <p className="ls-hero__kicker">{t.heroKicker}</p>
           <h1 className="ls-hero__title">{t.heroTitlePrefix}<span className="ls-linkedin">{t.heroTitleLinkedIn}</span> <em>{t.heroTitleEm}</em></h1>
-          <p className="ls-hero__sub" dangerouslySetInnerHTML={{ __html: t.heroSubHTML }} />
+          <p className="ls-hero__sub">{t.heroSubLead}</p>
+          <p className="ls-hero__sub">
+            <strong>{t.heroSubJoseStrong}</strong>{t.heroSubJoseRest}
+            <strong>{t.heroSubJocelynStrong}</strong>{t.heroSubJocelynRest}
+          </p>
         </div>
         <div className="ls-hero__aside">
           <div className="ls-stats">
