@@ -1555,8 +1555,8 @@ export const en = {
     resultsOf: 'of',
     resultsEpisodes: 'episodes shown',
     formPerks: [
-      { strong: 'Every submission gets read.', rest: '' },
-      { strong: "If we build it, you'll know first.", rest: '' },
+      { strong: 'Every submission gets read.', rest: ' We see them, even when we can\'t reply.' },
+      { strong: "If we build it, you'll know first.", rest: ' Episodes ship with a credit when we use your prompt.' },
       { strong: 'Your email stays private.', rest: ' We only use it to ping you about your topic.' },
     ],
     bridgeCopyPrefix: 'Have a topic in mind?',
