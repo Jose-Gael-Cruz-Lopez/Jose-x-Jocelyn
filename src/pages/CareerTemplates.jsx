@@ -27,13 +27,22 @@ export default function CareerTemplates() {
   const [reqCategory, setReqCategory] = useState('')
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({ request: '', email: '' })
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   const handleFilterClick = useCallback(e => setActiveFilter(e.currentTarget.dataset.key), [])
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if (!request.trim()) { setFormError(t.formErrorRequired); return }
+    const errors = { request: '', email: '' }
+    if (!request.trim()) errors.request = t.formErrorRequired
+    if (reqEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reqEmail.trim())) errors.email = t.formErrorEmail
+    if (errors.request || errors.email) {
+      setFieldErrors(errors)
+      setFormError('')
+      return
+    }
+    setFieldErrors({ request: '', email: '' })
     setFormLoading(true)
     setFormError('')
     const { error } = await supabase.from('template_requests').insert({
