@@ -69,8 +69,18 @@ const PAGE_CSS = `
   .ls-filters__rule { width:1px;align-self:stretch;background:rgba(26,25,22,.1);margin:6px 8px; }
   .ls-divider { max-width:1240px;margin:0 auto 48px;padding:0 clamp(20px,5vw,56px); }
   .ls-divider hr { border:none;border-top:1px solid rgba(26,25,22,.08); }
+  .ls-results-count { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 16px;font-size:13px;color:var(--color-muted); }
+  .ls-results-count strong { color:var(--color-dark);font-weight:700; }
+  .ls-toc { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 32px; }
+  .ls-toc__inner { display:flex;flex-wrap:wrap;gap:6px;align-items:center; }
+  .ls-toc__label { font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--color-muted);margin-right:10px; }
+  .ls-toc__chip { display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(255,250,242,.8);border:1px solid rgba(26,25,22,.13);color:var(--color-dark);font-family:var(--font-display);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.005em;text-decoration:none;transition:background .2s,border-color .2s,transform .15s cubic-bezier(.16,1,.3,1),box-shadow .2s; }
+  .ls-toc__chip:hover { background:var(--color-dark);color:var(--color-cream);border-color:var(--color-dark);transform:translateY(-1px);box-shadow:0 6px 12px -6px rgba(var(--ls-shadow-warm),.32); }
+  .ls-toc__chip--filtered { opacity:.3;pointer-events:none; }
+  .ls-toc__chip:focus-visible { outline:2px solid var(--color-accent);outline-offset:3px; }
+  @media (prefers-reduced-motion: reduce) { .ls-toc__chip { transition:none !important; } .ls-toc__chip:hover { transform:none !important; } }
   .ls-episodes { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 80px;display:flex;flex-direction:column;gap:64px; }
-  .ls-ep { display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start; }
+  .ls-ep { display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start;scroll-margin-top:96px; }
   .ls-ep__head { display:flex;align-items:flex-start;gap:24px;margin-bottom:0;position:sticky;top:80px; }
   .ls-ep__num { font-family:var(--font-display);font-size:clamp(48px,5.4vw,76px);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.05em;line-height:1;color:rgba(232,168,56,.42);flex-shrink:0;min-width:60px;font-feature-settings:"ss01" 1; }
   .ls-ep__info { flex:1;min-width:0; }
@@ -120,11 +130,19 @@ const PAGE_CSS = `
   .ls-how__item-title { font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--color-cream);margin-bottom:8px;letter-spacing:-.005em;line-height:1.3; }
   .ls-how__item-desc { font-size:14px;color:rgba(242,228,206,.7);line-height:1.6;text-wrap:pretty; }
   .ls-form-wrap { max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,56px); }
-  .ls-form-box { background:rgba(255,250,242,.7);border-radius:18px;padding:clamp(32px,4vw,56px);border:1px solid rgba(26,25,22,.13);max-width:640px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--ls-shadow-warm),.22); }
+  .ls-form-layout { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(40px,5vw,72px);align-items:start; }
+  @media (max-width: 860px) { .ls-form-layout { grid-template-columns: 1fr; gap: 36px; } }
+  .ls-form-intro { max-width: 460px; }
+  .ls-form-box { background:rgba(255,250,242,.7);border-radius:18px;padding:clamp(28px,3.5vw,44px);border:1px solid rgba(26,25,22,.13);box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--ls-shadow-warm),.22); }
   .ls-form-box__kicker { font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px; }
   .ls-form-box__kicker::after { content:'';width:24px;height:1px;background:var(--color-accent);opacity:.5; }
-  .ls-form-box__title { font-family:var(--font-display);font-size:clamp(24px,3.4vw,36px);font-weight:700;letter-spacing:-0.02em;text-wrap:balance;line-height:1.05;color:var(--color-dark);margin-bottom:10px; }
-  .ls-form-box__sub { font-size:15px;color:var(--color-muted);margin-bottom:28px;line-height:1.6;text-wrap:pretty;max-width:50ch; }
+  .ls-form-box__title { font-family:var(--font-display);font-size:clamp(28px,3.6vw,42px);font-weight:700;letter-spacing:-0.025em;text-wrap:balance;line-height:1.02;color:var(--color-dark);margin-bottom:14px; }
+  .ls-form-box__title em { font-style:italic;font-family:var(--font-serif,var(--font-display));color:var(--color-gold-dark);font-weight:500;padding-right:.04em; }
+  .ls-form-box__sub { font-size:15px;color:var(--color-muted);margin-bottom:0;line-height:1.65;text-wrap:pretty;max-width:48ch; }
+  .ls-form-perks { margin-top:28px;padding-top:24px;border-top:1px solid rgba(26,25,22,.08);display:flex;flex-direction:column;gap:12px;list-style:none; }
+  .ls-form-perk { display:flex;align-items:flex-start;gap:11px;font-size:14px;color:var(--color-muted);line-height:1.5; }
+  .ls-form-perk__icon { width:22px;height:22px;border-radius:50%;background:rgba(58,125,107,.12);color:var(--color-teal);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;box-shadow:inset 0 0 0 1.5px rgba(58,125,107,.18); }
+  .ls-form-perk strong { color:var(--color-dark);font-weight:700; }
   .ls-form-row { margin-bottom:16px; }
   .ls-form-label { display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--color-muted);margin-bottom:7px; }
   .ls-form-input,.ls-form-select,.ls-form-textarea { width:100%;font-family:var(--font-body);font-size:15px;padding:12px 14px;border:1.5px solid rgba(26,25,22,.12);border-radius:10px;background:rgba(255,255,255,.85);color:var(--color-dark);outline:none;transition:border-color .2s ease,background-color .2s ease,box-shadow .2s ease; }
@@ -306,6 +324,29 @@ export default function LinkedInSeries() {
 
       <div className="ls-divider"><hr /></div>
 
+      <nav className="ls-toc" aria-label={t.tocAriaLabel}>
+        <div className="ls-toc__inner">
+          <span className="ls-toc__label">{t.tocLabel}</span>
+          {EPISODES.map(ep => {
+            const isVisible = visibleEps.some(v => v.num === ep.num)
+            return (
+              <a
+                key={ep.num}
+                href={`#ep-${ep.num}`}
+                className={`ls-toc__chip${isVisible ? '' : ' ls-toc__chip--filtered'}`}
+                aria-label={`${t.tocAriaEpisode} ${ep.num}`}
+              >{ep.num}</a>
+            )
+          })}
+        </div>
+      </nav>
+
+      {(filterLens || filterTopic) && (
+        <p className="ls-results-count" aria-live="polite">
+          <strong>{visibleEps.length}</strong> {t.resultsOf} <strong>{EPISODES.length}</strong> {t.resultsEpisodes}
+        </p>
+      )}
+
       <div className="ls-episodes">
         {visibleEps.length === 0
           ? <div className="ls-no-results" aria-live="polite"><p>{t.noResults}</p></div>
@@ -313,7 +354,7 @@ export default function LinkedInSeries() {
               const epData = t.episodes[parseInt(ep.num, 10) - 1] ?? {}
               const isNext = epIdx === 0
               return (
-                <div key={ep.num} className="ls-ep">
+                <div key={ep.num} id={`ep-${ep.num}`} className="ls-ep">
                   <div className="ls-ep__head">
                     <div className="ls-ep__num">{ep.num}</div>
                     <div className="ls-ep__info">
@@ -372,10 +413,23 @@ export default function LinkedInSeries() {
       </section>
 
       <div className="ls-form-wrap" id="suggest">
+        <div className="ls-form-layout">
+          <div className="ls-form-intro">
+            <p className="ls-form-box__kicker">{t.formKicker}</p>
+            <h2 className="ls-form-box__title">{t.formTitle}</h2>
+            <p className="ls-form-box__sub">{t.formSub}</p>
+            <ul className="ls-form-perks">
+              {(t.formPerks || []).map((perk, i) => (
+                <li key={i} className="ls-form-perk">
+                  <span className="ls-form-perk__icon" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.8l2.4 2.4L9 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </span>
+                  <span><strong>{perk.strong}</strong>{perk.rest}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         <div className="ls-form-box">
-          <p className="ls-form-box__kicker">{t.formKicker}</p>
-          <h2 className="ls-form-box__title">{t.formTitle}</h2>
-          <p className="ls-form-box__sub">{t.formSub}</p>
           {formSubmitted ? (
             <div className="ls-form-success">
               <div className="ls-form-success__icon" aria-hidden="true">
@@ -417,6 +471,7 @@ export default function LinkedInSeries() {
               <button className="ls-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
             </form>
           )}
+        </div>
         </div>
       </div>
 

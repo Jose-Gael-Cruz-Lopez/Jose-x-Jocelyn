@@ -1549,6 +1549,16 @@ export const es = {
 
     // ── Filters ───────────────────────────────────────────────────────────────
     filtersAriaLabel: 'Filtrar episodios',
+    tocLabel: 'Ir a',
+    tocAriaLabel: 'Ir al episodio',
+    tocAriaEpisode: 'Episodio',
+    resultsOf: 'de',
+    resultsEpisodes: 'episodios mostrados',
+    formPerks: [
+      { strong: 'Leemos cada envío.', rest: '' },
+      { strong: 'Si lo construimos, te avisaremos primero.', rest: '' },
+      { strong: 'Tu correo se queda privado.', rest: ' Solo lo usamos para avisarte sobre tu tema.' },
+    ],
     bridgeCopyPrefix: '¿Tienes un tema en mente?',
     bridgeCopyEm: 'Cuéntanos dónde estás atascado.',
     bridgeCtaLabel: 'Sugerir un tema',

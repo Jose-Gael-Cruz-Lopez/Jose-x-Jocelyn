@@ -1549,6 +1549,16 @@ export const en = {
 
     // ── Filters ───────────────────────────────────────────────────────────────
     filtersAriaLabel: 'Filter episodes',
+    tocLabel: 'Jump to',
+    tocAriaLabel: 'Jump to episode',
+    tocAriaEpisode: 'Episode',
+    resultsOf: 'of',
+    resultsEpisodes: 'episodes shown',
+    formPerks: [
+      { strong: 'Every submission gets read.', rest: '' },
+      { strong: "If we build it, you'll know first.", rest: '' },
+      { strong: 'Your email stays private.', rest: ' We only use it to ping you about your topic.' },
+    ],
     bridgeCopyPrefix: 'Have a topic in mind?',
     bridgeCopyEm: 'Tell us where you’re stuck.',
     bridgeCtaLabel: 'Suggest a topic',
