@@ -1736,6 +1736,7 @@ export const es = {
     formPlaceholderCategoryOther: 'ej. visa de trabajo, estudiar en el extranjero, freelance…',
     formErrorCategoryOther: 'Por favor describe tu área de tema.',
     formErrorTopic: 'Por favor ingresa un tema o pregunta.',
+    formErrorEmail: 'Ese correo no parece válido.',
     formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
     formBtnSubmit: 'Enviar tema',
     formBtnSubmitting: 'Enviando…',
