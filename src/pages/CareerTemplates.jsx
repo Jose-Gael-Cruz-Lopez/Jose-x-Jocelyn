@@ -496,15 +496,23 @@ export default function CareerTemplates() {
         .ct-form-success__title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--color-cream); margin-bottom: 6px; letter-spacing: -.01em; }
         .ct-form-success__body { font-size: 14px; color: rgba(242,228,206,.7); line-height: 1.6; }
 
+        @media (max-width: 860px) {
+          .ct-form-inner { grid-template-columns: 1fr; gap: 36px; }
+        }
         @media (max-width: 768px) {
-          .ct-form-inner { grid-template-columns: 1fr; gap: 32px; }
-          .ct-grid { grid-template-columns: 1fr; }
           .ct-hero { padding: 88px 20px 48px; }
         }
         @media (max-width: 480px) {
           .ct-hero { padding: 80px 16px 40px; }
           .ct-filters { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; padding-bottom: 4px; }
           .ct-filter { flex-shrink: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .ct-card, .ct-filter, .ct-form-btn, .ct-form-input, .ct-form-select, .ct-form-textarea,
+          .ct-form-error-card__retry, .ct-card__cta { transition: none !important; }
+          .ct-card:hover, .ct-filter:hover, .ct-form-btn:hover, .ct-card__cta:hover,
+          .ct-form-error-card__retry:hover { transform: none !important; }
+          .ct-grid > .ct-card { animation: none !important; }
         }
       `}</style>
 
