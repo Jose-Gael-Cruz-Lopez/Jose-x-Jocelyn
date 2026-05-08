@@ -1602,10 +1602,10 @@ export const es = {
         summary: 'Jose explica dónde encontrar roles en etapas tardías y cómo moverse rápido cuando todos dicen que ya es tarde. Jocelyn explica cómo los equipos de contratación ven a los candidatos tardíos y cómo enmarcar "aún buscando" en entrevistas.',
         why: 'El reclutamiento en etapas tardías es donde la mayoría de los estudiantes de primera generación pierden el impulso; este episodio lo reencuadra como una estrategia real, no como un plan de respaldo.',
         posts: [
-          { title: 'Comenzando el Ep. 01 - Aún reclutando en abril', preview: 'Publicación de lanzamiento de la serie que presenta la premisa del episodio y lo que se viene desde ambas perspectivas.' },
+          { title: 'Comenzando el Ep. 01, Aún reclutando en abril', preview: 'Publicación de lanzamiento de la serie que presenta la premisa del episodio y lo que se viene desde ambas perspectivas.' },
           { title: 'Dónde están realmente los roles de etapa tardía (y cómo encontrarlos rápido)', preview: 'El proceso de búsqueda exacto que usa Jose: páginas de carreras de empresas, filtros de Handshake, solicitudes con contacto previo y por qué LinkedIn es el último lugar donde buscar.' },
           { title: 'Cómo realmente ven los equipos de contratación a los candidatos tardíos', preview: 'Lo que Jocelyn aprendió desde adentro: las renuncias abren puestos, el presupuesto llega tarde y los candidatos tardíos pueden moverse más rápido que los tempranos.' },
-          { title: 'Resumen del Ep. 01 - El plan para etapas tardías en una publicación', preview: 'Resumen completo del episodio, puntos clave de ambas perspectivas y enlaces al artículo relacionado y la plantilla de seguimiento de solicitudes.' },
+          { title: 'Resumen del Ep. 01, El plan para etapas tardías en una publicación', preview: 'Resumen completo del episodio, puntos clave de ambas perspectivas y enlaces al artículo relacionado y la plantilla de seguimiento de solicitudes.' },
         ],
       },
       {
@@ -1665,7 +1665,7 @@ export const es = {
         posts: [
           { title: 'Me acaban de rechazar. Esto es lo que realmente hice después.', preview: 'Un relato real de cómo se siente el rechazo en tiempo real, la tentación de espiralizarse y las pequeñas acciones que ayudaron a Jose a seguir avanzando.' },
           { title: 'Lo que el rechazo realmente te está diciendo (no es lo que crees)', preview: 'Tres historias reales de rechazos en ronda final, cuáles fueron las razones reales y por qué ninguna tenía que ver con ser inadecuado.' },
-          { title: 'Resumen del Ep. 07 - El rechazo no significa que lo hiciste mal', preview: 'Un resumen directo y fundamentado de ambas perspectivas, con un enlace al artículo completo y un recordatorio de que el proceso es más largo que cualquier resultado individual.' },
+          { title: 'Resumen del Ep. 07, El rechazo no significa que lo hiciste mal', preview: 'Un resumen directo y fundamentado de ambas perspectivas, con un enlace al artículo completo y un recordatorio de que el proceso es más largo que cualquier resultado individual.' },
         ],
       },
       {
@@ -1695,7 +1695,7 @@ export const es = {
         posts: [
           { title: 'Lo que desearía haber sabido antes de empezar a aplicar', preview: 'La publicación más personal de Jose en la serie: las cosas que nadie le dijo, los supuestos que hizo y que le costaron tiempo y lo que volvería a cambiar.' },
           { title: 'Lo que desearía haber sabido antes de graduarme', preview: 'Jocelyn sobre la brecha entre la universidad y el mundo real: las cosas que tuvo que aprender de la manera difícil que nadie le advirtió y que ahora le dice a cada estudiante de primera generación que asesora.' },
-          { title: 'Resumen del Ep. 10 - La serie completa en una publicación', preview: 'Una mirada atrás a los 10 episodios, las lecciones más importantes de cada uno y un llamado a la acción para la próxima cohorte de estudiantes de primera generación listos para comenzar su camino.' },
+          { title: 'Resumen del Ep. 10, La serie completa en una publicación', preview: 'Una mirada atrás a los 10 episodios, las lecciones más importantes de cada uno y un llamado a la acción para la próxima cohorte de estudiantes de primera generación listos para comenzar su camino.' },
         ],
       },
     ],
