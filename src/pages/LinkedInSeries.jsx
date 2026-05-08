@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -32,21 +31,32 @@ const PAGE_CSS = `
   html, body { background: var(--color-cream); }
   :root { --linkedin-brand-blue: #0a66c2; --ls-shadow-warm: 58, 38, 22; }
   .ls-linkedin { color: var(--linkedin-brand-blue); }
-  .ls-hero { max-width:1040px;margin:0 auto;padding:96px clamp(20px,5vw,56px) 48px;position:relative;overflow:hidden; }
-  .ls-hero::before { content:'';position:absolute;top:96px;left:clamp(20px,5vw,56px);width:56px;height:4px;background:var(--color-accent);border-radius:2px; }
-  .ls-hero::after { content:'';position:absolute;top:-10%;right:-6%;width:380px;height:380px;background:radial-gradient(closest-side,rgba(179,69,57,.13),transparent 70%);pointer-events:none;z-index:-1; }
+  .ls-hero { max-width:1240px;margin:0 auto;padding:96px clamp(20px,5vw,56px) 64px;position:relative;overflow:hidden; }
+  .ls-hero::before { content:'';position:absolute;top:96px;left:clamp(20px,5vw,56px);width:56px;height:4px;background:var(--color-accent);border-radius:2px;z-index:1; }
+  .ls-hero::after { content:'';position:absolute;top:-14%;right:-10%;width:520px;height:520px;background:radial-gradient(closest-side,rgba(179,69,57,.1),transparent 70%);pointer-events:none;z-index:0; }
+  .ls-hero__primary { position:relative;z-index:1; }
+  .ls-hero__aside { position:relative;z-index:1;margin-top:48px;padding-top:36px;border-top:1px solid rgba(26,25,22,.1); }
   .ls-hero__kicker { font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent);margin:28px 0 22px;display:inline-flex;align-items:center;gap:10px; }
   .ls-hero__kicker::after { content:'';width:24px;height:1px;background:var(--color-accent);opacity:.5; }
-  .ls-hero__title { font-family:var(--font-display);font-size:clamp(40px,7vw,80px);font-weight:700;line-height:.98;letter-spacing:-0.025em;text-wrap:balance;color:var(--color-dark);margin-bottom:22px; }
+  .ls-hero__title { font-family:var(--font-display);font-size:clamp(44px,8.4vw,108px);font-weight:700;line-height:.96;letter-spacing:-0.03em;text-wrap:balance;color:var(--color-dark);margin-bottom:24px;max-width:18ch; }
   .ls-hero__title em { font-style:italic;font-family:var(--font-serif,var(--font-display));color:var(--color-gold-dark);font-weight:500;padding-right:.04em; }
-  .ls-hero__sub { font-size:clamp(15px,2vw,18px);color:var(--color-muted);line-height:1.7;text-wrap:pretty;max-width:580px;margin-bottom:36px; }
+  .ls-hero__sub { font-size:clamp(16px,1.8vw,20px);color:var(--color-muted);line-height:1.65;text-wrap:pretty;max-width:62ch;margin-bottom:0; }
   .ls-hero__sub strong { color:var(--color-dark);font-weight:600; }
-  .ls-stats { display:flex;flex-wrap:wrap;gap:0;border:1px solid rgba(26,25,22,.08);border-radius:14px;overflow:hidden;max-width:640px;background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(232,168,56,.04));box-shadow:0 14px 36px -16px rgba(var(--ls-shadow-warm),.18),inset 0 1px 0 rgba(255,255,255,.5); }
-  .ls-stat { flex:1;min-width:130px;padding:20px 22px;border-right:1px solid rgba(26,25,22,.06); }
-  .ls-stat:last-child { border-right:none; }
-  .ls-stat__num { font-family:var(--font-display);font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;color:var(--color-dark);line-height:1;margin-bottom:5px; }
-  .ls-stat__label { font-size:12px;color:var(--color-muted);line-height:1.4;letter-spacing:.02em; }
-  .ls-controls { max-width:1040px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 40px; }
+  .ls-stats { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0; }
+  .ls-stat { padding:0 32px;position:relative; }
+  .ls-stat:first-child { padding-left:0; }
+  .ls-stat:last-child { padding-right:0; }
+  .ls-stat + .ls-stat::before { content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:rgba(26,25,22,.1); }
+  .ls-stat--lead .ls-stat__num::before { content:'';display:inline-block;width:18px;height:2px;background:var(--color-accent);border-radius:2px;margin-right:10px;vertical-align:.32em; }
+  .ls-stat__num { font-family:var(--font-display);font-size:clamp(28px,3.4vw,40px);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.03em;color:var(--color-dark);line-height:1;margin-bottom:8px; }
+  .ls-stat__label { font-size:12px;color:var(--color-muted);line-height:1.4;letter-spacing:.04em;text-transform:uppercase;font-weight:600; }
+  @media (max-width: 640px) {
+    .ls-stats { grid-template-columns: 1fr; gap: 18px 0; }
+    .ls-stat { padding: 0; }
+    .ls-stat + .ls-stat { padding-top: 18px; }
+    .ls-stat + .ls-stat::before { left:0;right:0;top:0;bottom:auto;width:auto;height:1px; }
+  }
+  .ls-controls { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 40px; }
   .ls-filters { display:flex;flex-wrap:wrap;gap:8px; }
   .ls-filter { padding:11px 18px;border-radius:999px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:-.005em;cursor:pointer;border:1.5px solid rgba(26,25,22,.1);background:rgba(255,255,255,.55);color:var(--color-muted);transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .15s ease,box-shadow .2s ease; }
   .ls-filter:hover { color:var(--color-dark);border-color:rgba(26,25,22,.22);background:rgba(255,255,255,.85);transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(var(--ls-shadow-warm),.1); }
@@ -57,12 +67,27 @@ const PAGE_CSS = `
   .ls-filters__group { display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center; }
   .ls-filters__label { font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--color-muted);margin-right:6px; }
   .ls-filters__rule { width:1px;align-self:stretch;background:rgba(26,25,22,.1);margin:6px 8px; }
-  .ls-divider { max-width:1040px;margin:0 auto 48px;padding:0 clamp(20px,5vw,56px); }
+  .ls-divider { max-width:1240px;margin:0 auto 48px;padding:0 clamp(20px,5vw,56px); }
   .ls-divider hr { border:none;border-top:1px solid rgba(26,25,22,.08); }
-  .ls-episodes { max-width:1040px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 80px;display:flex;flex-direction:column;gap:56px; }
-  .ls-ep__head { display:flex;align-items:flex-start;gap:28px;margin-bottom:24px; }
-  .ls-ep__num { font-family:var(--font-display);font-size:clamp(48px,6.4vw,76px);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.05em;line-height:1;color:rgba(232,168,56,.42);flex-shrink:0;min-width:72px;font-feature-settings:"ss01" 1; }
+  .ls-results-count { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 16px;font-size:13px;color:var(--color-muted); }
+  .ls-results-count strong { color:var(--color-dark);font-weight:700; }
+  .ls-toc { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 32px; }
+  .ls-toc__inner { display:flex;flex-wrap:wrap;gap:6px;align-items:center; }
+  .ls-toc__label { font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--color-muted);margin-right:10px; }
+  .ls-toc__chip { display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:rgba(255,250,242,.8);border:1px solid rgba(26,25,22,.13);color:var(--color-dark);font-family:var(--font-display);font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.005em;text-decoration:none;transition:background .2s,border-color .2s,transform .15s cubic-bezier(.16,1,.3,1),box-shadow .2s; }
+  .ls-toc__chip:hover { background:var(--color-dark);color:var(--color-cream);border-color:var(--color-dark);transform:translateY(-1px);box-shadow:0 6px 12px -6px rgba(var(--ls-shadow-warm),.32); }
+  .ls-toc__chip--filtered { opacity:.3;pointer-events:none; }
+  .ls-toc__chip:focus-visible { outline:2px solid var(--color-accent);outline-offset:3px; }
+  @media (prefers-reduced-motion: reduce) { .ls-toc__chip { transition:none !important; } .ls-toc__chip:hover { transform:none !important; } }
+  .ls-episodes { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 80px;display:flex;flex-direction:column;gap:64px; }
+  .ls-ep { display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start;scroll-margin-top:96px; }
+  .ls-ep__head { display:flex;align-items:flex-start;gap:24px;margin-bottom:0;position:sticky;top:80px; }
+  .ls-ep__num { font-family:var(--font-display);font-size:clamp(48px,5.4vw,76px);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.05em;line-height:1;color:rgba(232,168,56,.42);flex-shrink:0;min-width:60px;font-feature-settings:"ss01" 1; }
   .ls-ep__info { flex:1;min-width:0; }
+  @media (max-width: 960px) {
+    .ls-ep { grid-template-columns: 1fr; gap: 24px; }
+    .ls-ep__head { position: static; }
+  }
   .ls-ep__badges { display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap; }
   .ls-ep__lens { font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:4px 11px;border-radius:999px;color:var(--color-white); }
   .ls-ep__lens--jose { background:var(--color-teal); }
@@ -73,11 +98,13 @@ const PAGE_CSS = `
   .ls-ep__summary { font-size:15px;color:var(--color-muted);line-height:1.65;text-wrap:pretty;max-width:640px;margin-bottom:10px; }
   .ls-ep__why { font-size:13px;color:var(--color-teal);font-weight:500;font-style:italic;font-family:var(--font-serif,var(--font-body));border-left:2px solid rgba(58,125,107,.4);padding-left:10px;line-height:1.55; }
   .ls-ep__why-prefix { font-weight:700;font-style:normal;font-family:var(--font-display);letter-spacing:-.005em; }
-  .ls-ep__posts { display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px; }
+  .ls-ep__posts { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;min-width:0; }
+  @media (max-width:960px) { .ls-ep__posts { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media (max-width:560px) { .ls-ep__posts { grid-template-columns:1fr; } }
   .ls-ep__posts > .ls-post { animation: ls-post-in .55s cubic-bezier(.16,1,.3,1) backwards; animation-delay: calc(var(--ls-i, 0) * 50ms); }
   @keyframes ls-post-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-  .ls-post { position:relative;background:var(--color-cream);border:1px solid rgba(26,25,22,.07);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px;transition:transform .28s cubic-bezier(.16,1,.3,1),box-shadow .28s cubic-bezier(.16,1,.3,1),border-color .28s; }
-  .ls-post:hover { transform:translateY(-3px);border-color:rgba(26,25,22,.14);box-shadow:0 14px 36px -12px rgba(var(--ls-shadow-warm),.18); }
+  .ls-post { position:relative;background:linear-gradient(180deg,rgba(255,250,242,.85) 0%,rgba(255,250,242,.55) 100%);border:1px solid rgba(26,25,22,.13);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px;box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(var(--ls-shadow-warm),.12);transition:transform .28s cubic-bezier(.16,1,.3,1),box-shadow .28s cubic-bezier(.16,1,.3,1),border-color .28s; }
+  .ls-post:hover { transform:translateY(-3px);border-color:rgba(26,25,22,.22);box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 16px 36px -12px rgba(var(--ls-shadow-warm),.22); }
   .ls-post--featured { border-color:rgba(232,168,56,.4);border-width:1.5px;background:linear-gradient(180deg,rgba(232,168,56,.07) 0%,rgba(232,168,56,.02) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.4); }
   .ls-post--featured:hover { border-color:rgba(232,168,56,.55);box-shadow:0 16px 36px -12px rgba(232,168,56,.32),inset 0 1px 0 rgba(255,255,255,.45); }
   .ls-post--featured::before { content:'';position:absolute;top:-1px;left:18px;width:28px;height:5px;background:var(--color-gold);border-radius:0 0 4px 4px;box-shadow:0 1px 2px rgba(232,168,56,.4); }
@@ -92,7 +119,7 @@ const PAGE_CSS = `
   .ls-post__status { font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--color-muted);padding:3px 9px;border-radius:999px;background:rgba(26,25,22,.06); }
   .ls-how { position:relative;overflow:hidden;background:var(--color-navy);padding:clamp(64px,8vw,104px) clamp(20px,5vw,56px); }
   .ls-how::before { content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 84% 76%,rgba(58,125,107,.08) 0%,transparent 50%);pointer-events:none; }
-  .ls-how__inner { position:relative;max-width:1040px;margin:0 auto; }
+  .ls-how__inner { position:relative;max-width:1240px;margin:0 auto; }
   .ls-how__kicker { font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--color-gold);margin-bottom:16px;display:inline-flex;align-items:center;gap:10px; }
   .ls-how__kicker::after { content:'';width:24px;height:1px;background:var(--color-gold);opacity:.5; }
   .ls-how__title { font-family:var(--font-display);font-size:clamp(28px,4.4vw,46px);font-weight:700;letter-spacing:-0.025em;line-height:1.05;text-wrap:balance;color:var(--color-cream);margin-bottom:48px;max-width:18ch; }
@@ -102,12 +129,20 @@ const PAGE_CSS = `
   .ls-how__item-icon { font-family:var(--font-display);font-size:42px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.04em;color:var(--color-gold);margin-bottom:14px;line-height:1; }
   .ls-how__item-title { font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--color-cream);margin-bottom:8px;letter-spacing:-.005em;line-height:1.3; }
   .ls-how__item-desc { font-size:14px;color:rgba(242,228,206,.7);line-height:1.6;text-wrap:pretty; }
-  .ls-form-wrap { max-width:1040px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,56px); }
-  .ls-form-box { background:linear-gradient(180deg,rgba(255,255,255,.7) 0%,rgba(232,168,56,.04) 100%);border-radius:18px;padding:clamp(32px,4vw,56px);border:1px solid rgba(26,25,22,.08);max-width:640px;box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 24px 48px -28px rgba(var(--ls-shadow-warm),.18); }
+  .ls-form-wrap { max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,56px); }
+  .ls-form-layout { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(40px,5vw,72px);align-items:start; }
+  @media (max-width: 860px) { .ls-form-layout { grid-template-columns: 1fr; gap: 36px; } }
+  .ls-form-intro { max-width: 460px; }
+  .ls-form-box { background:rgba(255,250,242,.7);border-radius:18px;padding:clamp(28px,3.5vw,44px);border:1px solid rgba(26,25,22,.13);box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--ls-shadow-warm),.22); }
   .ls-form-box__kicker { font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px; }
   .ls-form-box__kicker::after { content:'';width:24px;height:1px;background:var(--color-accent);opacity:.5; }
-  .ls-form-box__title { font-family:var(--font-display);font-size:clamp(24px,3.4vw,36px);font-weight:700;letter-spacing:-0.02em;text-wrap:balance;line-height:1.05;color:var(--color-dark);margin-bottom:10px; }
-  .ls-form-box__sub { font-size:15px;color:var(--color-muted);margin-bottom:28px;line-height:1.6;text-wrap:pretty;max-width:50ch; }
+  .ls-form-box__title { font-family:var(--font-display);font-size:clamp(28px,3.6vw,42px);font-weight:700;letter-spacing:-0.025em;text-wrap:balance;line-height:1.02;color:var(--color-dark);margin-bottom:14px; }
+  .ls-form-box__title em { font-style:italic;font-family:var(--font-serif,var(--font-display));color:var(--color-gold-dark);font-weight:500;padding-right:.04em; }
+  .ls-form-box__sub { font-size:15px;color:var(--color-muted);margin-bottom:0;line-height:1.65;text-wrap:pretty;max-width:48ch; }
+  .ls-form-perks { margin-top:28px;padding-top:24px;border-top:1px solid rgba(26,25,22,.08);display:flex;flex-direction:column;gap:12px;list-style:none; }
+  .ls-form-perk { display:flex;align-items:flex-start;gap:11px;font-size:14px;color:var(--color-muted);line-height:1.5; }
+  .ls-form-perk__icon { width:22px;height:22px;border-radius:50%;background:rgba(58,125,107,.12);color:var(--color-teal);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;box-shadow:inset 0 0 0 1.5px rgba(58,125,107,.18); }
+  .ls-form-perk strong { color:var(--color-dark);font-weight:700; }
   .ls-form-row { margin-bottom:16px; }
   .ls-form-label { display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--color-muted);margin-bottom:7px; }
   .ls-form-input,.ls-form-select,.ls-form-textarea { width:100%;font-family:var(--font-body);font-size:15px;padding:12px 14px;border:1.5px solid rgba(26,25,22,.12);border-radius:10px;background:rgba(255,255,255,.85);color:var(--color-dark);outline:none;transition:border-color .2s ease,background-color .2s ease,box-shadow .2s ease; }
@@ -123,7 +158,17 @@ const PAGE_CSS = `
   .ls-form-success__title { font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--color-dark);margin-bottom:6px;letter-spacing:-.01em; }
   .ls-form-success__body { font-size:14px;color:var(--color-muted);line-height:1.6; }
   .ls-no-results { text-align:center;padding:60px 24px;color:var(--color-muted);background:rgba(232,168,56,.05);border:1px dashed rgba(232,168,56,.25);border-radius:16px;font-size:15px;line-height:1.6; }
-  .ls-footer { max-width:1040px; }
+
+  /* CTA bridge — sits between episodes list and the navy "how" band, surfaces the form before users commit to scrolling further */
+  .ls-bridge { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 56px; }
+  .ls-bridge__inner { display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;padding:24px 28px;background:rgba(232,168,56,.06);border:1px solid rgba(232,168,56,.22);border-radius:14px; }
+  .ls-bridge__copy { font-family:var(--font-display);font-size:clamp(17px,2vw,21px);font-weight:600;color:var(--color-dark);line-height:1.3;letter-spacing:-.005em; }
+  .ls-bridge__copy em { font-style:italic;font-family:var(--font-serif,var(--font-display));color:var(--color-gold-dark);font-weight:500; }
+  .ls-bridge__cta { display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:var(--color-dark);color:var(--color-cream);border-radius:999px;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:-.005em;text-decoration:none;box-shadow:0 6px 14px -8px rgba(var(--ls-shadow-warm),.4),inset 0 1px 0 rgba(255,255,255,.08);transition:background .25s,transform .22s cubic-bezier(.16,1,.3,1),box-shadow .25s; }
+  .ls-bridge__cta:hover { background:var(--color-accent);transform:translateY(-1px);box-shadow:0 12px 22px -10px rgba(179,69,57,.5); }
+  .ls-bridge__cta:active { transform:translateY(0); }
+  .ls-bridge__cta::after { content:'↓';font-size:13px;line-height:1; }
+  @media (prefers-reduced-motion: reduce) { .ls-bridge__cta { transition:none !important; } .ls-bridge__cta:hover { transform:none !important; } }
   @media (prefers-reduced-motion: reduce) {
     .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea { transition:none !important; }
     .ls-post:hover,.ls-filter:hover,.ls-form-btn:hover { transform:none !important; }
@@ -172,7 +217,8 @@ const TAG_KEY_MAP = {
 export default function LinkedInSeries() {
   const t = useT('linkedInSeries')
 
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [filterLens, setFilterLens] = useState('')   // '' | 'jose' | 'jocelyn' | 'both'
+  const [filterTopic, setFilterTopic] = useState('') // '' | 'internships' | 'offers' | 'rejection' | 'on-the-job'
   const [topic, setTopic] = useState('')
   const [email, setEmail] = useState('')
   const [category, setCategory] = useState('')
@@ -181,16 +227,18 @@ export default function LinkedInSeries() {
   const [formError, setFormError] = useState('')
   const [formSubmitted, setFormSubmitted] = useState(false)
 
-  const FILTERS = [
-    { f: 'all',        label: t.filterAll },
-    { f: 'jose',       label: t.filterJose },
-    { f: 'jocelyn',    label: t.filterJocelyn },
-    { f: 'both',       label: t.filterBoth },
-    { f: 'internships',label: t.filterInternships },
-    { f: 'offers',     label: t.filterOffers },
-    { f: 'rejection',  label: t.filterRejection },
-    { f: 'on-the-job', label: t.filterOnTheJob },
+  const LENS_OPTIONS = [
+    { v: 'jose',    label: t.filterJose },
+    { v: 'jocelyn', label: t.filterJocelyn },
+    { v: 'both',    label: t.filterBoth },
   ]
+  const TOPIC_OPTIONS = [
+    { v: 'internships', label: t.filterInternships },
+    { v: 'offers',      label: t.filterOffers },
+    { v: 'rejection',   label: t.filterRejection },
+    { v: 'on-the-job',  label: t.filterOnTheJob },
+  ]
+  const noFilters = !filterLens && !filterTopic
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -212,9 +260,8 @@ export default function LinkedInSeries() {
   }
 
   const visibleEps = EPISODES.filter(ep => {
-    if (activeFilter === 'all') return true
-    if (LENS_FILTERS.has(activeFilter)) return ep.lens === activeFilter
-    if (TOPIC_FILTERS.has(activeFilter)) return ep.topics.includes(activeFilter)
+    if (filterLens && ep.lens !== filterLens) return false
+    if (filterTopic && !ep.topics.includes(filterTopic)) return false
     return true
   })
 
@@ -235,38 +282,79 @@ export default function LinkedInSeries() {
       <style>{PAGE_CSS}</style>
 
       <header className="ls-hero">
-        <p className="ls-hero__kicker">{t.heroKicker}</p>
-        <h1 className="ls-hero__title">{t.heroTitlePrefix}<span className="ls-linkedin">{t.heroTitleLinkedIn}</span> <em>{t.heroTitleEm}</em></h1>
-        <p className="ls-hero__sub" dangerouslySetInnerHTML={{ __html: t.heroSubHTML }} />
-        <div className="ls-stats">
-          <div className="ls-stat"><div className="ls-stat__num">{t.stat1Num}</div><div className="ls-stat__label">{t.stat1Label}</div></div>
-          <div className="ls-stat"><div className="ls-stat__num">{t.stat2Num}</div><div className="ls-stat__label">{t.stat2Label}</div></div>
-          <div className="ls-stat"><div className="ls-stat__num">{t.stat3Num}</div><div className="ls-stat__label">{t.stat3Label}</div></div>
-          <div className="ls-stat"><div className="ls-stat__num">{t.stat4Num}</div><div className="ls-stat__label">{t.stat4Label}</div></div>
+        <div className="ls-hero__primary">
+          <p className="ls-hero__kicker">{t.heroKicker}</p>
+          <h1 className="ls-hero__title">{t.heroTitlePrefix}<span className="ls-linkedin">{t.heroTitleLinkedIn}</span> <em>{t.heroTitleEm}</em></h1>
+          <p className="ls-hero__sub" dangerouslySetInnerHTML={{ __html: t.heroSubHTML }} />
+        </div>
+        <div className="ls-hero__aside">
+          <div className="ls-stats">
+            <div className="ls-stat"><div className="ls-stat__num">{t.stat1Num}</div><div className="ls-stat__label">{t.stat1Label}</div></div>
+            <div className="ls-stat"><div className="ls-stat__num">{t.stat3Num}</div><div className="ls-stat__label">{t.stat3Label}</div></div>
+            <div className="ls-stat ls-stat--lead"><div className="ls-stat__num">{t.stat4Num}</div><div className="ls-stat__label">{t.stat4Label}</div></div>
+          </div>
         </div>
       </header>
 
       <div className="ls-controls">
         <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel}>
-          {FILTERS.slice(0, 4).map(({ f, label }) => (
-            <button key={f} className={`ls-filter${activeFilter === f ? ' ls-filter--active' : ''}`} onClick={() => setActiveFilter(f)}>{label}</button>
+          <button
+            className={`ls-filter${noFilters ? ' ls-filter--active' : ''}`}
+            onClick={() => { setFilterLens(''); setFilterTopic('') }}
+          >{t.filterAll}</button>
+          {LENS_OPTIONS.map(({ v, label }) => (
+            <button
+              key={v}
+              className={`ls-filter${filterLens === v ? ' ls-filter--active' : ''}`}
+              aria-pressed={filterLens === v}
+              onClick={() => setFilterLens(filterLens === v ? '' : v)}
+            >{label}</button>
           ))}
           <span className="ls-filters__rule" aria-hidden="true" />
-          {FILTERS.slice(4).map(({ f, label }) => (
-            <button key={f} className={`ls-filter${activeFilter === f ? ' ls-filter--active' : ''}`} onClick={() => setActiveFilter(f)}>{label}</button>
+          {TOPIC_OPTIONS.map(({ v, label }) => (
+            <button
+              key={v}
+              className={`ls-filter${filterTopic === v ? ' ls-filter--active' : ''}`}
+              aria-pressed={filterTopic === v}
+              onClick={() => setFilterTopic(filterTopic === v ? '' : v)}
+            >{label}</button>
           ))}
         </div>
       </div>
 
       <div className="ls-divider"><hr /></div>
 
+      <nav className="ls-toc" aria-label={t.tocAriaLabel}>
+        <div className="ls-toc__inner">
+          <span className="ls-toc__label">{t.tocLabel}</span>
+          {EPISODES.map(ep => {
+            const isVisible = visibleEps.some(v => v.num === ep.num)
+            return (
+              <a
+                key={ep.num}
+                href={`#ep-${ep.num}`}
+                className={`ls-toc__chip${isVisible ? '' : ' ls-toc__chip--filtered'}`}
+                aria-label={`${t.tocAriaEpisode} ${ep.num}`}
+              >{ep.num}</a>
+            )
+          })}
+        </div>
+      </nav>
+
+      {(filterLens || filterTopic) && (
+        <p className="ls-results-count" aria-live="polite">
+          <strong>{visibleEps.length}</strong> {t.resultsOf} <strong>{EPISODES.length}</strong> {t.resultsEpisodes}
+        </p>
+      )}
+
       <div className="ls-episodes">
         {visibleEps.length === 0
           ? <div className="ls-no-results" aria-live="polite"><p>{t.noResults}</p></div>
-          : visibleEps.map(ep => {
+          : visibleEps.map((ep, epIdx) => {
               const epData = t.episodes[parseInt(ep.num, 10) - 1] ?? {}
+              const isNext = epIdx === 0
               return (
-                <div key={ep.num} className="ls-ep">
+                <div key={ep.num} id={`ep-${ep.num}`} className="ls-ep">
                   <div className="ls-ep__head">
                     <div className="ls-ep__num">{ep.num}</div>
                     <div className="ls-ep__info">
@@ -276,7 +364,7 @@ export default function LinkedInSeries() {
                       </div>
                       <h2 className="ls-ep__title">{epData.title}</h2>
                       <p className="ls-ep__summary">{epData.summary}</p>
-                      <p className="ls-ep__why"><span className="ls-ep__why-prefix">{t.whyPrefix}</span>{epData.why}</p>
+                      <p className="ls-ep__why">{epData.why}</p>
                     </div>
                   </div>
                   <div className="ls-ep__posts">
@@ -289,7 +377,7 @@ export default function LinkedInSeries() {
                           <div className="ls-post__preview">{postData.preview}</div>
                           <div className="ls-post__footer">
                             <span className={`ls-post__author ${authorClass(p.author)}`}>{getAuthorLabel(p.author)}</span>
-                            <span className="ls-post__status">{t.statusComingSoon}</span>
+                            {isNext && <span className="ls-post__status">{t.statusComingSoon}</span>}
                           </div>
                         </div>
                       )
@@ -299,6 +387,13 @@ export default function LinkedInSeries() {
               )
             })
         }
+      </div>
+
+      <div className="ls-bridge">
+        <div className="ls-bridge__inner">
+          <p className="ls-bridge__copy">{t.bridgeCopyPrefix} <em>{t.bridgeCopyEm}</em></p>
+          <a href="#suggest" className="ls-bridge__cta">{t.bridgeCtaLabel}</a>
+        </div>
       </div>
 
       <section className="ls-how">
@@ -317,11 +412,24 @@ export default function LinkedInSeries() {
         </div>
       </section>
 
-      <div className="ls-form-wrap">
+      <div className="ls-form-wrap" id="suggest">
+        <div className="ls-form-layout">
+          <div className="ls-form-intro">
+            <p className="ls-form-box__kicker">{t.formKicker}</p>
+            <h2 className="ls-form-box__title">{t.formTitle}</h2>
+            <p className="ls-form-box__sub">{t.formSub}</p>
+            <ul className="ls-form-perks">
+              {(t.formPerks || []).map((perk, i) => (
+                <li key={i} className="ls-form-perk">
+                  <span className="ls-form-perk__icon" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.8l2.4 2.4L9 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </span>
+                  <span><strong>{perk.strong}</strong>{perk.rest}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         <div className="ls-form-box">
-          <p className="ls-form-box__kicker">{t.formKicker}</p>
-          <h2 className="ls-form-box__title">{t.formTitle}</h2>
-          <p className="ls-form-box__sub">{t.formSub}</p>
           {formSubmitted ? (
             <div className="ls-form-success">
               <div className="ls-form-success__icon" aria-hidden="true">
@@ -364,16 +472,9 @@ export default function LinkedInSeries() {
             </form>
           )}
         </div>
+        </div>
       </div>
 
-      <footer className="art-footer ls-footer">
-        <span className="art-footer__copy">{t.footerCopy}</span>
-        <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">{t.footerHome}</Link>
-          <Link to="/articles" className="art-footer__link">{t.footerArticles}</Link>
-          <Link to="/career-templates" className="art-footer__link">{t.footerTemplates}</Link>
-        </div>
-      </footer>
     </ArticleLayout>
   )
 }

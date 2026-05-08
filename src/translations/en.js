@@ -1549,6 +1549,19 @@ export const en = {
 
     // ── Filters ───────────────────────────────────────────────────────────────
     filtersAriaLabel: 'Filter episodes',
+    tocLabel: 'Jump to',
+    tocAriaLabel: 'Jump to episode',
+    tocAriaEpisode: 'Episode',
+    resultsOf: 'of',
+    resultsEpisodes: 'episodes shown',
+    formPerks: [
+      { strong: 'Every submission gets read.', rest: '' },
+      { strong: "If we build it, you'll know first.", rest: '' },
+      { strong: 'Your email stays private.', rest: ' We only use it to ping you about your topic.' },
+    ],
+    bridgeCopyPrefix: 'Have a topic in mind?',
+    bridgeCopyEm: 'Tell us where you’re stuck.',
+    bridgeCtaLabel: 'Suggest a topic',
     filterAll: 'All Posts',
     filterJose: "Jose's Lens",
     filterJocelyn: "Jocelyn's Lens",
@@ -1727,7 +1740,7 @@ export const en = {
     formBtnSubmit: 'Submit Topic',
     formBtnSubmitting: 'Submitting…',
     formSuccessTitle: 'Topic submitted!',
-    formSuccessBody: "Thanks — we'll consider it for an upcoming episode.",
+    formSuccessBody: "Thanks. We'll consider it for an upcoming episode.",
 
     // ── Footer ────────────────────────────────────────────────────────────────
     footerCopy: 'Jose x Jocelyn © 2026',
@@ -2532,7 +2545,7 @@ export const en = {
     navAriaLabel: 'Navigation menu',
     // sign-off
     signoffLine: 'You belong in these rooms.',
-    signoffSub: 'We built this because no one handed us the playbook. If something resonated — or if you have questions — we want to hear from you.',
+    signoffSub: 'We built this because no one handed us the playbook. If something resonated, or if you have questions, we want to hear from you.',
     signoffCta: 'Get in touch ↗',
     // footer
     footerCopy: 'Jose x Jocelyn © 2026',
