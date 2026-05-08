@@ -32,21 +32,24 @@ const PAGE_CSS = `
   html, body { background: var(--color-cream); }
   :root { --linkedin-brand-blue: #0a66c2; --ls-shadow-warm: 58, 38, 22; }
   .ls-linkedin { color: var(--linkedin-brand-blue); }
-  .ls-hero { max-width:1040px;margin:0 auto;padding:96px clamp(20px,5vw,56px) 48px;position:relative;overflow:hidden; }
-  .ls-hero::before { content:'';position:absolute;top:96px;left:clamp(20px,5vw,56px);width:56px;height:4px;background:var(--color-accent);border-radius:2px; }
-  .ls-hero::after { content:'';position:absolute;top:-10%;right:-6%;width:380px;height:380px;background:radial-gradient(closest-side,rgba(179,69,57,.13),transparent 70%);pointer-events:none;z-index:-1; }
+  .ls-hero { max-width:1240px;margin:0 auto;padding:96px clamp(20px,5vw,56px) 56px;position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:clamp(32px,5vw,72px);align-items:center; }
+  .ls-hero::before { content:'';position:absolute;top:96px;left:clamp(20px,5vw,56px);width:56px;height:4px;background:var(--color-accent);border-radius:2px;z-index:1; }
+  .ls-hero::after { content:'';position:absolute;top:-12%;right:-8%;width:460px;height:460px;background:radial-gradient(closest-side,rgba(179,69,57,.12),transparent 70%);pointer-events:none;z-index:0; }
+  .ls-hero__primary { position:relative;z-index:1; }
+  .ls-hero__aside { position:relative;z-index:1; }
   .ls-hero__kicker { font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent);margin:28px 0 22px;display:inline-flex;align-items:center;gap:10px; }
   .ls-hero__kicker::after { content:'';width:24px;height:1px;background:var(--color-accent);opacity:.5; }
-  .ls-hero__title { font-family:var(--font-display);font-size:clamp(40px,7vw,80px);font-weight:700;line-height:.98;letter-spacing:-0.025em;text-wrap:balance;color:var(--color-dark);margin-bottom:22px; }
+  .ls-hero__title { font-family:var(--font-display);font-size:clamp(44px,7.4vw,92px);font-weight:700;line-height:.96;letter-spacing:-0.028em;text-wrap:balance;color:var(--color-dark);margin-bottom:22px; }
   .ls-hero__title em { font-style:italic;font-family:var(--font-serif,var(--font-display));color:var(--color-gold-dark);font-weight:500;padding-right:.04em; }
-  .ls-hero__sub { font-size:clamp(15px,2vw,18px);color:var(--color-muted);line-height:1.7;text-wrap:pretty;max-width:580px;margin-bottom:36px; }
+  .ls-hero__sub { font-size:clamp(15px,1.6vw,18px);color:var(--color-muted);line-height:1.7;text-wrap:pretty;max-width:540px;margin-bottom:0; }
   .ls-hero__sub strong { color:var(--color-dark);font-weight:600; }
-  .ls-stats { display:flex;flex-wrap:wrap;gap:0;border:1px solid rgba(26,25,22,.08);border-radius:14px;overflow:hidden;max-width:640px;background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(232,168,56,.04));box-shadow:0 14px 36px -16px rgba(var(--ls-shadow-warm),.18),inset 0 1px 0 rgba(255,255,255,.5); }
-  .ls-stat { flex:1;min-width:130px;padding:20px 22px;border-right:1px solid rgba(26,25,22,.06); }
-  .ls-stat:last-child { border-right:none; }
-  .ls-stat__num { font-family:var(--font-display);font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;color:var(--color-dark);line-height:1;margin-bottom:5px; }
+  @media (max-width: 960px) { .ls-hero { grid-template-columns: 1fr; gap: 32px; } }
+  .ls-stats { display:grid;grid-template-columns:1fr 1fr;gap:1px;border:1px solid rgba(26,25,22,.08);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.7),rgba(232,168,56,.04));box-shadow:0 18px 40px -18px rgba(var(--ls-shadow-warm),.22),inset 0 1px 0 rgba(255,255,255,.5);position:relative; }
+  .ls-stats::before { content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(26,25,22,.06),rgba(26,25,22,.06)),linear-gradient(rgba(26,25,22,.06),rgba(26,25,22,.06));background-size:1px 100%,100% 1px;background-repeat:no-repeat,no-repeat;background-position:50% 0,0 50%;pointer-events:none; }
+  .ls-stat { padding:22px 24px;background:transparent;position:relative;z-index:1; }
+  .ls-stat__num { font-family:var(--font-display);font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.025em;color:var(--color-dark);line-height:1;margin-bottom:6px; }
   .ls-stat__label { font-size:12px;color:var(--color-muted);line-height:1.4;letter-spacing:.02em; }
-  .ls-controls { max-width:1040px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 40px; }
+  .ls-controls { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 40px; }
   .ls-filters { display:flex;flex-wrap:wrap;gap:8px; }
   .ls-filter { padding:11px 18px;border-radius:999px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:-.005em;cursor:pointer;border:1.5px solid rgba(26,25,22,.1);background:rgba(255,255,255,.55);color:var(--color-muted);transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .15s ease,box-shadow .2s ease; }
   .ls-filter:hover { color:var(--color-dark);border-color:rgba(26,25,22,.22);background:rgba(255,255,255,.85);transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(var(--ls-shadow-warm),.1); }
@@ -57,12 +60,17 @@ const PAGE_CSS = `
   .ls-filters__group { display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center; }
   .ls-filters__label { font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--color-muted);margin-right:6px; }
   .ls-filters__rule { width:1px;align-self:stretch;background:rgba(26,25,22,.1);margin:6px 8px; }
-  .ls-divider { max-width:1040px;margin:0 auto 48px;padding:0 clamp(20px,5vw,56px); }
+  .ls-divider { max-width:1240px;margin:0 auto 48px;padding:0 clamp(20px,5vw,56px); }
   .ls-divider hr { border:none;border-top:1px solid rgba(26,25,22,.08); }
-  .ls-episodes { max-width:1040px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 80px;display:flex;flex-direction:column;gap:56px; }
-  .ls-ep__head { display:flex;align-items:flex-start;gap:28px;margin-bottom:24px; }
-  .ls-ep__num { font-family:var(--font-display);font-size:clamp(48px,6.4vw,76px);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.05em;line-height:1;color:rgba(232,168,56,.42);flex-shrink:0;min-width:72px;font-feature-settings:"ss01" 1; }
+  .ls-episodes { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 80px;display:flex;flex-direction:column;gap:64px; }
+  .ls-ep { display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start; }
+  .ls-ep__head { display:flex;align-items:flex-start;gap:24px;margin-bottom:0;position:sticky;top:80px; }
+  .ls-ep__num { font-family:var(--font-display);font-size:clamp(48px,5.4vw,76px);font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.05em;line-height:1;color:rgba(232,168,56,.42);flex-shrink:0;min-width:60px;font-feature-settings:"ss01" 1; }
   .ls-ep__info { flex:1;min-width:0; }
+  @media (max-width: 960px) {
+    .ls-ep { grid-template-columns: 1fr; gap: 24px; }
+    .ls-ep__head { position: static; }
+  }
   .ls-ep__badges { display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap; }
   .ls-ep__lens { font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:4px 11px;border-radius:999px;color:var(--color-white); }
   .ls-ep__lens--jose { background:var(--color-teal); }
@@ -73,7 +81,7 @@ const PAGE_CSS = `
   .ls-ep__summary { font-size:15px;color:var(--color-muted);line-height:1.65;text-wrap:pretty;max-width:640px;margin-bottom:10px; }
   .ls-ep__why { font-size:13px;color:var(--color-teal);font-weight:500;font-style:italic;font-family:var(--font-serif,var(--font-body));border-left:2px solid rgba(58,125,107,.4);padding-left:10px;line-height:1.55; }
   .ls-ep__why-prefix { font-weight:700;font-style:normal;font-family:var(--font-display);letter-spacing:-.005em; }
-  .ls-ep__posts { display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px; }
+  .ls-ep__posts { display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;min-width:0; }
   .ls-ep__posts > .ls-post { animation: ls-post-in .55s cubic-bezier(.16,1,.3,1) backwards; animation-delay: calc(var(--ls-i, 0) * 50ms); }
   @keyframes ls-post-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
   .ls-post { position:relative;background:var(--color-cream);border:1px solid rgba(26,25,22,.07);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:10px;transition:transform .28s cubic-bezier(.16,1,.3,1),box-shadow .28s cubic-bezier(.16,1,.3,1),border-color .28s; }
@@ -92,7 +100,7 @@ const PAGE_CSS = `
   .ls-post__status { font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--color-muted);padding:3px 9px;border-radius:999px;background:rgba(26,25,22,.06); }
   .ls-how { position:relative;overflow:hidden;background:var(--color-navy);padding:clamp(64px,8vw,104px) clamp(20px,5vw,56px); }
   .ls-how::before { content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 84% 76%,rgba(58,125,107,.08) 0%,transparent 50%);pointer-events:none; }
-  .ls-how__inner { position:relative;max-width:1040px;margin:0 auto; }
+  .ls-how__inner { position:relative;max-width:1240px;margin:0 auto; }
   .ls-how__kicker { font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--color-gold);margin-bottom:16px;display:inline-flex;align-items:center;gap:10px; }
   .ls-how__kicker::after { content:'';width:24px;height:1px;background:var(--color-gold);opacity:.5; }
   .ls-how__title { font-family:var(--font-display);font-size:clamp(28px,4.4vw,46px);font-weight:700;letter-spacing:-0.025em;line-height:1.05;text-wrap:balance;color:var(--color-cream);margin-bottom:48px;max-width:18ch; }
@@ -102,7 +110,7 @@ const PAGE_CSS = `
   .ls-how__item-icon { font-family:var(--font-display);font-size:42px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.04em;color:var(--color-gold);margin-bottom:14px;line-height:1; }
   .ls-how__item-title { font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--color-cream);margin-bottom:8px;letter-spacing:-.005em;line-height:1.3; }
   .ls-how__item-desc { font-size:14px;color:rgba(242,228,206,.7);line-height:1.6;text-wrap:pretty; }
-  .ls-form-wrap { max-width:1040px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,56px); }
+  .ls-form-wrap { max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,56px); }
   .ls-form-box { background:linear-gradient(180deg,rgba(255,255,255,.7) 0%,rgba(232,168,56,.04) 100%);border-radius:18px;padding:clamp(32px,4vw,56px);border:1px solid rgba(26,25,22,.08);max-width:640px;box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 24px 48px -28px rgba(var(--ls-shadow-warm),.18); }
   .ls-form-box__kicker { font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent);margin-bottom:14px;display:inline-flex;align-items:center;gap:10px; }
   .ls-form-box__kicker::after { content:'';width:24px;height:1px;background:var(--color-accent);opacity:.5; }
@@ -235,14 +243,18 @@ export default function LinkedInSeries() {
       <style>{PAGE_CSS}</style>
 
       <header className="ls-hero">
-        <p className="ls-hero__kicker">{t.heroKicker}</p>
-        <h1 className="ls-hero__title">{t.heroTitlePrefix}<span className="ls-linkedin">{t.heroTitleLinkedIn}</span> <em>{t.heroTitleEm}</em></h1>
-        <p className="ls-hero__sub" dangerouslySetInnerHTML={{ __html: t.heroSubHTML }} />
-        <div className="ls-stats">
-          <div className="ls-stat"><div className="ls-stat__num">{t.stat1Num}</div><div className="ls-stat__label">{t.stat1Label}</div></div>
-          <div className="ls-stat"><div className="ls-stat__num">{t.stat2Num}</div><div className="ls-stat__label">{t.stat2Label}</div></div>
-          <div className="ls-stat"><div className="ls-stat__num">{t.stat3Num}</div><div className="ls-stat__label">{t.stat3Label}</div></div>
-          <div className="ls-stat"><div className="ls-stat__num">{t.stat4Num}</div><div className="ls-stat__label">{t.stat4Label}</div></div>
+        <div className="ls-hero__primary">
+          <p className="ls-hero__kicker">{t.heroKicker}</p>
+          <h1 className="ls-hero__title">{t.heroTitlePrefix}<span className="ls-linkedin">{t.heroTitleLinkedIn}</span> <em>{t.heroTitleEm}</em></h1>
+          <p className="ls-hero__sub" dangerouslySetInnerHTML={{ __html: t.heroSubHTML }} />
+        </div>
+        <div className="ls-hero__aside">
+          <div className="ls-stats">
+            <div className="ls-stat"><div className="ls-stat__num">{t.stat1Num}</div><div className="ls-stat__label">{t.stat1Label}</div></div>
+            <div className="ls-stat"><div className="ls-stat__num">{t.stat2Num}</div><div className="ls-stat__label">{t.stat2Label}</div></div>
+            <div className="ls-stat"><div className="ls-stat__num">{t.stat3Num}</div><div className="ls-stat__label">{t.stat3Label}</div></div>
+            <div className="ls-stat"><div className="ls-stat__num">{t.stat4Num}</div><div className="ls-stat__label">{t.stat4Label}</div></div>
+          </div>
         </div>
       </header>
 
