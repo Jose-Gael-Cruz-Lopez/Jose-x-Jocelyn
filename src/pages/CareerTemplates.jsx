@@ -589,29 +589,72 @@ export default function CareerTemplates() {
         )}
       </div>
 
-      <section className="ct-form-wrap">
+      <section className="ct-form-wrap" id="suggest">
         <div className="ct-form-inner">
           <div className="ct-form-copy">
             <p className="ct-form-copy__kicker">{t.formKicker}</p>
             <h2 className="ct-form-copy__title">{t.formTitle}</h2>
             <p className="ct-form-copy__sub">{t.formSub}</p>
+            <ul className="ct-form-perks">
+              {(t.formPerks || []).map((perk, i) => (
+                <li key={i} className="ct-form-perk">
+                  <span className="ct-form-perk__icon" aria-hidden="true">
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.8l2.4 2.4L9 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </span>
+                  <span><strong>{perk.strong}</strong>{perk.rest}</span>
+                </li>
+              ))}
+            </ul>
           </div>
           <div className="ct-form-box">
             {formSubmitted ? (
-              <div style={{ padding: '32px 0', textAlign: 'center' }}>
-                <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(58,125,107,.1)', color: 'var(--color-teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, margin: '0 auto 14px' }}>✓</div>
-                <p style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 700, color: 'var(--color-dark)', marginBottom: 6 }}>{t.formSuccessTitle}</p>
-                <p style={{ fontSize: 14, color: 'var(--color-muted)' }}>{t.formSuccessBody}</p>
+              <div className="ct-form-success">
+                <div className="ct-form-success__icon" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M5 11.5l4 4L17 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                </div>
+                <p className="ct-form-success__title">{t.formSuccessTitle}</p>
+                <p className="ct-form-success__body">{t.formSuccessBody}</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit}>
                 <div className="ct-form-row">
                   <label className="ct-form-label" htmlFor="reqField">{t.formLabelRequest}</label>
-                  <textarea className="ct-form-textarea" id="reqField" placeholder={t.formPlaceholderRequest} value={request} onChange={e => setRequest(e.target.value)}></textarea>
+                  <textarea
+                    className={`ct-form-textarea${fieldErrors.request ? ' is-invalid' : ''}`}
+                    id="reqField"
+                    placeholder={t.formPlaceholderRequest}
+                    value={request}
+                    maxLength={10000}
+                    onChange={e => { setRequest(e.target.value); if (fieldErrors.request) setFieldErrors(s => ({ ...s, request: '' })) }}
+                    aria-invalid={!!fieldErrors.request}
+                    aria-describedby={fieldErrors.request ? 'reqField-error' : (request.length >= 500 ? 'reqField-counter' : undefined)}
+                  />
+                  {fieldErrors.request && <span id="reqField-error" className="ct-form-row__error" role="alert">{fieldErrors.request}</span>}
+                  {request.length >= 500 && (
+                    <span id="reqField-counter" className={`ct-form-row__counter${request.length >= 9000 ? ' ct-form-row__counter--warn' : ''}`} aria-live="polite">
+                      {request.length >= 9000 ? `${request.length} / 10000` : `${request.length} chars`}
+                    </span>
+                  )}
                 </div>
                 <div className="ct-form-row">
                   <label className="ct-form-label" htmlFor="reqEmailField">{t.formLabelEmail}</label>
-                  <input className="ct-form-input" type="email" id="reqEmailField" placeholder={t.formPlaceholderEmail} value={reqEmail} onChange={e => setReqEmail(e.target.value)} />
+                  <input
+                    className={`ct-form-input${fieldErrors.email ? ' is-invalid' : ''}`}
+                    type="email"
+                    id="reqEmailField"
+                    placeholder={t.formPlaceholderEmail}
+                    value={reqEmail}
+                    onChange={e => { setReqEmail(e.target.value); if (fieldErrors.email) setFieldErrors(s => ({ ...s, email: '' })) }}
+                    onBlur={e => {
+                      const v = e.target.value.trim()
+                      if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                        setFieldErrors(s => ({ ...s, email: t.formErrorEmail }))
+                      }
+                    }}
+                    aria-invalid={!!fieldErrors.email}
+                    aria-describedby={fieldErrors.email ? 'reqEmailField-error' : undefined}
+                  />
+                  {fieldErrors.email && <span id="reqEmailField-error" className="ct-form-row__error" role="alert">{fieldErrors.email}</span>}
                 </div>
                 <div className="ct-form-row">
                   <label className="ct-form-label" htmlFor="reqCat">{t.formLabelCategory}</label>
@@ -624,7 +667,12 @@ export default function CareerTemplates() {
                     <option value="first-job-onboarding">{t.catFirstJobOnboarding}</option>
                   </select>
                 </div>
-                {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+                {formError && (
+                  <div role="alert" className="ct-form-error-card">
+                    <span className="ct-form-error-card__msg"><strong>{t.formErrorLabel}</strong> {formError}</span>
+                    <button type="submit" className="ct-form-error-card__retry" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formRetryLabel}</button>
+                  </div>
+                )}
                 <button className="ct-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
               </form>
             )}
