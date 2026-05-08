@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -29,7 +29,44 @@ export default function CareerTemplates() {
   const [fieldErrors, setFieldErrors] = useState({ request: '', email: '' })
   const [formSubmitted, setFormSubmitted] = useState(false)
 
+  const [previewId, setPreviewId] = useState(null)
+  const [copied, setCopied] = useState(false)
+  const previewTriggerRef = useRef(null)
+
   const handleFilterClick = useCallback(e => setActiveFilter(e.currentTarget.dataset.key), [])
+
+  const openPreview = (id, e) => {
+    previewTriggerRef.current = e?.currentTarget ?? null
+    setPreviewId(id)
+    setCopied(false)
+  }
+  const closePreview = useCallback(() => {
+    setPreviewId(null)
+    setCopied(false)
+    if (previewTriggerRef.current) {
+      previewTriggerRef.current.focus()
+      previewTriggerRef.current = null
+    }
+  }, [])
+
+  useEffect(() => {
+    if (previewId == null) { document.body.style.overflow = ''; return }
+    document.body.style.overflow = 'hidden'
+    const onKey = e => { if (e.key === 'Escape') closePreview() }
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [previewId, closePreview])
+
+  const copyPreview = body => {
+    if (!body) return
+    navigator.clipboard.writeText(body).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2200)
+    })
+  }
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -709,10 +746,24 @@ export default function CareerTemplates() {
               </div>
               <h2 className="ct-card__title">{tmpl.title}</h2>
               <p className="ct-card__desc">{tmpl.desc}</p>
-              <a href="#" className={`ct-card__cta ct-card__cta--${tmpl.stage}`}>
-                {tmpl.ctaLabel}
-                {tmpl.ctaIcon === 'copy' ? <CopyIcon /> : <ExternalIcon />}
-              </a>
+              <div className="ct-card__actions">
+                <a href="#" className={`ct-card__cta ct-card__cta--${tmpl.stage}`}>
+                  {tmpl.ctaLabel}
+                  {tmpl.ctaIcon === 'copy' ? <CopyIcon /> : <ExternalIcon />}
+                </a>
+                <button
+                  type="button"
+                  className="ct-card__preview"
+                  onClick={e => openPreview(tmpl.id, e)}
+                  aria-haspopup="dialog"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  {t.previewLabel}
+                </button>
+              </div>
             </div>
           ))
         )}
@@ -809,6 +860,46 @@ export default function CareerTemplates() {
         </div>
       </section>
 
+      <div
+        className={`ct-modal-overlay${previewId != null ? ' open' : ''}`}
+        onClick={closePreview}
+        aria-hidden={previewId == null}
+      >
+        {(() => {
+          const tmpl = previewId != null ? TEMPLATES.find(x => x.id === previewId) : null
+          if (!tmpl) return null
+          const body = tmpl.body || tmpl.desc
+          return (
+            <div
+              className="ct-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-label={`${tmpl.title} ${t.previewLabel}`}
+              onClick={e => e.stopPropagation()}
+            >
+              <button type="button" className="ct-modal__close" onClick={closePreview} aria-label={t.modalCloseLabel}>✕</button>
+              <div className="ct-modal__num">{tmpl.num}</div>
+              <div className="ct-modal__badges">
+                <span className={`ct-card__stage ct-card__stage--${tmpl.stage}`}>{STAGE_LABELS[tmpl.stage]}</span>
+                <span className={`ct-card__author ct-card__author--${tmpl.author}`}>
+                  {tmpl.author === 'jose' ? t.authorJose : tmpl.author === 'jocelyn' ? t.authorJocelyn : t.authorBoth}
+                </span>
+              </div>
+              <h2 className="ct-modal__title">{tmpl.title}</h2>
+              <p className="ct-modal__intro">{t.previewIntro}</p>
+              <div className={`ct-modal__body${tmpl.body ? '' : ' ct-modal__body--placeholder'}`}>{body}</div>
+              <button
+                type="button"
+                className={`ct-modal__copy-btn${copied ? ' copied' : ''}`}
+                onClick={() => copyPreview(body)}
+              >
+                <CopyIcon />
+                {copied ? t.modalCopiedLabel : t.modalCopyLabel}
+              </button>
+            </div>
+          )
+        })()}
+      </div>
     </ArticleLayout>
   )
 }
