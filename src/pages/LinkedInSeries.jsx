@@ -502,7 +502,18 @@ export default function LinkedInSeries() {
               {category === 'other' && (
                 <div className="ls-form-row">
                   <label className="ls-form-label" htmlFor="topicCatOther">{t.formLabelCategoryOther}</label>
-                  <input className="ls-form-input" type="text" id="topicCatOther" placeholder={t.formPlaceholderCategoryOther} value={categoryOther} onChange={e => setCategoryOther(e.target.value)} maxLength={120} />
+                  <input
+                    className={`ls-form-input${fieldErrors.category ? ' is-invalid' : ''}`}
+                    type="text"
+                    id="topicCatOther"
+                    placeholder={t.formPlaceholderCategoryOther}
+                    value={categoryOther}
+                    onChange={e => { setCategoryOther(e.target.value); if (fieldErrors.category) setFieldErrors(s => ({ ...s, category: '' })) }}
+                    maxLength={120}
+                    aria-invalid={!!fieldErrors.category}
+                    aria-describedby={fieldErrors.category ? 'topicCatOther-error' : undefined}
+                  />
+                  {fieldErrors.category && <span id="topicCatOther-error" className="ls-form-row__error" role="alert">{fieldErrors.category}</span>}
                 </div>
               )}
               {formError && <p role="alert" className="ls-form-error">{formError}</p>}
