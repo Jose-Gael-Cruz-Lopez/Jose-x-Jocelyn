@@ -332,6 +332,7 @@ export default function LinkedInSeries() {
         <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel}>
           <button
             className={`ls-filter${noFilters ? ' ls-filter--active' : ''}`}
+            aria-pressed={noFilters}
             onClick={() => { setFilterLens(''); setFilterTopic('') }}
           >{t.filterAll}</button>
           {LENS_OPTIONS.map(({ v, label }) => (
