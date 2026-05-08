@@ -17,9 +17,6 @@ const EPISODES = [
   { num: '10', lens: 'both', topics: 'internships offers rejection on-the-job', tags: ['internships', 'offers', 'rejection', 'on-the-job'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap-cta', author: 'both', status: 'coming-soon' }] },
 ]
 
-const LENS_FILTERS = new Set(['all', 'jose', 'jocelyn', 'both'])
-const TOPIC_FILTERS = new Set(['internships', 'offers', 'rejection', 'on-the-job'])
-
 function lensClass(a) {
   return a === 'jose' ? 'ls-ep__lens--jose' : a === 'jocelyn' ? 'ls-ep__lens--jocelyn' : 'ls-ep__lens--both'
 }
@@ -41,6 +38,7 @@ const PAGE_CSS = `
   .ls-hero__title { font-family:var(--font-display);font-size:clamp(44px,8.4vw,108px);font-weight:700;line-height:.96;letter-spacing:-0.03em;text-wrap:balance;color:var(--color-dark);margin-bottom:24px;max-width:18ch; }
   .ls-hero__title em { font-style:italic;font-family:var(--font-serif,var(--font-display));color:var(--color-gold-dark);font-weight:500;padding-right:.04em; }
   .ls-hero__sub { font-size:clamp(16px,1.8vw,20px);color:var(--color-muted);line-height:1.65;text-wrap:pretty;max-width:62ch;margin-bottom:0; }
+  .ls-hero__sub + .ls-hero__sub { margin-top:18px; }
   .ls-hero__sub strong { color:var(--color-dark);font-weight:600; }
   .ls-stats { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0; }
   .ls-stat { padding:0 32px;position:relative; }
@@ -78,7 +76,6 @@ const PAGE_CSS = `
   .ls-toc__chip:hover { background:var(--color-dark);color:var(--color-cream);border-color:var(--color-dark);transform:translateY(-1px);box-shadow:0 6px 12px -6px rgba(var(--ls-shadow-warm),.32); }
   .ls-toc__chip--filtered { opacity:.3;pointer-events:none; }
   .ls-toc__chip:focus-visible { outline:2px solid var(--color-accent);outline-offset:3px; }
-  @media (prefers-reduced-motion: reduce) { .ls-toc__chip { transition:none !important; } .ls-toc__chip:hover { transform:none !important; } }
   .ls-episodes { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 80px;display:flex;flex-direction:column;gap:64px; }
   .ls-ep { display:grid;grid-template-columns:minmax(0,360px) minmax(0,1fr);gap:clamp(24px,4vw,56px);align-items:start;scroll-margin-top:96px; }
   .ls-ep__head { display:flex;align-items:flex-start;gap:24px;margin-bottom:0;position:sticky;top:80px; }
@@ -96,8 +93,7 @@ const PAGE_CSS = `
   .ls-ep__tag { font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--color-muted);padding:4px 10px;border-radius:999px;background:rgba(26,25,22,.06); }
   .ls-ep__title { font-family:var(--font-display);font-size:clamp(22px,3vw,32px);font-weight:700;color:var(--color-dark);line-height:1.15;letter-spacing:-0.02em;text-wrap:balance;margin-bottom:10px; }
   .ls-ep__summary { font-size:15px;color:var(--color-muted);line-height:1.65;text-wrap:pretty;max-width:640px;margin-bottom:10px; }
-  .ls-ep__why { font-size:13px;color:var(--color-teal);font-weight:500;font-style:italic;font-family:var(--font-serif,var(--font-body));border-left:2px solid rgba(58,125,107,.4);padding-left:10px;line-height:1.55; }
-  .ls-ep__why-prefix { font-weight:700;font-style:normal;font-family:var(--font-display);letter-spacing:-.005em; }
+  .ls-ep__why { font-size:13px;color:var(--color-teal);font-weight:500;font-style:italic;font-family:var(--font-serif,var(--font-body));border-left:3px solid rgba(58,125,107,.5);padding-left:12px;line-height:1.55; }
   .ls-ep__posts { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;min-width:0; }
   @media (max-width:960px) { .ls-ep__posts { grid-template-columns:repeat(2,minmax(0,1fr)); } }
   @media (max-width:560px) { .ls-ep__posts { grid-template-columns:1fr; } }
@@ -129,7 +125,7 @@ const PAGE_CSS = `
   .ls-how__item-icon { font-family:var(--font-display);font-size:42px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.04em;color:var(--color-gold);margin-bottom:14px;line-height:1; }
   .ls-how__item-title { font-family:var(--font-display);font-size:17px;font-weight:700;color:var(--color-cream);margin-bottom:8px;letter-spacing:-.005em;line-height:1.3; }
   .ls-how__item-desc { font-size:14px;color:rgba(242,228,206,.7);line-height:1.6;text-wrap:pretty; }
-  .ls-form-wrap { max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,56px); }
+  .ls-form-wrap { max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,96px) clamp(20px,5vw,56px);scroll-margin-top:96px; }
   .ls-form-layout { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(40px,5vw,72px);align-items:start; }
   @media (max-width: 860px) { .ls-form-layout { grid-template-columns: 1fr; gap: 36px; } }
   .ls-form-intro { max-width: 460px; }
@@ -153,6 +149,17 @@ const PAGE_CSS = `
   .ls-form-btn:active { transform:translateY(0);box-shadow:0 2px 4px -2px rgba(var(--ls-shadow-warm),.18); }
   .ls-form-btn:disabled { opacity:.55;cursor:not-allowed;transform:none;box-shadow:none; }
   .ls-form-error { color:var(--color-accent);font-size:13px;font-weight:600;margin-bottom:10px; }
+  .ls-form-error-card { display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding:14px 16px;background:rgba(179,69,57,.06);border:1px solid rgba(179,69,57,.22);border-left:3px solid var(--color-accent);border-radius:10px; }
+  .ls-form-error-card__msg { flex:1;font-size:13px;color:var(--color-dark);line-height:1.5;font-weight:500; }
+  .ls-form-error-card__msg strong { color:var(--color-accent);font-weight:700; }
+  .ls-form-error-card__retry { flex-shrink:0;padding:7px 14px;background:transparent;border:1.5px solid var(--color-accent);color:var(--color-accent);border-radius:999px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:-.005em;cursor:pointer;transition:background .2s,color .2s; }
+  .ls-form-error-card__retry:hover { background:var(--color-accent);color:var(--color-cream); }
+  .ls-form-row__error { display:block;margin-top:6px;font-size:12px;font-weight:600;color:var(--color-accent);line-height:1.4; }
+  .ls-form-row__error::before { content:'';display:inline-block;width:4px;height:4px;border-radius:50%;background:var(--color-accent);margin-right:7px;vertical-align:.18em; }
+  .ls-form-input.is-invalid, .ls-form-textarea.is-invalid, .ls-form-select.is-invalid { border-color:rgba(179,69,57,.45); }
+  .ls-form-input.is-invalid:focus, .ls-form-textarea.is-invalid:focus, .ls-form-select.is-invalid:focus { border-color:var(--color-accent);box-shadow:0 0 0 4px rgba(179,69,57,.12); }
+  .ls-form-row__counter { display:block;margin-top:6px;font-size:11px;color:var(--color-muted);text-align:right;font-variant-numeric:tabular-nums;letter-spacing:.02em; }
+  .ls-form-row__counter--warn { color:var(--color-accent);font-weight:600; }
   .ls-form-success { padding:32px 0;text-align:center; }
   .ls-form-success__icon { width:52px;height:52px;border-radius:50%;background:rgba(58,125,107,.12);color:var(--color-teal);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;box-shadow:inset 0 0 0 1.5px rgba(58,125,107,.18); }
   .ls-form-success__title { font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--color-dark);margin-bottom:6px;letter-spacing:-.01em; }
@@ -168,10 +175,11 @@ const PAGE_CSS = `
   .ls-bridge__cta:hover { background:var(--color-accent);transform:translateY(-1px);box-shadow:0 12px 22px -10px rgba(179,69,57,.5); }
   .ls-bridge__cta:active { transform:translateY(0); }
   .ls-bridge__cta::after { content:'↓';font-size:13px;line-height:1; }
-  @media (prefers-reduced-motion: reduce) { .ls-bridge__cta { transition:none !important; } .ls-bridge__cta:hover { transform:none !important; } }
   @media (prefers-reduced-motion: reduce) {
-    .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea { transition:none !important; }
-    .ls-post:hover,.ls-filter:hover,.ls-form-btn:hover { transform:none !important; }
+    .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea,
+    .ls-form-error-card__retry,.ls-toc__chip,.ls-bridge__cta { transition:none !important; }
+    .ls-post:hover,.ls-filter:hover,.ls-form-btn:hover,
+    .ls-form-error-card__retry:hover,.ls-toc__chip:hover,.ls-bridge__cta:hover { transform:none !important; }
     .ls-ep__posts > .ls-post { animation:none !important; }
   }
   @media (max-width:768px) {
@@ -225,6 +233,7 @@ export default function LinkedInSeries() {
   const [categoryOther, setCategoryOther] = useState('')
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({ topic: '', email: '', category: '' })
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   const LENS_OPTIONS = [
@@ -242,8 +251,16 @@ export default function LinkedInSeries() {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if (!topic.trim()) { setFormError(t.formErrorTopic); return }
-    if (category === 'other' && !categoryOther.trim()) { setFormError(t.formErrorCategoryOther); return }
+    const errors = { topic: '', email: '', category: '' }
+    if (!topic.trim()) errors.topic = t.formErrorTopic
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) errors.email = t.formErrorEmail
+    if (category === 'other' && !categoryOther.trim()) errors.category = t.formErrorCategoryOther
+    if (errors.topic || errors.email || errors.category) {
+      setFieldErrors(errors)
+      setFormError('')
+      return
+    }
+    setFieldErrors({ topic: '', email: '', category: '' })
     setFormLoading(true)
     setFormError('')
     const categoryValue = category === 'other'
@@ -285,7 +302,11 @@ export default function LinkedInSeries() {
         <div className="ls-hero__primary">
           <p className="ls-hero__kicker">{t.heroKicker}</p>
           <h1 className="ls-hero__title">{t.heroTitlePrefix}<span className="ls-linkedin">{t.heroTitleLinkedIn}</span> <em>{t.heroTitleEm}</em></h1>
-          <p className="ls-hero__sub" dangerouslySetInnerHTML={{ __html: t.heroSubHTML }} />
+          <p className="ls-hero__sub">{t.heroSubLead}</p>
+          <p className="ls-hero__sub">
+            <strong>{t.heroSubJoseStrong}</strong>{t.heroSubJoseRest}
+            <strong>{t.heroSubJocelynStrong}</strong>{t.heroSubJocelynRest}
+          </p>
         </div>
         <div className="ls-hero__aside">
           <div className="ls-stats">
@@ -300,6 +321,7 @@ export default function LinkedInSeries() {
         <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel}>
           <button
             className={`ls-filter${noFilters ? ' ls-filter--active' : ''}`}
+            aria-pressed={noFilters}
             onClick={() => { setFilterLens(''); setFilterTopic('') }}
           >{t.filterAll}</button>
           {LENS_OPTIONS.map(({ v, label }) => (
@@ -440,8 +462,45 @@ export default function LinkedInSeries() {
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
-              <div className="ls-form-row"><label className="ls-form-label" htmlFor="topicField">{t.formLabelTopic}</label><textarea className="ls-form-textarea" id="topicField" placeholder={t.formPlaceholderTopic} value={topic} onChange={e => setTopic(e.target.value)} /></div>
-              <div className="ls-form-row"><label className="ls-form-label" htmlFor="emailField">{t.formLabelEmail}</label><input className="ls-form-input" type="email" id="emailField" placeholder={t.formPlaceholderEmail} value={email} onChange={e => setEmail(e.target.value)} /></div>
+              <div className="ls-form-row">
+                <label className="ls-form-label" htmlFor="topicField">{t.formLabelTopic}</label>
+                <textarea
+                  className={`ls-form-textarea${fieldErrors.topic ? ' is-invalid' : ''}`}
+                  id="topicField"
+                  placeholder={t.formPlaceholderTopic}
+                  value={topic}
+                  maxLength={10000}
+                  onChange={e => { setTopic(e.target.value); if (fieldErrors.topic) setFieldErrors(s => ({ ...s, topic: '' })) }}
+                  aria-invalid={!!fieldErrors.topic}
+                  aria-describedby={fieldErrors.topic ? 'topicField-error' : (topic.length >= 500 ? 'topicField-counter' : undefined)}
+                />
+                {fieldErrors.topic && <span id="topicField-error" className="ls-form-row__error" role="alert">{fieldErrors.topic}</span>}
+                {topic.length >= 500 && (
+                  <span id="topicField-counter" className={`ls-form-row__counter${topic.length >= 9000 ? ' ls-form-row__counter--warn' : ''}`} aria-live="polite">
+                    {topic.length >= 9000 ? `${topic.length} / 10000` : `${topic.length} chars`}
+                  </span>
+                )}
+              </div>
+              <div className="ls-form-row">
+                <label className="ls-form-label" htmlFor="emailField">{t.formLabelEmail}</label>
+                <input
+                  className={`ls-form-input${fieldErrors.email ? ' is-invalid' : ''}`}
+                  type="email"
+                  id="emailField"
+                  placeholder={t.formPlaceholderEmail}
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); if (fieldErrors.email) setFieldErrors(s => ({ ...s, email: '' })) }}
+                  onBlur={e => {
+                    const v = e.target.value.trim()
+                    if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                      setFieldErrors(s => ({ ...s, email: t.formErrorEmail }))
+                    }
+                  }}
+                  aria-invalid={!!fieldErrors.email}
+                  aria-describedby={fieldErrors.email ? 'emailField-error' : undefined}
+                />
+                {fieldErrors.email && <span id="emailField-error" className="ls-form-row__error" role="alert">{fieldErrors.email}</span>}
+              </div>
               <div className="ls-form-row">
                 <label className="ls-form-label" htmlFor="topicCat">{t.formLabelCategory}</label>
                 <select className="ls-form-select" id="topicCat" value={category} onChange={e => setCategory(e.target.value)}>
@@ -464,10 +523,26 @@ export default function LinkedInSeries() {
               {category === 'other' && (
                 <div className="ls-form-row">
                   <label className="ls-form-label" htmlFor="topicCatOther">{t.formLabelCategoryOther}</label>
-                  <input className="ls-form-input" type="text" id="topicCatOther" placeholder={t.formPlaceholderCategoryOther} value={categoryOther} onChange={e => setCategoryOther(e.target.value)} maxLength={120} />
+                  <input
+                    className={`ls-form-input${fieldErrors.category ? ' is-invalid' : ''}`}
+                    type="text"
+                    id="topicCatOther"
+                    placeholder={t.formPlaceholderCategoryOther}
+                    value={categoryOther}
+                    onChange={e => { setCategoryOther(e.target.value); if (fieldErrors.category) setFieldErrors(s => ({ ...s, category: '' })) }}
+                    maxLength={120}
+                    aria-invalid={!!fieldErrors.category}
+                    aria-describedby={fieldErrors.category ? 'topicCatOther-error' : undefined}
+                  />
+                  {fieldErrors.category && <span id="topicCatOther-error" className="ls-form-row__error" role="alert">{fieldErrors.category}</span>}
                 </div>
               )}
-              {formError && <p role="alert" className="ls-form-error">{formError}</p>}
+              {formError && (
+                <div role="alert" className="ls-form-error-card">
+                  <span className="ls-form-error-card__msg"><strong>{t.formErrorLabel}</strong> {formError}</span>
+                  <button type="submit" className="ls-form-error-card__retry" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formRetryLabel}</button>
+                </div>
+              )}
               <button className="ls-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
             </form>
           )}

@@ -23,6 +23,7 @@
   --color-paper: #F0ECE4;
   --font-display: 'Clash Display', 'Helvetica Neue', sans-serif;
   --font-body: 'Satoshi', 'Inter', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
