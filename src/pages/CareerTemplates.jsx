@@ -439,6 +439,7 @@ export default function CareerTemplates() {
           color: rgba(242,228,206,0.5);
           margin-bottom: 6px;
         }
+        .ct-form-box { background: rgba(255,255,255,.04); border: 1px solid rgba(242,228,206,.12); border-radius: 14px; padding: clamp(24px,3vw,32px); }
         .ct-form-input,
         .ct-form-select,
         .ct-form-textarea {
@@ -446,35 +447,54 @@ export default function CareerTemplates() {
           font-family: var(--font-body);
           font-size: 15px;
           padding: 12px 14px;
-          border: 1.5px solid rgba(242,228,206,0.15);
-          border-radius: 8px;
-          background: rgba(255,255,255,0.07);
+          border: 1.5px solid rgba(242,228,206,.15);
+          border-radius: 10px;
+          background: rgba(255,255,255,.07);
           color: var(--color-cream);
           outline: none;
-          transition: border-color 0.2s;
+          transition: border-color .2s, background .2s, box-shadow .2s;
         }
         .ct-form-input::placeholder,
-        .ct-form-textarea::placeholder { color: rgba(242,228,206,0.3); }
+        .ct-form-textarea::placeholder { color: rgba(242,228,206,.3); }
         .ct-form-input:focus,
         .ct-form-select:focus,
-        .ct-form-textarea:focus { border-color: var(--color-gold); }
+        .ct-form-textarea:focus { border-color: var(--color-gold); background: rgba(255,255,255,.1); box-shadow: 0 0 0 4px rgba(232,168,56,.16); }
+        .ct-form-input.is-invalid, .ct-form-select.is-invalid, .ct-form-textarea.is-invalid { border-color: rgba(232,168,56,.6); }
+        .ct-form-input.is-invalid:focus, .ct-form-select.is-invalid:focus, .ct-form-textarea.is-invalid:focus { border-color: var(--color-gold); box-shadow: 0 0 0 4px rgba(232,168,56,.24); }
         .ct-form-select { appearance: none; cursor: pointer; }
         .ct-form-select option { background: var(--color-navy); color: var(--color-cream); }
         .ct-form-textarea { min-height: 90px; resize: vertical; line-height: 1.55; }
+        .ct-form-row__error { display: block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--color-gold); line-height: 1.4; }
+        .ct-form-row__error::before { content: ''; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--color-gold); margin-right: 7px; vertical-align: .18em; }
+        .ct-form-row__counter { display: block; margin-top: 6px; font-size: 11px; color: rgba(242,228,206,.5); text-align: right; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+        .ct-form-row__counter--warn { color: var(--color-gold); font-weight: 600; }
+        .ct-form-error-card { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding: 14px 16px; background: rgba(232,168,56,.08); border: 1px solid rgba(232,168,56,.3); border-left: 3px solid var(--color-gold); border-radius: 10px; }
+        .ct-form-error-card__msg { flex: 1; font-size: 13px; color: var(--color-cream); line-height: 1.5; }
+        .ct-form-error-card__msg strong { color: var(--color-gold); font-weight: 700; }
+        .ct-form-error-card__retry { flex-shrink: 0; padding: 7px 14px; background: transparent; border: 1.5px solid var(--color-gold); color: var(--color-gold); border-radius: 999px; font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: -.005em; cursor: pointer; transition: background .2s, color .2s; }
+        .ct-form-error-card__retry:hover { background: var(--color-gold); color: var(--color-dark); }
         .ct-form-btn {
           margin-top: 4px;
-          padding: 13px 28px;
+          padding: 14px 28px;
           background: var(--color-gold);
           color: var(--color-dark);
           border: none;
-          border-radius: 8px;
+          border-radius: 999px;
           font-family: var(--font-display);
           font-size: 14px;
           font-weight: 700;
+          letter-spacing: -.005em;
           cursor: pointer;
-          transition: background 0.2s, transform 0.18s;
+          box-shadow: 0 8px 20px -10px rgba(232,168,56,.4);
+          transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s;
         }
-        .ct-form-btn:hover { background: var(--color-cream); transform: translateY(-1px); }
+        .ct-form-btn:hover { background: var(--color-cream); transform: translateY(-2px); box-shadow: 0 14px 24px -12px rgba(232,228,206,.5); }
+        .ct-form-btn:active { transform: translateY(0); }
+        .ct-form-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+        .ct-form-success { padding: 32px 0; text-align: center; }
+        .ct-form-success__icon { width: 52px; height: 52px; border-radius: 50%; background: rgba(232,168,56,.14); color: var(--color-gold); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: inset 0 0 0 1.5px rgba(232,168,56,.3); }
+        .ct-form-success__title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--color-cream); margin-bottom: 6px; letter-spacing: -.01em; }
+        .ct-form-success__body { font-size: 14px; color: rgba(242,228,206,.7); line-height: 1.6; }
 
         @media (max-width: 768px) {
           .ct-form-inner { grid-template-columns: 1fr; gap: 32px; }
