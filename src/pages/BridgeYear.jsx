@@ -108,6 +108,7 @@ export default function BridgeYear() {
           max-width: 1040px;
           margin: 0 auto;
           position: relative;
+          overflow: hidden;
         }
         .by-hero::before {
           content: '';
@@ -118,7 +119,20 @@ export default function BridgeYear() {
           height: 4px;
           background: var(--color-accent);
           border-radius: 2px;
+          z-index: 1;
         }
+        .by-hero::after {
+          content: '';
+          position: absolute;
+          top: -14%;
+          right: -10%;
+          width: 520px;
+          height: 520px;
+          background: radial-gradient(closest-side, rgba(179,69,57,.1), transparent 70%);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .by-hero > * { position: relative; z-index: 1; }
         .by-hero__kicker {
           font-size: 11px;
           font-weight: 700;
