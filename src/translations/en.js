@@ -168,6 +168,8 @@ export const en = {
     // ── Suggest form ──────────────────────────────────────────────────────
     suggestKicker: 'Contribute',
     suggestTitle: 'Know a program we should add?',
+    suggestTitlePrefix: 'Know a program',
+    suggestTitleEm: 'we should add?',
     suggestSub: 'This list is maintained by Jose and Jocelyn and updated as new programs open. If you found an apprenticeship, rotational program, or new grad role that is not on this list - especially programs designed for non-traditional or first-gen candidates in tech - submit it below and we will review it.',
     formLabelProgram: 'Program or role name',
     formPlaceholderProgram: 'e.g. Spotify Green Room Engineering Fellowship',

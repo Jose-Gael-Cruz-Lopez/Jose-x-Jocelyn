@@ -168,6 +168,8 @@ export const es = {
     // ── Suggest form ──────────────────────────────────────────────────────
     suggestKicker: 'Contribuir',
     suggestTitle: '¿Conoces un programa que deberíamos agregar?',
+    suggestTitlePrefix: '¿Conoces un programa',
+    suggestTitleEm: 'que deberíamos agregar?',
     suggestSub: 'Esta lista es mantenida por Jose y Jocelyn y actualizada cuando se abren nuevos programas. Si encontraste un programa de aprendizaje, rotacional o un rol para recién graduados que no está en esta lista - especialmente programas diseñados para candidatos no tradicionales o de primera generación en tecnología - envíalo abajo y lo revisaremos.',
     formLabelProgram: 'Nombre del programa o rol',
     formPlaceholderProgram: 'ej. Spotify Green Room Engineering Fellowship',
