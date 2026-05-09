@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
@@ -21,6 +21,7 @@ export default function BridgeYear() {
   const validRoleKeys = (t.roleFilters || []).map(f => f.key)
   const urlRole = searchParams.get('role') || ''
   const roleFilter = urlRole && validRoleKeys.includes(urlRole) ? urlRole : 'all'
+  const filtersRef = useRef(null)
 
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
@@ -39,6 +40,22 @@ export default function BridgeYear() {
     else next.set('role', key)
     setSearchParams(next, { replace: true })
   }, [searchParams, setSearchParams])
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstButton = filtersRef.current?.querySelector('button')
+      if (firstButton) {
+        e.preventDefault()
+        firstButton.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   const handleSubmit = async e => {
     e.preventDefault()
@@ -1085,7 +1102,7 @@ export default function BridgeYear() {
           <p className="by-section-body">{t.rolesBody}</p>
         </div>
 
-        <div className="by-roles__filters" role="group" aria-label={t.rolesFiltersAriaLabel}>
+        <div className="by-roles__filters" role="group" aria-label={t.rolesFiltersAriaLabel} ref={filtersRef}>
           {t.roleFilters.map(f => (
             <button
               key={f.key}
