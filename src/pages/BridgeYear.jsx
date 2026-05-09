@@ -611,7 +611,7 @@ export default function BridgeYear() {
 
         /* TOOLS */
         .by-tools {
-          padding: 80px clamp(20px,5vw,56px);
+          padding: 80px clamp(20px,5vw,56px) clamp(96px,12vw,128px);
           max-width: 1040px;
           margin: 0 auto;
         }
@@ -660,7 +660,7 @@ export default function BridgeYear() {
 
         /* FOLLOW */
         .by-follow {
-          padding: 80px clamp(20px,5vw,56px);
+          padding: 80px clamp(20px,5vw,56px) clamp(96px,12vw,128px);
           max-width: 1040px;
           margin: 0 auto;
         }
