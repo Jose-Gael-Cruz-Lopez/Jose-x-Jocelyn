@@ -1189,7 +1189,7 @@ export default function BridgeYear() {
         <div className="by-suggest__inner">
           <div className="by-suggest__copy">
             <p className="by-suggest__kicker">{t.suggestKicker}</p>
-            <h2 className="by-suggest__title">{t.suggestTitle}</h2>
+            <h2 className="by-suggest__title">{t.suggestTitlePrefix ?? t.suggestTitle}{t.suggestTitleEm && <> <em>{t.suggestTitleEm}</em></>}</h2>
             <p className="by-suggest__sub">{t.suggestSub}</p>
           </div>
           <div className="by-suggest__box">
