@@ -73,6 +73,16 @@ export default function BridgeYear() {
           text-transform: uppercase;
           color: var(--color-muted);
           margin-bottom: 14px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .by-kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
         }
         .by-section-title {
           font-family: var(--font-display);
@@ -138,8 +148,18 @@ export default function BridgeYear() {
           font-weight: 700;
           letter-spacing: .14em;
           text-transform: uppercase;
-          color: var(--color-muted);
+          color: var(--color-accent);
           margin-bottom: 18px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .by-hero__kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
         }
         .by-hero__title {
           font-family: var(--font-display);
@@ -223,6 +243,16 @@ export default function BridgeYear() {
           text-transform: uppercase;
           color: var(--color-gold);
           margin-bottom: 14px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .by-for__kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
         }
         .by-for__title {
           font-family: var(--font-display);
@@ -476,6 +506,16 @@ export default function BridgeYear() {
           text-transform: uppercase;
           color: var(--color-gold);
           margin-bottom: 14px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .by-sprint__kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
         }
         .by-sprint__title {
           font-family: var(--font-display);
@@ -665,8 +705,18 @@ export default function BridgeYear() {
           font-weight: 700;
           letter-spacing: .14em;
           text-transform: uppercase;
-          color: var(--color-muted);
+          color: var(--color-accent);
           margin-bottom: 12px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .by-suggest__kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
         }
         .by-suggest__title {
           font-family: var(--font-display);
