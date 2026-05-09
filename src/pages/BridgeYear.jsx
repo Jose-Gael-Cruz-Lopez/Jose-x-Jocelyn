@@ -528,16 +528,21 @@ export default function BridgeYear() {
           gap: 16px;
         }
         .by-tool-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: transparent;
+          border: 1.5px solid rgba(58,125,107,.3);
           border-radius: 12px;
           padding: 22px 22px 18px;
           display: flex;
           flex-direction: column;
           gap: 10px;
-          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s, border-color .2s, background .2s;
         }
-        .by-tool-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+        .by-tool-card:hover {
+          transform: translateY(-2px);
+          border-color: var(--color-teal);
+          background: rgba(58,125,107,.04);
+          box-shadow: 0 10px 24px -8px rgba(var(--by-shadow-warm),.18);
+        }
         .by-tool-card__name {
           font-family: var(--font-display);
           font-size: 16px;
