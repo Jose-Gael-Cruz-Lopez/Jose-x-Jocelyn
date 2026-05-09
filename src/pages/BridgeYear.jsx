@@ -22,6 +22,7 @@ export default function BridgeYear() {
   const urlRole = searchParams.get('role') || ''
   const roleFilter = urlRole && validRoleKeys.includes(urlRole) ? urlRole : 'all'
   const filtersRef = useRef(null)
+  const progressRef = useRef(null)
 
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
@@ -48,6 +49,28 @@ export default function BridgeYear() {
     else next.set('role', key)
     setSearchParams(next, { replace: true })
   }, [searchParams, setSearchParams])
+
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const el = progressRef.current
+      if (!el) return
+      const doc = document.documentElement
+      const max = (doc.scrollHeight - doc.clientHeight) || 1
+      const ratio = Math.min(1, Math.max(0, window.scrollY / max))
+      el.style.transform = 'scaleX(' + ratio + ')'
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
 
   useEffect(() => {
     const onKeyDown = e => {
@@ -125,9 +148,28 @@ export default function BridgeYear() {
       signoffSub={t.signoffSub}
       signoffCta={t.signoffCta}
     >
+      <div ref={progressRef} className="by-scroll-progress" aria-hidden="true" />
       <style>{`
         html, body { background: var(--color-cream); }
         :root { --by-shadow-warm: 58, 38, 22; }
+
+        .by-scroll-progress {
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 2px;
+          width: 100%;
+          background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-gold) 100%);
+          z-index: 1000;
+          pointer-events: none;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform .12s linear;
+          will-change: transform;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .by-scroll-progress { transition: none; }
+        }
 
         .by-wrap {
           max-width: 1040px;
