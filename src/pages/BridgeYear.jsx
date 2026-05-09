@@ -280,6 +280,19 @@ export default function BridgeYear() {
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
           gap: 20px;
         }
+        .by-apprentice__grid > .by-prog,
+        .by-tools__grid > .by-tool-card {
+          animation: by-card-in .55s cubic-bezier(.16,1,.3,1) backwards;
+          animation-delay: calc(var(--by-i, 0) * 50ms);
+        }
+        @keyframes by-card-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .by-apprentice__grid > .by-prog,
+          .by-tools__grid > .by-tool-card { animation: none !important; }
+        }
         .by-prog {
           background: linear-gradient(180deg, rgba(179,69,57,.06) 0%, rgba(255,250,242,.55) 60%);
           border: 1.5px solid rgba(179,69,57,.22);
@@ -843,7 +856,7 @@ export default function BridgeYear() {
 
         <div className="by-apprentice__grid">
           {t.programs.map((prog, idx) => (
-            <div className={`by-prog${idx === 0 ? ' by-prog--featured' : ''}`} key={prog.name}>
+            <div className={`by-prog${idx === 0 ? ' by-prog--featured' : ''}`} key={prog.name} style={{ '--by-i': idx }}>
               <div className="by-prog__inner">
                 {idx === 0 && <span className="by-prog--featured-tag">{t.featuredLabel ?? 'Start here'}</span>}
                 <p className="by-prog__company">{prog.company}</p>
@@ -947,8 +960,8 @@ export default function BridgeYear() {
           <p className="by-section-sub">{t.toolsSub}</p>
         </div>
         <div className="by-tools__grid">
-          {t.tools.map(tool => (
-            <div className="by-tool-card" key={tool.name}>
+          {t.tools.map((tool, idx) => (
+            <div className="by-tool-card" key={tool.name} style={{ '--by-i': idx }}>
               <h3 className="by-tool-card__name">{tool.name}</h3>
               <p className="by-tool-card__desc">{tool.desc}</p>
               <Link to="/career-templates" className="by-tool-card__link">{tool.linkLabel}</Link>
