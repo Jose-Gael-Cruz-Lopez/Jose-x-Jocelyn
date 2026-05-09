@@ -367,8 +367,8 @@ export default function BridgeYear() {
           font-size: 12px;
           font-weight: 600;
           cursor: pointer;
-          border: 1.5px solid rgba(0,0,0,.1);
-          background: var(--color-white);
+          border: 1.5px solid rgba(26,25,22,.12);
+          background: rgba(255,250,242,.6);
           color: var(--color-muted);
           transition: background .2s, color .2s, border-color .2s;
         }
