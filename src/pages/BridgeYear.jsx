@@ -701,18 +701,41 @@ export default function BridgeYear() {
         }
         .by-follow-card__cta:hover { transform: translateY(-1px); background: var(--color-gold); color: var(--color-dark); }
 
-        /* SUGGEST FORM */
+        /* SUGGEST FORM — full-bleed teal section (CT pattern) */
         .by-suggest {
-          padding: 80px clamp(20px,5vw,56px) 100px;
-          max-width: 1040px;
-          margin: 0 auto;
+          background: var(--color-teal);
+          padding: clamp(56px,8vw,96px) clamp(20px,5vw,56px);
+          margin: 0;
+          max-width: none;
+          position: relative;
+          overflow: hidden;
+          scroll-margin-top: 96px;
         }
+        .by-suggest::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(circle at 84% 76%, rgba(232,168,56,.12) 0%, transparent 50%);
+          pointer-events: none;
+        }
+        .by-suggest__inner {
+          max-width: 1240px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: minmax(0,1fr) minmax(0,1.4fr);
+          gap: clamp(40px,5vw,72px);
+          align-items: start;
+          position: relative;
+        }
+        @media (max-width: 860px) {
+          .by-suggest__inner { grid-template-columns: 1fr; gap: 36px; }
+        }
+        .by-suggest__copy { max-width: 460px; }
         .by-suggest__box {
           background: rgba(255,250,242,.7);
           border: 1px solid rgba(26,25,22,.13);
           border-radius: 16px;
           padding: clamp(32px,4vw,52px);
-          max-width: 680px;
           box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--by-shadow-warm),.18);
         }
         .by-suggest__kicker {
@@ -720,8 +743,8 @@ export default function BridgeYear() {
           font-weight: 700;
           letter-spacing: .14em;
           text-transform: uppercase;
-          color: var(--color-accent);
-          margin-bottom: 12px;
+          color: var(--color-gold);
+          margin-bottom: 14px;
           display: inline-flex;
           align-items: center;
           gap: 10px;
@@ -735,12 +758,23 @@ export default function BridgeYear() {
         }
         .by-suggest__title {
           font-family: var(--font-display);
-          font-size: clamp(22px,3vw,30px);
+          font-size: clamp(28px,4vw,46px);
           font-weight: 700;
-          color: var(--color-dark);
-          margin-bottom: 8px;
+          color: var(--color-cream);
+          line-height: 1.05;
+          letter-spacing: -.025em;
+          text-wrap: balance;
+          margin-bottom: 16px;
+          max-width: 18ch;
         }
-        .by-suggest__sub { font-size: 15px; color: var(--color-muted); line-height: 1.7; margin-bottom: 28px; }
+        .by-suggest__title em {
+          font-style: italic;
+          font-family: var(--font-serif, var(--font-display));
+          color: var(--color-gold);
+          font-weight: 500;
+          padding-right: .04em;
+        }
+        .by-suggest__sub { font-size: 15px; color: rgba(242,228,206,.7); line-height: 1.7; margin-bottom: 0; max-width: 50ch; }
         .by-suggest__row { margin-bottom: 16px; }
         .by-suggest__label {
           display: block;
@@ -1001,11 +1035,13 @@ export default function BridgeYear() {
 
       {/* SUGGEST FORM */}
       <section className="by-suggest" id="suggest">
-        <div className="by-suggest__box">
-          <p className="by-suggest__kicker">{t.suggestKicker}</p>
-          <h2 className="by-suggest__title">{t.suggestTitle}</h2>
-          <p className="by-suggest__sub">{t.suggestSub}</p>
-
+        <div className="by-suggest__inner">
+          <div className="by-suggest__copy">
+            <p className="by-suggest__kicker">{t.suggestKicker}</p>
+            <h2 className="by-suggest__title">{t.suggestTitle}</h2>
+            <p className="by-suggest__sub">{t.suggestSub}</p>
+          </div>
+          <div className="by-suggest__box">
           {formSubmitted ? (
             <div className="by-suggest__success">
               <h3>{t.formSuccessTitle}</h3>
@@ -1037,6 +1073,7 @@ export default function BridgeYear() {
               <button className="by-suggest__btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
             </form>
           )}
+          </div>
         </div>
       </section>
 
