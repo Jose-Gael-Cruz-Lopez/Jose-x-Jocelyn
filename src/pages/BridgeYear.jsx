@@ -1033,7 +1033,7 @@ export default function BridgeYear() {
 
         <div className="by-apprentice__grid">
           {t.programs.map((prog, idx) => (
-            <div className={`by-prog${idx === 0 ? ' by-prog--featured' : ''}`} key={prog.name} style={{ '--by-i': idx }}>
+            <div className={`by-prog${idx === 0 ? ' by-prog--featured' : ''}`} key={prog.name} style={{ '--by-i': idx % 12 }}>
               <div className="by-prog__inner">
                 {idx === 0 && <span className="by-prog--featured-tag">{t.featuredLabel ?? 'Start here'}</span>}
                 <p className="by-prog__company">{prog.company}</p>
@@ -1146,7 +1146,7 @@ export default function BridgeYear() {
         </div>
         <div className="by-tools__grid">
           {t.tools.map((tool, idx) => (
-            <div className="by-tool-card" key={tool.name} style={{ '--by-i': idx }}>
+            <div className="by-tool-card" key={tool.name} style={{ '--by-i': idx % 12 }}>
               <h3 className="by-tool-card__name">{tool.name}</h3>
               <p className="by-tool-card__desc">{tool.desc}</p>
               <Link to="/career-templates" className="by-tool-card__link">{tool.linkLabel}</Link>
