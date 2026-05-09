@@ -29,6 +29,11 @@ export default function BridgeYear() {
   const [fieldErrors, setFieldErrors] = useState({ program: '', company: '', email: '' })
   const [form, setForm] = useState({ program: '', company: '', link: '', why: '', email: '' })
 
+  const [captureEmail, setCaptureEmail] = useState('')
+  const [captureLoading, setCaptureLoading] = useState(false)
+  const [captureError, setCaptureError] = useState('')
+  const [captureSubmitted, setCaptureSubmitted] = useState(false)
+
   const visibleRoles = roleFilter === 'all'
     ? t.roleCards
     : t.roleCards.filter(c => c.rtags.includes(roleFilter))
@@ -89,6 +94,24 @@ export default function BridgeYear() {
   const setField = (k, v) => {
     setForm(f => ({ ...f, [k]: v }))
     if (fieldErrors[k]) setFieldErrors(s => ({ ...s, [k]: '' }))
+  }
+
+  const handleCaptureSubmit = async e => {
+    e.preventDefault()
+    const v = captureEmail.trim()
+    if (!v || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+      setCaptureError(t.captureErrorEmail)
+      return
+    }
+    setCaptureError('')
+    setCaptureLoading(true)
+    const { error } = await supabase.from('bridge_year_subscribers').insert({ email: v })
+    setCaptureLoading(false)
+    if (error) {
+      setCaptureError(t.captureErrorGeneric)
+    } else {
+      setCaptureSubmitted(true)
+    }
   }
 
   return (
@@ -1196,6 +1219,46 @@ export default function BridgeYear() {
           <h2 className="by-section-title">{t.apprenticeTitle}</h2>
           <p className="by-section-sub">{t.apprenticeSub}</p>
           <p className="by-section-body">{t.apprenticeBody}</p>
+        </div>
+
+        <div className="by-capture" aria-label={t.captureTitle}>
+          {captureSubmitted ? (
+            <div className="by-capture__success">
+              <span className="by-capture__success-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 22 22" fill="none"><path d="M5 11.5l4 4L17 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </span>
+              <p className="by-capture__success-text">
+                {t.captureSuccessTitle}
+                <small>{t.captureSuccessBody}</small>
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="by-capture__copy">
+                <p className="by-capture__kicker">{t.captureKicker}</p>
+                <p className="by-capture__title">{t.captureTitle}</p>
+                <p className="by-capture__sub">{t.captureSub}</p>
+              </div>
+              <form className="by-capture__form" onSubmit={handleCaptureSubmit}>
+                <label htmlFor="captureEmail" className="visually-hidden" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>{t.formLabelEmail}</label>
+                <input
+                  id="captureEmail"
+                  type="email"
+                  className={`by-capture__input${captureError ? ' is-invalid' : ''}`}
+                  placeholder={t.capturePlaceholder}
+                  value={captureEmail}
+                  onChange={e => { setCaptureEmail(e.target.value); if (captureError) setCaptureError('') }}
+                  aria-invalid={!!captureError}
+                  aria-describedby={captureError ? 'captureEmail-error' : undefined}
+                  autoComplete="email"
+                />
+                <button type="submit" className="by-capture__btn" disabled={captureLoading}>
+                  {captureLoading ? t.captureSubmitting : t.captureButton}
+                </button>
+                {captureError && <span id="captureEmail-error" className="by-capture__error" role="alert">{captureError}</span>}
+              </form>
+            </>
+          )}
         </div>
 
         <div className="by-apprentice__grid">
