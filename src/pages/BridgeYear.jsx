@@ -150,6 +150,16 @@ export default function BridgeYear() {
           margin-bottom: 14px;
         }
         .by-hero__title em { font-style: normal; color: var(--color-accent); }
+        .by-hero__tagline {
+          font-family: var(--font-serif, var(--font-display));
+          font-size: clamp(18px,2.2vw,24px);
+          font-style: italic;
+          font-weight: 400;
+          color: var(--color-accent);
+          margin-bottom: 22px;
+          letter-spacing: -.005em;
+          max-width: 60ch;
+        }
         .by-hero__sub {
           font-family: var(--font-display);
           font-size: clamp(18px,2.5vw,26px);
@@ -741,6 +751,7 @@ export default function BridgeYear() {
       <header className="by-hero" id="top">
         <p className="by-hero__kicker">{t.heroKicker}</p>
         <h1 className="by-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
+        {t.heroTagline && <p className="by-hero__tagline">{t.heroTagline}</p>}
         <p className="by-hero__sub">{t.heroSub}</p>
         <p className="by-hero__body" dangerouslySetInnerHTML={{ __html: t.heroBody }} />
         <nav className="by-jumps" aria-label={t.heroJumpsAriaLabel}>
