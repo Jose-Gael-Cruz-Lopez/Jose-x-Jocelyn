@@ -58,6 +58,7 @@ export default function BridgeYear() {
     <ArticleLayout title="Bridge Year Hub">
       <style>{`
         html, body { background: var(--color-cream); }
+        :root { --by-shadow-warm: 58, 38, 22; }
 
         .by-wrap {
           max-width: 1040px;
