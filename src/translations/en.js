@@ -407,6 +407,9 @@ export const en = {
     footerLaVoz: 'La Voz del Día',
     footerTemplates: 'Templates',
     footerLinkedIn: 'LinkedIn Series',
+    signoffLine: 'We both took the bridge year. It worked.',
+    signoffSub: 'Don’t apologize for being on it.',
+    signoffCta: 'Tell us what you need',
   },
   interviewPrep: {
     // ── Hero ─────────────────────────────────────────────────────────────

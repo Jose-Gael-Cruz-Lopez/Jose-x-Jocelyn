@@ -65,7 +65,12 @@ export default function BridgeYear() {
   }
 
   return (
-    <ArticleLayout title="Bridge Year Hub">
+    <ArticleLayout
+      title="Bridge Year Hub"
+      signoffLine={t.signoffLine}
+      signoffSub={t.signoffSub}
+      signoffCta={t.signoffCta}
+    >
       <style>{`
         html, body { background: var(--color-cream); }
         :root { --by-shadow-warm: 58, 38, 22; }
