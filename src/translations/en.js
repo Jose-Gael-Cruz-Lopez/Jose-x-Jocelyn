@@ -120,6 +120,7 @@ export const en = {
     heroKicker: 'From Campus to Career · Bridge Year Sprint',
     heroTitle: 'Bridge Year',
     heroTitleEm: 'Hub',
+    heroTagline: 'Not behind. Just on the path no one drew you a map for.',
     heroSub: 'You finished school. You do not have an offer yet. That is not failure - that is exactly where this page is for.',
     heroBody: 'Most advice for people in the gap is either <strong>"keep applying"</strong> or <strong>"go to grad school."</strong> Neither of those is useful when you have already been applying for months, when grad school is not the goal, and when you are watching people around you announce offers you have not gotten yet. This page exists because Jose and Jocelyn have both been close to that moment and know what actually moves the needle. What you will find here is not motivation - it is a curated set of real doors, specific tools, and a step-by-step path through the gap, built for <strong>first-gen and underrepresented students</strong> who are trying to break into tech without a built-in network or family roadmap.',
     heroJump1: 'Apprenticeships and Alternative Entry Programs',
