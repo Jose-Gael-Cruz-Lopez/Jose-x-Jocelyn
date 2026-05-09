@@ -149,7 +149,13 @@ export default function BridgeYear() {
           color: var(--color-dark);
           margin-bottom: 14px;
         }
-        .by-hero__title em { font-style: normal; color: var(--color-accent); }
+        .by-hero__title em {
+          font-style: italic;
+          font-family: var(--font-serif, var(--font-display));
+          color: var(--color-gold-dark);
+          font-weight: 500;
+          padding-right: .04em;
+        }
         .by-hero__tagline {
           font-family: var(--font-serif, var(--font-display));
           font-size: clamp(18px,2.2vw,24px);
