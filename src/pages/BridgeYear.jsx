@@ -599,13 +599,14 @@ export default function BridgeYear() {
           gap: 16px;
         }
         .by-tool-card {
-          background: transparent;
+          background: linear-gradient(180deg, rgba(58,125,107,.06) 0%, rgba(255,250,242,.4) 60%);
           border: 1.5px solid rgba(58,125,107,.3);
           border-radius: 12px;
           padding: 22px 22px 18px;
           display: flex;
           flex-direction: column;
           gap: 10px;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(var(--by-shadow-warm),.1);
           transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s, border-color .2s, background .2s;
         }
         .by-tool-card:hover {
