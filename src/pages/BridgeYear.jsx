@@ -944,16 +944,6 @@ export default function BridgeYear() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="art-footer" style={{ maxWidth: '1040px' }}>
-        <span className="art-footer__copy">{t.footerCopy}</span>
-        <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">{t.footerHome}</Link>
-          <Link to="/articles" className="art-footer__link">{t.footerLaVoz}</Link>
-          <Link to="/career-templates" className="art-footer__link">{t.footerTemplates}</Link>
-          <Link to="/linkedin-series" className="art-footer__link">{t.footerLinkedIn}</Link>
-        </div>
-      </footer>
     </ArticleLayout>
   )
 }
