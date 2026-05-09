@@ -54,9 +54,11 @@ export default function InterviewPrep() {
           color: var(--color-dark); line-height: 1.15; margin-bottom: 10px;
         }
         .ip-section-sub {
-          font-family: var(--font-display);
-          font-size: clamp(16px,2vw,20px); font-weight: 400;
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 500;
+          font-size: clamp(18px,2.2vw,22px);
           color: var(--color-accent); margin-bottom: 18px;
+          letter-spacing: -0.005em; line-height: 1.3;
         }
         .ip-section-body {
           font-size: clamp(14px,1.7vw,16px); color: var(--color-muted);
@@ -133,57 +135,86 @@ export default function InterviewPrep() {
           gap: 20px;
         }
         .ip-grade-card {
-          background: var(--color-white); border: 1px solid rgba(0,0,0,.08);
+          --card-bg: var(--color-cream);
+          --card-fg: var(--color-dark);
+          --card-fg-strong: var(--color-dark);
+          --card-fg-muted: rgba(26,25,22,.74);
+          --card-divider: rgba(26,25,22,.18);
+          background: var(--card-bg); color: var(--card-fg);
           border-radius: 14px; overflow: hidden;
           display: flex; flex-direction: column;
-          transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s;
+          transition: transform .22s cubic-bezier(.16,1,.3,1);
         }
-        .ip-grade-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
-        .ip-grade-card__bar { height: 4px; }
-        .ip-grade-card__bar--fy  { background: var(--color-teal); }
-        .ip-grade-card__bar--jr  { background: var(--color-gold); }
-        .ip-grade-card__bar--sr  { background: var(--color-navy); }
-        .ip-grade-card__bar--rg  { background: var(--color-accent); }
-        .ip-grade-card__inner { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+        .ip-grade-card:hover { transform: translateY(-3px); }
+        .ip-grade-card--fy {
+          --card-bg: var(--color-teal);
+          --card-fg: var(--color-cream);
+          --card-fg-strong: var(--color-cream);
+          --card-fg-muted: rgba(242,228,206,.78);
+          --card-divider: rgba(242,228,206,.22);
+        }
+        .ip-grade-card--jr {
+          --card-bg: var(--color-gold);
+          --card-fg: var(--color-dark);
+          --card-fg-strong: var(--color-dark);
+          --card-fg-muted: rgba(26,25,22,.74);
+          --card-divider: rgba(26,25,22,.22);
+        }
+        .ip-grade-card--sr {
+          --card-bg: var(--color-navy);
+          --card-fg: var(--color-cream);
+          --card-fg-strong: var(--color-cream);
+          --card-fg-muted: rgba(242,228,206,.78);
+          --card-divider: rgba(242,228,206,.22);
+        }
+        .ip-grade-card--rg {
+          --card-bg: var(--color-accent);
+          --card-fg: var(--color-cream);
+          --card-fg-strong: var(--color-cream);
+          --card-fg-muted: rgba(242,228,206,.82);
+          --card-divider: rgba(242,228,206,.22);
+        }
+        .ip-grade-card__inner { padding: 26px 24px; flex: 1; display: flex; flex-direction: column; }
         .ip-grade-card__label {
-          font-size: 11px; font-weight: 700; letter-spacing: .1em;
-          text-transform: uppercase; padding: 3px 10px; border-radius: 4px;
-          color: var(--color-cream); display: inline-block; align-self: flex-start; margin-bottom: 14px;
+          font-size: 10px; font-weight: 700; letter-spacing: .12em;
+          text-transform: uppercase; padding: 4px 10px; border-radius: 4px;
+          color: var(--card-fg-strong); border: 1px solid var(--card-fg-strong);
+          background: transparent;
+          display: inline-block; align-self: flex-start; margin-bottom: 16px;
+          opacity: .82;
         }
-        .ip-grade-card__label--fy  { background: var(--color-teal); }
-        .ip-grade-card__label--jr  { background: var(--color-gold-dark); }
-        .ip-grade-card__label--sr  { background: var(--color-navy); }
-        .ip-grade-card__label--rg  { background: var(--color-accent); }
         .ip-grade-card__title {
           font-family: var(--font-display); font-size: clamp(17px,2vw,20px);
-          font-weight: 700; color: var(--color-dark); margin-bottom: 10px;
+          font-weight: 700; color: var(--card-fg-strong); margin-bottom: 10px;
         }
         .ip-grade-card__body {
-          font-size: 13px; color: var(--color-muted); line-height: 1.7;
-          margin-bottom: 20px; flex: 1;
+          font-size: 13px; color: var(--card-fg-muted); line-height: 1.75;
+          margin-bottom: 22px; flex: 1;
         }
-        .ip-grade-card__body strong { color: var(--color-dark); font-weight: 600; }
-        .ip-grade-card__resources { border-top: 1px solid rgba(0,0,0,.08); padding-top: 16px; }
+        .ip-grade-card__body strong { color: var(--card-fg-strong); font-weight: 600; }
+        .ip-grade-card__resources { border-top: 1px solid var(--card-divider); padding-top: 18px; }
         .ip-grade-card__res-label {
-          font-size: 10px; font-weight: 700; letter-spacing: .1em;
-          text-transform: uppercase; color: var(--color-muted); margin-bottom: 10px;
+          font-size: 10px; font-weight: 700; letter-spacing: .12em;
+          text-transform: uppercase; color: var(--card-fg-muted); margin-bottom: 12px;
         }
-        .ip-grade-card__res-list { display: flex; flex-direction: column; gap: 6px; }
+        .ip-grade-card__res-list { display: flex; flex-direction: column; gap: 7px; }
         .ip-grade-card__res-item {
-          display: flex; align-items: center; gap: 7px;
-          font-size: 13px; color: var(--color-dark);
-          text-decoration: none; font-weight: 500; transition: color .2s;
+          display: flex; align-items: center; gap: 8px;
+          font-size: 13px; color: var(--card-fg);
+          text-decoration: none; font-weight: 500;
+          transition: color .2s, transform .18s cubic-bezier(.16,1,.3,1);
+          border-radius: 4px;
         }
         .ip-grade-card__res-item::before {
           content: '→'; font-size: 11px; font-weight: 700;
-          flex-shrink: 0; transition: transform .18s cubic-bezier(.16,1,.3,1);
+          color: var(--card-fg-strong); flex-shrink: 0;
+          transition: transform .18s cubic-bezier(.16,1,.3,1);
         }
-        .ip-grade-card__res-item--fy::before  { color: var(--color-teal); }
-        .ip-grade-card__res-item--jr::before  { color: var(--color-gold); }
-        .ip-grade-card__res-item--sr::before  { color: var(--color-navy); }
-        .ip-grade-card__res-item--rg::before  { color: var(--color-accent); }
-        .ip-grade-card__res-item:hover { color: var(--color-accent); }
+        .ip-grade-card__res-item:hover { color: var(--card-fg-strong); }
         .ip-grade-card__res-item:hover::before { transform: translateX(3px); }
+        .ip-grade-card__res-item:focus-visible {
+          outline: 2px solid currentColor; outline-offset: 3px;
+        }
 
         /* INTERVIEW TYPES */
         .ip-types {
@@ -201,8 +232,11 @@ export default function InterviewPrep() {
           color: var(--color-cream); margin-bottom: 10px;
         }
         .ip-types__sub {
-          font-family: var(--font-display); font-size: clamp(16px,2vw,20px);
-          font-weight: 400; color: rgba(232,168,56,.85); margin-bottom: 48px;
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 500;
+          font-size: clamp(18px,2.2vw,22px);
+          color: rgba(232,168,56,.9); margin-bottom: 48px;
+          letter-spacing: -0.005em; line-height: 1.3;
         }
         .ip-type-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 36px; }
         .ip-type-tab {
@@ -254,17 +288,20 @@ export default function InterviewPrep() {
           gap: 18px;
         }
         .ip-res-card {
-          background: var(--color-white); border: 1px solid rgba(0,0,0,.08);
+          background: var(--color-cream); border: 1.5px solid rgba(26,25,22,.16);
           border-radius: 14px; padding: 24px;
-          display: flex; flex-direction: column; gap: 12px;
-          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+          display: flex; flex-direction: column; gap: 14px;
+          transition: transform .2s cubic-bezier(.16,1,.3,1), border-color .2s;
         }
-        .ip-res-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+        .ip-res-card:hover { transform: translateY(-2px); border-color: rgba(26,25,22,.32); }
         .ip-res-card__name {
-          font-family: var(--font-display); font-size: clamp(15px,1.8vw,18px);
-          font-weight: 600; color: var(--color-dark); line-height: 1.3;
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 600;
+          font-size: clamp(17px,2vw,20px);
+          color: var(--color-dark); line-height: 1.25;
+          letter-spacing: -0.005em;
         }
-        .ip-res-card__desc { font-size: 13px; color: var(--color-muted); line-height: 1.65; flex: 1; }
+        .ip-res-card__desc { font-size: 13px; color: var(--color-muted); line-height: 1.7; flex: 1; }
         .ip-res-card__tags-group { display: flex; flex-direction: column; gap: 6px; }
         .ip-res-card__tag-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
         .ip-res-card__tag-label {
@@ -280,6 +317,9 @@ export default function InterviewPrep() {
           transition: background .2s, transform .18s; align-self: flex-start;
         }
         .ip-res-card__cta:hover { background: var(--color-accent); transform: translateY(-1px); }
+        .ip-res-card__cta:focus-visible {
+          outline: 2px solid var(--color-gold); outline-offset: 3px;
+        }
 
         /* SUGGESTED PATHS */
         .ip-paths {
@@ -289,24 +329,34 @@ export default function InterviewPrep() {
         .ip-paths__head { margin-bottom: 36px; }
         .ip-paths__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .ip-path-card {
-          background: var(--color-white); border: 1px solid rgba(0,0,0,.08);
+          background: var(--color-cream); border: 1.5px solid rgba(26,25,22,.16);
           border-radius: 14px; padding: 28px;
+          transition: border-color .2s;
         }
+        .ip-path-card:hover { border-color: rgba(26,25,22,.32); }
         .ip-path-card__num {
-          font-family: var(--font-display); font-size: 36px; font-weight: 700;
-          color: rgba(0,0,0,.07); line-height: 1; margin-bottom: 10px;
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 600;
+          font-size: 38px;
+          color: rgba(232,168,56,.65);
+          line-height: 1; margin-bottom: 10px;
+          letter-spacing: -0.01em;
         }
         .ip-path-card__trigger {
-          font-family: var(--font-display); font-size: clamp(15px,1.8vw,17px);
-          font-weight: 600; color: var(--color-muted);
-          border-bottom: 1px solid rgba(0,0,0,.08);
-          padding-bottom: 14px; margin-bottom: 16px; line-height: 1.45; font-style: italic;
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 500;
+          font-size: clamp(16px,1.9vw,18px);
+          color: var(--color-dark);
+          border-bottom: 1px solid rgba(26,25,22,.14);
+          padding-bottom: 16px; margin-bottom: 18px; line-height: 1.4;
+          letter-spacing: -0.005em;
         }
         .ip-path-card__list { display: flex; flex-direction: column; gap: 8px; }
         .ip-path-card__item {
           display: flex; align-items: flex-start; gap: 8px;
           font-size: 14px; color: var(--color-dark);
           text-decoration: none; font-weight: 500; transition: color .2s;
+          border-radius: 4px;
         }
         .ip-path-card__item::before {
           content: '→'; font-size: 11px; font-weight: 700;
@@ -315,6 +365,9 @@ export default function InterviewPrep() {
         }
         .ip-path-card__item:hover { color: var(--color-accent); }
         .ip-path-card__item:hover::before { transform: translateX(3px); }
+        .ip-path-card__item:focus-visible {
+          outline: 2px solid var(--color-gold); outline-offset: 3px;
+        }
 
         /* ECOSYSTEM */
         .ip-eco {
@@ -361,7 +414,7 @@ export default function InterviewPrep() {
           padding: 80px clamp(20px,5vw,56px) 100px;
         }
         .ip-form-box {
-          background: var(--color-white); border: 1px solid rgba(0,0,0,.08);
+          background: var(--color-cream); border: 1.5px solid rgba(179,69,57,.22);
           border-radius: 16px; padding: clamp(32px,4vw,52px); max-width: 680px;
         }
         .ip-form-box__kicker {
@@ -369,8 +422,11 @@ export default function InterviewPrep() {
           text-transform: uppercase; color: var(--color-muted); margin-bottom: 12px;
         }
         .ip-form-box__title {
-          font-family: var(--font-display); font-size: clamp(22px,3vw,30px);
-          font-weight: 700; color: var(--color-dark); margin-bottom: 8px;
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 600;
+          font-size: clamp(24px,3.2vw,32px);
+          color: var(--color-dark); margin-bottom: 10px;
+          letter-spacing: -0.01em; line-height: 1.2;
         }
         .ip-form-box__sub { font-size: 15px; color: var(--color-muted); line-height: 1.7; margin-bottom: 28px; }
         .ip-form-row { margin-bottom: 16px; }
@@ -383,9 +439,9 @@ export default function InterviewPrep() {
         .ip-form-select,
         .ip-form-textarea {
           width: 100%; font-family: var(--font-body); font-size: 15px;
-          padding: 12px 14px; border: 1.5px solid rgba(0,0,0,.12);
-          border-radius: 8px; background: var(--color-white);
-          color: var(--color-dark); outline: none; transition: border-color .2s;
+          padding: 12px 14px; border: 1.5px solid rgba(26,25,22,.18);
+          border-radius: 8px; background: rgba(255,255,255,.55);
+          color: var(--color-dark); outline: none; transition: border-color .2s, background .2s;
           box-sizing: border-box;
         }
         .ip-form-textarea { min-height: 90px; resize: vertical; line-height: 1.55; }
@@ -407,6 +463,82 @@ export default function InterviewPrep() {
           color: var(--color-dark); margin-bottom: 8px;
         }
         .ip-form-success p { font-size: 15px; color: var(--color-muted); line-height: 1.7; }
+
+
+        /* Focus-visible (a11y pass) */
+        .ip-jump:focus-visible {
+          outline: 2px solid var(--color-dark); outline-offset: 3px; border-radius: 3px;
+        }
+        .ip-eco__link:focus-visible {
+          outline: 2px solid var(--color-gold); outline-offset: 3px; border-radius: 10px;
+        }
+        .ip-type-panel__res:focus-visible {
+          outline: 2px solid var(--color-gold); outline-offset: 3px; border-radius: 8px;
+        }
+        .ip-form-btn:focus-visible {
+          outline: 2px solid var(--color-gold); outline-offset: 3px;
+        }
+
+        /* CLOSING BEAT */
+        .ip-closing {
+          background: var(--color-accent);
+          padding: clamp(72px,9vw,112px) clamp(20px,5vw,56px);
+          position: relative; overflow: hidden;
+        }
+        .ip-closing__inner {
+          max-width: 760px; margin: 0 auto;
+          text-align: center; position: relative;
+        }
+        .ip-closing__mark {
+          display: inline-block;
+          font-size: clamp(32px,4.5vw,48px);
+          color: var(--color-gold);
+          transform: rotate(-12deg);
+          margin-bottom: 22px;
+          line-height: 1;
+        }
+        .ip-closing__title {
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 600;
+          color: var(--color-cream);
+          font-size: clamp(28px,4.5vw,46px);
+          line-height: 1.2;
+          letter-spacing: -0.01em;
+          margin-bottom: 22px;
+          max-width: 720px; margin-inline: auto;
+        }
+        .ip-closing__body {
+          font-family: var(--font-body);
+          font-size: clamp(15px,1.8vw,17px);
+          line-height: 1.75;
+          color: rgba(242,228,206,.85);
+          margin-bottom: 32px;
+          max-width: 620px; margin-inline: auto;
+        }
+        .ip-closing__body strong {
+          color: var(--color-gold);
+          font-weight: 600;
+        }
+        .ip-closing__cta {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 14px 30px;
+          border: 1.5px solid var(--color-cream);
+          border-radius: 999px;
+          color: var(--color-cream);
+          text-decoration: none;
+          font-family: var(--font-display);
+          font-size: 14px; font-weight: 600;
+          letter-spacing: .01em;
+          transition: background .2s, color .2s, transform .18s cubic-bezier(.16,1,.3,1);
+        }
+        .ip-closing__cta:hover {
+          background: var(--color-cream);
+          color: var(--color-accent);
+          transform: translateY(-2px);
+        }
+        .ip-closing__cta:focus-visible {
+          outline: 2px solid var(--color-gold); outline-offset: 3px;
+        }
 
         @media (max-width: 768px) {
           .ip-hero { padding: 88px 20px 48px; }
@@ -448,24 +580,22 @@ export default function InterviewPrep() {
       {/* S1: GRADE LEVEL */}
       <section className="ip-grade" id="by-grade">
         <div className="ip-grade__head">
-          <p className="ip-kicker">{t.gradeKicker}</p>
           <h2 className="ip-section-title">{t.gradeTitle}</h2>
           <p className="ip-section-sub">{t.gradeSub}</p>
           <p className="ip-section-body">{t.gradeBody}</p>
         </div>
         <div className="ip-grade__grid">
           {t.gradeCards.map(card => (
-            <div className="ip-grade-card" key={card.bar}>
-              <div className={`ip-grade-card__bar ip-grade-card__bar--${card.bar}`} />
+            <div className={`ip-grade-card ip-grade-card--${card.bar}`} key={card.bar}>
               <div className="ip-grade-card__inner">
-                <span className={`ip-grade-card__label ip-grade-card__label--${card.bar}`}>{card.label}</span>
+                <span className="ip-grade-card__label">{card.label}</span>
                 <h3 className="ip-grade-card__title">{card.title}</h3>
                 <p className="ip-grade-card__body" dangerouslySetInnerHTML={{ __html: card.body }} />
                 <div className="ip-grade-card__resources">
                   <p className="ip-grade-card__res-label">{t.gradeResLabel}</p>
                   <div className="ip-grade-card__res-list">
                     {card.resources.map(r => (
-                      <Link key={r.label} to={r.to} className={`ip-grade-card__res-item ip-grade-card__res-item--${card.bar}`}>{r.label}</Link>
+                      <Link key={r.label} to={r.to} className="ip-grade-card__res-item">{r.label}</Link>
                     ))}
                   </div>
                 </div>
@@ -480,7 +610,6 @@ export default function InterviewPrep() {
       {/* S2: INTERVIEW TYPES */}
       <section className="ip-types" id="by-type">
         <div className="ip-types__inner">
-          <p className="ip-types__kicker">{t.typesKicker}</p>
           <h2 className="ip-types__title">{t.typesTitle}</h2>
           <p className="ip-types__sub">{t.typesSub}</p>
 
@@ -528,7 +657,6 @@ export default function InterviewPrep() {
       {/* S3: RESOURCE LIBRARY */}
       <section className="ip-library" id="resources">
         <div className="ip-library__head">
-          <p className="ip-kicker">{t.libraryKicker}</p>
           <h2 className="ip-section-title">{t.libraryTitle}</h2>
           <p className="ip-section-sub">{t.librarySub}</p>
         </div>
@@ -538,12 +666,6 @@ export default function InterviewPrep() {
               <h3 className="ip-res-card__name">{card.name}</h3>
               <p className="ip-res-card__desc">{card.desc}</p>
               <div className="ip-res-card__tags-group">
-                <div className="ip-res-card__tag-row">
-                  <span className="ip-res-card__tag-label">{t.libraryGradeLabel}</span>
-                  {card.gradeTags.map(tag => (
-                    <span key={tag.label} className={`ip-tag ip-tag--${tag.type}`}>{tag.label}</span>
-                  ))}
-                </div>
                 <div className="ip-res-card__tag-row">
                   <span className="ip-res-card__tag-label">{t.libraryRoundLabel}</span>
                   {card.roundTags.map(tag => (
@@ -562,7 +684,6 @@ export default function InterviewPrep() {
       {/* S4: SUGGESTED PATHS */}
       <section className="ip-paths" id="paths">
         <div className="ip-paths__head">
-          <p className="ip-kicker">{t.pathsKicker}</p>
           <h2 className="ip-section-title">{t.pathsTitle}</h2>
           <p className="ip-section-sub">{t.pathsSub}</p>
           <p className="ip-section-body">{t.pathsBody}</p>
@@ -654,6 +775,16 @@ export default function InterviewPrep() {
               <button className="ip-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
             </form>
           )}
+        </div>
+      </section>
+
+      {/* CLOSING BEAT */}
+      <section className="ip-closing">
+        <div className="ip-closing__inner">
+          <span className="ip-closing__mark" aria-hidden="true">✦</span>
+          <h2 className="ip-closing__title">{t.closingTitle}</h2>
+          <p className="ip-closing__body" dangerouslySetInnerHTML={{ __html: t.closingBody }} />
+          <Link to={t.closingCtaTo} className="ip-closing__cta">{t.closingCta}</Link>
         </div>
       </section>
 
