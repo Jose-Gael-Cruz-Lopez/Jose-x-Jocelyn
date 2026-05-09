@@ -221,17 +221,18 @@ export default function BridgeYear() {
           gap: 20px;
         }
         .by-prog {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: rgba(255,250,242,.7);
+          border: 1.5px solid rgba(179,69,57,.18);
           border-radius: 14px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s;
+          transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s, border-color .22s;
         }
         .by-prog:hover {
           transform: translateY(-3px);
-          box-shadow: 0 10px 32px rgba(0,0,0,.09);
+          border-color: rgba(179,69,57,.35);
+          box-shadow: 0 14px 32px -10px rgba(var(--by-shadow-warm),.18);
         }
         .by-prog__inner { padding: 24px 24px 20px; flex: 1; display: flex; flex-direction: column; }
         .by-prog__company {
