@@ -186,6 +186,11 @@ export const es = {
     formSuccessCtaTo: '/career-templates',
     formErrorRequired: 'El nombre del programa y la empresa son obligatorios.',
     formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    formErrorProgram: 'Dinos el nombre del programa.',
+    formErrorCompany: 'Dinos qué empresa lo administra.',
+    formErrorEmail: 'Ese correo no se ve del todo bien.',
+    formErrorLabel: 'No se pudo guardar tu sugerencia.',
+    formRetryLabel: 'Reintentar',
     // ── PROGRAMS array ────────────────────────────────────────────────────
     programs: [
       {

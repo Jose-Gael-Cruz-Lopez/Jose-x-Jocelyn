@@ -184,6 +184,11 @@ export const en = {
     formSuccessBody: 'We review every suggestion and update this list as new programs open. We appreciate you helping keep it current.',
     formErrorRequired: 'Program name and company are required.',
     formErrorGeneric: 'Something went wrong. Please try again.',
+    formErrorProgram: 'Tell us the program name.',
+    formErrorCompany: 'Tell us which company runs it.',
+    formErrorEmail: 'That email does not look quite right.',
+    formErrorLabel: 'Could not save your suggestion.',
+    formRetryLabel: 'Retry',
     // ── PROGRAMS array ────────────────────────────────────────────────────
     programs: [
       {
