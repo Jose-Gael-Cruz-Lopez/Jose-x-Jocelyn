@@ -409,6 +409,9 @@ export const es = {
     footerLaVoz: 'La Voz del Día',
     footerTemplates: 'Plantillas',
     footerLinkedIn: 'Serie de LinkedIn',
+    signoffLine: 'Los dos tomamos el año puente. Funcionó.',
+    signoffSub: 'No pidas perdón por estar en él.',
+    signoffCta: 'Dinos qué necesitas',
   },
   interviewPrep: {
     // ── Hero ─────────────────────────────────────────────────────────────
