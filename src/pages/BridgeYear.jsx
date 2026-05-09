@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -17,7 +17,11 @@ function ExtIcon() {
 export default function BridgeYear() {
   const t = useT('bridgeYear')
 
-  const [roleFilter, setRoleFilter] = useState('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const validRoleKeys = (t.roleFilters || []).map(f => f.key)
+  const urlRole = searchParams.get('role') || ''
+  const roleFilter = urlRole && validRoleKeys.includes(urlRole) ? urlRole : 'all'
+
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
@@ -28,7 +32,13 @@ export default function BridgeYear() {
     ? t.roleCards
     : t.roleCards.filter(c => c.rtags.includes(roleFilter))
 
-  const handleRoleFilter = useCallback(e => setRoleFilter(e.currentTarget.dataset.key), [])
+  const handleRoleFilter = useCallback(e => {
+    const key = e.currentTarget.dataset.key
+    const next = new URLSearchParams(searchParams)
+    if (!key || key === 'all') next.delete('role')
+    else next.set('role', key)
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
 
   const handleSubmit = async e => {
     e.preventDefault()
