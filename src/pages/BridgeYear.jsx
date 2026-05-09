@@ -575,32 +575,31 @@ export default function BridgeYear() {
           gap: 20px;
         }
         .by-follow-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          border: none;
           border-radius: 14px;
-          padding: 28px;
+          padding: 32px 28px;
+          color: var(--color-cream);
         }
+        .by-follow-card--jose    { background: var(--color-teal); }
+        .by-follow-card--jocelyn { background: var(--color-accent); }
         .by-follow-card__label {
           font-size: 11px;
           font-weight: 700;
-          letter-spacing: .1em;
+          letter-spacing: .14em;
           text-transform: uppercase;
-          padding: 3px 10px;
-          border-radius: 4px;
-          color: var(--color-cream);
+          color: rgba(242,228,206,.72);
           display: inline-block;
           margin-bottom: 14px;
         }
-        .by-follow-card__label--jose    { background: var(--color-teal); }
-        .by-follow-card__label--jocelyn { background: var(--color-accent); }
         .by-follow-card__name {
           font-family: var(--font-display);
-          font-size: 20px;
+          font-size: 22px;
           font-weight: 700;
-          color: var(--color-dark);
+          color: var(--color-cream);
           margin-bottom: 10px;
+          letter-spacing: -.005em;
         }
-        .by-follow-card__desc { font-size: 14px; color: var(--color-muted); line-height: 1.7; margin-bottom: 22px; }
+        .by-follow-card__desc { font-size: 14px; color: rgba(242,228,206,.78); line-height: 1.7; margin-bottom: 22px; }
         .by-follow-card__cta {
           display: inline-flex;
           align-items: center;
@@ -611,11 +610,11 @@ export default function BridgeYear() {
           font-size: 13px;
           font-weight: 600;
           text-decoration: none;
-          transition: transform .18s, opacity .2s;
+          background: var(--color-cream);
+          color: var(--color-dark);
+          transition: transform .18s, background .2s, color .2s;
         }
-        .by-follow-card__cta:hover { opacity: .85; transform: translateY(-1px); }
-        .by-follow-card__cta--jose    { background: var(--color-teal);   color: var(--color-cream); }
-        .by-follow-card__cta--jocelyn { background: var(--color-accent); color: var(--color-cream); }
+        .by-follow-card__cta:hover { transform: translateY(-1px); background: var(--color-gold); color: var(--color-dark); }
 
         /* SUGGEST FORM */
         .by-suggest {
@@ -882,19 +881,19 @@ export default function BridgeYear() {
         <h2 className="by-section-title" style={{ marginBottom: '8px' }}>{t.followTitle}</h2>
         <p className="by-section-body" style={{ marginBottom: '36px' }}>{t.followBody}</p>
         <div className="by-follow__inner">
-          <div className="by-follow-card">
-            <span className="by-follow-card__label by-follow-card__label--jose">{t.joseCardLabel}</span>
+          <div className="by-follow-card by-follow-card--jose">
+            <span className="by-follow-card__label">{t.joseCardLabel}</span>
             <h3 className="by-follow-card__name">{t.joseCardName}</h3>
             <p className="by-follow-card__desc">{t.joseCardDesc}</p>
-            <a href="https://www.linkedin.com/in/cjxsez/" target="_blank" rel="noopener noreferrer" className="by-follow-card__cta by-follow-card__cta--jose">
+            <a href="https://www.linkedin.com/in/cjxsez/" target="_blank" rel="noopener noreferrer" className="by-follow-card__cta">
               {t.joseCardCta}
             </a>
           </div>
-          <div className="by-follow-card">
-            <span className="by-follow-card__label by-follow-card__label--jocelyn">{t.jocelynCardLabel}</span>
+          <div className="by-follow-card by-follow-card--jocelyn">
+            <span className="by-follow-card__label">{t.jocelynCardLabel}</span>
             <h3 className="by-follow-card__name">{t.jocelynCardName}</h3>
             <p className="by-follow-card__desc">{t.jocelynCardDesc}</p>
-            <a href="https://www.linkedin.com/in/jocelyn-vazquez/" target="_blank" rel="noopener noreferrer" className="by-follow-card__cta by-follow-card__cta--jocelyn">
+            <a href="https://www.linkedin.com/in/jocelyn-vazquez/" target="_blank" rel="noopener noreferrer" className="by-follow-card__cta">
               {t.jocelynCardCta}
             </a>
           </div>
