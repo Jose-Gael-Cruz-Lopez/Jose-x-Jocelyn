@@ -844,10 +844,11 @@ export default function BridgeYear() {
           font-family: var(--font-display);
           font-size: 22px;
           font-weight: 700;
-          color: var(--color-dark);
+          color: var(--color-cream);
           margin-bottom: 8px;
+          letter-spacing: -.01em;
         }
-        .by-suggest__success p { font-size: 15px; color: var(--color-muted); line-height: 1.7; }
+        .by-suggest__success p { font-size: 15px; color: rgba(242,228,206,.7); line-height: 1.7; }
 
         @media (max-width: 768px) {
           .by-follow__inner { grid-template-columns: 1fr; }
@@ -1083,7 +1084,7 @@ export default function BridgeYear() {
                 <label className="by-suggest__label" htmlFor="sgEmail">{t.formLabelEmail}</label>
                 <input className="by-suggest__input" type="email" id="sgEmail" placeholder={t.formPlaceholderEmail} value={form.email} onChange={e => setField('email', e.target.value)} />
               </div>
-              {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+              {formError && <p role="alert" style={{ color: 'var(--color-gold)', fontSize: '13px', fontWeight: 600, marginBottom: '10px' }}>{formError}</p>}
               <button className="by-suggest__btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
             </form>
           )}
