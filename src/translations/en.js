@@ -129,7 +129,14 @@ export const en = {
     heroJumpsAriaLabel: 'Page sections',
     // ── Is This For You ───────────────────────────────────────────────────
     forKicker: 'Is this for you?',
-    forTitle: 'Four people built this page for',
+    forTitle: 'Built for',
+    forItems: [
+      'Seniors who graduated without a return offer.',
+      'Last-semester students with nothing lined up.',
+      'Recent grads applying for months without movement.',
+      'Anyone breaking into tech without a roadmap.',
+    ],
+    forFooter: 'If you recognize yourself, this page was built for you.',
     forBody: '<strong>Seniors who graduated without a return offer or full-time role</strong> and are now trying to figure out what comes next. <strong>Students in their last semester</strong> who do not have anything lined up yet and are starting to feel the pressure. <strong>Recent grads who have been actively applying for months</strong> with little to no movement and are not sure where the problem is. And <strong>anyone who wants to break into tech</strong> - whether from a traditional CS background, a bootcamp, a self-taught path, or a completely different field - and is looking for an entry point that is specifically designed for people who did not come through the traditional recruiting pipeline. If you recognize yourself in any of those, every section of this page was built for you.',
     // ── Apprenticeships section ───────────────────────────────────────────
     captureKicker: 'Quiet alert',

@@ -390,6 +390,44 @@ export default function BridgeYear() {
           line-height: 1.8;
         }
         .by-for__body strong { color: var(--color-cream); font-weight: 600; }
+        .by-for__list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .by-for__item {
+          position: relative;
+          padding-left: 22px;
+          font-size: clamp(14px,1.6vw,15px);
+          color: var(--color-cream);
+          line-height: 1.45;
+          font-weight: 500;
+          letter-spacing: -.005em;
+        }
+        .by-for__item::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: .55em;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: var(--color-gold);
+          opacity: .85;
+        }
+        .by-for__footer {
+          margin: 18px 0 0;
+          padding-top: 16px;
+          border-top: 1px solid rgba(242,228,206,.18);
+          font-family: var(--font-serif, var(--font-body));
+          font-style: italic;
+          font-size: 13px;
+          color: rgba(242,228,206,.72);
+          line-height: 1.55;
+        }
 
         /* APPRENTICESHIPS */
         .by-apprentice {
@@ -1282,7 +1320,16 @@ export default function BridgeYear() {
             <div className="by-for__card">
               <p className="by-for__kicker">{t.forKicker}</p>
               <h2 className="by-for__title">{t.forTitle}</h2>
-              <p className="by-for__body" dangerouslySetInnerHTML={{ __html: t.forBody }} />
+              {Array.isArray(t.forItems) ? (
+                <ul className="by-for__list">
+                  {t.forItems.map((item, i) => (
+                    <li key={i} className="by-for__item">{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="by-for__body" dangerouslySetInnerHTML={{ __html: t.forBody }} />
+              )}
+              {t.forFooter && <p className="by-for__footer">{t.forFooter}</p>}
             </div>
           </aside>
         </div>
