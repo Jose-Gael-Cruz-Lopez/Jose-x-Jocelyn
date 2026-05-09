@@ -552,6 +552,8 @@ export const en = {
     librarySub: 'Every tool you need. Organized by who it is for and what interview it fits.',
     libraryGradeLabel: 'Grade:',
     libraryRoundLabel: 'Round:',
+    libraryPreviewLabel: 'Preview',
+    previewModalCloseLabel: 'Close preview',
     resourceCards: [
       {
         name: 'Tell Me About Yourself Script',
@@ -735,6 +737,8 @@ export const en = {
     formSubmitting: 'Sending…',
     formSuccessTitle: 'Request received!',
     formSuccessBody: 'Jose and Jocelyn review every submission and use them to decide what to build next. Thank you for helping shape this hub.',
+    formSuccessCta: 'Browse templates →',
+    formSuccessCtaTo: '/career-templates',
     // ── Closing Beat ──────────────────────────────────────────────────────
     closingTitle: "You don't have to be the most polished person in the room.",
     closingBody: "You just have to be the one who showed up prepared, named what you brought, and didn't apologize for the path that got you here. <strong>Two steps ahead is still ahead.</strong> We made this hub because nobody made it for us.",

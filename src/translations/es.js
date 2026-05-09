@@ -181,6 +181,8 @@ export const es = {
     formSubmitting: 'Enviando…',
     formSuccessTitle: '¡Gracias por el envío!',
     formSuccessBody: 'Revisamos cada sugerencia y actualizamos esta lista cuando se abren nuevos programas. Agradecemos tu ayuda para mantenerla actualizada.',
+    formSuccessCta: 'Ver plantillas →',
+    formSuccessCtaTo: '/career-templates',
     formErrorRequired: 'El nombre del programa y la empresa son obligatorios.',
     formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
     // ── PROGRAMS array ────────────────────────────────────────────────────
@@ -552,6 +554,8 @@ export const es = {
     librarySub: 'Cada herramienta que necesitas. Organizada por para quién es y qué entrevista le corresponde.',
     libraryGradeLabel: 'Nivel:',
     libraryRoundLabel: 'Ronda:',
+    libraryPreviewLabel: 'Vista previa',
+    previewModalCloseLabel: 'Cerrar vista previa',
     resourceCards: [
       {
         name: 'Guion de "Háblame de Ti"',

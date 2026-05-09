@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
@@ -12,6 +12,18 @@ export default function InterviewPrep() {
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
   const [form, setForm] = useState({ role: '', stage: '', type: '', need: '', email: '' })
+  const [previewIndex, setPreviewIndex] = useState(null)
+
+  useEffect(() => {
+    if (previewIndex == null) { document.body.style.overflow = ''; return }
+    document.body.style.overflow = 'hidden'
+    const onKey = e => { if (e.key === 'Escape') setPreviewIndex(null) }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [previewIndex])
 
   const setField = (k, v) => setForm(f => ({ ...f, [k]: v }))
   const handleSubmit = async e => {
@@ -67,22 +79,19 @@ export default function InterviewPrep() {
         .ip-section-body strong { color: var(--color-dark); font-weight: 600; }
         .ip-divider { border: none; border-top: 1px solid rgba(0,0,0,.08); margin: 0; }
 
-        /* Tag pills */
+        /* Tag pills — tinted-bg style (matches Career Templates stage badges) */
         .ip-tag {
-          display: inline-block; font-size: 10px; font-weight: 700;
-          letter-spacing: .07em; text-transform: uppercase;
-          padding: 3px 9px; border-radius: 4px;
+          display: inline-block; font-size: 10px; font-weight: 800;
+          letter-spacing: .12em; text-transform: uppercase;
+          padding: 4px 10px; border-radius: 999px;
+          border: none;
         }
-        .ip-tag--fy   { background: rgba(58,125,107,.1);  color: var(--color-teal); }
-        .ip-tag--jr   { background: rgba(232,168,56,.14); color: var(--color-gold-dark); }
-        .ip-tag--sr   { background: rgba(22,43,68,.1);    color: var(--color-navy); }
-        .ip-tag--rg   { background: rgba(179,69,57,.1);   color: var(--color-accent); }
-        .ip-tag--rec  { background: rgba(91,142,194,.12); color: var(--color-blue); }
-        .ip-tag--beh  { background: rgba(58,125,107,.1);  color: var(--color-teal); }
-        .ip-tag--tech { background: rgba(232,168,56,.14); color: var(--color-gold-dark); }
-        .ip-tag--case { background: rgba(22,43,68,.1);    color: var(--color-navy); }
+        .ip-tag--rec  { background: rgba(91,142,194,.14); color: var(--color-blue); }
+        .ip-tag--beh  { background: rgba(58,125,107,.14); color: var(--color-teal); }
+        .ip-tag--tech { background: rgba(232,168,56,.18); color: var(--color-gold-dark); }
+        .ip-tag--case { background: rgba(22,43,68,.12);   color: var(--color-navy); }
         .ip-tag--ow   { background: rgba(0,0,0,.06);      color: var(--color-muted); }
-        .ip-tag--fin  { background: rgba(179,69,57,.1);   color: var(--color-accent); }
+        .ip-tag--fin  { background: rgba(179,69,57,.12);  color: var(--color-accent); }
 
         /* HERO */
         .ip-hero {
@@ -98,11 +107,13 @@ export default function InterviewPrep() {
           font-size: clamp(42px,7vw,80px); font-weight: 700;
           line-height: 1.04; color: var(--color-dark); margin-bottom: 14px;
         }
-        .ip-hero__title em { font-style: normal; color: var(--color-accent); }
+        .ip-hero__title em { font-family: 'Playfair Display', serif; font-style: italic; font-weight: 500; color: var(--color-accent); letter-spacing: -0.01em; }
         .ip-hero__sub {
-          font-family: var(--font-display);
-          font-size: clamp(18px,2.5vw,26px); font-weight: 400;
-          color: var(--color-dark); line-height: 1.4;
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 500;
+          font-size: clamp(20px,2.7vw,28px);
+          color: var(--color-dark); line-height: 1.35;
+          letter-spacing: -0.005em;
           max-width: 680px; margin-bottom: 24px;
         }
         .ip-hero__body {
@@ -184,8 +195,11 @@ export default function InterviewPrep() {
           opacity: .82;
         }
         .ip-grade-card__title {
-          font-family: var(--font-display); font-size: clamp(17px,2vw,20px);
-          font-weight: 700; color: var(--card-fg-strong); margin-bottom: 10px;
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 600;
+          font-size: clamp(19px,2.2vw,22px);
+          color: var(--card-fg-strong); margin-bottom: 12px;
+          letter-spacing: -0.005em; line-height: 1.25;
         }
         .ip-grade-card__body {
           font-size: 13px; color: var(--card-fg-muted); line-height: 1.75;
@@ -288,40 +302,105 @@ export default function InterviewPrep() {
           gap: 18px;
         }
         .ip-res-card {
-          background: var(--color-cream); border: 1.5px solid rgba(26,25,22,.16);
-          border-radius: 14px; padding: 24px;
-          display: flex; flex-direction: column; gap: 14px;
-          transition: transform .2s cubic-bezier(.16,1,.3,1), border-color .2s;
+          background: linear-gradient(180deg, rgba(255,250,242,.85) 0%, rgba(255,250,242,.55) 100%);
+          border: 1px solid rgba(26,25,22,.13);
+          border-radius: 14px;
+          padding: 24px;
+          display: flex; flex-direction: column; gap: 0;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(63,42,28,.12);
+          transition: transform .28s cubic-bezier(.16,1,.3,1), box-shadow .28s, border-color .28s;
         }
-        .ip-res-card:hover { transform: translateY(-2px); border-color: rgba(26,25,22,.32); }
+        .ip-res-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 36px -12px rgba(63,42,28,.22);
+          border-color: rgba(26,25,22,.22);
+        }
+        .ip-res-card:nth-child(3n+2) {
+          background: linear-gradient(180deg, rgba(232,168,56,.07) 0%, rgba(255,250,242,.55) 60%);
+          border-color: rgba(232,168,56,.26);
+        }
+        .ip-res-card:nth-child(3n+3) {
+          background: linear-gradient(180deg, rgba(58,125,107,.07) 0%, rgba(255,250,242,.55) 60%);
+          border-color: rgba(58,125,107,.22);
+        }
+        .ip-res-card__num {
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 600;
+          font-size: 15px;
+          color: rgba(232,168,56,.7);
+          letter-spacing: -0.005em;
+          font-variant-numeric: tabular-nums;
+          margin-bottom: 12px;
+          align-self: flex-start;
+        }
         .ip-res-card__name {
           font-family: 'Playfair Display', serif;
           font-style: italic; font-weight: 600;
           font-size: clamp(17px,2vw,20px);
           color: var(--color-dark); line-height: 1.25;
           letter-spacing: -0.005em;
+          margin-bottom: 12px;
         }
-        .ip-res-card__desc { font-size: 13px; color: var(--color-muted); line-height: 1.7; flex: 1; }
-        .ip-res-card__tags-group { display: flex; flex-direction: column; gap: 6px; }
-        .ip-res-card__tag-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+        .ip-res-card__desc {
+          font-size: 13px; color: var(--color-muted); line-height: 1.7;
+          flex: 1; margin-bottom: 16px;
+        }
+        .ip-res-card__tags-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+        .ip-res-card__tag-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
         .ip-res-card__tag-label {
-          font-size: 10px; font-weight: 700; letter-spacing: .08em;
+          font-size: 10px; font-weight: 700; letter-spacing: .12em;
           text-transform: uppercase; color: var(--color-muted); margin-right: 4px; flex-shrink: 0;
         }
-        .ip-res-card__cta {
-          display: inline-flex; align-items: center; gap: 6px;
-          padding: 10px 18px; border-radius: 8px;
-          background: var(--color-dark); color: var(--color-cream);
-          font-family: var(--font-display); font-size: 12px; font-weight: 600;
-          text-decoration: none; border: none; cursor: pointer;
-          transition: background .2s, transform .18s; align-self: flex-start;
+        /* Dual CTA layout (matches Career Templates) */
+        .ip-res-card__actions {
+          display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+          margin-top: auto;
         }
-        .ip-res-card__cta:hover { background: var(--color-accent); transform: translateY(-1px); }
-        .ip-res-card__cta:focus-visible {
+        .ip-res-card__cta-primary {
+          display: inline-flex; align-items: center; gap: 7px;
+          padding: 10px 18px; border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 12px; font-weight: 700; letter-spacing: -.005em;
+          text-decoration: none; cursor: pointer;
+          background: transparent;
+          color: var(--color-dark);
+          border: 1.5px solid rgba(26,25,22,.5);
+          transition: background .25s, color .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s, border-color .25s;
+        }
+        .ip-res-card__cta-primary:hover {
+          background: var(--color-dark); color: var(--color-cream);
+          border-color: var(--color-dark);
+          transform: translateY(-1px);
+          box-shadow: 0 8px 16px -8px rgba(26,25,22,.4);
+        }
+        .ip-res-card__cta-primary:focus-visible {
           outline: 2px solid var(--color-gold); outline-offset: 3px;
+        }
+        .ip-res-card__cta-secondary {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 10px 14px; border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 12px; font-weight: 700; letter-spacing: -.005em;
+          text-decoration: none; cursor: pointer;
+          background: transparent;
+          border: 1.5px solid rgba(26,25,22,.18);
+          color: var(--color-muted);
+          transition: color .25s, border-color .25s, background .25s, transform .22s cubic-bezier(.16,1,.3,1);
+        }
+        .ip-res-card__cta-secondary:hover {
+          color: var(--color-dark);
+          border-color: rgba(26,25,22,.32);
+          background: rgba(26,25,22,.04);
+          transform: translateY(-1px);
+        }
+        .ip-res-card__cta-secondary:focus-visible {
+          outline: 2px solid var(--color-accent); outline-offset: 3px;
         }
 
         /* SUGGESTED PATHS */
+        .ip-paths-wrap {
+          background: color-mix(in oklch, var(--color-cream) 95%, var(--color-teal) 5%);
+        }
         .ip-paths {
           max-width: 1040px; margin: 0 auto;
           padding: 80px clamp(20px,5vw,56px);
@@ -440,9 +519,14 @@ export default function InterviewPrep() {
         .ip-form-textarea {
           width: 100%; font-family: var(--font-body); font-size: 15px;
           padding: 12px 14px; border: 1.5px solid rgba(26,25,22,.18);
-          border-radius: 8px; background: rgba(255,255,255,.55);
+          border-radius: 8px; background: rgba(26,25,22,.04);
           color: var(--color-dark); outline: none; transition: border-color .2s, background .2s;
           box-sizing: border-box;
+        }
+        .ip-form-input:focus,
+        .ip-form-select:focus,
+        .ip-form-textarea:focus {
+          background: rgba(26,25,22,.02);
         }
         .ip-form-textarea { min-height: 90px; resize: vertical; line-height: 1.55; }
         .ip-form-input:focus,
@@ -459,13 +543,41 @@ export default function InterviewPrep() {
         .ip-form-btn:hover { background: var(--color-accent); transform: translateY(-1px); }
         .ip-form-success { text-align: center; padding: 32px 0; }
         .ip-form-success h3 {
-          font-family: var(--font-display); font-size: 22px; font-weight: 700;
-          color: var(--color-dark); margin-bottom: 8px;
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 600;
+          font-size: clamp(22px,2.6vw,26px);
+          color: var(--color-dark); margin-bottom: 10px;
+          letter-spacing: -0.005em;
         }
-        .ip-form-success p { font-size: 15px; color: var(--color-muted); line-height: 1.7; }
+        .ip-form-success p {
+          font-size: 15px; color: var(--color-muted); line-height: 1.7;
+          margin-bottom: 22px;
+        }
+        .ip-form-success__cta {
+          display: inline-flex; align-items: center; gap: 6px;
+          padding: 11px 22px; border-radius: 999px;
+          border: 1.5px solid var(--color-dark);
+          color: var(--color-dark);
+          font-family: var(--font-display);
+          font-size: 13px; font-weight: 600; letter-spacing: .01em;
+          text-decoration: none;
+          transition: background .2s, color .2s, transform .18s cubic-bezier(.16,1,.3,1);
+        }
+        .ip-form-success__cta:hover {
+          background: var(--color-dark); color: var(--color-cream);
+          transform: translateY(-2px);
+        }
+        .ip-form-success__cta:focus-visible {
+          outline: 2px solid var(--color-gold); outline-offset: 3px;
+        }
 
 
         /* Focus-visible (a11y pass) */
+        .ip-form-input:focus-visible,
+        .ip-form-select:focus-visible,
+        .ip-form-textarea:focus-visible {
+          outline: 2px solid var(--color-gold); outline-offset: 2px;
+        }
         .ip-jump:focus-visible {
           outline: 2px solid var(--color-dark); outline-offset: 3px; border-radius: 3px;
         }
@@ -479,7 +591,83 @@ export default function InterviewPrep() {
           outline: 2px solid var(--color-gold); outline-offset: 3px;
         }
 
-        /* CLOSING BEAT */
+        /* PREVIEW MODAL (lifted from Career Templates) */
+        .ip-modal-overlay {
+          position: fixed; inset: 0;
+          background: rgba(26,25,22,.7);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+          z-index: 500;
+          display: flex; align-items: center; justify-content: center;
+          padding: 20px;
+          opacity: 0; pointer-events: none;
+          transition: opacity .2s;
+        }
+        .ip-modal-overlay.open { opacity: 1; pointer-events: all; }
+        .ip-modal {
+          background: var(--color-cream);
+          border-radius: 18px;
+          padding: 36px clamp(24px, 4vw, 40px) 32px;
+          max-width: 580px; width: 100%;
+          max-height: 85vh; overflow-y: auto;
+          transform: translateY(12px);
+          transition: transform .3s cubic-bezier(.16,1,.3,1);
+          position: relative;
+          box-shadow: 0 36px 72px -24px rgba(26,25,22,.5), 0 0 0 1px rgba(26,25,22,.06);
+        }
+        .ip-modal-overlay.open .ip-modal { transform: translateY(0); }
+        .ip-modal__close {
+          position: absolute; top: 14px; right: 14px;
+          min-width: 44px; min-height: 44px;
+          border-radius: 50%; border: none;
+          background: rgba(26,25,22,.06);
+          color: var(--color-muted);
+          font-size: 16px; cursor: pointer;
+          display: flex; align-items: center; justify-content: center;
+          transition: background .15s, color .15s;
+        }
+        .ip-modal__close:hover { background: rgba(179,69,57,.1); color: var(--color-accent); }
+        .ip-modal__close:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+        .ip-modal__num {
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 600;
+          font-size: 15px;
+          color: rgba(232,168,56,.7);
+          font-variant-numeric: tabular-nums;
+          margin-bottom: 10px;
+        }
+        .ip-modal__badges { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+        .ip-modal__title {
+          font-family: 'Playfair Display', serif;
+          font-style: italic; font-weight: 600;
+          font-size: clamp(24px,3.2vw,32px);
+          color: var(--color-dark);
+          margin-bottom: 14px;
+          line-height: 1.2;
+          letter-spacing: -0.01em;
+          max-width: 24ch;
+        }
+        .ip-modal__desc {
+          font-size: 15px; color: var(--color-muted);
+          line-height: 1.7; margin-bottom: 22px;
+          max-width: 52ch;
+        }
+        .ip-modal__cta {
+          display: inline-flex; align-items: center; justify-content: center;
+          gap: 8px; width: 100%;
+          padding: 13px;
+          background: var(--color-dark); color: var(--color-cream);
+          border: none; border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 13px; font-weight: 700; letter-spacing: -.005em;
+          text-decoration: none; cursor: pointer;
+          box-shadow: 0 8px 20px -10px rgba(26,25,22,.4), inset 0 1px 0 rgba(255,255,255,.08);
+          transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s;
+        }
+        .ip-modal__cta:hover { background: var(--color-accent); transform: translateY(-1px); }
+        .ip-modal__cta:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+
+                /* CLOSING BEAT */
         .ip-closing {
           background: var(--color-accent);
           padding: clamp(72px,9vw,112px) clamp(20px,5vw,56px);
@@ -575,8 +763,6 @@ export default function InterviewPrep() {
         </nav>
       </header>
 
-      <hr className="ip-divider" />
-
       {/* S1: GRADE LEVEL */}
       <section className="ip-grade" id="by-grade">
         <div className="ip-grade__head">
@@ -604,8 +790,6 @@ export default function InterviewPrep() {
           ))}
         </div>
       </section>
-
-      <hr className="ip-divider" />
 
       {/* S2: INTERVIEW TYPES */}
       <section className="ip-types" id="by-type">
@@ -661,8 +845,9 @@ export default function InterviewPrep() {
           <p className="ip-section-sub">{t.librarySub}</p>
         </div>
         <div className="ip-library__grid">
-          {t.resourceCards.map(card => (
+          {t.resourceCards.map((card, i) => (
             <div className="ip-res-card" key={card.name}>
+              <span className="ip-res-card__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <h3 className="ip-res-card__name">{card.name}</h3>
               <p className="ip-res-card__desc">{card.desc}</p>
               <div className="ip-res-card__tags-group">
@@ -673,15 +858,30 @@ export default function InterviewPrep() {
                   ))}
                 </div>
               </div>
-              <Link to="/career-templates" className="ip-res-card__cta">{card.ctaLabel}</Link>
+              <div className="ip-res-card__actions">
+                <Link to="/career-templates" className="ip-res-card__cta-primary">
+                  {card.ctaLabel}
+                </Link>
+                <button
+                  type="button"
+                  className="ip-res-card__cta-secondary"
+                  onClick={() => setPreviewIndex(i)}
+                  aria-haspopup="dialog"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                  {t.libraryPreviewLabel}
+                </button>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      <hr className="ip-divider" />
-
       {/* S4: SUGGESTED PATHS */}
+      <div className="ip-paths-wrap">
       <section className="ip-paths" id="paths">
         <div className="ip-paths__head">
           <h2 className="ip-section-title">{t.pathsTitle}</h2>
@@ -702,6 +902,7 @@ export default function InterviewPrep() {
           ))}
         </div>
       </section>
+      </div>
 
       {/* S5: ECOSYSTEM */}
       <section className="ip-eco" id="ecosystem">
@@ -736,6 +937,7 @@ export default function InterviewPrep() {
             <div className="ip-form-success">
               <h3>{t.formSuccessTitle}</h3>
               <p>{t.formSuccessBody}</p>
+              <Link to={t.formSuccessCtaTo} className="ip-form-success__cta">{t.formSuccessCta}</Link>
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
@@ -787,6 +989,45 @@ export default function InterviewPrep() {
           <Link to={t.closingCtaTo} className="ip-closing__cta">{t.closingCta}</Link>
         </div>
       </section>
+
+      {/* PREVIEW MODAL */}
+      <div
+        className={`ip-modal-overlay${previewIndex != null ? ' open' : ''}`}
+        onClick={() => setPreviewIndex(null)}
+        aria-hidden={previewIndex == null}
+      >
+        {(() => {
+          const card = previewIndex != null ? t.resourceCards[previewIndex] : null
+          if (!card) return null
+          return (
+            <div
+              className="ip-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="ip-modal-title"
+              onClick={e => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                className="ip-modal__close"
+                onClick={() => setPreviewIndex(null)}
+                aria-label={t.previewModalCloseLabel}
+              >✕</button>
+              <div className="ip-modal__num">{String(previewIndex + 1).padStart(2, '0')}</div>
+              <div className="ip-modal__badges">
+                {card.roundTags.map(tag => (
+                  <span key={tag.label} className={`ip-tag ip-tag--${tag.type}`}>{tag.label}</span>
+                ))}
+              </div>
+              <h2 id="ip-modal-title" className="ip-modal__title">{card.name}</h2>
+              <p className="ip-modal__desc">{card.desc}</p>
+              <Link to="/career-templates" className="ip-modal__cta" onClick={() => setPreviewIndex(null)}>
+                {card.ctaLabel}
+              </Link>
+            </div>
+          )
+        })()}
+      </div>
 
       {/* FOOTER */}
       <footer className="art-footer art-footer--wide">
