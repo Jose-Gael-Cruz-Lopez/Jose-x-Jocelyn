@@ -1743,6 +1743,9 @@ export const en = {
     footerHome: 'Home',
     footerArticles: 'La Voz del Día',
     footerTemplates: 'Templates',
+    signoffLine: 'Twice a week, in two voices.',
+    signoffSub: 'We’re posting what we wished someone had told us. Stick around — episode 01 is coming.',
+    signoffCta: 'Tell us where you’re stuck',
   },
 
   careerTemplates: {
@@ -1934,9 +1937,9 @@ export const en = {
     footerHome: 'Home',
     footerArticles: 'La Voz del Día',
     footerLinkedIn: 'LinkedIn Series',
-    signoffLine: 'Twice a week, in two voices.',
-    signoffSub: 'We’re posting what we wished someone had told us. Stick around — episode 01 is coming.',
-    signoffCta: 'Tell us where you’re stuck',
+    signoffLine: 'Steal these. Send them.',
+    signoffSub: 'The worst thing that happens is someone reads your message. Don’t let perfect copy be the reason you didn’t reach out.',
+    signoffCta: 'Tell us what’s missing',
   },
 
   partnerPanels: {
