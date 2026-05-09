@@ -295,7 +295,12 @@ export default function LinkedInSeries() {
   }
 
   return (
-    <ArticleLayout title="The LinkedIn Series">
+    <ArticleLayout
+      title="The LinkedIn Series"
+      signoffLine={t.signoffLine}
+      signoffSub={t.signoffSub}
+      signoffCta={t.signoffCta}
+    >
       <style>{PAGE_CSS}</style>
 
       <header className="ls-hero">

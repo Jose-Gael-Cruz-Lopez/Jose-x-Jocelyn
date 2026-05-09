@@ -1967,6 +1967,9 @@ export const en = {
     footerHome: 'Home',
     footerArticles: 'La Voz del Día',
     footerLinkedIn: 'LinkedIn Series',
+    signoffLine: 'Twice a week, in two voices.',
+    signoffSub: 'We’re posting what we wished someone had told us. Stick around — episode 01 is coming.',
+    signoffCta: 'Tell us where you’re stuck',
   },
 
   partnerPanels: {
