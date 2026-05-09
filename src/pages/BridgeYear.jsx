@@ -471,6 +471,26 @@ export default function BridgeYear() {
           color: var(--color-dark);
         }
         .by-capture__success-text small { display: block; font-family: var(--font-body); font-size: 12px; font-weight: 400; color: var(--color-muted); margin-top: 2px; }
+        .by-capture__trust {
+          grid-column: 1 / -1;
+          margin-top: 4px;
+          font-size: 11px;
+          color: var(--color-muted);
+          line-height: 1.5;
+          letter-spacing: .005em;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .by-capture__trust::before {
+          content: '';
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--color-teal);
+          flex-shrink: 0;
+          opacity: .65;
+        }
         @media (prefers-reduced-motion: reduce) {
           .by-capture__btn { transition: none !important; }
           .by-capture__btn:hover { transform: none !important; }
@@ -1257,6 +1277,7 @@ export default function BridgeYear() {
                 </button>
                 {captureError && <span id="captureEmail-error" className="by-capture__error" role="alert">{captureError}</span>}
               </form>
+              {t.captureTrust && <p className="by-capture__trust">{t.captureTrust}</p>}
             </>
           )}
         </div>
