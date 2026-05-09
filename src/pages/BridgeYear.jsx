@@ -281,12 +281,13 @@ export default function BridgeYear() {
           gap: 20px;
         }
         .by-prog {
-          background: rgba(255,250,242,.7);
-          border: 1.5px solid rgba(179,69,57,.18);
+          background: linear-gradient(180deg, rgba(179,69,57,.06) 0%, rgba(255,250,242,.55) 60%);
+          border: 1.5px solid rgba(179,69,57,.22);
           border-radius: 14px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(var(--by-shadow-warm),.12);
           transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s, border-color .22s;
         }
         .by-prog:hover {
