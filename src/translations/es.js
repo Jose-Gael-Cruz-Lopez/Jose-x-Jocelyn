@@ -184,6 +184,11 @@ export const es = {
     formSuccessBody: 'Revisamos cada sugerencia y actualizamos esta lista cuando se abren nuevos programas. Agradecemos tu ayuda para mantenerla actualizada.',
     formErrorRequired: 'El nombre del programa y la empresa son obligatorios.',
     formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    formErrorProgram: 'Dinos el nombre del programa.',
+    formErrorCompany: 'Dinos qué empresa lo administra.',
+    formErrorEmail: 'Ese correo no se ve del todo bien.',
+    formErrorLabel: 'No se pudo guardar tu sugerencia.',
+    formRetryLabel: 'Reintentar',
     // ── PROGRAMS array ────────────────────────────────────────────────────
     programs: [
       {
