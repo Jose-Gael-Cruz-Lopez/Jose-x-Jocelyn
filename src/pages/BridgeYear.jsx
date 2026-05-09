@@ -21,6 +21,7 @@ export default function BridgeYear() {
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({ program: '', company: '', email: '' })
   const [form, setForm] = useState({ program: '', company: '', link: '', why: '', email: '' })
 
   const visibleRoles = roleFilter === 'all'
@@ -31,18 +32,24 @@ export default function BridgeYear() {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if (!form.program || !form.company) {
-      setFormError(t.formErrorRequired)
+    const errors = { program: '', company: '', email: '' }
+    if (!form.program.trim()) errors.program = t.formErrorProgram
+    if (!form.company.trim()) errors.company = t.formErrorCompany
+    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errors.email = t.formErrorEmail
+    if (errors.program || errors.company || errors.email) {
+      setFieldErrors(errors)
+      setFormError('')
       return
     }
+    setFieldErrors({ program: '', company: '', email: '' })
     setFormLoading(true)
     setFormError('')
     const { error } = await supabase.from('bridge_year_suggestions').insert({
-      program_name: form.program,
-      company: form.company,
-      link: form.link || null,
-      why: form.why || null,
-      email: form.email || null,
+      program_name: form.program.trim(),
+      company: form.company.trim(),
+      link: form.link.trim() || null,
+      why: form.why.trim() || null,
+      email: form.email.trim() || null,
     })
     setFormLoading(false)
     if (error) {
@@ -52,7 +59,10 @@ export default function BridgeYear() {
     }
   }
 
-  const setField = (k, v) => setForm(f => ({ ...f, [k]: v }))
+  const setField = (k, v) => {
+    setForm(f => ({ ...f, [k]: v }))
+    if (fieldErrors[k]) setFieldErrors(s => ({ ...s, [k]: '' }))
+  }
 
   return (
     <ArticleLayout title="Bridge Year Hub">
@@ -808,6 +818,31 @@ export default function BridgeYear() {
           background: rgba(255,255,255,.1);
           box-shadow: 0 0 0 4px rgba(232,168,56,.16);
         }
+        .by-suggest__input.is-invalid,
+        .by-suggest__textarea.is-invalid { border-color: rgba(232,168,56,.6); }
+        .by-suggest__input.is-invalid:focus,
+        .by-suggest__textarea.is-invalid:focus {
+          border-color: var(--color-gold);
+          box-shadow: 0 0 0 4px rgba(232,168,56,.24);
+        }
+        .by-suggest__row__error {
+          display: block;
+          margin-top: 6px;
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--color-gold);
+          line-height: 1.4;
+        }
+        .by-suggest__row__error::before {
+          content: '';
+          display: inline-block;
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: var(--color-gold);
+          margin-right: 7px;
+          vertical-align: .18em;
+        }
         .by-suggest__btn {
           margin-top: 4px;
           padding: 14px 28px;
@@ -1066,11 +1101,31 @@ export default function BridgeYear() {
             <form onSubmit={handleSubmit}>
               <div className="by-suggest__row">
                 <label className="by-suggest__label" htmlFor="sgProgram">{t.formLabelProgram}</label>
-                <input className="by-suggest__input" type="text" id="sgProgram" placeholder={t.formPlaceholderProgram} value={form.program} onChange={e => setField('program', e.target.value)} />
+                <input
+                  className={`by-suggest__input${fieldErrors.program ? ' is-invalid' : ''}`}
+                  type="text"
+                  id="sgProgram"
+                  placeholder={t.formPlaceholderProgram}
+                  value={form.program}
+                  onChange={e => setField('program', e.target.value)}
+                  aria-invalid={!!fieldErrors.program}
+                  aria-describedby={fieldErrors.program ? 'sgProgram-error' : undefined}
+                />
+                {fieldErrors.program && <span id="sgProgram-error" className="by-suggest__row__error" role="alert">{fieldErrors.program}</span>}
               </div>
               <div className="by-suggest__row">
                 <label className="by-suggest__label" htmlFor="sgCompany">{t.formLabelCompany}</label>
-                <input className="by-suggest__input" type="text" id="sgCompany" placeholder={t.formPlaceholderCompany} value={form.company} onChange={e => setField('company', e.target.value)} />
+                <input
+                  className={`by-suggest__input${fieldErrors.company ? ' is-invalid' : ''}`}
+                  type="text"
+                  id="sgCompany"
+                  placeholder={t.formPlaceholderCompany}
+                  value={form.company}
+                  onChange={e => setField('company', e.target.value)}
+                  aria-invalid={!!fieldErrors.company}
+                  aria-describedby={fieldErrors.company ? 'sgCompany-error' : undefined}
+                />
+                {fieldErrors.company && <span id="sgCompany-error" className="by-suggest__row__error" role="alert">{fieldErrors.company}</span>}
               </div>
               <div className="by-suggest__row">
                 <label className="by-suggest__label" htmlFor="sgLink">{t.formLabelLink}</label>
@@ -1082,7 +1137,23 @@ export default function BridgeYear() {
               </div>
               <div className="by-suggest__row">
                 <label className="by-suggest__label" htmlFor="sgEmail">{t.formLabelEmail}</label>
-                <input className="by-suggest__input" type="email" id="sgEmail" placeholder={t.formPlaceholderEmail} value={form.email} onChange={e => setField('email', e.target.value)} />
+                <input
+                  className={`by-suggest__input${fieldErrors.email ? ' is-invalid' : ''}`}
+                  type="email"
+                  id="sgEmail"
+                  placeholder={t.formPlaceholderEmail}
+                  value={form.email}
+                  onChange={e => setField('email', e.target.value)}
+                  onBlur={e => {
+                    const v = e.target.value.trim()
+                    if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                      setFieldErrors(s => ({ ...s, email: t.formErrorEmail }))
+                    }
+                  }}
+                  aria-invalid={!!fieldErrors.email}
+                  aria-describedby={fieldErrors.email ? 'sgEmail-error' : undefined}
+                />
+                {fieldErrors.email && <span id="sgEmail-error" className="by-suggest__row__error" role="alert">{fieldErrors.email}</span>}
               </div>
               {formError && <p role="alert" style={{ color: 'var(--color-gold)', fontSize: '13px', fontWeight: 600, marginBottom: '10px' }}>{formError}</p>}
               <button className="by-suggest__btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
