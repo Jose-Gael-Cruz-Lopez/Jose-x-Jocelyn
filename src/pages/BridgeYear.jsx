@@ -623,11 +623,12 @@ export default function BridgeYear() {
           margin: 0 auto;
         }
         .by-suggest__box {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: rgba(255,250,242,.7);
+          border: 1px solid rgba(26,25,22,.13);
           border-radius: 16px;
           padding: clamp(32px,4vw,52px);
           max-width: 680px;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--by-shadow-warm),.18);
         }
         .by-suggest__kicker {
           font-size: 11px;
