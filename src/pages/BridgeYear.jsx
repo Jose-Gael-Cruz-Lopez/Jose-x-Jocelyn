@@ -226,7 +226,7 @@ export default function BridgeYear() {
         /* HERO */
         .by-hero {
           padding: 120px clamp(20px,5vw,56px) 64px;
-          max-width: 1040px;
+          max-width: 1280px;
           margin: 0 auto;
           position: relative;
           overflow: hidden;
@@ -245,15 +245,27 @@ export default function BridgeYear() {
         .by-hero::after {
           content: '';
           position: absolute;
-          top: -14%;
-          right: -10%;
-          width: 520px;
-          height: 520px;
-          background: radial-gradient(closest-side, rgba(179,69,57,.1), transparent 70%);
+          top: -18%;
+          right: -8%;
+          width: 620px;
+          height: 620px;
+          background: radial-gradient(closest-side, rgba(179,69,57,.09), transparent 70%);
           pointer-events: none;
           z-index: 0;
         }
         .by-hero > * { position: relative; z-index: 1; }
+        .by-hero__inner {
+          display: grid;
+          grid-template-columns: minmax(0, 1.15fr) minmax(0, .9fr);
+          gap: clamp(40px, 5vw, 80px);
+          align-items: start;
+        }
+        @media (max-width: 960px) {
+          .by-hero__inner { grid-template-columns: 1fr; gap: 40px; }
+        }
+        .by-hero__primary { min-width: 0; }
+        .by-hero__aside { min-width: 0; padding-top: 4px; }
+        .by-hero__aside .by-for__card { max-width: none; }
         .by-hero__kicker {
           font-size: 11px;
           font-weight: 700;
@@ -1253,28 +1265,28 @@ export default function BridgeYear() {
 
       {/* HERO */}
       <header className="by-hero" id="top">
-        <p className="by-hero__kicker">{t.heroKicker}</p>
-        <h1 className="by-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
-        {t.heroTagline && <p className="by-hero__tagline">{t.heroTagline}</p>}
-        <p className="by-hero__sub">{t.heroSub}</p>
-        <p className="by-hero__body" dangerouslySetInnerHTML={{ __html: t.heroBody }} />
-        <nav className="by-jumps" aria-label={t.heroJumpsAriaLabel}>
-          <a href="#apprenticeships" className="by-jump">{t.heroJump1}</a>
-          <a href="#roles" className="by-jump">{t.heroJump2}</a>
-          <a href="#sprint" className="by-jump">{t.heroJump3}</a>
-        </nav>
-      </header>
-
-      <hr className="by-divider" />
-
-      {/* IS THIS FOR YOU */}
-      <section className="by-for">
-        <div className="by-for__card">
-          <p className="by-for__kicker">{t.forKicker}</p>
-          <h2 className="by-for__title">{t.forTitle}</h2>
-          <p className="by-for__body" dangerouslySetInnerHTML={{ __html: t.forBody }} />
+        <div className="by-hero__inner">
+          <div className="by-hero__primary">
+            <p className="by-hero__kicker">{t.heroKicker}</p>
+            <h1 className="by-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
+            {t.heroTagline && <p className="by-hero__tagline">{t.heroTagline}</p>}
+            <p className="by-hero__sub">{t.heroSub}</p>
+            <p className="by-hero__body" dangerouslySetInnerHTML={{ __html: t.heroBody }} />
+            <nav className="by-jumps" aria-label={t.heroJumpsAriaLabel}>
+              <a href="#apprenticeships" className="by-jump">{t.heroJump1}</a>
+              <a href="#roles" className="by-jump">{t.heroJump2}</a>
+              <a href="#sprint" className="by-jump">{t.heroJump3}</a>
+            </nav>
+          </div>
+          <aside className="by-hero__aside" aria-label={t.forKicker}>
+            <div className="by-for__card">
+              <p className="by-for__kicker">{t.forKicker}</p>
+              <h2 className="by-for__title">{t.forTitle}</h2>
+              <p className="by-for__body" dangerouslySetInnerHTML={{ __html: t.forBody }} />
+            </div>
+          </aside>
         </div>
-      </section>
+      </header>
 
       <hr className="by-divider" />
 
