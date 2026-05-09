@@ -129,7 +129,14 @@ export const es = {
     heroJumpsAriaLabel: 'Secciones de la página',
     // ── Is This For You ───────────────────────────────────────────────────
     forKicker: '¿Es esto para ti?',
-    forTitle: 'Esta página fue construida para cuatro personas',
+    forTitle: 'Construida para',
+    forItems: [
+      'Estudiantes que se graduaron sin oferta.',
+      'Alumnos en su último semestre sin nada confirmado.',
+      'Recién graduados que llevan meses aplicando sin avance.',
+      'Cualquiera entrando a la tecnología sin un mapa.',
+    ],
+    forFooter: 'Si te reconoces, esta página fue construida para ti.',
     forBody: '<strong>Estudiantes que se graduaron sin una oferta de regreso o empleo de tiempo completo</strong> y ahora intentan descubrir qué sigue. <strong>Estudiantes en su último semestre</strong> que aún no tienen nada confirmado y están empezando a sentir la presión. <strong>Recién graduados que llevan meses aplicando activamente</strong> con poco o ningún avance y no saben dónde está el problema. Y <strong>cualquiera que quiera entrar a la tecnología</strong> - ya sea desde una carrera de CS tradicional, un bootcamp, un camino autodidacta o un campo completamente distinto - y busca un punto de entrada diseñado específicamente para personas que no pasaron por el reclutamiento tradicional. Si te reconoces en alguno de esos casos, cada sección de esta página fue construida para ti.',
     // ── Apprenticeships section ───────────────────────────────────────────
     captureKicker: 'Aviso silencioso',
