@@ -122,7 +122,7 @@ export const es = {
     heroTitleEm: 'Año Puente',
     heroTagline: 'No estás atrás. Solo en el camino del que nadie te dibujó un mapa.',
     heroSub: 'Terminaste la escuela. Aún no tienes una oferta. Eso no es fracaso - para eso existe exactamente esta página.',
-    heroBody: 'La mayoría de los consejos para personas en la transición son <strong>"sigue aplicando"</strong> o <strong>"ve a la maestría."</strong> Ninguno es útil cuando ya llevas meses aplicando, cuando la maestría no es tu meta, y cuando ves a personas a tu alrededor anunciar ofertas que tú no has recibido. Esta página existe porque Jose y Jocelyn han estado cerca de ese momento y saben qué es lo que realmente mueve la aguja. Lo que encontrarás aquí no es motivación - es un conjunto de puertas reales, herramientas específicas y un camino paso a paso a través de la transición, construido para <strong>estudiantes de primera generación y grupos subrepresentados</strong> que intentan entrar a la tecnología sin una red de contactos o guía familiar.',
+    heroBody: 'No es motivación — <strong>puertas reales, herramientas específicas y un camino paso a paso por la transición.</strong> Construido para <strong>estudiantes de primera generación y grupos subrepresentados</strong> sin red de contactos ni guía familiar.',
     heroJump1: 'Programas de Aprendizaje y Puntos de Entrada Alternativos',
     heroJump2: 'Roles para Recién Graduados y Primeros Empleos',
     heroJump3: 'Camino Sprint Autoguiado y Herramientas',
