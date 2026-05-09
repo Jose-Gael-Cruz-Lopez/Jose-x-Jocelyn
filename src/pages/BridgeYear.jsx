@@ -234,6 +234,48 @@ export default function BridgeYear() {
           border-color: rgba(179,69,57,.35);
           box-shadow: 0 14px 32px -10px rgba(var(--by-shadow-warm),.18);
         }
+        .by-prog--featured {
+          grid-column: 1 / -1;
+          background: var(--color-accent);
+          border-color: var(--color-accent);
+          position: relative;
+        }
+        .by-prog--featured::before {
+          content: '';
+          position: absolute;
+          top: -1px;
+          left: 28px;
+          width: 36px;
+          height: 6px;
+          background: var(--color-gold);
+          border-radius: 0 0 4px 4px;
+          box-shadow: 0 1px 2px rgba(232,168,56,.4);
+        }
+        .by-prog--featured .by-prog__company { color: rgba(242,228,206,.7); }
+        .by-prog--featured .by-prog__name { color: var(--color-cream); }
+        .by-prog--featured .by-prog__pill { background: rgba(242,228,206,.14); color: var(--color-cream); }
+        .by-prog--featured .by-prog__pill--urgent { background: rgba(232,168,56,.22); color: var(--color-gold); }
+        .by-prog--featured .by-prog__pill--pay { background: rgba(58,125,107,.28); color: var(--color-cream); }
+        .by-prog--featured .by-prog__note {
+          background: rgba(255,255,255,.06);
+          border-color: rgba(232,168,56,.35);
+        }
+        .by-prog--featured .by-prog__note-label { color: var(--color-gold); }
+        .by-prog--featured .by-prog__note-text { color: rgba(242,228,206,.85); }
+        .by-prog--featured .by-prog__cta {
+          background: var(--color-cream);
+          color: var(--color-dark);
+        }
+        .by-prog--featured .by-prog__cta:hover { background: var(--color-gold); color: var(--color-dark); }
+        .by-prog--featured-tag {
+          display: inline-block;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: .12em;
+          text-transform: uppercase;
+          color: var(--color-gold);
+          margin-bottom: 8px;
+        }
         .by-prog__inner { padding: 24px 24px 20px; flex: 1; display: flex; flex-direction: column; }
         .by-prog__company {
           font-size: 11px;
@@ -708,9 +750,10 @@ export default function BridgeYear() {
         </div>
 
         <div className="by-apprentice__grid">
-          {t.programs.map(prog => (
-            <div className="by-prog" key={prog.name}>
+          {t.programs.map((prog, idx) => (
+            <div className={`by-prog${idx === 0 ? ' by-prog--featured' : ''}`} key={prog.name}>
               <div className="by-prog__inner">
+                {idx === 0 && <span className="by-prog--featured-tag">{t.featuredLabel ?? 'Start here'}</span>}
                 <p className="by-prog__company">{prog.company}</p>
                 <h3 className="by-prog__name">{prog.name}</h3>
                 <div className="by-prog__meta">
