@@ -732,11 +732,11 @@ export default function BridgeYear() {
         }
         .by-suggest__copy { max-width: 460px; }
         .by-suggest__box {
-          background: rgba(255,250,242,.7);
-          border: 1px solid rgba(26,25,22,.13);
-          border-radius: 16px;
-          padding: clamp(32px,4vw,52px);
-          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--by-shadow-warm),.18);
+          background: rgba(0,0,0,.12);
+          border: 1px solid rgba(242,228,206,.22);
+          border-radius: 14px;
+          padding: clamp(24px,3vw,32px);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
         }
         .by-suggest__kicker {
           font-size: 11px;
@@ -779,11 +779,11 @@ export default function BridgeYear() {
         .by-suggest__label {
           display: block;
           font-size: 12px;
-          font-weight: 700;
+          font-weight: 800;
           text-transform: uppercase;
-          letter-spacing: .08em;
-          color: var(--color-muted);
-          margin-bottom: 6px;
+          letter-spacing: .12em;
+          color: rgba(242,228,206,.85);
+          margin-bottom: 7px;
         }
         .by-suggest__input,
         .by-suggest__textarea {
@@ -791,31 +791,45 @@ export default function BridgeYear() {
           font-family: var(--font-body);
           font-size: 15px;
           padding: 12px 14px;
-          border: 1.5px solid rgba(0,0,0,.12);
-          border-radius: 8px;
-          background: var(--color-white);
-          color: var(--color-dark);
+          border: 1.5px solid rgba(242,228,206,.32);
+          border-radius: 10px;
+          background: rgba(0,0,0,.18);
+          color: var(--color-cream);
           outline: none;
-          transition: border-color .2s;
+          transition: border-color .2s, background .2s, box-shadow .2s;
           box-sizing: border-box;
         }
-        .by-suggest__textarea { min-height: 80px; resize: vertical; line-height: 1.55; }
+        .by-suggest__input::placeholder,
+        .by-suggest__textarea::placeholder { color: rgba(242,228,206,.55); }
+        .by-suggest__textarea { min-height: 90px; resize: vertical; line-height: 1.55; }
         .by-suggest__input:focus,
-        .by-suggest__textarea:focus { border-color: var(--color-gold); }
+        .by-suggest__textarea:focus {
+          border-color: var(--color-gold);
+          background: rgba(255,255,255,.1);
+          box-shadow: 0 0 0 4px rgba(232,168,56,.16);
+        }
         .by-suggest__btn {
-          margin-top: 6px;
-          padding: 13px 28px;
-          background: var(--color-dark);
-          color: var(--color-cream);
+          margin-top: 4px;
+          padding: 14px 28px;
+          background: var(--color-gold);
+          color: var(--color-dark);
           border: none;
-          border-radius: 8px;
+          border-radius: 999px;
           font-family: var(--font-display);
           font-size: 14px;
-          font-weight: 600;
+          font-weight: 700;
+          letter-spacing: -.005em;
           cursor: pointer;
-          transition: background .2s, transform .18s;
+          box-shadow: 0 8px 20px -10px rgba(232,168,56,.4);
+          transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s;
         }
-        .by-suggest__btn:hover { background: var(--color-accent); transform: translateY(-1px); }
+        .by-suggest__btn:hover {
+          background: var(--color-cream);
+          transform: translateY(-2px);
+          box-shadow: 0 14px 24px -12px rgba(232,228,206,.5);
+        }
+        .by-suggest__btn:active { transform: translateY(0); }
+        .by-suggest__btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
         .by-jump:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 3px; }
         .by-prog__cta:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
         .by-role-card__cta:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; }
