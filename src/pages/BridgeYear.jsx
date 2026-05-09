@@ -865,6 +865,39 @@ export default function BridgeYear() {
         }
         .by-suggest__btn:active { transform: translateY(0); }
         .by-suggest__btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+        .by-suggest__error-card {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          margin-bottom: 14px;
+          padding: 14px 16px;
+          background: rgba(232,168,56,.08);
+          border: 1px solid rgba(232,168,56,.3);
+          border-radius: 10px;
+        }
+        .by-suggest__error-card__msg {
+          flex: 1;
+          font-size: 13px;
+          color: var(--color-cream);
+          line-height: 1.5;
+        }
+        .by-suggest__error-card__msg strong { color: var(--color-gold); font-weight: 700; }
+        .by-suggest__error-card__retry {
+          flex-shrink: 0;
+          padding: 7px 14px;
+          background: transparent;
+          border: 1.5px solid var(--color-gold);
+          color: var(--color-gold);
+          border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: -.005em;
+          cursor: pointer;
+          transition: background .2s, color .2s;
+        }
+        .by-suggest__error-card__retry:hover { background: var(--color-gold); color: var(--color-dark); }
+        .by-suggest__error-card__retry:focus-visible { outline: 2px solid var(--color-cream); outline-offset: 2px; }
         .by-jump:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 3px; }
         .by-prog__cta:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
         .by-role-card__cta:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; }
@@ -1155,7 +1188,12 @@ export default function BridgeYear() {
                 />
                 {fieldErrors.email && <span id="sgEmail-error" className="by-suggest__row__error" role="alert">{fieldErrors.email}</span>}
               </div>
-              {formError && <p role="alert" style={{ color: 'var(--color-gold)', fontSize: '13px', fontWeight: 600, marginBottom: '10px' }}>{formError}</p>}
+              {formError && (
+                <div role="alert" className="by-suggest__error-card">
+                  <span className="by-suggest__error-card__msg"><strong>{t.formErrorLabel}</strong> {formError}</span>
+                  <button type="submit" className="by-suggest__error-card__retry" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formRetryLabel}</button>
+                </div>
+              )}
               <button className="by-suggest__btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
             </form>
           )}
