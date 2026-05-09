@@ -32,7 +32,10 @@ export default function BridgeYear() {
   const [captureEmail, setCaptureEmail] = useState('')
   const [captureLoading, setCaptureLoading] = useState(false)
   const [captureError, setCaptureError] = useState('')
-  const [captureSubmitted, setCaptureSubmitted] = useState(false)
+  const [captureSubmitted, setCaptureSubmitted] = useState(() => {
+    if (typeof window === 'undefined') return false
+    try { return window.localStorage.getItem('by-subscribed') === '1' } catch { return false }
+  })
 
   const visibleRoles = roleFilter === 'all'
     ? t.roleCards
@@ -111,6 +114,7 @@ export default function BridgeYear() {
       setCaptureError(t.captureErrorGeneric)
     } else {
       setCaptureSubmitted(true)
+      try { window.localStorage.setItem('by-subscribed', '1') } catch {}
     }
   }
 
