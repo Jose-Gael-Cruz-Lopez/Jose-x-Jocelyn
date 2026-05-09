@@ -377,17 +377,21 @@ export default function BridgeYear() {
         .by-roles__filter--active { background: var(--color-teal); color: var(--color-cream); border-color: var(--color-teal); }
         .by-roles__list { display: flex; flex-direction: column; gap: 14px; }
         .by-role-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: transparent;
+          border: 1px solid rgba(26,25,22,.1);
           border-radius: 12px;
           padding: 22px 24px;
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
           gap: 20px;
-          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s, border-color .2s;
         }
-        .by-role-card:hover { transform: translateX(4px); box-shadow: 4px 4px 20px rgba(0,0,0,.07); }
+        .by-role-card:hover {
+          transform: translateX(4px);
+          border-color: rgba(58,125,107,.4);
+          box-shadow: 4px 4px 18px -6px rgba(var(--by-shadow-warm),.14);
+        }
         .by-role-card__left { flex: 1; min-width: 0; }
         .by-role-card__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
         .by-role-card__tag {
