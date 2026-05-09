@@ -364,7 +364,7 @@ export default function BridgeYear() {
           font-weight: 700;
           letter-spacing: .14em;
           text-transform: uppercase;
-          color: var(--color-gold);
+          color: rgba(232,168,56,.72);
           margin-bottom: 14px;
           display: inline-flex;
           align-items: center;
