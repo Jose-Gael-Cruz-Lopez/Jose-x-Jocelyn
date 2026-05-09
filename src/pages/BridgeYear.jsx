@@ -341,16 +341,16 @@ export default function BridgeYear() {
         .by-prog__cta:hover { background: var(--color-accent); transform: translateY(-1px); }
         .by-apprentice__note {
           margin-top: 32px;
-          padding: 20px 24px;
-          background: var(--color-white);
-          border-radius: 10px;
-          border: 1px solid rgba(0,0,0,.08);
-          font-size: 14px;
+          padding: 0 0 0 18px;
+          border-left: none;
+          font-family: var(--font-serif, var(--font-body));
+          font-style: italic;
+          font-size: 15px;
           color: var(--color-muted);
-          line-height: 1.65;
-          max-width: 700px;
+          line-height: 1.7;
+          max-width: 640px;
         }
-        .by-apprentice__note strong { color: var(--color-dark); font-weight: 600; }
+        .by-apprentice__note strong { color: var(--color-dark); font-weight: 600; font-style: normal; }
 
         /* NEW GRAD ROLES */
         .by-roles {
