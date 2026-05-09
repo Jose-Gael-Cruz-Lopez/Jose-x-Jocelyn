@@ -1934,6 +1934,9 @@ export const es = {
     footerHome: 'Inicio',
     footerArticles: 'La Voz del Día',
     footerLinkedIn: 'Serie de LinkedIn',
+    signoffLine: 'Dos veces por semana, en dos voces.',
+    signoffSub: 'Publicamos lo que nos hubiera gustado que alguien nos dijera. Quédate — el episodio 01 ya viene.',
+    signoffCta: 'Dinos dónde estás atorado',
   },
 
   partnerPanels: {
