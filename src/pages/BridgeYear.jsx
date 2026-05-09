@@ -35,7 +35,7 @@ export default function BridgeYear() {
   const [captureError, setCaptureError] = useState('')
   const [captureSubmitted, setCaptureSubmitted] = useState(() => {
     if (typeof window === 'undefined') return false
-    try { return window.localStorage.getItem('by-subscribed') === '1' } catch { return false }
+    try { return window.localStorage.getItem('jxj.bridge-year.subscribed') === '1' } catch { return false }
   })
 
   const visibleRoles = roleFilter === 'all'
@@ -137,7 +137,7 @@ export default function BridgeYear() {
       setCaptureError(t.captureErrorGeneric)
     } else {
       setCaptureSubmitted(true)
-      try { window.localStorage.setItem('by-subscribed', '1') } catch {}
+      try { window.localStorage.setItem('jxj.bridge-year.subscribed', '1') } catch {}
     }
   }
 

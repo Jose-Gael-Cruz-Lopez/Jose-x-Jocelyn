@@ -2,6 +2,20 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useT } from '../hooks/useT'
 
+/**
+ * Standard interior-page chrome: nav, mobile menu, main content slot,
+ * art-signoff section, and wide footer.
+ *
+ * @param {string}   [signoffLine] Override for the closing headline. Falls back to articleLayout.signoffLine.
+ * @param {string}   [signoffSub]  Override for the supporting line under signoffLine.
+ * @param {string}   [signoffCta]  Override for the CTA label that links to /#contact.
+ *
+ * Pages that want a page-specific closing beat in piñata register
+ * (per .impeccable.md principle #5) should pass these props from
+ * their own i18n block, e.g.:
+ *   <ArticleLayout signoffLine={t.signoffLine} signoffSub={t.signoffSub} ... />
+ * Pages that omit them keep the generic articleLayout copy.
+ */
 export default function ArticleLayout({ children, title, footerWidth = 680, signoffLine, signoffSub, signoffCta }) {
   const t = useT('articleLayout')
 
