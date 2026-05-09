@@ -107,6 +107,17 @@ export default function BridgeYear() {
           padding: 120px clamp(20px,5vw,56px) 64px;
           max-width: 1040px;
           margin: 0 auto;
+          position: relative;
+        }
+        .by-hero::before {
+          content: '';
+          position: absolute;
+          top: 96px;
+          left: clamp(20px,5vw,56px);
+          width: 56px;
+          height: 4px;
+          background: var(--color-accent);
+          border-radius: 2px;
         }
         .by-hero__kicker {
           font-size: 11px;
