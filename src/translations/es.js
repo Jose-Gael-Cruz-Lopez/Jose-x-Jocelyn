@@ -1776,6 +1776,9 @@ export const es = {
     footerHome: 'Inicio',
     footerArticles: 'La Voz del Día',
     footerTemplates: 'Plantillas',
+    signoffLine: 'Dos veces por semana, en dos voces.',
+    signoffSub: 'Publicamos lo que nos hubiera gustado que alguien nos dijera. Quédate — el episodio 01 ya viene.',
+    signoffCta: 'Dinos dónde estás atorado',
   },
 
   careerTemplates: {
@@ -1967,9 +1970,9 @@ export const es = {
     footerHome: 'Inicio',
     footerArticles: 'La Voz del Día',
     footerLinkedIn: 'Serie de LinkedIn',
-    signoffLine: 'Dos veces por semana, en dos voces.',
-    signoffSub: 'Publicamos lo que nos hubiera gustado que alguien nos dijera. Quédate — el episodio 01 ya viene.',
-    signoffCta: 'Dinos dónde estás atorado',
+    signoffLine: 'Róbatelas. Mándalas.',
+    signoffSub: 'Lo peor que puede pasar es que alguien lea tu mensaje. No dejes que un texto «perfecto» sea la razón por la que no escribiste.',
+    signoffCta: 'Dinos qué falta',
   },
 
   partnerPanels: {
