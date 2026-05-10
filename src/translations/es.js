@@ -181,6 +181,8 @@ export const es = {
     formSubmitting: 'Enviando…',
     formSuccessTitle: '¡Gracias por el envío!',
     formSuccessBody: 'Revisamos cada sugerencia y actualizamos esta lista cuando se abren nuevos programas. Agradecemos tu ayuda para mantenerla actualizada.',
+    formSuccessCta: 'Ver plantillas →',
+    formSuccessCtaTo: '/career-templates',
     formErrorRequired: 'El nombre del programa y la empresa son obligatorios.',
     formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
     // ── PROGRAMS array ────────────────────────────────────────────────────
@@ -410,7 +412,6 @@ export const es = {
     heroJump4: 'Encuentra tu camino sugerido',
     heroJumpsAriaLabel: 'Secciones de la página',
     // ── Section 01: Grade Level ───────────────────────────────────────────
-    gradeKicker: 'Sección 01',
     gradeTitle: 'Empieza por Nivel Académico',
     gradeSub: 'Distintas etapas. Distintas necesidades. Distintos recursos.',
     gradeBody: 'Los estudiantes en diferentes momentos de la universidad necesitan una preparación completamente diferente. Encuentra tu etapa, lee el párrafo y trabaja los recursos recomendados en orden - ese es el camino más rápido para estar listo.',
@@ -472,7 +473,6 @@ export const es = {
       },
     ],
     // ── Section 02: Interview Types ───────────────────────────────────────
-    typesKicker: 'Sección 02',
     typesTitle: 'Explora por Tipo de Entrevista',
     typesSub: 'Tengo una entrevista de [tipo] mañana. Aquí está exactamente por dónde empezar.',
     typesTabsAriaLabel: 'Tipos de entrevista',
@@ -550,123 +550,85 @@ export const es = {
       },
     ],
     // ── Section 03: Resource Library ──────────────────────────────────────
-    libraryKicker: 'Sección 03',
     libraryTitle: 'Biblioteca de Recursos Principales',
     librarySub: 'Cada herramienta que necesitas. Organizada por para quién es y qué entrevista le corresponde.',
     libraryGradeLabel: 'Nivel:',
     libraryRoundLabel: 'Ronda:',
+    libraryPreviewLabel: 'Vista previa',
+    previewModalCloseLabel: 'Cerrar vista previa',
     resourceCards: [
       {
         name: 'Guion de "Háblame de Ti"',
         desc: 'Tres versiones: estudiante, cuarto año/recién graduado y transición de carrera. Un marco de 3 partes - quién eres, qué has hecho, por qué este rol - que convierte la pregunta más frecuente en una respuesta practicada y segura.',
-        gradeTags: [
-          { label: 'Primer Año', type: 'fy' },
-          { label: 'Tercer Año', type: 'jr' },
-          { label: 'Cuarto Año', type: 'sr' },
-          { label: 'Recién Graduado', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Reclutador', type: 'rec' },
           { label: 'Conductual', type: 'beh' },
           { label: 'Ronda Final', type: 'fin' },
         ],
-        ctaLabel: 'Copiar Plantilla →',
+        ctaLabel: 'Ver en Plantillas →',
       },
       {
         name: 'Plantilla del Banco de Historias STAR',
         desc: 'Un documento en blanco para construir 6–8 historias de entrevista organizadas por trabajo en equipo, liderazgo, desafío, fracaso, conflicto e iniciativa - construido una vez, reutilizado en cada entrevista.',
-        gradeTags: [
-          { label: 'Tercer Año', type: 'jr' },
-          { label: 'Cuarto Año', type: 'sr' },
-          { label: 'Recién Graduado', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Conductual', type: 'beh' },
           { label: 'Ronda Final', type: 'fin' },
         ],
-        ctaLabel: 'Abrir Marco →',
+        ctaLabel: 'Ver en Plantillas →',
       },
       {
         name: 'Preguntas para Hacer al Final',
         desc: '15 preguntas específicas y no genéricas organizadas por con quién estás hablando: reclutador, ingeniero, gerente de contratación o panel. Las preguntas que realmente muestran que has pensado en el rol.',
-        gradeTags: [
-          { label: 'Primer Año', type: 'fy' },
-          { label: 'Tercer Año', type: 'jr' },
-          { label: 'Cuarto Año', type: 'sr' },
-          { label: 'Recién Graduado', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Reclutador', type: 'rec' },
           { label: 'Técnica', type: 'tech' },
           { label: 'Ronda Final', type: 'fin' },
         ],
-        ctaLabel: 'Abrir Marco →',
+        ctaLabel: 'Ver en Plantillas →',
       },
       {
         name: 'Documento de Reflexión Post-Entrevista',
         desc: 'Qué pasó, qué preguntas te hicieron, dónde te bloqueaste y qué mejorar la próxima vez. Convierte cada entrevista - exitosa o no - en retroalimentación para la siguiente.',
-        gradeTags: [
-          { label: 'Tercer Año', type: 'jr' },
-          { label: 'Cuarto Año', type: 'sr' },
-          { label: 'Recién Graduado', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Conductual', type: 'beh' },
           { label: 'Técnica', type: 'tech' },
           { label: 'Ronda Final', type: 'fin' },
         ],
-        ctaLabel: 'Abrir Marco →',
+        ctaLabel: 'Ver en Plantillas →',
       },
       {
         name: 'Constructor de Respuestas de Práctica',
         desc: 'Una hoja de trabajo para redactar respuestas sólidas a preguntas específicas antes de practicar - para que construyas respuestas desde la estructura, no actuando bajo presión por primera vez en la entrevista real.',
-        gradeTags: [
-          { label: 'Primer Año', type: 'fy' },
-          { label: 'Tercer Año', type: 'jr' },
-          { label: 'Cuarto Año', type: 'sr' },
-        ],
         roundTags: [
           { label: 'Conductual', type: 'beh' },
           { label: 'Técnica', type: 'tech' },
           { label: 'Caso', type: 'case' },
         ],
-        ctaLabel: 'Abrir Marco →',
+        ctaLabel: 'Ver en Plantillas →',
       },
       {
         name: 'Lista de Verificación del Día de Entrevista',
         desc: 'Qué hacer 24 horas antes, 1 hora antes y 10 minutos antes - para que el día de la entrevista sea sobre estar presente, no sobre correr apurado. Cubre formatos virtuales y presenciales.',
-        gradeTags: [
-          { label: 'Primer Año', type: 'fy' },
-          { label: 'Tercer Año', type: 'jr' },
-          { label: 'Cuarto Año', type: 'sr' },
-          { label: 'Recién Graduado', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Reclutador', type: 'rec' },
           { label: 'Conductual', type: 'beh' },
           { label: 'Técnica', type: 'tech' },
           { label: 'Grabada', type: 'ow' },
         ],
-        ctaLabel: 'Copiar Plantilla →',
+        ctaLabel: 'Ver en Plantillas →',
       },
       {
         name: 'Guía para Reencuadrar la Confianza',
         desc: 'Construida específicamente para estudiantes de primera generación que tienden a subvalorar su experiencia. Un marco para traducir grit real, responsabilidad real y liderazgo real desde contextos no tradicionales a un lenguaje que los entrevistadores reconocen.',
-        gradeTags: [
-          { label: 'Primer Año', type: 'fy' },
-          { label: 'Tercer Año', type: 'jr' },
-          { label: 'Recién Graduado', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Reclutador', type: 'rec' },
           { label: 'Conductual', type: 'beh' },
           { label: 'Ronda Final', type: 'fin' },
         ],
-        ctaLabel: 'Abrir Marco →',
+        ctaLabel: 'Ver en Plantillas →',
       },
     ],
     // ── Section 04: Suggested Paths ───────────────────────────────────────
-    pathsKicker: 'Sección 04',
     pathsTitle: 'Caminos Sugeridos',
     pathsSub: 'Encuentra tu situación. Sigue el camino.',
     pathsBody: '¿No sabes por dónde empezar? Encuentra la oración que coincide con tu situación y trabaja los cuatro recursos en orden. Estos caminos combinan nivel académico y tipo de entrevista en una secuencia única y accionable.',
@@ -777,6 +739,11 @@ export const es = {
     formSubmitting: 'Enviando…',
     formSuccessTitle: '¡Solicitud recibida!',
     formSuccessBody: 'Jose y Jocelyn revisan cada envío y los usan para decidir qué construir a continuación. Gracias por ayudar a dar forma a este hub.',
+    // ── Cierre Emocional ──────────────────────────────────────────────────
+    closingTitle: 'No tienes que ser la persona más pulida del cuarto.',
+    closingBody: 'Solo tienes que ser quien llegó preparada, nombró lo que aportaba, y no se disculpó por el camino que la trajo aquí. <strong>Dos pasos adelante sigue siendo adelante.</strong> Hicimos este hub porque nadie lo hizo por nosotros.',
+    closingCta: 'Ver qué más hemos hecho →',
+    closingCtaTo: '/career-templates',
     // ── Footer ────────────────────────────────────────────────────────────
     footerCopy: 'Jose x Jocelyn © 2026',
     footerHome: 'Inicio',

@@ -410,7 +410,6 @@ export const en = {
     heroJump4: 'Find your suggested path',
     heroJumpsAriaLabel: 'Page sections',
     // ── Section 01: Grade Level ───────────────────────────────────────────
-    gradeKicker: 'Section 01',
     gradeTitle: 'Start by Grade Level',
     gradeSub: 'Different stages. Different needs. Different resources.',
     gradeBody: 'Students at different points in college need completely different preparation. Find your stage, read the paragraph, and work through the recommended resources in order - that is the fastest path to being ready.',
@@ -472,7 +471,6 @@ export const en = {
       },
     ],
     // ── Section 02: Interview Types ───────────────────────────────────────
-    typesKicker: 'Section 02',
     typesTitle: 'Browse by Interview Type',
     typesSub: 'I have a [type] interview tomorrow. Here is exactly where to start.',
     typesTabsAriaLabel: 'Interview types',
@@ -550,123 +548,85 @@ export const en = {
       },
     ],
     // ── Section 03: Resource Library ──────────────────────────────────────
-    libraryKicker: 'Section 03',
     libraryTitle: 'Core Resource Library',
     librarySub: 'Every tool you need. Organized by who it is for and what interview it fits.',
     libraryGradeLabel: 'Grade:',
     libraryRoundLabel: 'Round:',
+    libraryPreviewLabel: 'Preview',
+    previewModalCloseLabel: 'Close preview',
     resourceCards: [
       {
         name: 'Tell Me About Yourself Script',
         desc: 'Three versions: student, senior/new grad, and career transition. A 3-part framework - who you are, what you have done, why this role - that turns the most-asked question into a practiced, confident answer.',
-        gradeTags: [
-          { label: 'First-Year', type: 'fy' },
-          { label: 'Junior', type: 'jr' },
-          { label: 'Senior', type: 'sr' },
-          { label: 'Recent Grad', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Recruiter', type: 'rec' },
           { label: 'Behavioral', type: 'beh' },
           { label: 'Final Round', type: 'fin' },
         ],
-        ctaLabel: 'Copy Template →',
+        ctaLabel: 'View in Templates →',
       },
       {
         name: 'STAR Story Bank Template',
         desc: 'A blank document for building 6–8 interview stories organized by teamwork, leadership, challenge, failure, conflict, and initiative - built once, reused in every interview.',
-        gradeTags: [
-          { label: 'Junior', type: 'jr' },
-          { label: 'Senior', type: 'sr' },
-          { label: 'Recent Grad', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Behavioral', type: 'beh' },
           { label: 'Final Round', type: 'fin' },
         ],
-        ctaLabel: 'Open Framework →',
+        ctaLabel: 'View in Templates →',
       },
       {
         name: 'Questions to Ask at the End',
         desc: '15 specific, non-generic questions organized by who you are talking to: recruiter, engineer, hiring manager, or panel. The questions that actually show you have thought about the role.',
-        gradeTags: [
-          { label: 'First-Year', type: 'fy' },
-          { label: 'Junior', type: 'jr' },
-          { label: 'Senior', type: 'sr' },
-          { label: 'Recent Grad', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Recruiter', type: 'rec' },
           { label: 'Technical', type: 'tech' },
           { label: 'Final Round', type: 'fin' },
         ],
-        ctaLabel: 'Open Framework →',
+        ctaLabel: 'View in Templates →',
       },
       {
         name: 'Post-Interview Reflection Doc',
         desc: 'What happened, what questions you got, where you froze, and what to improve next time. Turns every interview - successful or not - into feedback for the next one.',
-        gradeTags: [
-          { label: 'Junior', type: 'jr' },
-          { label: 'Senior', type: 'sr' },
-          { label: 'Recent Grad', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Behavioral', type: 'beh' },
           { label: 'Technical', type: 'tech' },
           { label: 'Final Round', type: 'fin' },
         ],
-        ctaLabel: 'Open Framework →',
+        ctaLabel: 'View in Templates →',
       },
       {
         name: 'Mock Answer Builder',
         desc: 'A worksheet for drafting strong responses to specific questions before practice - so you are building answers from structure, not performing under pressure for the first time in the real interview.',
-        gradeTags: [
-          { label: 'First-Year', type: 'fy' },
-          { label: 'Junior', type: 'jr' },
-          { label: 'Senior', type: 'sr' },
-        ],
         roundTags: [
           { label: 'Behavioral', type: 'beh' },
           { label: 'Technical', type: 'tech' },
           { label: 'Case', type: 'case' },
         ],
-        ctaLabel: 'Open Framework →',
+        ctaLabel: 'View in Templates →',
       },
       {
         name: 'Interview Day Checklist',
         desc: 'What to do 24 hours before, 1 hour before, and 10 minutes before - so the day of the interview is about being present, not scrambling. Covers both virtual and in-person formats.',
-        gradeTags: [
-          { label: 'First-Year', type: 'fy' },
-          { label: 'Junior', type: 'jr' },
-          { label: 'Senior', type: 'sr' },
-          { label: 'Recent Grad', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Recruiter', type: 'rec' },
           { label: 'Behavioral', type: 'beh' },
           { label: 'Technical', type: 'tech' },
           { label: 'One-Way', type: 'ow' },
         ],
-        ctaLabel: 'Copy Template →',
+        ctaLabel: 'View in Templates →',
       },
       {
         name: 'Confidence Reframe Guide',
         desc: 'Built specifically for first-gen students who tend to undersell their experience. A framework for translating real grit, real responsibility, and real leadership from non-traditional contexts into language that interviewers recognize.',
-        gradeTags: [
-          { label: 'First-Year', type: 'fy' },
-          { label: 'Junior', type: 'jr' },
-          { label: 'Recent Grad', type: 'rg' },
-        ],
         roundTags: [
           { label: 'Recruiter', type: 'rec' },
           { label: 'Behavioral', type: 'beh' },
           { label: 'Final Round', type: 'fin' },
         ],
-        ctaLabel: 'Open Framework →',
+        ctaLabel: 'View in Templates →',
       },
     ],
     // ── Section 04: Suggested Paths ───────────────────────────────────────
-    pathsKicker: 'Section 04',
     pathsTitle: 'Suggested Paths',
     pathsSub: 'Find your situation. Follow the path.',
     pathsBody: 'Not sure where to start? Find the sentence that matches your situation and work through the four resources in order. These paths combine grade level and interview type into a single, actionable sequence.',
@@ -777,6 +737,13 @@ export const en = {
     formSubmitting: 'Sending…',
     formSuccessTitle: 'Request received!',
     formSuccessBody: 'Jose and Jocelyn review every submission and use them to decide what to build next. Thank you for helping shape this hub.',
+    formSuccessCta: 'Browse templates →',
+    formSuccessCtaTo: '/career-templates',
+    // ── Closing Beat ──────────────────────────────────────────────────────
+    closingTitle: "You don't have to be the most polished person in the room.",
+    closingBody: "You just have to be the one who showed up prepared, named what you brought, and didn't apologize for the path that got you here. <strong>Two steps ahead is still ahead.</strong> We made this hub because nobody made it for us.",
+    closingCta: "See what else we've built →",
+    closingCtaTo: '/career-templates',
     // ── Footer ────────────────────────────────────────────────────────────
     footerCopy: 'Jose x Jocelyn © 2026',
     footerHome: 'Home',
