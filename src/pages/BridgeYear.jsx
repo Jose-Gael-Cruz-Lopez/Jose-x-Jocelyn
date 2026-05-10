@@ -58,6 +58,7 @@ export default function BridgeYear() {
     <ArticleLayout title="Bridge Year Hub">
       <style>{`
         html, body { background: var(--color-cream); }
+        :root { --by-shadow-warm: 58, 38, 22; }
 
         .by-wrap {
           max-width: 1040px;
@@ -106,6 +107,17 @@ export default function BridgeYear() {
           padding: 120px clamp(20px,5vw,56px) 64px;
           max-width: 1040px;
           margin: 0 auto;
+          position: relative;
+        }
+        .by-hero::before {
+          content: '';
+          position: absolute;
+          top: 96px;
+          left: clamp(20px,5vw,56px);
+          width: 56px;
+          height: 4px;
+          background: var(--color-accent);
+          border-radius: 2px;
         }
         .by-hero__kicker {
           font-size: 11px;
@@ -209,17 +221,60 @@ export default function BridgeYear() {
           gap: 20px;
         }
         .by-prog {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: rgba(255,250,242,.7);
+          border: 1.5px solid rgba(179,69,57,.18);
           border-radius: 14px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s;
+          transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s, border-color .22s;
         }
         .by-prog:hover {
           transform: translateY(-3px);
-          box-shadow: 0 10px 32px rgba(0,0,0,.09);
+          border-color: rgba(179,69,57,.35);
+          box-shadow: 0 14px 32px -10px rgba(var(--by-shadow-warm),.18);
+        }
+        .by-prog--featured {
+          grid-column: 1 / -1;
+          background: var(--color-accent);
+          border-color: var(--color-accent);
+          position: relative;
+        }
+        .by-prog--featured::before {
+          content: '';
+          position: absolute;
+          top: -1px;
+          left: 28px;
+          width: 36px;
+          height: 6px;
+          background: var(--color-gold);
+          border-radius: 0 0 4px 4px;
+          box-shadow: 0 1px 2px rgba(232,168,56,.4);
+        }
+        .by-prog--featured .by-prog__company { color: rgba(242,228,206,.7); }
+        .by-prog--featured .by-prog__name { color: var(--color-cream); }
+        .by-prog--featured .by-prog__pill { background: rgba(242,228,206,.14); color: var(--color-cream); }
+        .by-prog--featured .by-prog__pill--urgent { background: rgba(232,168,56,.22); color: var(--color-gold); }
+        .by-prog--featured .by-prog__pill--pay { background: rgba(58,125,107,.28); color: var(--color-cream); }
+        .by-prog--featured .by-prog__note {
+          background: rgba(255,255,255,.06);
+          border-color: rgba(232,168,56,.35);
+        }
+        .by-prog--featured .by-prog__note-label { color: var(--color-gold); }
+        .by-prog--featured .by-prog__note-text { color: rgba(242,228,206,.85); }
+        .by-prog--featured .by-prog__cta {
+          background: var(--color-cream);
+          color: var(--color-dark);
+        }
+        .by-prog--featured .by-prog__cta:hover { background: var(--color-gold); color: var(--color-dark); }
+        .by-prog--featured-tag {
+          display: inline-block;
+          font-size: 10px;
+          font-weight: 700;
+          letter-spacing: .12em;
+          text-transform: uppercase;
+          color: var(--color-gold);
+          margin-bottom: 8px;
         }
         .by-prog__inner { padding: 24px 24px 20px; flex: 1; display: flex; flex-direction: column; }
         .by-prog__company {
@@ -286,16 +341,16 @@ export default function BridgeYear() {
         .by-prog__cta:hover { background: var(--color-accent); transform: translateY(-1px); }
         .by-apprentice__note {
           margin-top: 32px;
-          padding: 20px 24px;
-          background: var(--color-white);
-          border-radius: 10px;
-          border: 1px solid rgba(0,0,0,.08);
-          font-size: 14px;
+          padding: 0 0 0 18px;
+          border-left: none;
+          font-family: var(--font-serif, var(--font-body));
+          font-style: italic;
+          font-size: 15px;
           color: var(--color-muted);
-          line-height: 1.65;
-          max-width: 700px;
+          line-height: 1.7;
+          max-width: 640px;
         }
-        .by-apprentice__note strong { color: var(--color-dark); font-weight: 600; }
+        .by-apprentice__note strong { color: var(--color-dark); font-weight: 600; font-style: normal; }
 
         /* NEW GRAD ROLES */
         .by-roles {
@@ -312,8 +367,8 @@ export default function BridgeYear() {
           font-size: 12px;
           font-weight: 600;
           cursor: pointer;
-          border: 1.5px solid rgba(0,0,0,.1);
-          background: var(--color-white);
+          border: 1.5px solid rgba(26,25,22,.12);
+          background: rgba(255,250,242,.6);
           color: var(--color-muted);
           transition: background .2s, color .2s, border-color .2s;
         }
@@ -322,17 +377,21 @@ export default function BridgeYear() {
         .by-roles__filter--active { background: var(--color-teal); color: var(--color-cream); border-color: var(--color-teal); }
         .by-roles__list { display: flex; flex-direction: column; gap: 14px; }
         .by-role-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: transparent;
+          border: 1px solid rgba(26,25,22,.1);
           border-radius: 12px;
           padding: 22px 24px;
           display: flex;
           align-items: flex-start;
           justify-content: space-between;
           gap: 20px;
-          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s, border-color .2s;
         }
-        .by-role-card:hover { transform: translateX(4px); box-shadow: 4px 4px 20px rgba(0,0,0,.07); }
+        .by-role-card:hover {
+          transform: translateX(4px);
+          border-color: rgba(58,125,107,.4);
+          box-shadow: 4px 4px 18px -6px rgba(var(--by-shadow-warm),.14);
+        }
         .by-role-card__left { flex: 1; min-width: 0; }
         .by-role-card__tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
         .by-role-card__tag {
@@ -469,16 +528,21 @@ export default function BridgeYear() {
           gap: 16px;
         }
         .by-tool-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: transparent;
+          border: 1.5px solid rgba(58,125,107,.3);
           border-radius: 12px;
           padding: 22px 22px 18px;
           display: flex;
           flex-direction: column;
           gap: 10px;
-          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s, border-color .2s, background .2s;
         }
-        .by-tool-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+        .by-tool-card:hover {
+          transform: translateY(-2px);
+          border-color: var(--color-teal);
+          background: rgba(58,125,107,.04);
+          box-shadow: 0 10px 24px -8px rgba(var(--by-shadow-warm),.18);
+        }
         .by-tool-card__name {
           font-family: var(--font-display);
           font-size: 16px;
@@ -511,32 +575,31 @@ export default function BridgeYear() {
           gap: 20px;
         }
         .by-follow-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          border: none;
           border-radius: 14px;
-          padding: 28px;
+          padding: 32px 28px;
+          color: var(--color-cream);
         }
+        .by-follow-card--jose    { background: var(--color-teal); }
+        .by-follow-card--jocelyn { background: var(--color-accent); }
         .by-follow-card__label {
           font-size: 11px;
           font-weight: 700;
-          letter-spacing: .1em;
+          letter-spacing: .14em;
           text-transform: uppercase;
-          padding: 3px 10px;
-          border-radius: 4px;
-          color: var(--color-cream);
+          color: rgba(242,228,206,.72);
           display: inline-block;
           margin-bottom: 14px;
         }
-        .by-follow-card__label--jose    { background: var(--color-teal); }
-        .by-follow-card__label--jocelyn { background: var(--color-accent); }
         .by-follow-card__name {
           font-family: var(--font-display);
-          font-size: 20px;
+          font-size: 22px;
           font-weight: 700;
-          color: var(--color-dark);
+          color: var(--color-cream);
           margin-bottom: 10px;
+          letter-spacing: -.005em;
         }
-        .by-follow-card__desc { font-size: 14px; color: var(--color-muted); line-height: 1.7; margin-bottom: 22px; }
+        .by-follow-card__desc { font-size: 14px; color: rgba(242,228,206,.78); line-height: 1.7; margin-bottom: 22px; }
         .by-follow-card__cta {
           display: inline-flex;
           align-items: center;
@@ -547,11 +610,11 @@ export default function BridgeYear() {
           font-size: 13px;
           font-weight: 600;
           text-decoration: none;
-          transition: transform .18s, opacity .2s;
+          background: var(--color-cream);
+          color: var(--color-dark);
+          transition: transform .18s, background .2s, color .2s;
         }
-        .by-follow-card__cta:hover { opacity: .85; transform: translateY(-1px); }
-        .by-follow-card__cta--jose    { background: var(--color-teal);   color: var(--color-cream); }
-        .by-follow-card__cta--jocelyn { background: var(--color-accent); color: var(--color-cream); }
+        .by-follow-card__cta:hover { transform: translateY(-1px); background: var(--color-gold); color: var(--color-dark); }
 
         /* SUGGEST FORM */
         .by-suggest {
@@ -560,11 +623,12 @@ export default function BridgeYear() {
           margin: 0 auto;
         }
         .by-suggest__box {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: rgba(255,250,242,.7);
+          border: 1px solid rgba(26,25,22,.13);
           border-radius: 16px;
           padding: clamp(32px,4vw,52px);
           max-width: 680px;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--by-shadow-warm),.18);
         }
         .by-suggest__kicker {
           font-size: 11px;
@@ -695,9 +759,10 @@ export default function BridgeYear() {
         </div>
 
         <div className="by-apprentice__grid">
-          {t.programs.map(prog => (
-            <div className="by-prog" key={prog.name}>
+          {t.programs.map((prog, idx) => (
+            <div className={`by-prog${idx === 0 ? ' by-prog--featured' : ''}`} key={prog.name}>
               <div className="by-prog__inner">
+                {idx === 0 && <span className="by-prog--featured-tag">{t.featuredLabel ?? 'Start here'}</span>}
                 <p className="by-prog__company">{prog.company}</p>
                 <h3 className="by-prog__name">{prog.name}</h3>
                 <div className="by-prog__meta">
@@ -817,19 +882,19 @@ export default function BridgeYear() {
         <h2 className="by-section-title" style={{ marginBottom: '8px' }}>{t.followTitle}</h2>
         <p className="by-section-body" style={{ marginBottom: '36px' }}>{t.followBody}</p>
         <div className="by-follow__inner">
-          <div className="by-follow-card">
-            <span className="by-follow-card__label by-follow-card__label--jose">{t.joseCardLabel}</span>
+          <div className="by-follow-card by-follow-card--jose">
+            <span className="by-follow-card__label">{t.joseCardLabel}</span>
             <h3 className="by-follow-card__name">{t.joseCardName}</h3>
             <p className="by-follow-card__desc">{t.joseCardDesc}</p>
-            <a href="https://www.linkedin.com/in/cjxsez/" target="_blank" rel="noopener noreferrer" className="by-follow-card__cta by-follow-card__cta--jose">
+            <a href="https://www.linkedin.com/in/cjxsez/" target="_blank" rel="noopener noreferrer" className="by-follow-card__cta">
               {t.joseCardCta}
             </a>
           </div>
-          <div className="by-follow-card">
-            <span className="by-follow-card__label by-follow-card__label--jocelyn">{t.jocelynCardLabel}</span>
+          <div className="by-follow-card by-follow-card--jocelyn">
+            <span className="by-follow-card__label">{t.jocelynCardLabel}</span>
             <h3 className="by-follow-card__name">{t.jocelynCardName}</h3>
             <p className="by-follow-card__desc">{t.jocelynCardDesc}</p>
-            <a href="https://www.linkedin.com/in/jocelyn-vazquez/" target="_blank" rel="noopener noreferrer" className="by-follow-card__cta by-follow-card__cta--jocelyn">
+            <a href="https://www.linkedin.com/in/jocelyn-vazquez/" target="_blank" rel="noopener noreferrer" className="by-follow-card__cta">
               {t.jocelynCardCta}
             </a>
           </div>
@@ -879,16 +944,6 @@ export default function BridgeYear() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="art-footer" style={{ maxWidth: '1040px' }}>
-        <span className="art-footer__copy">{t.footerCopy}</span>
-        <div className="art-footer__links">
-          <Link to="/" className="art-footer__link">{t.footerHome}</Link>
-          <Link to="/articles" className="art-footer__link">{t.footerLaVoz}</Link>
-          <Link to="/career-templates" className="art-footer__link">{t.footerTemplates}</Link>
-          <Link to="/linkedin-series" className="art-footer__link">{t.footerLinkedIn}</Link>
-        </div>
-      </footer>
     </ArticleLayout>
   )
 }
