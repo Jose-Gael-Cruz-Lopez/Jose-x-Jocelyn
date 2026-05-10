@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -17,32 +17,97 @@ function ExtIcon() {
 export default function BridgeYear() {
   const t = useT('bridgeYear')
 
-  const [roleFilter, setRoleFilter] = useState('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const validRoleKeys = (t.roleFilters || []).map(f => f.key)
+  const urlRole = searchParams.get('role') || ''
+  const roleFilter = urlRole && validRoleKeys.includes(urlRole) ? urlRole : 'all'
+  const filtersRef = useRef(null)
+  const progressRef = useRef(null)
+
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({ program: '', company: '', email: '' })
   const [form, setForm] = useState({ program: '', company: '', link: '', why: '', email: '' })
+
+  const [captureEmail, setCaptureEmail] = useState('')
+  const [captureLoading, setCaptureLoading] = useState(false)
+  const [captureError, setCaptureError] = useState('')
+  const [captureSubmitted, setCaptureSubmitted] = useState(() => {
+    if (typeof window === 'undefined') return false
+    try { return window.localStorage.getItem('jxj.bridge-year.subscribed') === '1' } catch { return false }
+  })
 
   const visibleRoles = roleFilter === 'all'
     ? t.roleCards
     : t.roleCards.filter(c => c.rtags.includes(roleFilter))
 
-  const handleRoleFilter = useCallback(e => setRoleFilter(e.currentTarget.dataset.key), [])
+  const handleRoleFilter = useCallback(e => {
+    const key = e.currentTarget.dataset.key
+    const next = new URLSearchParams(searchParams)
+    if (!key || key === 'all') next.delete('role')
+    else next.set('role', key)
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
+
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const el = progressRef.current
+      if (!el) return
+      const doc = document.documentElement
+      const max = (doc.scrollHeight - doc.clientHeight) || 1
+      const ratio = Math.min(1, Math.max(0, window.scrollY / max))
+      el.style.transform = 'scaleX(' + ratio + ')'
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstButton = filtersRef.current?.querySelector('button')
+      if (firstButton) {
+        e.preventDefault()
+        firstButton.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   const handleSubmit = async e => {
     e.preventDefault()
-    if (!form.program || !form.company) {
-      setFormError(t.formErrorRequired)
+    const errors = { program: '', company: '', email: '' }
+    if (!form.program.trim()) errors.program = t.formErrorProgram
+    if (!form.company.trim()) errors.company = t.formErrorCompany
+    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errors.email = t.formErrorEmail
+    if (errors.program || errors.company || errors.email) {
+      setFieldErrors(errors)
+      setFormError('')
       return
     }
+    setFieldErrors({ program: '', company: '', email: '' })
     setFormLoading(true)
     setFormError('')
     const { error } = await supabase.from('bridge_year_suggestions').insert({
-      program_name: form.program,
-      company: form.company,
-      link: form.link || null,
-      why: form.why || null,
-      email: form.email || null,
+      program_name: form.program.trim(),
+      company: form.company.trim(),
+      link: form.link.trim() || null,
+      why: form.why.trim() || null,
+      email: form.email.trim() || null,
     })
     setFormLoading(false)
     if (error) {
@@ -52,13 +117,59 @@ export default function BridgeYear() {
     }
   }
 
-  const setField = (k, v) => setForm(f => ({ ...f, [k]: v }))
+  const setField = (k, v) => {
+    setForm(f => ({ ...f, [k]: v }))
+    if (fieldErrors[k]) setFieldErrors(s => ({ ...s, [k]: '' }))
+  }
+
+  const handleCaptureSubmit = async e => {
+    e.preventDefault()
+    const v = captureEmail.trim()
+    if (!v || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+      setCaptureError(t.captureErrorEmail)
+      return
+    }
+    setCaptureError('')
+    setCaptureLoading(true)
+    const { error } = await supabase.from('bridge_year_subscribers').insert({ email: v })
+    setCaptureLoading(false)
+    if (error) {
+      setCaptureError(t.captureErrorGeneric)
+    } else {
+      setCaptureSubmitted(true)
+      try { window.localStorage.setItem('jxj.bridge-year.subscribed', '1') } catch {}
+    }
+  }
 
   return (
-    <ArticleLayout title="Bridge Year Hub">
+    <ArticleLayout
+      title="Bridge Year Hub"
+      signoffLine={t.signoffLine}
+      signoffSub={t.signoffSub}
+      signoffCta={t.signoffCta}
+    >
+      <div ref={progressRef} className="by-scroll-progress" aria-hidden="true" />
       <style>{`
         html, body { background: var(--color-cream); }
         :root { --by-shadow-warm: 58, 38, 22; }
+
+        .by-scroll-progress {
+          position: fixed;
+          top: 0;
+          left: 0;
+          height: 2px;
+          width: 100%;
+          background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-gold) 100%);
+          z-index: 1000;
+          pointer-events: none;
+          transform: scaleX(0);
+          transform-origin: left;
+          transition: transform .12s linear;
+          will-change: transform;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .by-scroll-progress { transition: none; }
+        }
 
         .by-wrap {
           max-width: 1040px;
@@ -73,6 +184,16 @@ export default function BridgeYear() {
           text-transform: uppercase;
           color: var(--color-muted);
           margin-bottom: 14px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .by-kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
         }
         .by-section-title {
           font-family: var(--font-display);
@@ -105,9 +226,10 @@ export default function BridgeYear() {
         /* HERO */
         .by-hero {
           padding: 120px clamp(20px,5vw,56px) 64px;
-          max-width: 1040px;
+          max-width: 1280px;
           margin: 0 auto;
           position: relative;
+          overflow: hidden;
         }
         .by-hero::before {
           content: '';
@@ -118,14 +240,49 @@ export default function BridgeYear() {
           height: 4px;
           background: var(--color-accent);
           border-radius: 2px;
+          z-index: 1;
         }
+        .by-hero::after {
+          content: '';
+          position: absolute;
+          top: -18%;
+          right: -8%;
+          width: 620px;
+          height: 620px;
+          background: radial-gradient(closest-side, rgba(179,69,57,.09), transparent 70%);
+          pointer-events: none;
+          z-index: 0;
+        }
+        .by-hero > * { position: relative; z-index: 1; }
+        .by-hero__inner {
+          display: grid;
+          grid-template-columns: minmax(0, 1.15fr) minmax(0, .9fr);
+          gap: clamp(40px, 5vw, 80px);
+          align-items: start;
+        }
+        @media (max-width: 960px) {
+          .by-hero__inner { grid-template-columns: 1fr; gap: 40px; }
+        }
+        .by-hero__primary { min-width: 0; }
+        .by-hero__aside { min-width: 0; padding-top: 4px; }
+        .by-hero__aside .by-for__card { max-width: none; }
         .by-hero__kicker {
           font-size: 11px;
           font-weight: 700;
           letter-spacing: .14em;
           text-transform: uppercase;
-          color: var(--color-muted);
+          color: var(--color-accent);
           margin-bottom: 18px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .by-hero__kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
         }
         .by-hero__title {
           font-family: var(--font-display);
@@ -135,7 +292,23 @@ export default function BridgeYear() {
           color: var(--color-dark);
           margin-bottom: 14px;
         }
-        .by-hero__title em { font-style: normal; color: var(--color-accent); }
+        .by-hero__title em {
+          font-style: italic;
+          font-family: var(--font-serif, var(--font-display));
+          color: var(--color-gold-dark);
+          font-weight: 500;
+          padding-right: .04em;
+        }
+        .by-hero__tagline {
+          font-family: var(--font-serif, var(--font-display));
+          font-size: clamp(18px,2.2vw,24px);
+          font-style: italic;
+          font-weight: 400;
+          color: var(--color-accent);
+          margin-bottom: 22px;
+          letter-spacing: -.005em;
+          max-width: 60ch;
+        }
         .by-hero__sub {
           font-family: var(--font-display);
           font-size: clamp(18px,2.5vw,26px);
@@ -191,8 +364,18 @@ export default function BridgeYear() {
           font-weight: 700;
           letter-spacing: .14em;
           text-transform: uppercase;
-          color: var(--color-gold);
+          color: rgba(232,168,56,.72);
           margin-bottom: 14px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .by-for__kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
         }
         .by-for__title {
           font-family: var(--font-display);
@@ -207,6 +390,44 @@ export default function BridgeYear() {
           line-height: 1.8;
         }
         .by-for__body strong { color: var(--color-cream); font-weight: 600; }
+        .by-for__list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .by-for__item {
+          position: relative;
+          padding-left: 22px;
+          font-size: clamp(14px,1.6vw,15px);
+          color: var(--color-cream);
+          line-height: 1.45;
+          font-weight: 500;
+          letter-spacing: -.005em;
+        }
+        .by-for__item::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: .55em;
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: var(--color-gold);
+          opacity: .85;
+        }
+        .by-for__footer {
+          margin: 18px 0 0;
+          padding-top: 16px;
+          border-top: 1px solid rgba(242,228,206,.18);
+          font-family: var(--font-serif, var(--font-body));
+          font-style: italic;
+          font-size: 13px;
+          color: rgba(242,228,206,.72);
+          line-height: 1.55;
+        }
 
         /* APPRENTICESHIPS */
         .by-apprentice {
@@ -215,18 +436,187 @@ export default function BridgeYear() {
           margin: 0 auto;
         }
         .by-apprentice__head { margin-bottom: 40px; }
+
+        /* CAPTURE BANNER — sits above the apprentice grid so we capture intent before users click out */
+        .by-capture {
+          margin-bottom: 32px;
+          padding: 24px 28px;
+          background: linear-gradient(180deg, rgba(232,168,56,.08) 0%, rgba(255,250,242,.5) 100%);
+          border: 1px solid rgba(232,168,56,.32);
+          border-radius: 14px;
+          display: grid;
+          grid-template-columns: minmax(0,1fr) auto;
+          gap: 20px;
+          align-items: center;
+        }
+        @media (max-width: 720px) {
+          .by-capture { grid-template-columns: 1fr; gap: 16px; }
+        }
+        .by-capture__copy { min-width: 0; }
+        .by-capture__kicker {
+          font-size: 10px;
+          font-weight: 800;
+          letter-spacing: .14em;
+          text-transform: uppercase;
+          color: var(--color-gold-dark, var(--color-gold));
+          margin-bottom: 6px;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .by-capture__kicker::after {
+          content: '';
+          width: 18px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
+        }
+        .by-capture__title {
+          font-family: var(--font-display);
+          font-size: clamp(16px,2vw,19px);
+          font-weight: 700;
+          color: var(--color-dark);
+          line-height: 1.3;
+          letter-spacing: -.005em;
+          margin-bottom: 4px;
+          text-wrap: balance;
+        }
+        .by-capture__sub { font-size: 13px; color: var(--color-muted); line-height: 1.55; max-width: 56ch; }
+        .by-capture__form {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .by-capture__input {
+          font-family: var(--font-body);
+          font-size: 14px;
+          padding: 11px 14px;
+          border: 1.5px solid rgba(26,25,22,.13);
+          border-radius: 10px;
+          background: var(--color-white);
+          color: var(--color-dark);
+          outline: none;
+          min-width: 220px;
+          transition: border-color .2s, box-shadow .2s;
+          box-sizing: border-box;
+        }
+        .by-capture__input::placeholder { color: var(--color-muted); }
+        .by-capture__input:focus { border-color: var(--color-gold); box-shadow: 0 0 0 4px rgba(232,168,56,.16); }
+        .by-capture__input.is-invalid { border-color: rgba(179,69,57,.45); }
+        .by-capture__input.is-invalid:focus { border-color: var(--color-accent); box-shadow: 0 0 0 4px rgba(179,69,57,.14); }
+        .by-capture__btn {
+          padding: 11px 22px;
+          background: var(--color-dark);
+          color: var(--color-cream);
+          border: none;
+          border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: -.005em;
+          cursor: pointer;
+          box-shadow: 0 6px 14px -8px rgba(var(--by-shadow-warm),.4), inset 0 1px 0 rgba(255,255,255,.08);
+          transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s;
+        }
+        .by-capture__btn:hover { background: var(--color-gold); color: var(--color-dark); transform: translateY(-1px); box-shadow: 0 12px 22px -10px rgba(232,168,56,.5); }
+        .by-capture__btn:active { transform: translateY(0); }
+        .by-capture__btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+        .by-capture__btn:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+        .by-capture__error {
+          flex-basis: 100%;
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--color-accent);
+          line-height: 1.4;
+          margin-top: 2px;
+        }
+        .by-capture__error::before {
+          content: '';
+          display: inline-block;
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: var(--color-accent);
+          margin-right: 7px;
+          vertical-align: .18em;
+        }
+        .by-capture__success {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          color: var(--color-dark);
+        }
+        .by-capture__success-icon {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: rgba(58,125,107,.14);
+          color: var(--color-teal);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          box-shadow: inset 0 0 0 1.5px rgba(58,125,107,.22);
+        }
+        .by-capture__success-text {
+          font-family: var(--font-display);
+          font-size: 14px;
+          font-weight: 600;
+          line-height: 1.4;
+          color: var(--color-dark);
+        }
+        .by-capture__success-text small { display: block; font-family: var(--font-body); font-size: 12px; font-weight: 400; color: var(--color-muted); margin-top: 2px; }
+        .by-capture__trust {
+          grid-column: 1 / -1;
+          margin-top: 4px;
+          font-size: 11px;
+          color: var(--color-muted);
+          line-height: 1.5;
+          letter-spacing: .005em;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .by-capture__trust::before {
+          content: '';
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--color-teal);
+          flex-shrink: 0;
+          opacity: .65;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .by-capture__btn { transition: none !important; }
+          .by-capture__btn:hover { transform: none !important; }
+        }
         .by-apprentice__grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
           gap: 20px;
         }
+        .by-apprentice__grid > .by-prog,
+        .by-tools__grid > .by-tool-card {
+          animation: by-card-in .55s cubic-bezier(.16,1,.3,1) backwards;
+          animation-delay: calc(var(--by-i, 0) * 50ms);
+        }
+        @keyframes by-card-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .by-apprentice__grid > .by-prog,
+          .by-tools__grid > .by-tool-card { animation: none !important; }
+        }
         .by-prog {
-          background: rgba(255,250,242,.7);
-          border: 1.5px solid rgba(179,69,57,.18);
+          background: linear-gradient(180deg, rgba(179,69,57,.06) 0%, rgba(255,250,242,.55) 60%);
+          border: 1.5px solid rgba(179,69,57,.22);
           border-radius: 14px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(var(--by-shadow-warm),.12);
           transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s, border-color .22s;
         }
         .by-prog:hover {
@@ -433,6 +823,66 @@ export default function BridgeYear() {
         }
         .by-role-card__cta:hover { background: var(--color-teal); color: var(--color-cream); }
 
+        /* BRIDGE CTA — surfaces the suggest form before users commit to scrolling further (LS pattern) */
+        .by-bridge {
+          max-width: 1040px;
+          margin: 0 auto;
+          padding: 0 clamp(20px,5vw,56px) 56px;
+        }
+        .by-bridge__inner {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+          flex-wrap: wrap;
+          padding: 24px 28px;
+          background: rgba(232,168,56,.06);
+          border: 1px solid rgba(232,168,56,.22);
+          border-radius: 14px;
+        }
+        .by-bridge__copy {
+          font-family: var(--font-display);
+          font-size: clamp(17px,2vw,21px);
+          font-weight: 600;
+          color: var(--color-dark);
+          line-height: 1.3;
+          letter-spacing: -.005em;
+        }
+        .by-bridge__copy em {
+          font-style: italic;
+          font-family: var(--font-serif, var(--font-display));
+          color: var(--color-gold-dark);
+          font-weight: 500;
+        }
+        .by-bridge__cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 11px 20px;
+          background: var(--color-dark);
+          color: var(--color-cream);
+          border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: -.005em;
+          text-decoration: none;
+          box-shadow: 0 6px 14px -8px rgba(var(--by-shadow-warm),.4), inset 0 1px 0 rgba(255,255,255,.08);
+          transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s;
+        }
+        .by-bridge__cta:hover {
+          background: var(--color-accent);
+          transform: translateY(-1px);
+          box-shadow: 0 12px 22px -10px rgba(179,69,57,.5);
+        }
+        .by-bridge__cta:active { transform: translateY(0); }
+        .by-bridge__cta:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+        .by-bridge__cta::after { content: '↓'; font-size: 13px; line-height: 1; }
+        @media (prefers-reduced-motion: reduce) {
+          .by-bridge__cta { transition: none !important; }
+          .by-bridge__cta:hover { transform: none !important; }
+        }
+
         /* SPRINT PATH */
         .by-sprint {
           background: var(--color-navy);
@@ -446,6 +896,16 @@ export default function BridgeYear() {
           text-transform: uppercase;
           color: var(--color-gold);
           margin-bottom: 14px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .by-sprint__kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
         }
         .by-sprint__title {
           font-family: var(--font-display);
@@ -517,7 +977,7 @@ export default function BridgeYear() {
 
         /* TOOLS */
         .by-tools {
-          padding: 80px clamp(20px,5vw,56px);
+          padding: 80px clamp(20px,5vw,56px) clamp(96px,12vw,128px);
           max-width: 1040px;
           margin: 0 auto;
         }
@@ -528,13 +988,14 @@ export default function BridgeYear() {
           gap: 16px;
         }
         .by-tool-card {
-          background: transparent;
+          background: linear-gradient(180deg, rgba(58,125,107,.06) 0%, rgba(255,250,242,.4) 60%);
           border: 1.5px solid rgba(58,125,107,.3);
           border-radius: 12px;
           padding: 22px 22px 18px;
           display: flex;
           flex-direction: column;
           gap: 10px;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(var(--by-shadow-warm),.1);
           transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s, border-color .2s, background .2s;
         }
         .by-tool-card:hover {
@@ -565,7 +1026,7 @@ export default function BridgeYear() {
 
         /* FOLLOW */
         .by-follow {
-          padding: 80px clamp(20px,5vw,56px);
+          padding: 80px clamp(20px,5vw,56px) clamp(96px,12vw,128px);
           max-width: 1040px;
           margin: 0 auto;
         }
@@ -616,45 +1077,89 @@ export default function BridgeYear() {
         }
         .by-follow-card__cta:hover { transform: translateY(-1px); background: var(--color-gold); color: var(--color-dark); }
 
-        /* SUGGEST FORM */
+        /* SUGGEST FORM — full-bleed teal section (CT pattern) */
         .by-suggest {
-          padding: 80px clamp(20px,5vw,56px) 100px;
-          max-width: 1040px;
-          margin: 0 auto;
+          background: var(--color-teal);
+          padding: clamp(56px,8vw,96px) clamp(20px,5vw,56px);
+          margin: 0;
+          max-width: none;
+          position: relative;
+          overflow: hidden;
+          scroll-margin-top: 96px;
         }
+        .by-suggest::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: radial-gradient(circle at 84% 76%, rgba(232,168,56,.12) 0%, transparent 50%);
+          pointer-events: none;
+        }
+        .by-suggest__inner {
+          max-width: 1240px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: minmax(0,1fr) minmax(0,1.4fr);
+          gap: clamp(40px,5vw,72px);
+          align-items: start;
+          position: relative;
+        }
+        @media (max-width: 860px) {
+          .by-suggest__inner { grid-template-columns: 1fr; gap: 36px; }
+        }
+        .by-suggest__copy { max-width: 460px; }
         .by-suggest__box {
-          background: rgba(255,250,242,.7);
-          border: 1px solid rgba(26,25,22,.13);
-          border-radius: 16px;
-          padding: clamp(32px,4vw,52px);
-          max-width: 680px;
-          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--by-shadow-warm),.18);
+          background: rgba(0,0,0,.12);
+          border: 1px solid rgba(242,228,206,.22);
+          border-radius: 14px;
+          padding: clamp(24px,3vw,32px);
+          box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
         }
         .by-suggest__kicker {
           font-size: 11px;
           font-weight: 700;
           letter-spacing: .14em;
           text-transform: uppercase;
-          color: var(--color-muted);
-          margin-bottom: 12px;
+          color: var(--color-gold);
+          margin-bottom: 14px;
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .by-suggest__kicker::after {
+          content: '';
+          width: 24px;
+          height: 1px;
+          background: currentColor;
+          opacity: .5;
         }
         .by-suggest__title {
           font-family: var(--font-display);
-          font-size: clamp(22px,3vw,30px);
+          font-size: clamp(28px,4vw,46px);
           font-weight: 700;
-          color: var(--color-dark);
-          margin-bottom: 8px;
+          color: var(--color-cream);
+          line-height: 1.05;
+          letter-spacing: -.025em;
+          text-wrap: balance;
+          margin-bottom: 16px;
+          max-width: 18ch;
         }
-        .by-suggest__sub { font-size: 15px; color: var(--color-muted); line-height: 1.7; margin-bottom: 28px; }
+        .by-suggest__title em {
+          font-style: italic;
+          font-family: var(--font-serif, var(--font-display));
+          color: var(--color-gold);
+          font-weight: 500;
+          padding-right: .04em;
+        }
+        .by-suggest__sub { font-size: 15px; color: rgba(242,228,206,.7); line-height: 1.7; margin-bottom: 0; max-width: 50ch; }
         .by-suggest__row { margin-bottom: 16px; }
         .by-suggest__label {
           display: block;
           font-size: 12px;
-          font-weight: 700;
+          font-weight: 800;
           text-transform: uppercase;
-          letter-spacing: .08em;
-          color: var(--color-muted);
-          margin-bottom: 6px;
+          letter-spacing: .12em;
+          color: rgba(242,228,206,.85);
+          margin-bottom: 7px;
         }
         .by-suggest__input,
         .by-suggest__textarea {
@@ -662,31 +1167,103 @@ export default function BridgeYear() {
           font-family: var(--font-body);
           font-size: 15px;
           padding: 12px 14px;
-          border: 1.5px solid rgba(0,0,0,.12);
-          border-radius: 8px;
-          background: var(--color-white);
-          color: var(--color-dark);
+          border: 1.5px solid rgba(242,228,206,.32);
+          border-radius: 10px;
+          background: rgba(0,0,0,.18);
+          color: var(--color-cream);
           outline: none;
-          transition: border-color .2s;
+          transition: border-color .2s, background .2s, box-shadow .2s;
           box-sizing: border-box;
         }
-        .by-suggest__textarea { min-height: 80px; resize: vertical; line-height: 1.55; }
+        .by-suggest__input::placeholder,
+        .by-suggest__textarea::placeholder { color: rgba(242,228,206,.55); }
+        .by-suggest__textarea { min-height: 90px; resize: vertical; line-height: 1.55; }
         .by-suggest__input:focus,
-        .by-suggest__textarea:focus { border-color: var(--color-gold); }
-        .by-suggest__btn {
+        .by-suggest__textarea:focus {
+          border-color: var(--color-gold);
+          background: rgba(255,255,255,.1);
+          box-shadow: 0 0 0 4px rgba(232,168,56,.16);
+        }
+        .by-suggest__input.is-invalid,
+        .by-suggest__textarea.is-invalid { border-color: rgba(232,168,56,.6); }
+        .by-suggest__input.is-invalid:focus,
+        .by-suggest__textarea.is-invalid:focus {
+          border-color: var(--color-gold);
+          box-shadow: 0 0 0 4px rgba(232,168,56,.24);
+        }
+        .by-suggest__row__error {
+          display: block;
           margin-top: 6px;
-          padding: 13px 28px;
-          background: var(--color-dark);
-          color: var(--color-cream);
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--color-gold);
+          line-height: 1.4;
+        }
+        .by-suggest__row__error::before {
+          content: '';
+          display: inline-block;
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: var(--color-gold);
+          margin-right: 7px;
+          vertical-align: .18em;
+        }
+        .by-suggest__btn {
+          margin-top: 4px;
+          padding: 14px 28px;
+          background: var(--color-gold);
+          color: var(--color-dark);
           border: none;
-          border-radius: 8px;
+          border-radius: 999px;
           font-family: var(--font-display);
           font-size: 14px;
-          font-weight: 600;
+          font-weight: 700;
+          letter-spacing: -.005em;
           cursor: pointer;
-          transition: background .2s, transform .18s;
+          box-shadow: 0 8px 20px -10px rgba(232,168,56,.4);
+          transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s;
         }
-        .by-suggest__btn:hover { background: var(--color-accent); transform: translateY(-1px); }
+        .by-suggest__btn:hover {
+          background: var(--color-cream);
+          transform: translateY(-2px);
+          box-shadow: 0 14px 24px -12px rgba(232,228,206,.5);
+        }
+        .by-suggest__btn:active { transform: translateY(0); }
+        .by-suggest__btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+        .by-suggest__error-card {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          margin-bottom: 14px;
+          padding: 14px 16px;
+          background: rgba(232,168,56,.08);
+          border: 1px solid rgba(232,168,56,.3);
+          border-radius: 10px;
+        }
+        .by-suggest__error-card__msg {
+          flex: 1;
+          font-size: 13px;
+          color: var(--color-cream);
+          line-height: 1.5;
+        }
+        .by-suggest__error-card__msg strong { color: var(--color-gold); font-weight: 700; }
+        .by-suggest__error-card__retry {
+          flex-shrink: 0;
+          padding: 7px 14px;
+          background: transparent;
+          border: 1.5px solid var(--color-gold);
+          color: var(--color-gold);
+          border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: -.005em;
+          cursor: pointer;
+          transition: background .2s, color .2s;
+        }
+        .by-suggest__error-card__retry:hover { background: var(--color-gold); color: var(--color-dark); }
+        .by-suggest__error-card__retry:focus-visible { outline: 2px solid var(--color-cream); outline-offset: 2px; }
         .by-jump:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 3px; }
         .by-prog__cta:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
         .by-role-card__cta:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; }
@@ -701,10 +1278,11 @@ export default function BridgeYear() {
           font-family: var(--font-display);
           font-size: 22px;
           font-weight: 700;
-          color: var(--color-dark);
+          color: var(--color-cream);
           margin-bottom: 8px;
+          letter-spacing: -.01em;
         }
-        .by-suggest__success p { font-size: 15px; color: var(--color-muted); line-height: 1.7; }
+        .by-suggest__success p { font-size: 15px; color: rgba(242,228,206,.7); line-height: 1.7; }
 
         @media (max-width: 768px) {
           .by-follow__inner { grid-template-columns: 1fr; }
@@ -725,27 +1303,37 @@ export default function BridgeYear() {
 
       {/* HERO */}
       <header className="by-hero" id="top">
-        <p className="by-hero__kicker">{t.heroKicker}</p>
-        <h1 className="by-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
-        <p className="by-hero__sub">{t.heroSub}</p>
-        <p className="by-hero__body" dangerouslySetInnerHTML={{ __html: t.heroBody }} />
-        <nav className="by-jumps" aria-label={t.heroJumpsAriaLabel}>
-          <a href="#apprenticeships" className="by-jump">{t.heroJump1}</a>
-          <a href="#roles" className="by-jump">{t.heroJump2}</a>
-          <a href="#sprint" className="by-jump">{t.heroJump3}</a>
-        </nav>
-      </header>
-
-      <hr className="by-divider" />
-
-      {/* IS THIS FOR YOU */}
-      <section className="by-for">
-        <div className="by-for__card">
-          <p className="by-for__kicker">{t.forKicker}</p>
-          <h2 className="by-for__title">{t.forTitle}</h2>
-          <p className="by-for__body" dangerouslySetInnerHTML={{ __html: t.forBody }} />
+        <div className="by-hero__inner">
+          <div className="by-hero__primary">
+            <p className="by-hero__kicker">{t.heroKicker}</p>
+            <h1 className="by-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
+            {t.heroTagline && <p className="by-hero__tagline">{t.heroTagline}</p>}
+            <p className="by-hero__sub">{t.heroSub}</p>
+            <p className="by-hero__body" dangerouslySetInnerHTML={{ __html: t.heroBody }} />
+            <nav className="by-jumps" aria-label={t.heroJumpsAriaLabel}>
+              <a href="#apprenticeships" className="by-jump">{t.heroJump1}</a>
+              <a href="#roles" className="by-jump">{t.heroJump2}</a>
+              <a href="#sprint" className="by-jump">{t.heroJump3}</a>
+            </nav>
+          </div>
+          <aside className="by-hero__aside" aria-label={t.forKicker}>
+            <div className="by-for__card">
+              <p className="by-for__kicker">{t.forKicker}</p>
+              <h2 className="by-for__title">{t.forTitle}</h2>
+              {Array.isArray(t.forItems) ? (
+                <ul className="by-for__list">
+                  {t.forItems.map((item, i) => (
+                    <li key={i} className="by-for__item">{item}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="by-for__body" dangerouslySetInnerHTML={{ __html: t.forBody }} />
+              )}
+              {t.forFooter && <p className="by-for__footer">{t.forFooter}</p>}
+            </div>
+          </aside>
         </div>
-      </section>
+      </header>
 
       <hr className="by-divider" />
 
@@ -758,9 +1346,50 @@ export default function BridgeYear() {
           <p className="by-section-body">{t.apprenticeBody}</p>
         </div>
 
+        <div className="by-capture" aria-label={t.captureTitle}>
+          {captureSubmitted ? (
+            <div className="by-capture__success">
+              <span className="by-capture__success-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 22 22" fill="none"><path d="M5 11.5l4 4L17 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </span>
+              <p className="by-capture__success-text">
+                {t.captureSuccessTitle}
+                <small>{t.captureSuccessBody}</small>
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="by-capture__copy">
+                <p className="by-capture__kicker">{t.captureKicker}</p>
+                <p className="by-capture__title">{t.captureTitle}</p>
+                <p className="by-capture__sub">{t.captureSub}</p>
+              </div>
+              <form className="by-capture__form" onSubmit={handleCaptureSubmit}>
+                <label htmlFor="captureEmail" className="visually-hidden" style={{ position: 'absolute', width: '1px', height: '1px', padding: 0, margin: '-1px', overflow: 'hidden', clip: 'rect(0,0,0,0)', border: 0 }}>{t.formLabelEmail}</label>
+                <input
+                  id="captureEmail"
+                  type="email"
+                  className={`by-capture__input${captureError ? ' is-invalid' : ''}`}
+                  placeholder={t.capturePlaceholder}
+                  value={captureEmail}
+                  onChange={e => { setCaptureEmail(e.target.value); if (captureError) setCaptureError('') }}
+                  aria-invalid={!!captureError}
+                  aria-describedby={captureError ? 'captureEmail-error' : undefined}
+                  autoComplete="email"
+                />
+                <button type="submit" className="by-capture__btn" disabled={captureLoading}>
+                  {captureLoading ? t.captureSubmitting : t.captureButton}
+                </button>
+                {captureError && <span id="captureEmail-error" className="by-capture__error" role="alert">{captureError}</span>}
+              </form>
+              {t.captureTrust && <p className="by-capture__trust">{t.captureTrust}</p>}
+            </>
+          )}
+        </div>
+
         <div className="by-apprentice__grid">
           {t.programs.map((prog, idx) => (
-            <div className={`by-prog${idx === 0 ? ' by-prog--featured' : ''}`} key={prog.name}>
+            <div className={`by-prog${idx === 0 ? ' by-prog--featured' : ''}`} key={prog.name} style={{ '--by-i': idx % 12 }}>
               <div className="by-prog__inner">
                 {idx === 0 && <span className="by-prog--featured-tag">{t.featuredLabel ?? 'Start here'}</span>}
                 <p className="by-prog__company">{prog.company}</p>
@@ -797,7 +1426,7 @@ export default function BridgeYear() {
           <p className="by-section-body">{t.rolesBody}</p>
         </div>
 
-        <div className="by-roles__filters" role="group" aria-label={t.rolesFiltersAriaLabel}>
+        <div className="by-roles__filters" role="group" aria-label={t.rolesFiltersAriaLabel} ref={filtersRef}>
           {t.roleFilters.map(f => (
             <button
               key={f.key}
@@ -828,6 +1457,14 @@ export default function BridgeYear() {
           ))}
         </div>
       </section>
+
+      {/* BRIDGE CTA */}
+      <div className="by-bridge">
+        <div className="by-bridge__inner">
+          <p className="by-bridge__copy">{t.bridgeCopyPrefix} <em>{t.bridgeCopyEm}</em></p>
+          <a href="#suggest" className="by-bridge__cta">{t.bridgeCtaLabel}</a>
+        </div>
+      </div>
 
       {/* SPRINT PATH */}
       <section className="by-sprint" id="sprint">
@@ -864,8 +1501,8 @@ export default function BridgeYear() {
           <p className="by-section-sub">{t.toolsSub}</p>
         </div>
         <div className="by-tools__grid">
-          {t.tools.map(tool => (
-            <div className="by-tool-card" key={tool.name}>
+          {t.tools.map((tool, idx) => (
+            <div className="by-tool-card" key={tool.name} style={{ '--by-i': idx % 12 }}>
               <h3 className="by-tool-card__name">{tool.name}</h3>
               <p className="by-tool-card__desc">{tool.desc}</p>
               <Link to="/career-templates" className="by-tool-card__link">{tool.linkLabel}</Link>
@@ -905,11 +1542,13 @@ export default function BridgeYear() {
 
       {/* SUGGEST FORM */}
       <section className="by-suggest" id="suggest">
-        <div className="by-suggest__box">
-          <p className="by-suggest__kicker">{t.suggestKicker}</p>
-          <h2 className="by-suggest__title">{t.suggestTitle}</h2>
-          <p className="by-suggest__sub">{t.suggestSub}</p>
-
+        <div className="by-suggest__inner">
+          <div className="by-suggest__copy">
+            <p className="by-suggest__kicker">{t.suggestKicker}</p>
+            <h2 className="by-suggest__title">{t.suggestTitlePrefix ?? t.suggestTitle}{t.suggestTitleEm && <> <em>{t.suggestTitleEm}</em></>}</h2>
+            <p className="by-suggest__sub">{t.suggestSub}</p>
+          </div>
+          <div className="by-suggest__box">
           {formSubmitted ? (
             <div className="by-suggest__success">
               <h3>{t.formSuccessTitle}</h3>
@@ -919,11 +1558,31 @@ export default function BridgeYear() {
             <form onSubmit={handleSubmit}>
               <div className="by-suggest__row">
                 <label className="by-suggest__label" htmlFor="sgProgram">{t.formLabelProgram}</label>
-                <input className="by-suggest__input" type="text" id="sgProgram" placeholder={t.formPlaceholderProgram} value={form.program} onChange={e => setField('program', e.target.value)} />
+                <input
+                  className={`by-suggest__input${fieldErrors.program ? ' is-invalid' : ''}`}
+                  type="text"
+                  id="sgProgram"
+                  placeholder={t.formPlaceholderProgram}
+                  value={form.program}
+                  onChange={e => setField('program', e.target.value)}
+                  aria-invalid={!!fieldErrors.program}
+                  aria-describedby={fieldErrors.program ? 'sgProgram-error' : undefined}
+                />
+                {fieldErrors.program && <span id="sgProgram-error" className="by-suggest__row__error" role="alert">{fieldErrors.program}</span>}
               </div>
               <div className="by-suggest__row">
                 <label className="by-suggest__label" htmlFor="sgCompany">{t.formLabelCompany}</label>
-                <input className="by-suggest__input" type="text" id="sgCompany" placeholder={t.formPlaceholderCompany} value={form.company} onChange={e => setField('company', e.target.value)} />
+                <input
+                  className={`by-suggest__input${fieldErrors.company ? ' is-invalid' : ''}`}
+                  type="text"
+                  id="sgCompany"
+                  placeholder={t.formPlaceholderCompany}
+                  value={form.company}
+                  onChange={e => setField('company', e.target.value)}
+                  aria-invalid={!!fieldErrors.company}
+                  aria-describedby={fieldErrors.company ? 'sgCompany-error' : undefined}
+                />
+                {fieldErrors.company && <span id="sgCompany-error" className="by-suggest__row__error" role="alert">{fieldErrors.company}</span>}
               </div>
               <div className="by-suggest__row">
                 <label className="by-suggest__label" htmlFor="sgLink">{t.formLabelLink}</label>
@@ -935,12 +1594,34 @@ export default function BridgeYear() {
               </div>
               <div className="by-suggest__row">
                 <label className="by-suggest__label" htmlFor="sgEmail">{t.formLabelEmail}</label>
-                <input className="by-suggest__input" type="email" id="sgEmail" placeholder={t.formPlaceholderEmail} value={form.email} onChange={e => setField('email', e.target.value)} />
+                <input
+                  className={`by-suggest__input${fieldErrors.email ? ' is-invalid' : ''}`}
+                  type="email"
+                  id="sgEmail"
+                  placeholder={t.formPlaceholderEmail}
+                  value={form.email}
+                  onChange={e => setField('email', e.target.value)}
+                  onBlur={e => {
+                    const v = e.target.value.trim()
+                    if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                      setFieldErrors(s => ({ ...s, email: t.formErrorEmail }))
+                    }
+                  }}
+                  aria-invalid={!!fieldErrors.email}
+                  aria-describedby={fieldErrors.email ? 'sgEmail-error' : undefined}
+                />
+                {fieldErrors.email && <span id="sgEmail-error" className="by-suggest__row__error" role="alert">{fieldErrors.email}</span>}
               </div>
-              {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+              {formError && (
+                <div role="alert" className="by-suggest__error-card">
+                  <span className="by-suggest__error-card__msg"><strong>{t.formErrorLabel}</strong> {formError}</span>
+                  <button type="submit" className="by-suggest__error-card__retry" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formRetryLabel}</button>
+                </div>
+              )}
               <button className="by-suggest__btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
             </form>
           )}
+          </div>
         </div>
       </section>
 

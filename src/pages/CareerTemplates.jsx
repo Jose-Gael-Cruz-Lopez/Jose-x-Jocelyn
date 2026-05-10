@@ -127,7 +127,12 @@ export default function CareerTemplates() {
     : t.countMany.replace('{n}', visible.length)
 
   return (
-    <ArticleLayout title={t.heroTitle}>
+    <ArticleLayout
+      title={t.heroTitle}
+      signoffLine={t.signoffLine}
+      signoffSub={t.signoffSub}
+      signoffCta={t.signoffCta}
+    >
       <style>{`
         html, body { background: var(--color-cream); }
 

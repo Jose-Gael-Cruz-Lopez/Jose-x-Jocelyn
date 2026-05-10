@@ -120,17 +120,36 @@ export const es = {
     heroKicker: 'Del Campus a la Carrera · Sprint del Año Puente',
     heroTitle: 'Hub del',
     heroTitleEm: 'Año Puente',
+    heroTagline: 'No estás atrás. Solo en el camino del que nadie te dibujó un mapa.',
     heroSub: 'Terminaste la escuela. Aún no tienes una oferta. Eso no es fracaso - para eso existe exactamente esta página.',
-    heroBody: 'La mayoría de los consejos para personas en la transición son <strong>"sigue aplicando"</strong> o <strong>"ve a la maestría."</strong> Ninguno es útil cuando ya llevas meses aplicando, cuando la maestría no es tu meta, y cuando ves a personas a tu alrededor anunciar ofertas que tú no has recibido. Esta página existe porque Jose y Jocelyn han estado cerca de ese momento y saben qué es lo que realmente mueve la aguja. Lo que encontrarás aquí no es motivación - es un conjunto de puertas reales, herramientas específicas y un camino paso a paso a través de la transición, construido para <strong>estudiantes de primera generación y grupos subrepresentados</strong> que intentan entrar a la tecnología sin una red de contactos o guía familiar.',
+    heroBody: 'No es motivación. <strong>Puertas reales, herramientas específicas y un camino paso a paso por la transición.</strong> Construido para <strong>estudiantes de primera generación y grupos subrepresentados</strong> sin red de contactos ni guía familiar.',
     heroJump1: 'Programas de Aprendizaje y Puntos de Entrada Alternativos',
     heroJump2: 'Roles para Recién Graduados y Primeros Empleos',
     heroJump3: 'Camino Sprint Autoguiado y Herramientas',
     heroJumpsAriaLabel: 'Secciones de la página',
     // ── Is This For You ───────────────────────────────────────────────────
     forKicker: '¿Es esto para ti?',
-    forTitle: 'Esta página fue construida para cuatro personas',
+    forTitle: 'Construida para',
+    forItems: [
+      'Estudiantes que se graduaron sin oferta.',
+      'Alumnos en su último semestre sin nada confirmado.',
+      'Recién graduados que llevan meses aplicando sin avance.',
+      'Cualquiera entrando a la tecnología sin un mapa.',
+    ],
+    forFooter: 'Si te reconoces, esta página fue construida para ti.',
     forBody: '<strong>Estudiantes que se graduaron sin una oferta de regreso o empleo de tiempo completo</strong> y ahora intentan descubrir qué sigue. <strong>Estudiantes en su último semestre</strong> que aún no tienen nada confirmado y están empezando a sentir la presión. <strong>Recién graduados que llevan meses aplicando activamente</strong> con poco o ningún avance y no saben dónde está el problema. Y <strong>cualquiera que quiera entrar a la tecnología</strong> - ya sea desde una carrera de CS tradicional, un bootcamp, un camino autodidacta o un campo completamente distinto - y busca un punto de entrada diseñado específicamente para personas que no pasaron por el reclutamiento tradicional. Si te reconoces en alguno de esos casos, cada sección de esta página fue construida para ti.',
     // ── Apprenticeships section ───────────────────────────────────────────
+    captureKicker: 'Aviso silencioso',
+    captureTitle: 'Te avisamos cuando estos programas vuelvan a abrir.',
+    captureSub: 'Un correo por ciclo. Sin frases corporativas. Déjalo antes de salir y olvidarte.',
+    capturePlaceholder: 'tu@escuela.edu',
+    captureButton: 'Avísame',
+    captureSubmitting: 'Guardando…',
+    captureSuccessTitle: 'Listo.',
+    captureSuccessBody: 'Te escribimos cuando haya noticias que valgan tu correo.',
+    captureErrorEmail: 'Ese correo no se ve del todo bien.',
+    captureErrorGeneric: 'Algo salió mal. Intenta de nuevo en un momento.',
+    captureTrust: 'Lo manejamos Jose y Jocelyn. Tu correo se queda aquí. No lo compartimos en ningún lado.',
     apprenticeKicker: 'Sección 01',
     apprenticeTitle: 'Programas de Aprendizaje y Puntos de Entrada Alternativos',
     apprenticeSub: 'Las puertas que la mayoría no sabe que existen.',
@@ -167,6 +186,8 @@ export const es = {
     // ── Suggest form ──────────────────────────────────────────────────────
     suggestKicker: 'Contribuir',
     suggestTitle: '¿Conoces un programa que deberíamos agregar?',
+    suggestTitlePrefix: '¿Conoces un programa',
+    suggestTitleEm: 'que deberíamos agregar?',
     suggestSub: 'Esta lista es mantenida por Jose y Jocelyn y actualizada cuando se abren nuevos programas. Si encontraste un programa de aprendizaje, rotacional o un rol para recién graduados que no está en esta lista - especialmente programas diseñados para candidatos no tradicionales o de primera generación en tecnología - envíalo abajo y lo revisaremos.',
     formLabelProgram: 'Nombre del programa o rol',
     formPlaceholderProgram: 'ej. Spotify Green Room Engineering Fellowship',
@@ -183,6 +204,14 @@ export const es = {
     formSuccessBody: 'Revisamos cada sugerencia y actualizamos esta lista cuando se abren nuevos programas. Agradecemos tu ayuda para mantenerla actualizada.',
     formErrorRequired: 'El nombre del programa y la empresa son obligatorios.',
     formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    bridgeCopyPrefix: '¿Conoces un programa que se nos pasó?',
+    bridgeCopyEm: 'Envíalo.',
+    bridgeCtaLabel: 'Sugerir un programa',
+    formErrorProgram: 'Dinos el nombre del programa.',
+    formErrorCompany: 'Dinos qué empresa lo administra.',
+    formErrorEmail: 'Ese correo no se ve del todo bien.',
+    formErrorLabel: 'No se pudo guardar tu sugerencia.',
+    formRetryLabel: 'Reintentar',
     // ── PROGRAMS array ────────────────────────────────────────────────────
     programs: [
       {
@@ -396,6 +425,9 @@ export const es = {
     footerLaVoz: 'La Voz del Día',
     footerTemplates: 'Plantillas',
     footerLinkedIn: 'Serie de LinkedIn',
+    signoffLine: 'Los dos tomamos el año puente. Funcionó.',
+    signoffSub: 'No pidas perdón por estar en él.',
+    signoffCta: 'Dinos qué necesitas',
   },
   interviewPrep: {
     // ── Hero ─────────────────────────────────────────────────────────────
@@ -1751,6 +1783,9 @@ export const es = {
     footerHome: 'Inicio',
     footerArticles: 'La Voz del Día',
     footerTemplates: 'Plantillas',
+    signoffLine: 'Dos veces por semana, en dos voces.',
+    signoffSub: 'Publicamos lo que nos hubiera gustado que alguien nos dijera. Quédate. El episodio 01 ya viene.',
+    signoffCta: 'Dinos dónde estás atorado',
   },
 
   careerTemplates: {
@@ -1942,6 +1977,9 @@ export const es = {
     footerHome: 'Inicio',
     footerArticles: 'La Voz del Día',
     footerLinkedIn: 'Serie de LinkedIn',
+    signoffLine: 'Róbatelas. Mándalas.',
+    signoffSub: 'Lo peor que puede pasar es que alguien lea tu mensaje. No dejes que un texto «perfecto» sea la razón por la que no escribiste.',
+    signoffCta: 'Dinos qué falta',
   },
 
   partnerPanels: {

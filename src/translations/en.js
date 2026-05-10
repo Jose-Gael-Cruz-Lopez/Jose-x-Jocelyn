@@ -120,17 +120,36 @@ export const en = {
     heroKicker: 'From Campus to Career · Bridge Year Sprint',
     heroTitle: 'Bridge Year',
     heroTitleEm: 'Hub',
+    heroTagline: 'Not behind. Just on the path no one drew you a map for.',
     heroSub: 'You finished school. You do not have an offer yet. That is not failure - that is exactly where this page is for.',
-    heroBody: 'Most advice for people in the gap is either <strong>"keep applying"</strong> or <strong>"go to grad school."</strong> Neither of those is useful when you have already been applying for months, when grad school is not the goal, and when you are watching people around you announce offers you have not gotten yet. This page exists because Jose and Jocelyn have both been close to that moment and know what actually moves the needle. What you will find here is not motivation - it is a curated set of real doors, specific tools, and a step-by-step path through the gap, built for <strong>first-gen and underrepresented students</strong> who are trying to break into tech without a built-in network or family roadmap.',
+    heroBody: 'Not motivation. <strong>Real doors, specific tools, and a step-by-step path through the gap.</strong> Built for <strong>first-gen and underrepresented students</strong> without a built-in network or family roadmap.',
     heroJump1: 'Apprenticeships and Alternative Entry Programs',
     heroJump2: 'New Grad and Early-Career Roles',
     heroJump3: 'Self-Guided Sprint Path and Tools',
     heroJumpsAriaLabel: 'Page sections',
     // ── Is This For You ───────────────────────────────────────────────────
     forKicker: 'Is this for you?',
-    forTitle: 'Four people built this page for',
+    forTitle: 'Built for',
+    forItems: [
+      'Seniors who graduated without a return offer.',
+      'Last-semester students with nothing lined up.',
+      'Recent grads applying for months without movement.',
+      'Anyone breaking into tech without a roadmap.',
+    ],
+    forFooter: 'If you recognize yourself, this page was built for you.',
     forBody: '<strong>Seniors who graduated without a return offer or full-time role</strong> and are now trying to figure out what comes next. <strong>Students in their last semester</strong> who do not have anything lined up yet and are starting to feel the pressure. <strong>Recent grads who have been actively applying for months</strong> with little to no movement and are not sure where the problem is. And <strong>anyone who wants to break into tech</strong> - whether from a traditional CS background, a bootcamp, a self-taught path, or a completely different field - and is looking for an entry point that is specifically designed for people who did not come through the traditional recruiting pipeline. If you recognize yourself in any of those, every section of this page was built for you.',
     // ── Apprenticeships section ───────────────────────────────────────────
+    captureKicker: 'Quiet alert',
+    captureTitle: 'We’ll email you when these programs reopen.',
+    captureSub: 'One email per cycle. No platform-speak. Drop it before you click out and forget.',
+    capturePlaceholder: 'you@school.edu',
+    captureButton: 'Notify me',
+    captureSubmitting: 'Saving…',
+    captureSuccessTitle: 'Got it.',
+    captureSuccessBody: 'We’ll be in touch when there’s news worth your inbox.',
+    captureErrorEmail: 'That email does not look quite right.',
+    captureErrorGeneric: 'Something went wrong. Try again in a moment.',
+    captureTrust: 'Run by Jose and Jocelyn. Your email stays here. We don’t share it anywhere.',
     apprenticeKicker: 'Section 01',
     apprenticeTitle: 'Apprenticeships and Alternative Entry Programs',
     apprenticeSub: 'The doors most people do not know exist.',
@@ -167,6 +186,8 @@ export const en = {
     // ── Suggest form ──────────────────────────────────────────────────────
     suggestKicker: 'Contribute',
     suggestTitle: 'Know a program we should add?',
+    suggestTitlePrefix: 'Know a program',
+    suggestTitleEm: 'we should add?',
     suggestSub: 'This list is maintained by Jose and Jocelyn and updated as new programs open. If you found an apprenticeship, rotational program, or new grad role that is not on this list - especially programs designed for non-traditional or first-gen candidates in tech - submit it below and we will review it.',
     formLabelProgram: 'Program or role name',
     formPlaceholderProgram: 'e.g. Spotify Green Room Engineering Fellowship',
@@ -183,6 +204,14 @@ export const en = {
     formSuccessBody: 'We review every suggestion and update this list as new programs open. We appreciate you helping keep it current.',
     formErrorRequired: 'Program name and company are required.',
     formErrorGeneric: 'Something went wrong. Please try again.',
+    bridgeCopyPrefix: 'Know a program we missed?',
+    bridgeCopyEm: 'Send it to us.',
+    bridgeCtaLabel: 'Suggest a program',
+    formErrorProgram: 'Tell us the program name.',
+    formErrorCompany: 'Tell us which company runs it.',
+    formErrorEmail: 'That email does not look quite right.',
+    formErrorLabel: 'Could not save your suggestion.',
+    formRetryLabel: 'Retry',
     // ── PROGRAMS array ────────────────────────────────────────────────────
     programs: [
       {
@@ -396,6 +425,9 @@ export const en = {
     footerLaVoz: 'La Voz del Día',
     footerTemplates: 'Templates',
     footerLinkedIn: 'LinkedIn Series',
+    signoffLine: 'We both took the bridge year. It worked.',
+    signoffSub: 'Don’t apologize for being on it.',
+    signoffCta: 'Tell us what you need',
   },
   interviewPrep: {
     // ── Hero ─────────────────────────────────────────────────────────────
@@ -1751,6 +1783,9 @@ export const en = {
     footerHome: 'Home',
     footerArticles: 'La Voz del Día',
     footerTemplates: 'Templates',
+    signoffLine: 'Twice a week, in two voices.',
+    signoffSub: 'We’re posting what we wished someone had told us. Stick around. Episode 01 is coming.',
+    signoffCta: 'Tell us where you’re stuck',
   },
 
   careerTemplates: {
@@ -1942,6 +1977,9 @@ export const en = {
     footerHome: 'Home',
     footerArticles: 'La Voz del Día',
     footerLinkedIn: 'LinkedIn Series',
+    signoffLine: 'Steal these. Send them.',
+    signoffSub: 'The worst thing that happens is someone reads your message. Don’t let perfect copy be the reason you didn’t reach out.',
+    signoffCta: 'Tell us what’s missing',
   },
 
   partnerPanels: {
