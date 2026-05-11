@@ -411,8 +411,8 @@ export default function CoffeeChat() {
         .cc-card__role { font-size: 12px; color: var(--color-muted); line-height: 1.4; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .cc-card__badge { font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; background: rgba(58,125,107,.14); color: var(--color-teal); flex-shrink: 0; }
         .cc-card__badge--new { background: var(--color-gold); color: var(--color-dark); box-shadow: 0 1px 3px -1px rgba(232,168,56,.5); }
-        .cc-card__topic-block { padding: 14px 16px; background: rgba(255,255,255,.55); border-radius: 10px; border-left: 3px solid var(--color-accent); }
-        .cc-card--new .cc-card__topic-block { border-left-color: var(--color-gold-dark); background: rgba(255,255,255,.6); }
+        .cc-card__topic-block { padding: 14px 16px; background: linear-gradient(180deg, rgba(179,69,57,.08) 0%, rgba(255,255,255,.55) 60%); border-radius: 10px; border: 1px solid rgba(179,69,57,.22); }
+        .cc-card--new .cc-card__topic-block { background: linear-gradient(180deg, rgba(232,168,56,.1) 0%, rgba(255,255,255,.6) 60%); border-color: rgba(232,168,56,.3); }
         .cc-card__topic-headline { font-family: var(--font-serif, var(--font-display)); font-size: 14px; font-style: italic; font-weight: 500; color: var(--color-accent); line-height: 1.4; margin-bottom: 6px; }
         .cc-card--new .cc-card__topic-headline { color: var(--color-gold-dark); }
         .cc-card__topics { font-size: 13px; color: var(--color-dark); line-height: 1.6; }
