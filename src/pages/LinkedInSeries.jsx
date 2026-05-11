@@ -104,7 +104,6 @@ const PAGE_CSS = `
   .ls-post:hover { transform:translateY(-3px);border-color:rgba(26,25,22,.22);box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 16px 36px -12px rgba(var(--ls-shadow-warm),.22); }
   .ls-post--featured { border-color:rgba(232,168,56,.4);border-width:1.5px;background:linear-gradient(180deg,rgba(232,168,56,.07) 0%,rgba(232,168,56,.02) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.4); }
   .ls-post--featured:hover { border-color:rgba(232,168,56,.55);box-shadow:0 16px 36px -12px rgba(232,168,56,.32),inset 0 1px 0 rgba(255,255,255,.45); }
-  .ls-post--featured::before { content:'';position:absolute;top:-1px;left:18px;width:28px;height:5px;background:var(--color-gold);border-radius:0 0 4px 4px;box-shadow:0 1px 2px rgba(232,168,56,.4); }
   .ls-post__type { font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--color-muted); }
   .ls-post__title { font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--color-dark);line-height:1.4;text-wrap:balance; }
   .ls-post__preview { font-size:13px;color:var(--color-muted);line-height:1.55;flex:1; }
