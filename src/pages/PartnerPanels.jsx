@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -117,16 +117,38 @@ function addToCalendar(title, start, end) {
 
 export default function PartnerPanels() {
   const t = useT('partnerPanels')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const validTopics = ['all', ...new Set(ARCHIVE_CARDS.flatMap(c => c.topics))]
+  const urlTopic = searchParams.get('topic') || ''
+  const activeTopic = urlTopic && validTopics.includes(urlTopic) ? urlTopic : 'all'
+  const setActiveTopic = useCallback(key => {
+    const next = new URLSearchParams(searchParams)
+    if (!key || key === 'all') next.delete('topic')
+    else next.set('topic', key)
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
   const [openTakeaway, setOpenTakeaway] = useState(null)
-  const [activeTopic, setActiveTopic] = useState('all')
+  const topicsRef = useRef(null)
+  const progressRef = useRef(null)
   const [suggestSubmitted, setSuggestSubmitted] = useState(false)
   const [suggestLoading, setSuggestLoading] = useState(false)
   const [suggestError, setSuggestError] = useState('')
+  const [suggestFieldErrors, setSuggestFieldErrors] = useState({ topic: '', why: '', stage: '', category: '', email: '' })
   const [panelistSubmitted, setPanelistSubmitted] = useState(false)
   const [panelistLoading, setPanelistLoading] = useState(false)
   const [panelistError, setPanelistError] = useState('')
+  const [panelistFieldErrors, setPanelistFieldErrors] = useState({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '' })
   const [suggestForm, setSuggestForm] = useState({ topic: '', why: '', stage: '', category: '', email: '' })
   const [panelistForm, setPanelistForm] = useState({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '', notes: '' })
+
+  const setSuggestField = (k, v) => {
+    setSuggestForm(f => ({ ...f, [k]: v }))
+    if (suggestFieldErrors[k]) setSuggestFieldErrors(s => ({ ...s, [k]: '' }))
+  }
+  const setPanelistField = (k, v) => {
+    setPanelistForm(f => ({ ...f, [k]: v }))
+    if (panelistFieldErrors[k]) setPanelistFieldErrors(s => ({ ...s, [k]: '' }))
+  }
 
   const topicChips = t.topicChips
 
@@ -138,20 +160,66 @@ export default function PartnerPanels() {
     setOpenTakeaway(prev => prev === id ? null : id)
   }
 
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const el = progressRef.current
+      if (!el) return
+      const doc = document.documentElement
+      const max = (doc.scrollHeight - doc.clientHeight) || 1
+      const ratio = Math.min(1, Math.max(0, window.scrollY / max))
+      el.style.transform = 'scaleX(' + ratio + ')'
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstChip = topicsRef.current?.querySelector('button, [tabindex]:not([tabindex="-1"])')
+      if (firstChip) {
+        e.preventDefault()
+        firstChip.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
+
   async function submitSuggest(e) {
     e.preventDefault()
-    if (!suggestForm.topic || !suggestForm.why || !suggestForm.stage || !suggestForm.category) {
-      setSuggestError(t.suggestErrorRequired)
+    const errors = { topic: '', why: '', stage: '', category: '', email: '' }
+    if (!suggestForm.topic.trim()) errors.topic = t.suggestErrorTopic
+    if (!suggestForm.why.trim()) errors.why = t.suggestErrorWhy
+    if (!suggestForm.stage) errors.stage = t.suggestErrorStage
+    if (!suggestForm.category) errors.category = t.suggestErrorCategory
+    if (suggestForm.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(suggestForm.email.trim())) errors.email = t.suggestErrorEmail
+    if (Object.values(errors).some(Boolean)) {
+      setSuggestFieldErrors(errors)
+      setSuggestError('')
       return
     }
+    setSuggestFieldErrors({ topic: '', why: '', stage: '', category: '', email: '' })
     setSuggestLoading(true)
     setSuggestError('')
     const { error } = await supabase.from('panel_suggestions').insert({
-      topic: suggestForm.topic,
-      why_helpful: suggestForm.why,
+      topic: suggestForm.topic.trim(),
+      why_helpful: suggestForm.why.trim(),
       stage: suggestForm.stage,
       category: suggestForm.category,
-      email: suggestForm.email || null,
+      email: suggestForm.email.trim() || null,
     })
     setSuggestLoading(false)
     if (error) {
@@ -163,20 +231,30 @@ export default function PartnerPanels() {
 
   async function submitPanelist(e) {
     e.preventDefault()
-    if (!panelistForm.name || !panelistForm.email || !panelistForm.linkedin || !panelistForm.role || !panelistForm.topic || !panelistForm.interest) {
-      setPanelistError(t.panelistErrorRequired)
+    const errors = { name: '', email: '', linkedin: '', role: '', topic: '', interest: '' }
+    if (!panelistForm.name.trim()) errors.name = t.panelistErrorName
+    if (!panelistForm.email.trim()) errors.email = t.panelistErrorEmail
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(panelistForm.email.trim())) errors.email = t.panelistErrorEmailFormat
+    if (!panelistForm.linkedin.trim()) errors.linkedin = t.panelistErrorLinkedin
+    if (!panelistForm.role.trim()) errors.role = t.panelistErrorRole
+    if (!panelistForm.topic) errors.topic = t.panelistErrorTopic
+    if (!panelistForm.interest) errors.interest = t.panelistErrorInterest
+    if (Object.values(errors).some(Boolean)) {
+      setPanelistFieldErrors(errors)
+      setPanelistError('')
       return
     }
+    setPanelistFieldErrors({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '' })
     setPanelistLoading(true)
     setPanelistError('')
     const { error } = await supabase.from('panelists').insert({
-      name: panelistForm.name,
-      email: panelistForm.email,
-      linkedin_url: panelistForm.linkedin,
-      role_title: panelistForm.role,
+      name: panelistForm.name.trim(),
+      email: panelistForm.email.trim(),
+      linkedin_url: panelistForm.linkedin.trim(),
+      role_title: panelistForm.role.trim(),
       topic: panelistForm.topic,
       interested_in: panelistForm.interest,
-      notes: panelistForm.notes || null,
+      notes: panelistForm.notes.trim() || null,
     })
     setPanelistLoading(false)
     if (error) {
@@ -187,9 +265,18 @@ export default function PartnerPanels() {
   }
 
   return (
-    <ArticleLayout title={`${t.heroTitlePrefix}${t.heroTitleEm}`}>
+    <ArticleLayout
+      title={`${t.heroTitlePrefix}${t.heroTitleEm}`}
+      signoffLine={t.signoffLine}
+      signoffSub={t.signoffSub}
+      signoffCta={t.signoffCta}
+    >
+      <div ref={progressRef} className="pp-scroll-progress" aria-hidden="true" />
       <style>{`
         html, body { background: var(--color-cream); }
+        :root { --pp-shadow-warm: 58, 38, 22; }
+        .pp-scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-gold) 100%); z-index: 1000; pointer-events: none; transform: scaleX(0); transform-origin: left; transition: transform .12s linear; will-change: transform; }
+        @media (prefers-reduced-motion: reduce) { .pp-scroll-progress { transition: none; } }
 
         .pp-wrap {
           max-width: 1040px;
@@ -201,7 +288,9 @@ export default function PartnerPanels() {
         .pp-kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
           text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px;
+          display: inline-flex; align-items: center; gap: 10px;
         }
+        .pp-kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .pp-section-title {
           font-family: var(--font-display);
           font-size: clamp(26px,4vw,40px); font-weight: 700;
@@ -254,17 +343,32 @@ export default function PartnerPanels() {
         .pp-hero {
           padding: 120px clamp(20px,5vw,56px) 64px;
           max-width: 1040px; margin: 0 auto;
+          position: relative; overflow: hidden;
         }
+        .pp-hero::before {
+          content: ''; position: absolute; top: 96px; left: clamp(20px,5vw,56px);
+          width: 56px; height: 4px; background: var(--color-accent); border-radius: 2px; z-index: 1;
+        }
+        .pp-hero::after {
+          content: ''; position: absolute; top: -14%; right: -10%;
+          width: 520px; height: 520px;
+          background: radial-gradient(closest-side, rgba(179,69,57,.1), transparent 70%);
+          pointer-events: none; z-index: 0;
+        }
+        .pp-hero > * { position: relative; z-index: 1; }
         .pp-hero__kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: var(--color-muted); margin-bottom: 18px;
+          text-transform: uppercase; color: var(--color-accent); margin-bottom: 18px;
+          display: inline-flex; align-items: center; gap: 10px;
         }
+        .pp-hero__kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .pp-hero__title {
           font-family: var(--font-display);
           font-size: clamp(42px,7vw,80px); font-weight: 700;
           line-height: 1.04; color: var(--color-dark); margin-bottom: 14px;
         }
-        .pp-hero__title em { font-style: normal; color: var(--color-gold); }
+        .pp-hero__title em { font-style: italic; font-family: var(--font-serif, var(--font-display)); color: var(--color-gold-dark); font-weight: 500; padding-right: .04em; }
+        .pp-hero__tagline { font-family: var(--font-serif, var(--font-display)); font-size: clamp(18px,2.2vw,24px); font-style: italic; font-weight: 400; color: var(--color-accent); margin-bottom: 22px; letter-spacing: -.005em; max-width: 60ch; }
         .pp-hero__sub {
           font-family: var(--font-display);
           font-size: clamp(18px,2.5vw,26px); font-weight: 400;
@@ -276,20 +380,7 @@ export default function PartnerPanels() {
           line-height: 1.8; max-width: 680px; margin-bottom: 36px;
         }
         .pp-hero__body strong { color: var(--color-dark); font-weight: 600; }
-        .pp-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 48px; }
-
-        .pp-stats {
-          display: flex; flex-wrap: wrap; gap: 36px;
-          padding-top: 32px;
-          border-top: 1px solid rgba(0,0,0,.08);
-        }
-        .pp-stat__num {
-          font-family: var(--font-display);
-          font-size: clamp(28px,4vw,40px); font-weight: 700;
-          color: var(--color-dark); line-height: 1;
-        }
-        .pp-stat__num em { font-style: normal; color: var(--color-gold); }
-        .pp-stat__label { font-size: 13px; color: var(--color-muted); margin-top: 5px; }
+        .pp-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; }
 
         /* FEATURED */
         .pp-featured {
@@ -298,11 +389,18 @@ export default function PartnerPanels() {
         }
         .pp-featured__head { margin-bottom: 28px; }
         .pp-featured-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: linear-gradient(180deg, rgba(255,250,242,.85) 0%, rgba(255,250,242,.55) 100%);
+          border: 1.5px solid rgba(232,168,56,.32);
           border-radius: 20px; overflow: hidden;
           display: grid; grid-template-columns: 1fr 340px;
           min-height: 380px;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -20px rgba(var(--pp-shadow-warm),.22);
+          position: relative;
+        }
+        .pp-featured-card::before {
+          content: ''; position: absolute; top: -1px; left: 28px;
+          width: 36px; height: 6px; background: var(--color-gold);
+          border-radius: 0 0 4px 4px; box-shadow: 0 1px 2px rgba(232,168,56,.4);
         }
         .pp-featured-card__body {
           padding: clamp(28px,4vw,52px);
@@ -386,13 +484,21 @@ export default function PartnerPanels() {
           gap: 20px;
         }
         .pp-panel-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: linear-gradient(180deg, rgba(255,250,242,.85) 0%, rgba(255,250,242,.55) 100%);
+          border: 1px solid rgba(26,25,22,.1);
           border-radius: 16px; padding: 26px;
           display: flex; flex-direction: column; gap: 14px;
-          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(var(--pp-shadow-warm),.12);
+          transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s, border-color .22s;
         }
-        .pp-panel-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
+        .pp-panel-card:hover { transform: translateY(-3px); border-color: rgba(26,25,22,.22); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 32px -12px rgba(var(--pp-shadow-warm),.22); }
+        .pp-upcoming__grid > .pp-panel-card,
+        .pp-archive__list > .pp-archive-card { animation: pp-card-in .55s cubic-bezier(.16,1,.3,1) backwards; animation-delay: calc(var(--pp-i, 0) * 50ms); }
+        @keyframes pp-card-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @media (prefers-reduced-motion: reduce) {
+          .pp-upcoming__grid > .pp-panel-card,
+          .pp-archive__list > .pp-archive-card { animation: none !important; }
+        }
         .pp-panel-card__date-badge {
           display: inline-flex; align-items: center; gap: 6px;
           background: rgba(232,168,56,.12); color: var(--color-gold);
@@ -444,12 +550,12 @@ export default function PartnerPanels() {
         .pp-archive__head { margin-bottom: 32px; }
         .pp-archive__list { display: flex; flex-direction: column; gap: 16px; }
         .pp-archive-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: linear-gradient(180deg, rgba(255,250,242,.7) 0%, rgba(255,250,242,.45) 100%);
+          border: 1px solid rgba(26,25,22,.1);
           border-radius: 16px; overflow: hidden;
-          transition: border-color .2s, box-shadow .2s;
+          transition: border-color .22s, box-shadow .22s, transform .22s cubic-bezier(.16,1,.3,1);
         }
-        .pp-archive-card:hover { border-color: rgba(0,0,0,.15); box-shadow: 0 8px 24px rgba(0,0,0,.07); }
+        .pp-archive-card:hover { border-color: rgba(26,25,22,.22); transform: translateX(4px); box-shadow: 4px 4px 18px -6px rgba(var(--pp-shadow-warm),.18); }
         .pp-archive-card__main {
           padding: 26px 28px;
           display: grid; grid-template-columns: 1fr auto;
@@ -501,10 +607,8 @@ export default function PartnerPanels() {
         .pp-takeaways.open { grid-template-rows: 1fr; }
         .pp-takeaways__inner {
           overflow: hidden; min-height: 0;
-          padding: 0 28px;
-          transition: padding .35s cubic-bezier(.16,1,.3,1);
+          padding: 22px 28px;
         }
-        .pp-takeaways.open .pp-takeaways__inner { padding: 22px 28px; }
         .pp-takeaways__title {
           font-size: 11px; font-weight: 700; letter-spacing: .1em;
           text-transform: uppercase; color: var(--color-teal); margin-bottom: 12px;
@@ -555,8 +659,10 @@ export default function PartnerPanels() {
         .pp-suggest__layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: flex-start; }
         .pp-suggest__intro-kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: var(--color-muted); margin-bottom: 12px;
+          text-transform: uppercase; color: var(--color-accent); margin-bottom: 12px;
+          display: inline-flex; align-items: center; gap: 10px;
         }
+        .pp-suggest__intro-kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .pp-suggest__intro-title {
           font-family: var(--font-display);
           font-size: clamp(22px,3vw,32px); font-weight: 700;
@@ -566,10 +672,11 @@ export default function PartnerPanels() {
         .pp-suggest__intro-body strong { color: var(--color-dark); font-weight: 600; }
 
         .pp-form-box {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: rgba(255,250,242,.7);
+          border: 1px solid rgba(26,25,22,.13);
           border-radius: 16px;
           padding: clamp(26px,4vw,44px);
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--pp-shadow-warm),.18);
         }
         .pp-form-row { margin-bottom: 16px; }
         .pp-form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -590,7 +697,16 @@ export default function PartnerPanels() {
         }
         .pp-form-input:focus,
         .pp-form-select:focus,
-        .pp-form-textarea:focus { border-color: var(--color-gold); }
+        .pp-form-textarea:focus { border-color: var(--color-gold); box-shadow: 0 0 0 4px rgba(232,168,56,.16); }
+        .pp-form-input.is-invalid, .pp-form-select.is-invalid, .pp-form-textarea.is-invalid { border-color: rgba(179,69,57,.45); }
+        .pp-form-input.is-invalid:focus, .pp-form-select.is-invalid:focus, .pp-form-textarea.is-invalid:focus { border-color: var(--color-accent); box-shadow: 0 0 0 4px rgba(179,69,57,.14); }
+        .pp-form-row__error { display: block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--color-accent); line-height: 1.4; }
+        .pp-form-row__error::before { content: ''; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--color-accent); margin-right: 7px; vertical-align: .18em; }
+        .pp-form-error-card { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding: 14px 16px; background: rgba(179,69,57,.06); border: 1px solid rgba(179,69,57,.22); border-radius: 10px; }
+        .pp-form-error-card__msg { flex: 1; font-size: 13px; color: var(--color-dark); line-height: 1.5; font-weight: 500; }
+        .pp-form-error-card__msg strong { color: var(--color-accent); font-weight: 700; }
+        .pp-form-error-card__retry { flex-shrink: 0; padding: 7px 14px; background: transparent; border: 1.5px solid var(--color-accent); color: var(--color-accent); border-radius: 999px; font-family: var(--font-display); font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s, color .2s; }
+        .pp-form-error-card__retry:hover { background: var(--color-accent); color: var(--color-cream); }
         .pp-form-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
         .pp-form-select {
           appearance: none; cursor: pointer;
@@ -632,8 +748,10 @@ export default function PartnerPanels() {
         }
         .pp-panelist__intro-kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: rgba(242,228,206,.45); margin-bottom: 12px;
+          text-transform: uppercase; color: var(--color-gold); margin-bottom: 12px;
+          display: inline-flex; align-items: center; gap: 10px;
         }
+        .pp-panelist__intro-kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .pp-panelist__intro-title {
           font-family: var(--font-display);
           font-size: clamp(22px,3vw,32px); font-weight: 700;
@@ -668,7 +786,20 @@ export default function PartnerPanels() {
         .pp-form-box--dark .pp-form-label { color: rgba(242,228,206,.55); }
         .pp-form-box--dark .pp-form-input:focus,
         .pp-form-box--dark .pp-form-select:focus,
-        .pp-form-box--dark .pp-form-textarea:focus { border-color: var(--color-gold); }
+        .pp-form-box--dark .pp-form-textarea:focus { border-color: var(--color-gold); box-shadow: 0 0 0 4px rgba(232,168,56,.16); }
+        .pp-form-box--dark .pp-form-input.is-invalid,
+        .pp-form-box--dark .pp-form-select.is-invalid,
+        .pp-form-box--dark .pp-form-textarea.is-invalid { border-color: rgba(232,168,56,.6); }
+        .pp-form-box--dark .pp-form-input.is-invalid:focus,
+        .pp-form-box--dark .pp-form-select.is-invalid:focus,
+        .pp-form-box--dark .pp-form-textarea.is-invalid:focus { border-color: var(--color-gold); box-shadow: 0 0 0 4px rgba(232,168,56,.24); }
+        .pp-form-box--dark .pp-form-row__error { color: var(--color-gold); }
+        .pp-form-box--dark .pp-form-row__error::before { background: var(--color-gold); }
+        .pp-form-error-card--dark { background: rgba(232,168,56,.08); border-color: rgba(232,168,56,.3); }
+        .pp-form-error-card--dark .pp-form-error-card__msg { color: var(--color-cream); }
+        .pp-form-error-card--dark .pp-form-error-card__msg strong { color: var(--color-gold); }
+        .pp-form-error-card--dark .pp-form-error-card__retry { border-color: var(--color-gold); color: var(--color-gold); }
+        .pp-form-error-card--dark .pp-form-error-card__retry:hover { background: var(--color-gold); color: var(--color-dark); }
         .pp-form-box--dark .pp-form-select {
           background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='rgba(242,228,206,0.45)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
           background-repeat: no-repeat; background-position: right 12px center;
@@ -682,12 +813,15 @@ export default function PartnerPanels() {
         @media (max-width: 740px) { .pp-panelist__inner { grid-template-columns: 1fr; gap: 36px; } }
 
         /* ECOSYSTEM */
-        .pp-eco { background: var(--color-dark); padding: 80px clamp(20px,5vw,56px); }
-        .pp-eco__inner { max-width: 1040px; margin: 0 auto; }
+        .pp-eco { background: var(--color-dark); padding: 80px clamp(20px,5vw,56px); position: relative; overflow: hidden; }
+        .pp-eco::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 84% 76%, rgba(232,168,56,.12) 0%, transparent 50%); pointer-events: none; }
+        .pp-eco__inner { max-width: 1040px; margin: 0 auto; position: relative; }
         .pp-eco__kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: rgba(242,228,206,.4); margin-bottom: 10px;
+          text-transform: uppercase; color: var(--color-gold); margin-bottom: 10px;
+          display: inline-flex; align-items: center; gap: 10px;
         }
+        .pp-eco__kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .pp-eco__title {
           font-family: var(--font-display);
           font-size: clamp(20px,3vw,30px); font-weight: 700;
@@ -778,6 +912,7 @@ export default function PartnerPanels() {
       <header className="pp-hero" id="top">
         <p className="pp-hero__kicker">{t.heroKicker}</p>
         <h1 className="pp-hero__title">{t.heroTitlePrefix}<em>{t.heroTitleEm}</em></h1>
+        {t.heroTagline && <p className="pp-hero__tagline">{t.heroTagline}</p>}
         <p className="pp-hero__sub">{t.heroSub}</p>
         <p className="pp-hero__body">
           {t.heroBody} <strong>{t.heroBodyStrong}</strong> {t.heroBodyTail}
@@ -785,24 +920,6 @@ export default function PartnerPanels() {
         <div className="pp-hero__ctas">
           <a href="#upcoming" className="pp-btn-primary">{t.heroCtaUpcoming}</a>
           <a href="#archive" className="pp-btn-secondary">{t.heroCtaArchive}</a>
-        </div>
-        <div className="pp-stats">
-          <div>
-            <div className="pp-stat__num">{t.stat1Num}</div>
-            <div className="pp-stat__label">{t.stat1Label}</div>
-          </div>
-          <div>
-            <div className="pp-stat__num">{t.stat2Num}</div>
-            <div className="pp-stat__label">{t.stat2Label}</div>
-          </div>
-          <div>
-            <div className="pp-stat__num">{t.stat3Num}</div>
-            <div className="pp-stat__label">{t.stat3Label}</div>
-          </div>
-          <div>
-            <div className="pp-stat__num">{t.stat4Num}</div>
-            <div className="pp-stat__label">{t.stat4Label}</div>
-          </div>
         </div>
       </header>
 
@@ -886,8 +1003,8 @@ export default function PartnerPanels() {
           <p className="pp-section-body">{t.upcomingBody} <strong>{t.upcomingBodyStrong}</strong></p>
         </div>
         <div className="pp-upcoming__grid">
-          {UPCOMING_PANELS.map(panel => (
-            <article key={panel.id} className="pp-panel-card">
+          {UPCOMING_PANELS.map((panel, i) => (
+            <article key={panel.id} className="pp-panel-card" style={{ '--pp-i': i % 12 }}>
               <span className="pp-panel-card__date-badge">{panel.date}</span>
               <h3 className="pp-panel-card__title">{panel.title}</h3>
               <p className="pp-panel-card__desc">{panel.desc}</p>
@@ -936,8 +1053,8 @@ export default function PartnerPanels() {
           {filteredArchive.length === 0 && (
             <p style={{ color: 'var(--color-muted)', fontSize: 15, padding: '40px 0' }}>{t.archiveEmptyState}</p>
           )}
-          {filteredArchive.map(card => (
-            <article key={card.id} className="pp-archive-card">
+          {filteredArchive.map((card, i) => (
+            <article key={card.id} className="pp-archive-card" style={{ '--pp-i': i % 12 }}>
               <div className="pp-archive-card__main">
                 <div>
                   <p className="pp-archive-card__date">{card.date}</p>
@@ -989,7 +1106,7 @@ export default function PartnerPanels() {
           <p className="pp-section-sub">{t.topicsSub}</p>
           <p className="pp-section-body">{t.topicsBody}</p>
         </div>
-        <div className="pp-topics__chips">
+        <div className="pp-topics__chips" ref={topicsRef}>
           {topicChips.map(chip => (
             <button
               key={chip.key}
@@ -1028,35 +1145,60 @@ export default function PartnerPanels() {
               <form onSubmit={submitSuggest}>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="suggestTopic">{t.suggestLabelTopic} <span>{t.suggestLabelTopicRequired}</span></label>
-                  <input className="pp-form-input" type="text" id="suggestTopic" placeholder={t.suggestPlaceholderTopic} value={suggestForm.topic} onChange={e => setSuggestForm(f => ({ ...f, topic: e.target.value }))} />
+                  <input className={`pp-form-input${suggestFieldErrors.topic ? ' is-invalid' : ''}`} type="text" id="suggestTopic" placeholder={t.suggestPlaceholderTopic} value={suggestForm.topic} onChange={e => setSuggestField('topic', e.target.value)} aria-invalid={!!suggestFieldErrors.topic} aria-describedby={suggestFieldErrors.topic ? 'suggestTopic-error' : undefined} />
+                  {suggestFieldErrors.topic && <span id="suggestTopic-error" className="pp-form-row__error" role="alert">{suggestFieldErrors.topic}</span>}
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="suggestWhy">{t.suggestLabelWhy} <span>{t.suggestLabelWhyRequired}</span></label>
-                  <textarea className="pp-form-textarea" id="suggestWhy" placeholder={t.suggestPlaceholderWhy} value={suggestForm.why} onChange={e => setSuggestForm(f => ({ ...f, why: e.target.value }))} />
+                  <textarea className={`pp-form-textarea${suggestFieldErrors.why ? ' is-invalid' : ''}`} id="suggestWhy" placeholder={t.suggestPlaceholderWhy} value={suggestForm.why} onChange={e => setSuggestField('why', e.target.value)} aria-invalid={!!suggestFieldErrors.why} aria-describedby={suggestFieldErrors.why ? 'suggestWhy-error' : undefined} />
+                  {suggestFieldErrors.why && <span id="suggestWhy-error" className="pp-form-row__error" role="alert">{suggestFieldErrors.why}</span>}
                 </div>
                 <div className="pp-form-row pp-form-row-2">
                   <div>
                     <label className="pp-form-label" htmlFor="suggestStage">{t.suggestLabelStage} <span>{t.suggestLabelStageRequired}</span></label>
-                    <select className="pp-form-select" id="suggestStage" value={suggestForm.stage} onChange={e => setSuggestForm(f => ({ ...f, stage: e.target.value }))}>
+                    <select className={`pp-form-select${suggestFieldErrors.stage ? ' is-invalid' : ''}`} id="suggestStage" value={suggestForm.stage} onChange={e => setSuggestField('stage', e.target.value)} aria-invalid={!!suggestFieldErrors.stage} aria-describedby={suggestFieldErrors.stage ? 'suggestStage-error' : undefined}>
                       {t.suggestStageOptions.map(opt => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
+                    {suggestFieldErrors.stage && <span id="suggestStage-error" className="pp-form-row__error" role="alert">{suggestFieldErrors.stage}</span>}
                   </div>
                   <div>
                     <label className="pp-form-label" htmlFor="suggestCategory">{t.suggestLabelCategory} <span>{t.suggestLabelCategoryRequired}</span></label>
-                    <select className="pp-form-select" id="suggestCategory" value={suggestForm.category} onChange={e => setSuggestForm(f => ({ ...f, category: e.target.value }))}>
+                    <select className={`pp-form-select${suggestFieldErrors.category ? ' is-invalid' : ''}`} id="suggestCategory" value={suggestForm.category} onChange={e => setSuggestField('category', e.target.value)} aria-invalid={!!suggestFieldErrors.category} aria-describedby={suggestFieldErrors.category ? 'suggestCategory-error' : undefined}>
                       {t.suggestCategoryOptions.map(opt => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
+                    {suggestFieldErrors.category && <span id="suggestCategory-error" className="pp-form-row__error" role="alert">{suggestFieldErrors.category}</span>}
                   </div>
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="suggestEmail">{t.suggestLabelEmail} <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.suggestEmailNote}</span></label>
-                  <input className="pp-form-input" type="email" id="suggestEmail" placeholder={t.suggestPlaceholderEmail} value={suggestForm.email} onChange={e => setSuggestForm(f => ({ ...f, email: e.target.value }))} />
+                  <input
+                    className={`pp-form-input${suggestFieldErrors.email ? ' is-invalid' : ''}`}
+                    type="email"
+                    id="suggestEmail"
+                    placeholder={t.suggestPlaceholderEmail}
+                    value={suggestForm.email}
+                    onChange={e => setSuggestField('email', e.target.value)}
+                    onBlur={e => {
+                      const v = e.target.value.trim()
+                      if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                        setSuggestFieldErrors(s => ({ ...s, email: t.suggestErrorEmail }))
+                      }
+                    }}
+                    aria-invalid={!!suggestFieldErrors.email}
+                    aria-describedby={suggestFieldErrors.email ? 'suggestEmail-error' : undefined}
+                  />
+                  {suggestFieldErrors.email && <span id="suggestEmail-error" className="pp-form-row__error" role="alert">{suggestFieldErrors.email}</span>}
                 </div>
-                {suggestError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{suggestError}</p>}
+                {suggestError && (
+                  <div role="alert" className="pp-form-error-card">
+                    <span className="pp-form-error-card__msg"><strong>{t.suggestErrorLabel}</strong> {suggestError}</span>
+                    <button type="submit" className="pp-form-error-card__retry" disabled={suggestLoading}>{suggestLoading ? t.suggestBtnSubmitting : t.suggestRetryLabel}</button>
+                  </div>
+                )}
                 <button className="pp-form-btn" type="submit" disabled={suggestLoading}>{suggestLoading ? t.suggestBtnSubmitting : t.suggestBtnSubmit}</button>
                 <p className="pp-form-note">{t.suggestFormNote}</p>
               </form>
@@ -1107,38 +1249,49 @@ export default function PartnerPanels() {
                 <div className="pp-form-row pp-form-row-2">
                   <div>
                     <label className="pp-form-label" htmlFor="plName">{t.panelistLabelName} <span>{t.panelistLabelNameRequired}</span></label>
-                    <input className="pp-form-input" type="text" id="plName" placeholder={t.panelistPlaceholderName} value={panelistForm.name} onChange={e => setPanelistForm(f => ({ ...f, name: e.target.value }))} />
+                    <input className={`pp-form-input${panelistFieldErrors.name ? ' is-invalid' : ''}`} type="text" id="plName" placeholder={t.panelistPlaceholderName} value={panelistForm.name} onChange={e => setPanelistField('name', e.target.value)} aria-invalid={!!panelistFieldErrors.name} aria-describedby={panelistFieldErrors.name ? 'plName-error' : undefined} />
+                    {panelistFieldErrors.name && <span id="plName-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.name}</span>}
                   </div>
                   <div>
                     <label className="pp-form-label" htmlFor="plEmail">{t.panelistLabelEmail} <span>{t.panelistLabelEmailRequired}</span></label>
-                    <input className="pp-form-input" type="email" id="plEmail" placeholder={t.panelistPlaceholderEmail} value={panelistForm.email} onChange={e => setPanelistForm(f => ({ ...f, email: e.target.value }))} />
+                    <input className={`pp-form-input${panelistFieldErrors.email ? ' is-invalid' : ''}`} type="email" id="plEmail" placeholder={t.panelistPlaceholderEmail} value={panelistForm.email} onChange={e => setPanelistField('email', e.target.value)} onBlur={e => { const v = e.target.value.trim(); if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) setPanelistFieldErrors(s => ({ ...s, email: t.panelistErrorEmailFormat })) }} aria-invalid={!!panelistFieldErrors.email} aria-describedby={panelistFieldErrors.email ? 'plEmail-error' : undefined} />
+                    {panelistFieldErrors.email && <span id="plEmail-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.email}</span>}
                   </div>
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="plLinkedIn">{t.panelistLabelLinkedIn} <span>{t.panelistLabelLinkedInRequired}</span></label>
-                  <input className="pp-form-input" type="url" id="plLinkedIn" placeholder={t.panelistPlaceholderLinkedIn} value={panelistForm.linkedin} onChange={e => setPanelistForm(f => ({ ...f, linkedin: e.target.value }))} />
+                  <input className={`pp-form-input${panelistFieldErrors.linkedin ? ' is-invalid' : ''}`} type="url" id="plLinkedIn" placeholder={t.panelistPlaceholderLinkedIn} value={panelistForm.linkedin} onChange={e => setPanelistField('linkedin', e.target.value)} aria-invalid={!!panelistFieldErrors.linkedin} aria-describedby={panelistFieldErrors.linkedin ? 'plLinkedIn-error' : undefined} />
+                  {panelistFieldErrors.linkedin && <span id="plLinkedIn-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.linkedin}</span>}
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="plRole">{t.panelistLabelRole} <span>{t.panelistLabelRoleRequired}</span></label>
-                  <input className="pp-form-input" type="text" id="plRole" placeholder={t.panelistPlaceholderRole} value={panelistForm.role} onChange={e => setPanelistForm(f => ({ ...f, role: e.target.value }))} />
+                  <input className={`pp-form-input${panelistFieldErrors.role ? ' is-invalid' : ''}`} type="text" id="plRole" placeholder={t.panelistPlaceholderRole} value={panelistForm.role} onChange={e => setPanelistField('role', e.target.value)} aria-invalid={!!panelistFieldErrors.role} aria-describedby={panelistFieldErrors.role ? 'plRole-error' : undefined} />
+                  {panelistFieldErrors.role && <span id="plRole-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.role}</span>}
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="plTopic">{t.panelistLabelTopic} <span>{t.panelistLabelTopicRequired}</span></label>
-                  <textarea className="pp-form-textarea" id="plTopic" placeholder={t.panelistPlaceholderTopic} value={panelistForm.topic} onChange={e => setPanelistForm(f => ({ ...f, topic: e.target.value }))} />
+                  <textarea className={`pp-form-textarea${panelistFieldErrors.topic ? ' is-invalid' : ''}`} id="plTopic" placeholder={t.panelistPlaceholderTopic} value={panelistForm.topic} onChange={e => setPanelistField('topic', e.target.value)} aria-invalid={!!panelistFieldErrors.topic} aria-describedby={panelistFieldErrors.topic ? 'plTopic-error' : undefined} />
+                  {panelistFieldErrors.topic && <span id="plTopic-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.topic}</span>}
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="plInterest">{t.panelistLabelInterest} <span>{t.panelistLabelInterestRequired}</span></label>
-                  <select className="pp-form-select" id="plInterest" value={panelistForm.interest} onChange={e => setPanelistForm(f => ({ ...f, interest: e.target.value }))}>
+                  <select className={`pp-form-select${panelistFieldErrors.interest ? ' is-invalid' : ''}`} id="plInterest" value={panelistForm.interest} onChange={e => setPanelistField('interest', e.target.value)} aria-invalid={!!panelistFieldErrors.interest} aria-describedby={panelistFieldErrors.interest ? 'plInterest-error' : undefined}>
                     {t.panelistInterestOptions.map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
                   </select>
+                  {panelistFieldErrors.interest && <span id="plInterest-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.interest}</span>}
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="plNotes">{t.panelistLabelNotes}</label>
-                  <textarea className="pp-form-textarea" id="plNotes" placeholder={t.panelistPlaceholderNotes} value={panelistForm.notes} onChange={e => setPanelistForm(f => ({ ...f, notes: e.target.value }))} />
+                  <textarea className="pp-form-textarea" id="plNotes" placeholder={t.panelistPlaceholderNotes} value={panelistForm.notes} onChange={e => setPanelistField('notes', e.target.value)} />
                 </div>
-                {panelistError && <p role="alert" style={{ color: 'var(--color-cream)', fontSize: 13, marginBottom: 10, opacity: 0.85 }}>{panelistError}</p>}
+                {panelistError && (
+                  <div role="alert" className="pp-form-error-card pp-form-error-card--dark">
+                    <span className="pp-form-error-card__msg"><strong>{t.panelistErrorLabel}</strong> {panelistError}</span>
+                    <button type="submit" className="pp-form-error-card__retry" disabled={panelistLoading}>{panelistLoading ? t.panelistBtnSubmitting : t.panelistRetryLabel}</button>
+                  </div>
+                )}
                 <button className="pp-form-btn" type="submit" disabled={panelistLoading}>{panelistLoading ? t.panelistBtnSubmitting : t.panelistBtnSubmit}</button>
               </form>
             )}
