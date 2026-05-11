@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -166,11 +166,24 @@ function dbProfileToCard(row) {
 
 export default function CoffeeChat() {
   const t = useT('coffeeChat')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filterRole = searchParams.get('role') || ''
+  const filterFunc = searchParams.get('func') || ''
+  const filterStage = searchParams.get('stage') || ''
+  const filterIdentity = searchParams.get('identity') || ''
+  const setSearchParam = useCallback((key, value) => {
+    const next = new URLSearchParams(searchParams)
+    if (!value) next.delete(key)
+    else next.set(key, value)
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
+  const setFilterRole = (v) => setSearchParam('role', v)
+  const setFilterFunc = (v) => setSearchParam('func', v)
+  const setFilterStage = (v) => setSearchParam('stage', v)
+  const setFilterIdentity = (v) => setSearchParam('identity', v)
   const [search, setSearch] = useState('')
-  const [filterRole, setFilterRole] = useState('')
-  const [filterFunc, setFilterFunc] = useState('')
-  const [filterStage, setFilterStage] = useState('')
-  const [filterIdentity, setFilterIdentity] = useState('')
+  const searchRef = useRef(null)
+  const progressRef = useRef(null)
 
   const [modalOpen, setModalOpen] = useState(false)
   const [modalName, setModalName] = useState('')
@@ -179,6 +192,7 @@ export default function CoffeeChat() {
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({ name: '', email: '', linkedin: '', role: '', func: '', topics: '', capacity: '', consent1: '', consent2: '' })
   const [funcChips, setFuncChips] = useState([])
   const [identityChips, setIdentityChips] = useState([])
   const [photoFile, setPhotoFile] = useState(null)
@@ -196,6 +210,43 @@ export default function CoffeeChat() {
   const [profilesLoading, setProfilesLoading] = useState(true)
   const [profilesError, setProfilesError] = useState(false)
   const ccModalRef = useRef(null)
+
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const el = progressRef.current
+      if (!el) return
+      const doc = document.documentElement
+      const max = (doc.scrollHeight - doc.clientHeight) || 1
+      const ratio = Math.min(1, Math.max(0, window.scrollY / max))
+      el.style.transform = 'scaleX(' + ratio + ')'
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      if (searchRef.current) {
+        e.preventDefault()
+        searchRef.current.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   useEffect(() => {
     supabase.from('coffee_chat_profiles')
@@ -277,17 +328,31 @@ export default function CoffeeChat() {
     })
   }
 
+  const setFormField = (k, v) => {
+    setFormData(f => ({ ...f, [k]: v }))
+    if (fieldErrors[k]) setFieldErrors(s => ({ ...s, [k]: '' }))
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const { name, email, linkedin, role, topics, capacity, consent1, consent2 } = formData
-    if (!name || !email || !linkedin || !role || !topics || !capacity || funcChips.length === 0) {
-      setFormError(t.formErrorRequired)
+    const errors = { name: '', email: '', linkedin: '', role: '', func: '', topics: '', capacity: '', consent1: '', consent2: '' }
+    if (!formData.name.trim()) errors.name = t.formErrorName
+    if (!formData.email.trim()) errors.email = t.formErrorEmail
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = t.formErrorEmailFormat
+    if (!formData.linkedin.trim()) errors.linkedin = t.formErrorLinkedin
+    if (!formData.role.trim()) errors.role = t.formErrorRole
+    if (funcChips.length === 0) errors.func = t.formErrorFunc
+    else if (funcChips.includes('Other') && !funcOtherText.trim()) errors.func = t.formErrorFuncOther
+    if (!formData.topics.trim()) errors.topics = t.formErrorTopics
+    if (!formData.capacity) errors.capacity = t.formErrorCapacity
+    if (!formData.consent1) errors.consent1 = t.formErrorConsent1
+    if (!formData.consent2) errors.consent2 = t.formErrorConsent2
+    if (Object.values(errors).some(Boolean)) {
+      setFieldErrors(errors)
+      setFormError('')
       return
     }
-    if (!consent1 || !consent2) {
-      setFormError(t.formErrorConsent)
-      return
-    }
+    setFieldErrors({ name: '', email: '', linkedin: '', role: '', func: '', topics: '', capacity: '', consent1: '', consent2: '' })
     setFormLoading(true)
     setFormError('')
     let avatar_url = null
@@ -327,9 +392,17 @@ export default function CoffeeChat() {
   }
 
   return (
-    <ArticleLayout title={t.pageTitle}>
+    <ArticleLayout
+      title={t.pageTitle}
+      signoffLine={t.signoffLine}
+      signoffSub={t.signoffSub}
+      signoffCta={t.signoffCta}
+    >
+      <div ref={progressRef} className="cc-scroll-progress" aria-hidden="true" />
       <style>{`
         html, body { background: var(--color-cream); }
+        .cc-scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-gold) 100%); z-index: 1000; pointer-events: none; transform: scaleX(0); transform-origin: left; transition: transform .12s linear; will-change: transform; }
+        @media (prefers-reduced-motion: reduce) { .cc-scroll-progress { transition: none; } }
 
         .cc-kicker { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 10px; }
         .cc-kicker::after { content: ''; width: 24px; height: 1px; background: var(--color-accent); opacity: .5; }
@@ -347,6 +420,7 @@ export default function CoffeeChat() {
         .cc-hero__kicker::after { content: ''; width: 24px; height: 1px; background: var(--color-teal); opacity: .5; }
         .cc-hero__title { font-family: var(--font-display); font-size: clamp(46px,7.6vw,90px); font-weight: 700; line-height: .98; letter-spacing: -.025em; color: var(--color-dark); margin-bottom: 22px; max-width: 18ch; }
         .cc-hero__title em { font-style: italic; font-family: var(--font-serif, var(--font-display)); color: var(--color-gold-dark); font-weight: 500; padding-right: .04em; }
+        .cc-hero__tagline { font-family: var(--font-serif, var(--font-display)); font-size: clamp(18px,2.2vw,24px); font-style: italic; font-weight: 400; color: var(--color-accent); margin-bottom: 22px; letter-spacing: -.005em; max-width: 60ch; }
         .cc-hero__sub { font-family: var(--font-display); font-size: clamp(18px,2.5vw,26px); font-weight: 400; color: var(--color-dark); line-height: 1.4; max-width: 600px; margin-bottom: 18px; }
         .cc-hero__body { font-size: clamp(15px,1.8vw,17px); color: var(--color-muted); line-height: 1.7; max-width: 580px; margin-bottom: 36px; }
         .cc-hero__body strong { color: var(--color-dark); font-weight: 600; }
@@ -411,8 +485,8 @@ export default function CoffeeChat() {
         .cc-card__role { font-size: 12px; color: var(--color-muted); line-height: 1.4; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .cc-card__badge { font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; background: rgba(58,125,107,.14); color: var(--color-teal); flex-shrink: 0; }
         .cc-card__badge--new { background: var(--color-gold); color: var(--color-dark); box-shadow: 0 1px 3px -1px rgba(232,168,56,.5); }
-        .cc-card__topic-block { padding: 14px 16px; background: rgba(255,255,255,.55); border-radius: 10px; border-left: 3px solid var(--color-accent); }
-        .cc-card--new .cc-card__topic-block { border-left-color: var(--color-gold-dark); background: rgba(255,255,255,.6); }
+        .cc-card__topic-block { padding: 14px 16px; background: linear-gradient(180deg, rgba(179,69,57,.08) 0%, rgba(255,255,255,.55) 60%); border-radius: 10px; border: 1px solid rgba(179,69,57,.22); }
+        .cc-card--new .cc-card__topic-block { background: linear-gradient(180deg, rgba(232,168,56,.1) 0%, rgba(255,255,255,.6) 60%); border-color: rgba(232,168,56,.3); }
         .cc-card__topic-headline { font-family: var(--font-serif, var(--font-display)); font-size: 14px; font-style: italic; font-weight: 500; color: var(--color-accent); line-height: 1.4; margin-bottom: 6px; }
         .cc-card--new .cc-card__topic-headline { color: var(--color-gold-dark); }
         .cc-card__topics { font-size: 13px; color: var(--color-dark); line-height: 1.6; }
@@ -449,6 +523,15 @@ export default function CoffeeChat() {
         .cc-reach__templates-link::before { content: '→'; color: var(--color-accent); transition: transform .2s; }
         .cc-reach__templates-link:hover { color: var(--color-accent); }
 
+        .cc-bridge { max-width: 1040px; margin: 0 auto; padding: 0 clamp(20px,5vw,56px) 24px; }
+        .cc-bridge__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 24px 28px; background: rgba(232,168,56,.06); border: 1px solid rgba(232,168,56,.22); border-radius: 14px; }
+        .cc-bridge__copy { font-family: var(--font-display); font-size: clamp(17px,2vw,21px); font-weight: 600; color: var(--color-dark); line-height: 1.3; letter-spacing: -.005em; }
+        .cc-bridge__copy em { font-style: italic; font-family: var(--font-serif, var(--font-display)); color: var(--color-gold-dark); font-weight: 500; }
+        .cc-bridge__cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; background: var(--color-dark); color: var(--color-cream); border-radius: 999px; font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: -.005em; text-decoration: none; box-shadow: 0 6px 14px -8px rgba(63,42,28,.4), inset 0 1px 0 rgba(255,255,255,.08); transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s; }
+        .cc-bridge__cta:hover { background: var(--color-teal); transform: translateY(-1px); box-shadow: 0 12px 22px -10px rgba(58,125,107,.5); }
+        .cc-bridge__cta::after { content: '↓'; font-size: 13px; line-height: 1; }
+        @media (prefers-reduced-motion: reduce) { .cc-bridge__cta { transition: none !important; } .cc-bridge__cta:hover { transform: none !important; } }
+
         .cc-apply { max-width: 1040px; margin: 0 auto; padding: 88px clamp(20px,5vw,56px); position: relative; }
         .cc-apply__layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: flex-start; }
         .cc-apply__intro-kicker { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--color-teal); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 10px; }
@@ -468,6 +551,15 @@ export default function CoffeeChat() {
         .cc-form-label span { color: var(--color-accent); }
         .cc-form-input, .cc-form-select, .cc-form-textarea { width: 100%; font-family: var(--font-body); font-size: 15px; padding: 12px 14px; border: 1.5px solid rgba(26,25,22,.12); border-radius: 10px; background: rgba(255,255,255,.85); color: var(--color-dark); outline: none; transition: border-color .2s, background .2s, box-shadow .2s; }
         .cc-form-input:focus, .cc-form-select:focus, .cc-form-textarea:focus { border-color: var(--color-gold); background: var(--color-white); box-shadow: 0 0 0 4px rgba(232,168,56,.12); }
+        .cc-form-input.is-invalid, .cc-form-select.is-invalid, .cc-form-textarea.is-invalid, .cc-ms-trigger.is-invalid { border-color: rgba(179,69,57,.45); }
+        .cc-form-input.is-invalid:focus, .cc-form-select.is-invalid:focus, .cc-form-textarea.is-invalid:focus, .cc-ms-trigger.is-invalid:focus { border-color: var(--color-accent); box-shadow: 0 0 0 4px rgba(179,69,57,.14); }
+        .cc-form-row__error { display: block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--color-accent); line-height: 1.4; }
+        .cc-form-row__error::before { content: ''; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--color-accent); margin-right: 7px; vertical-align: .18em; }
+        .cc-form-error-card { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding: 14px 16px; background: rgba(179,69,57,.06); border: 1px solid rgba(179,69,57,.22); border-radius: 10px; }
+        .cc-form-error-card__msg { flex: 1; font-size: 13px; color: var(--color-dark); line-height: 1.5; font-weight: 500; }
+        .cc-form-error-card__msg strong { color: var(--color-accent); font-weight: 700; }
+        .cc-form-error-card__retry { flex-shrink: 0; padding: 7px 14px; background: transparent; border: 1.5px solid var(--color-accent); color: var(--color-accent); border-radius: 999px; font-family: var(--font-display); font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s, color .2s; }
+        .cc-form-error-card__retry:hover { background: var(--color-accent); color: var(--color-cream); }
         .cc-form-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
         .cc-form-select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B5E52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
         .cc-form-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
@@ -481,28 +573,27 @@ export default function CoffeeChat() {
         .cc-form-success__body { font-size: 14px; color: var(--color-muted); line-height: 1.7; }
 
         .cc-safety { max-width: 1040px; margin: 0 auto; padding: 60px clamp(20px,5vw,56px); }
-        .cc-safety__box { background: rgba(22,43,68,.05); border: 1px solid rgba(22,43,68,.12); border-left: 3px solid var(--color-navy); border-radius: 14px; padding: 28px 32px; display: flex; gap: 18px; align-items: flex-start; }
+        .cc-safety__box { background: linear-gradient(180deg, rgba(22,43,68,.07) 0%, rgba(22,43,68,.03) 100%); border: 1.5px solid rgba(22,43,68,.22); border-radius: 14px; padding: 28px 32px; display: flex; gap: 18px; align-items: flex-start; }
         .cc-safety__icon { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: rgba(22,43,68,.12); color: var(--color-navy); display: flex; align-items: center; justify-content: center; margin-top: 1px; }
         .cc-safety__text { font-size: clamp(13px,1.5vw,14px); color: var(--color-muted); line-height: 1.75; }
         .cc-safety__text strong { color: var(--color-navy); font-weight: 700; }
         .cc-safety__text a { color: var(--color-navy); font-weight: 700; text-decoration: underline; text-decoration-color: rgba(22,43,68,.3); text-underline-offset: 2px; transition: text-decoration-color .2s; }
         .cc-safety__text a:hover { text-decoration-color: var(--color-navy); }
 
-        .cc-eco { background: var(--color-navy); padding: 88px clamp(20px,5vw,56px); position: relative; overflow: hidden; }
-        .cc-eco::before { content: ''; position: absolute; top: -10%; left: -6%; width: 360px; height: 360px; background: radial-gradient(closest-side, rgba(232,168,56,.16), transparent 70%); pointer-events: none; }
+        .cc-eco { background: linear-gradient(180deg, rgba(242,228,206,.55) 0%, rgba(242,228,206,.25) 100%); padding: 88px clamp(20px,5vw,56px); position: relative; overflow: hidden; }
         .cc-eco__inner { max-width: 1040px; margin: 0 auto; position: relative; }
-        .cc-eco__kicker { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--color-gold); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 10px; }
-        .cc-eco__kicker::after { content: ''; width: 24px; height: 1px; background: var(--color-gold); opacity: .5; }
-        .cc-eco__title { font-family: var(--font-display); font-size: clamp(28px,4.4vw,46px); font-weight: 700; color: var(--color-cream); margin-bottom: 14px; line-height: 1.05; letter-spacing: -.02em; max-width: 18ch; }
-        .cc-eco__title em { font-style: italic; font-family: var(--font-serif, var(--font-display)); color: var(--color-gold); font-weight: 500; padding-right: .04em; }
-        .cc-eco__body { font-size: clamp(15px,1.7vw,16px); color: rgba(242,228,206,.7); line-height: 1.65; max-width: 580px; margin-bottom: 40px; }
+        .cc-eco__kicker { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 10px; }
+        .cc-eco__kicker::after { content: ''; width: 24px; height: 1px; background: var(--color-accent); opacity: .5; }
+        .cc-eco__title { font-family: var(--font-display); font-size: clamp(28px,4.4vw,46px); font-weight: 700; color: var(--color-dark); margin-bottom: 14px; line-height: 1.05; letter-spacing: -.02em; max-width: 18ch; }
+        .cc-eco__title em { font-style: italic; font-family: var(--font-serif, var(--font-display)); color: var(--color-gold-dark); font-weight: 500; padding-right: .04em; }
+        .cc-eco__body { font-size: clamp(15px,1.7vw,16px); color: rgba(26,25,22,.7); line-height: 1.65; max-width: 580px; margin-bottom: 40px; }
         .cc-eco__grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 14px; }
-        .cc-eco__link { background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); border-radius: 14px; padding: 22px 24px; text-decoration: none; transition: background .25s, border-color .25s, transform .25s cubic-bezier(.16,1,.3,1); display: block; position: relative; }
-        .cc-eco__link::after { content: '→'; position: absolute; top: 22px; right: 22px; font-size: 14px; color: var(--color-gold); opacity: 0; transform: translateX(-4px); transition: opacity .25s, transform .25s cubic-bezier(.16,1,.3,1); }
-        .cc-eco__link:hover { background: rgba(232,168,56,.07); border-color: rgba(232,168,56,.25); transform: translateY(-2px); }
+        .cc-eco__link { background: rgba(255,255,255,.6); border: 1px solid rgba(26,25,22,.08); border-radius: 14px; padding: 22px 24px; text-decoration: none; transition: background .25s, border-color .25s, transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s; display: block; position: relative; }
+        .cc-eco__link::after { content: '→'; position: absolute; top: 22px; right: 22px; font-size: 14px; color: var(--color-accent); opacity: 0; transform: translateX(-4px); transition: opacity .25s, transform .25s cubic-bezier(.16,1,.3,1); }
+        .cc-eco__link:hover { background: rgba(255,255,255,.9); border-color: rgba(179,69,57,.22); transform: translateY(-2px); box-shadow: 0 12px 24px -16px rgba(var(--xx-shadow-warm,58,38,22),.18); }
         .cc-eco__link:hover::after { opacity: 1; transform: translateX(0); }
-        .cc-eco__link-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--color-cream); margin-bottom: 6px; letter-spacing: -.005em; }
-        .cc-eco__link-desc { font-size: 12px; color: rgba(242,228,206,.55); line-height: 1.55; }
+        .cc-eco__link-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--color-dark); margin-bottom: 6px; letter-spacing: -.005em; }
+        .cc-eco__link-desc { font-size: 12px; color: rgba(26,25,22,.6); line-height: 1.55; }
 
         .cc-modal-overlay { position: fixed; inset: 0; background: rgba(26,25,22,.55); backdrop-filter: blur(4px); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s; }
         .cc-modal-overlay.open { opacity: 1; pointer-events: all; }
@@ -514,7 +605,7 @@ export default function CoffeeChat() {
         .cc-modal__kicker::after { content: ''; width: 24px; height: 1px; background: var(--color-accent); opacity: .5; }
         .cc-modal__title { font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--color-dark); margin-bottom: 8px; line-height: 1.1; letter-spacing: -.02em; }
         .cc-modal__sub { font-size: 14px; color: var(--color-muted); line-height: 1.6; margin-bottom: 22px; max-width: 50ch; }
-        .cc-modal__template { background: rgba(232,168,56,.06); border: 1px solid rgba(232,168,56,.2); border-left: 3px solid var(--color-gold-dark); border-radius: 12px; padding: 22px 24px; font-size: 14px; line-height: 1.75; color: var(--color-dark); margin-bottom: 16px; white-space: pre-wrap; font-family: var(--font-body); }
+        .cc-modal__template { background: linear-gradient(180deg, rgba(232,168,56,.1) 0%, rgba(232,168,56,.04) 100%); border: 1.5px solid rgba(232,168,56,.32); border-radius: 12px; padding: 22px 24px; font-size: 14px; line-height: 1.75; color: var(--color-dark); margin-bottom: 16px; white-space: pre-wrap; font-family: var(--font-body); }
         .cc-modal__copy-btn { width: 100%; padding: 14px; background: var(--color-dark); color: var(--color-cream); border: none; border-radius: 999px; font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: -.005em; cursor: pointer; box-shadow: 0 8px 20px -10px rgba(26,25,22,.4), inset 0 1px 0 rgba(255,255,255,.08); transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s; }
         .cc-modal__copy-btn:hover { background: var(--color-teal); transform: translateY(-1px); box-shadow: 0 12px 24px -10px rgba(58,125,107,.5); }
         .cc-modal__copy-btn.copied { background: var(--color-teal); }
@@ -555,7 +646,7 @@ export default function CoffeeChat() {
         .cc-card-skel__id-line { height: 10px; background: rgba(26,25,22,.06); border-radius: 4px; }
         .cc-card-skel__id-line--w50 { width: 50%; }
         .cc-card-skel__badge { width: 60px; height: 18px; background: rgba(26,25,22,.05); border-radius: 999px; flex-shrink: 0; }
-        .cc-card-skel__topic { padding: 14px 16px; background: rgba(255,255,255,.4); border-radius: 10px; border-left: 3px solid rgba(179,69,57,.18); display: flex; flex-direction: column; gap: 8px; }
+        .cc-card-skel__topic { padding: 14px 16px; background: linear-gradient(180deg, rgba(179,69,57,.05) 0%, rgba(255,255,255,.4) 60%); border-radius: 10px; border: 1px solid rgba(179,69,57,.16); display: flex; flex-direction: column; gap: 8px; }
         .cc-card-skel__topic-line { height: 10px; background: rgba(26,25,22,.05); border-radius: 4px; }
         .cc-card-skel__topic-line--w70 { width: 70%; }
         .cc-card-skel__tags { display: flex; gap: 6px; }
@@ -603,6 +694,7 @@ export default function CoffeeChat() {
       <header className="cc-hero" id="top">
         <p className="cc-hero__kicker">{t.heroKicker}</p>
         <h1 className="cc-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
+        {t.heroTagline && <p className="cc-hero__tagline">{t.heroTagline}</p>}
         <p className="cc-hero__sub">{t.heroSub}</p>
         <p className="cc-hero__body">
           {t.heroBody1} <strong>{t.heroBodyQuote}</strong> {t.heroBody2}
@@ -655,6 +747,7 @@ export default function CoffeeChat() {
             </svg>
             <input
               type="text"
+              ref={searchRef}
               className="cc-search"
               placeholder={t.searchPlaceholder}
               aria-label={t.searchAriaLabel}
@@ -838,6 +931,13 @@ export default function CoffeeChat() {
         </div>
       </section>
 
+      <div className="cc-bridge">
+        <div className="cc-bridge__inner">
+          <p className="cc-bridge__copy">{t.bridgeCopyPrefix} <em>{t.bridgeCopyEm}</em></p>
+          <a href="#apply" className="cc-bridge__cta">{t.bridgeCtaLabel}</a>
+        </div>
+      </div>
+
       <hr className="cc-divider" />
 
       <section className="cc-apply" id="apply">
@@ -900,29 +1000,33 @@ export default function CoffeeChat() {
                 <div className="cc-form-row cc-form-row-2">
                   <div>
                     <label className="cc-form-label" htmlFor="ccName">{t.formLabelName} <span>*</span></label>
-                    <input className="cc-form-input" type="text" id="ccName" placeholder={t.formPlaceholderName} value={formData.name} onChange={e => setFormData(d => ({ ...d, name: e.target.value }))} />
+                    <input className={`cc-form-input${fieldErrors.name ? ' is-invalid' : ''}`} type="text" id="ccName" placeholder={t.formPlaceholderName} value={formData.name} onChange={e => setFormField('name', e.target.value)} aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? 'ccName-error' : undefined} />
+                    {fieldErrors.name && <span id="ccName-error" className="cc-form-row__error" role="alert">{fieldErrors.name}</span>}
                   </div>
                   <div>
                     <label className="cc-form-label" htmlFor="ccPronouns">{t.formLabelPronouns}</label>
-                    <input className="cc-form-input" type="text" id="ccPronouns" placeholder={t.formPlaceholderPronouns} value={formData.pronouns} onChange={e => setFormData(d => ({ ...d, pronouns: e.target.value }))} />
+                    <input className="cc-form-input" type="text" id="ccPronouns" placeholder={t.formPlaceholderPronouns} value={formData.pronouns} onChange={e => setFormField('pronouns', e.target.value)} />
                   </div>
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccEmail">{t.formLabelEmail} <span>*</span> <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.formEmailNote}</span></label>
-                  <input className="cc-form-input" type="email" id="ccEmail" placeholder={t.formPlaceholderEmail} value={formData.email} onChange={e => setFormData(d => ({ ...d, email: e.target.value }))} />
+                  <input className={`cc-form-input${fieldErrors.email ? ' is-invalid' : ''}`} type="email" id="ccEmail" placeholder={t.formPlaceholderEmail} value={formData.email} onChange={e => setFormField('email', e.target.value)} onBlur={e => { const v = e.target.value.trim(); if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) setFieldErrors(s => ({ ...s, email: t.formErrorEmailFormat })) }} aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? 'ccEmail-error' : undefined} />
+                  {fieldErrors.email && <span id="ccEmail-error" className="cc-form-row__error" role="alert">{fieldErrors.email}</span>}
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccLinkedIn">{t.formLabelLinkedIn} <span>*</span></label>
-                  <input className="cc-form-input" type="url" id="ccLinkedIn" placeholder={t.formPlaceholderLinkedIn} value={formData.linkedin} onChange={e => setFormData(d => ({ ...d, linkedin: e.target.value }))} />
+                  <input className={`cc-form-input${fieldErrors.linkedin ? ' is-invalid' : ''}`} type="url" id="ccLinkedIn" placeholder={t.formPlaceholderLinkedIn} value={formData.linkedin} onChange={e => setFormField('linkedin', e.target.value)} aria-invalid={!!fieldErrors.linkedin} aria-describedby={fieldErrors.linkedin ? 'ccLinkedIn-error' : undefined} />
+                  {fieldErrors.linkedin && <span id="ccLinkedIn-error" className="cc-form-row__error" role="alert">{fieldErrors.linkedin}</span>}
                 </div>
                 <div className="cc-form-row cc-form-row-2">
                   <div>
                     <label className="cc-form-label" htmlFor="ccCurrentRole">{t.formLabelRole} <span>*</span></label>
-                    <input className="cc-form-input" type="text" id="ccCurrentRole" placeholder={t.formPlaceholderRole} value={formData.role} onChange={e => setFormData(d => ({ ...d, role: e.target.value }))} />
+                    <input className={`cc-form-input${fieldErrors.role ? ' is-invalid' : ''}`} type="text" id="ccCurrentRole" placeholder={t.formPlaceholderRole} value={formData.role} onChange={e => setFormField('role', e.target.value)} aria-invalid={!!fieldErrors.role} aria-describedby={fieldErrors.role ? 'ccCurrentRole-error' : undefined} />
+                    {fieldErrors.role && <span id="ccCurrentRole-error" className="cc-form-row__error" role="alert">{fieldErrors.role}</span>}
                   </div>
                   <div>
                     <label className="cc-form-label" htmlFor="ccLocation">{t.formLabelLocation}</label>
-                    <input className="cc-form-input" type="text" id="ccLocation" placeholder={t.formPlaceholderLocation} value={formData.location} onChange={e => setFormData(d => ({ ...d, location: e.target.value }))} />
+                    <input className="cc-form-input" type="text" id="ccLocation" placeholder={t.formPlaceholderLocation} value={formData.location} onChange={e => setFormField('location', e.target.value)} />
                   </div>
                 </div>
                 <div className="cc-form-row">
@@ -930,17 +1034,18 @@ export default function CoffeeChat() {
                   <MultiSelectDropdown
                     options={FUNCTION_OPTIONS}
                     selected={funcChips}
-                    onChange={setFuncChips}
+                    onChange={(updater) => { setFuncChips(updater); if (fieldErrors.func) setFieldErrors(s => ({ ...s, func: '' })) }}
                     placeholder={t.formFunctionPlaceholder}
                   />
+                  {fieldErrors.func && <span className="cc-form-row__error" role="alert">{fieldErrors.func}</span>}
                   {funcChips.length > 0 && <div className="cc-selected-tags">{funcChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => { setFuncChips(p => p.filter(v => v !== c)); if (c === 'Other') setFuncOtherText('') }}>×</button></span>)}</div>}
                   {funcChips.includes('Other') && (
                     <input
-                      className="cc-form-input"
+                      className={`cc-form-input${fieldErrors.func && !funcOtherText.trim() ? ' is-invalid' : ''}`}
                       type="text"
                       placeholder={t.formFunctionOtherPlaceholder}
                       value={funcOtherText}
-                      onChange={e => setFuncOtherText(e.target.value)}
+                      onChange={e => { setFuncOtherText(e.target.value); if (fieldErrors.func) setFieldErrors(s => ({ ...s, func: '' })) }}
                       style={{ marginTop: '10px' }}
                     />
                   )}
@@ -967,28 +1072,37 @@ export default function CoffeeChat() {
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccTopics">{t.formLabelTopics} <span>*</span></label>
-                  <textarea className="cc-form-textarea" id="ccTopics" placeholder={t.formPlaceholderTopics} value={formData.topics} onChange={e => setFormData(d => ({ ...d, topics: e.target.value }))}></textarea>
+                  <textarea className={`cc-form-textarea${fieldErrors.topics ? ' is-invalid' : ''}`} id="ccTopics" placeholder={t.formPlaceholderTopics} value={formData.topics} onChange={e => setFormField('topics', e.target.value)} aria-invalid={!!fieldErrors.topics} aria-describedby={fieldErrors.topics ? 'ccTopics-error' : undefined}></textarea>
+                  {fieldErrors.topics && <span id="ccTopics-error" className="cc-form-row__error" role="alert">{fieldErrors.topics}</span>}
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccCapacity">{t.formLabelCapacity} <span>*</span></label>
-                  <select className="cc-form-select" id="ccCapacity" value={formData.capacity} onChange={e => setFormData(d => ({ ...d, capacity: e.target.value }))}>
+                  <select className={`cc-form-select${fieldErrors.capacity ? ' is-invalid' : ''}`} id="ccCapacity" value={formData.capacity} onChange={e => setFormField('capacity', e.target.value)} aria-invalid={!!fieldErrors.capacity} aria-describedby={fieldErrors.capacity ? 'ccCapacity-error' : undefined}>
                     <option value="">{t.formCapacityDefault}</option>
                     <option value="1-2">{t.formCapacity1}</option>
                     <option value="3-5">{t.formCapacity2}</option>
                     <option value="6+">{t.formCapacity3}</option>
                   </select>
+                  {fieldErrors.capacity && <span id="ccCapacity-error" className="cc-form-row__error" role="alert">{fieldErrors.capacity}</span>}
                 </div>
                 <div className="cc-form-row" style={{ marginBottom: '20px' }}>
                   <div className="cc-form-check">
-                    <input type="checkbox" id="ccConsent1" checked={formData.consent1} onChange={e => setFormData(d => ({ ...d, consent1: e.target.checked }))} />
+                    <input type="checkbox" id="ccConsent1" checked={formData.consent1} onChange={e => { setFormData(d => ({ ...d, consent1: e.target.checked })); if (fieldErrors.consent1) setFieldErrors(s => ({ ...s, consent1: '' })) }} />
                     <label className="cc-form-check-label" htmlFor="ccConsent1">{t.formConsent1}</label>
                   </div>
+                  {fieldErrors.consent1 && <span className="cc-form-row__error" role="alert" style={{ marginLeft: 26 }}>{fieldErrors.consent1}</span>}
                   <div className="cc-form-check">
-                    <input type="checkbox" id="ccConsent2" checked={formData.consent2} onChange={e => setFormData(d => ({ ...d, consent2: e.target.checked }))} />
+                    <input type="checkbox" id="ccConsent2" checked={formData.consent2} onChange={e => { setFormData(d => ({ ...d, consent2: e.target.checked })); if (fieldErrors.consent2) setFieldErrors(s => ({ ...s, consent2: '' })) }} />
                     <label className="cc-form-check-label" htmlFor="ccConsent2">{t.formConsent2}</label>
                   </div>
+                  {fieldErrors.consent2 && <span className="cc-form-row__error" role="alert" style={{ marginLeft: 26 }}>{fieldErrors.consent2}</span>}
                 </div>
-                {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+                {formError && (
+                  <div role="alert" className="cc-form-error-card">
+                    <span className="cc-form-error-card__msg"><strong>{t.formErrorLabel}</strong> {formError}</span>
+                    <button type="submit" className="cc-form-error-card__retry" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formRetryLabel}</button>
+                  </div>
+                )}
                 <button className="cc-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
               </form>
             )}
