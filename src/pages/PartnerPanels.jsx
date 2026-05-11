@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -118,7 +118,19 @@ function addToCalendar(title, start, end) {
 export default function PartnerPanels() {
   const t = useT('partnerPanels')
   const [openTakeaway, setOpenTakeaway] = useState(null)
-  const [activeTopic, setActiveTopic] = useState('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const topicChips = t.topicChips || []
+  const validTopicKeys = topicChips.map(c => c.key)
+  const urlTopic = searchParams.get('topic') || ''
+  const activeTopic = urlTopic && validTopicKeys.includes(urlTopic) ? urlTopic : 'all'
+  const setActiveTopic = key => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      if (!key || key === 'all') next.delete('topic')
+      else next.set('topic', key)
+      return next
+    }, { replace: true })
+  }
   const [suggestSubmitted, setSuggestSubmitted] = useState(false)
   const [suggestLoading, setSuggestLoading] = useState(false)
   const [suggestError, setSuggestError] = useState('')
