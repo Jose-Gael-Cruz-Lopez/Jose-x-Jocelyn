@@ -153,7 +153,7 @@ export const en = {
     captureSuccessTitle: 'Got it.',
     captureSuccessBody: 'We’ll be in touch when there’s news worth your inbox.',
     captureErrorEmail: 'That email does not look quite right.',
-    captureErrorGeneric: 'Something went wrong. Try again in a moment.',
+    captureErrorGeneric: 'Couldn’t send. Try again, or email us at campustocareerteam@gmail.com.',
     captureTrust: 'Run by Jose and Jocelyn. Your email stays here. We don’t share it anywhere.',
     apprenticeKicker: 'Section 01',
     apprenticeTitle: 'Apprenticeships and Alternative Entry Programs',

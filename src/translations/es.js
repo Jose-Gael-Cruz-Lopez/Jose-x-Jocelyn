@@ -153,7 +153,7 @@ export const es = {
     captureSuccessTitle: 'Listo.',
     captureSuccessBody: 'Te escribimos cuando haya noticias que valgan tu correo.',
     captureErrorEmail: 'Ese correo no se ve del todo bien.',
-    captureErrorGeneric: 'Algo salió mal. Intenta de nuevo en un momento.',
+    captureErrorGeneric: 'No se pudo enviar. Inténtalo otra vez, o escríbenos a campustocareerteam@gmail.com.',
     captureTrust: 'Lo manejamos Jose y Jocelyn. Tu correo se queda aquí. No lo compartimos en ningún lado.',
     apprenticeKicker: 'Sección 01',
     apprenticeTitle: 'Programas de Aprendizaje y Puntos de Entrada Alternativos',
