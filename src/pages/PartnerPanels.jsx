@@ -1137,7 +1137,7 @@ export default function PartnerPanels() {
                   <textarea className="pp-form-textarea" id="plNotes" placeholder={t.panelistPlaceholderNotes} value={panelistForm.notes} onChange={e => setPanelistForm(f => ({ ...f, notes: e.target.value }))} />
                 </div>
                 {panelistError && <p role="alert" style={{ color: 'var(--color-cream)', fontSize: 13, marginBottom: 10, opacity: 0.85 }}>{panelistError}</p>}
-                <button className="pp-form-btn" type="submit" disabled={panelistLoading}>{panelistLoading ? t.panelistBtnSubmitting : t.panelistBtnSubmit}</button>
+                <button className="pp-form-btn" type="submit" disabled={panelistLoading || !panelistForm.name.trim() || !panelistForm.email.trim() || !panelistForm.linkedin.trim() || !panelistForm.role.trim() || !panelistForm.topic.trim() || !panelistForm.interest}>{panelistLoading ? t.panelistBtnSubmitting : t.panelistBtnSubmit}</button>
               </form>
             )}
           </div>
