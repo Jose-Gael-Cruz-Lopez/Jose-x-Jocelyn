@@ -481,7 +481,7 @@ export default function CoffeeChat() {
         .cc-form-success__body { font-size: 14px; color: var(--color-muted); line-height: 1.7; }
 
         .cc-safety { max-width: 1040px; margin: 0 auto; padding: 60px clamp(20px,5vw,56px); }
-        .cc-safety__box { background: rgba(22,43,68,.05); border: 1px solid rgba(22,43,68,.12); border-left: 3px solid var(--color-navy); border-radius: 14px; padding: 28px 32px; display: flex; gap: 18px; align-items: flex-start; }
+        .cc-safety__box { background: linear-gradient(180deg, rgba(22,43,68,.07) 0%, rgba(22,43,68,.03) 100%); border: 1.5px solid rgba(22,43,68,.22); border-radius: 14px; padding: 28px 32px; display: flex; gap: 18px; align-items: flex-start; }
         .cc-safety__icon { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: rgba(22,43,68,.12); color: var(--color-navy); display: flex; align-items: center; justify-content: center; margin-top: 1px; }
         .cc-safety__text { font-size: clamp(13px,1.5vw,14px); color: var(--color-muted); line-height: 1.75; }
         .cc-safety__text strong { color: var(--color-navy); font-weight: 700; }
