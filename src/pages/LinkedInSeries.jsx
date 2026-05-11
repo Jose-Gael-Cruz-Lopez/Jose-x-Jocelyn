@@ -566,7 +566,7 @@ export default function LinkedInSeries() {
                   <button type="submit" className="ls-form-error-card__retry" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formRetryLabel}</button>
                 </div>
               )}
-              <button className="ls-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
+              <button className="ls-form-btn" type="submit" disabled={formLoading || !topic.trim()}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
             </form>
           )}
         </div>
