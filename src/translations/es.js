@@ -105,7 +105,7 @@ export const es = {
     modalSend: 'Enviar mensaje →',
     modalSending: 'Enviando…',
     modalSentTitle: 'Mensaje enviado.',
-    modalSentMsg: '¡Gracias por escribirnos! Te responderemos pronto.',
+    modalSentMsg: 'Gracias por escribirnos. Te responderemos pronto.',
     modalClose: 'Cerrar',
     breakMsgs: [
       "Échale ganas, ya diste el primer paso.",

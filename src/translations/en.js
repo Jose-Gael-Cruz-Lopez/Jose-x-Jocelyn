@@ -105,7 +105,7 @@ export const en = {
     modalSend: 'Send message →',
     modalSending: 'Sending…',
     modalSentTitle: 'Message sent.',
-    modalSentMsg: "Thanks for reaching out! We'll get back to you soon.",
+    modalSentMsg: "Thanks for reaching out. We'll get back to you soon.",
     modalClose: 'Close',
     breakMsgs: [
       "Échale ganas, you already took the first step.",
