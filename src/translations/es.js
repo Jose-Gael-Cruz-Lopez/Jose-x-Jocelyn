@@ -2164,7 +2164,7 @@ export const es = {
     suggestEmailNote: '(opcional — para avisarte cuando lo organicemos)',
     suggestPlaceholderEmail: 'tu@correo.com',
     suggestErrorRequired: 'Por favor completa todos los campos requeridos antes de enviar.',
-    suggestErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    suggestErrorGeneric: 'No se pudo enviar. Inténtalo otra vez, o escríbenos a campustocareerteam@gmail.com.',
     suggestBtnSubmit: 'Enviar sugerencia de tema',
     suggestBtnSubmitting: 'Enviando…',
     suggestFormNote: 'No toda idea se convierte en un panel de inmediato, pero cada envío ayuda a definir lo que construimos a continuación.',

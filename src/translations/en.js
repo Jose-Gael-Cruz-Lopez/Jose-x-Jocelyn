@@ -2164,7 +2164,7 @@ export const en = {
     suggestEmailNote: '(optional - if you want a heads-up when we host it)',
     suggestPlaceholderEmail: 'your@email.com',
     suggestErrorRequired: 'Please fill in all required fields before submitting.',
-    suggestErrorGeneric: 'Something went wrong. Please try again.',
+    suggestErrorGeneric: 'Couldn’t send. Try again, or email us at campustocareerteam@gmail.com.',
     suggestBtnSubmit: 'Send Topic Suggestion',
     suggestBtnSubmitting: 'Submitting…',
     suggestFormNote: 'Not every idea becomes a panel immediately, but every submission helps shape what we build next.',
