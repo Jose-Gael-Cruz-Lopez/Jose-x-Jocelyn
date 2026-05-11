@@ -335,6 +335,8 @@ export default function CoffeeChat() {
     >
       <style>{`
         html, body { background: var(--color-cream); }
+        .cc-scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-gold) 100%); z-index: 1000; pointer-events: none; transform: scaleX(0); transform-origin: left; transition: transform .12s linear; will-change: transform; }
+        @media (prefers-reduced-motion: reduce) { .cc-scroll-progress { transition: none; } }
 
         .cc-kicker { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 10px; }
         .cc-kicker::after { content: ''; width: 24px; height: 1px; background: var(--color-accent); opacity: .5; }
