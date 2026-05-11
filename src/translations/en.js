@@ -1836,6 +1836,7 @@ export const en = {
     filterInterview: 'Interviews',
     filterInterviewDesc: 'Mock prep, thank-yous',
     filterOffers: 'Offers & Negotiation',
+    filterOffersDesc: 'Negotiation, offers',
     filterJob: 'On the Job',
     filterAriaLabel: 'Filter by pipeline stage',
 
