@@ -103,7 +103,7 @@ export const en = {
     modalEmailPlaceholder: 'Your email',
     modalMessageLabel: 'Message',
     modalMessagePlaceholder: "What's on your mind?",
-    modalError: 'Something went wrong. Please try again.',
+    modalError: 'Couldn’t send. Try again, or email us at campustocareerteam@gmail.com.',
     modalSend: 'Send message →',
     modalSending: 'Sending…',
     modalSentTitle: 'Message sent.',
