@@ -409,8 +409,33 @@ export default function PartnerPanels() {
         .pp-upcoming__head { margin-bottom: 32px; }
         .pp-upcoming__grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+          grid-template-columns: 1.4fr 1fr;
+          grid-template-rows: auto auto;
           gap: 20px;
+        }
+        .pp-panel-card--featured {
+          grid-row: 1 / 3;
+          padding: 32px 30px;
+        }
+        .pp-panel-card--featured .pp-panel-card__title {
+          font-size: clamp(20px,2.5vw,26px);
+        }
+        .pp-panel-card--featured .pp-panel-card__date-badge {
+          background: var(--color-gold);
+          color: var(--color-dark);
+        }
+        .pp-panel-card__featured-tag {
+          display: inline-flex; align-items: center; gap: 6px;
+          font-size: 10px; font-weight: 700; letter-spacing: .12em;
+          text-transform: uppercase; color: var(--color-accent);
+          margin-bottom: -4px;
+        }
+        .pp-panel-card__featured-tag::before {
+          content: ''; width: 16px; height: 1px; background: var(--color-accent); opacity: .6;
+        }
+        @media (max-width: 760px) {
+          .pp-upcoming__grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+          .pp-panel-card--featured { grid-row: auto; padding: 26px; }
         }
         .pp-panel-card {
           background: var(--color-white);
