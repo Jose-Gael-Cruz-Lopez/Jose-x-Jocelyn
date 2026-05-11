@@ -417,7 +417,8 @@ export default function OpportunityBoard() {
 
         .ob-submit { max-width: 1040px; margin: 0 auto; padding: 80px clamp(20px,5vw,56px); }
         .ob-submit__layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: flex-start; }
-        .ob-submit__intro-kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 12px; }
+        .ob-submit__intro-kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 12px; display: inline-flex; align-items: center; gap: 10px; }
+        .ob-submit__intro-kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .ob-submit__intro-title { font-family: var(--font-display); font-size: clamp(22px,3vw,32px); font-weight: 700; color: var(--color-dark); line-height: 1.2; margin-bottom: 16px; }
         .ob-submit__intro-body { font-size: clamp(14px,1.6vw,15px); color: var(--color-muted); line-height: 1.75; }
         .ob-submit__intro-body strong { color: var(--color-dark); font-weight: 600; }
@@ -449,7 +450,8 @@ export default function OpportunityBoard() {
 
         .ob-eco { background: var(--color-dark); padding: 72px clamp(20px,5vw,56px); }
         .ob-eco__inner { max-width: 1040px; margin: 0 auto; }
-        .ob-eco__kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(242,228,206,.4); margin-bottom: 10px; }
+        .ob-eco__kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-gold); margin-bottom: 10px; display: inline-flex; align-items: center; gap: 10px; }
+        .ob-eco__kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .ob-eco__title { font-family: var(--font-display); font-size: clamp(20px,3vw,28px); font-weight: 700; color: var(--color-cream); margin-bottom: 8px; line-height: 1.25; }
         .ob-eco__body { font-size: clamp(14px,1.6vw,15px); color: rgba(242,228,206,.55); line-height: 1.75; max-width: 680px; margin-bottom: 36px; }
         .ob-eco__grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 14px; }
