@@ -148,6 +148,7 @@ export default function PartnerPanels() {
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [])
+  const [mode, setMode] = useState('suggest')
   const [suggestSubmitted, setSuggestSubmitted] = useState(false)
   const [suggestLoading, setSuggestLoading] = useState(false)
   const [suggestError, setSuggestError] = useState('')
@@ -750,6 +751,49 @@ export default function PartnerPanels() {
           .pp-faq__grid { grid-template-columns: 1fr; row-gap: 24px; }
         }
 
+        /* GET-INVOLVED TOGGLE (segmented control inside the merged form card) */
+        .pp-getinvolved__toggle {
+          display: inline-flex; gap: 4px; padding: 4px;
+          background: rgba(26,25,22,.05);
+          border: 1px solid rgba(26,25,22,.08);
+          border-radius: 999px;
+          margin-bottom: 22px;
+        }
+        .pp-getinvolved__toggle-btn {
+          padding: 9px 18px; font-family: var(--font-display);
+          font-size: 13px; font-weight: 700; letter-spacing: -.005em;
+          color: var(--color-muted); background: transparent;
+          border: none; border-radius: 999px; cursor: pointer;
+          transition: background .22s, color .22s, box-shadow .22s;
+        }
+        .pp-getinvolved__toggle-btn:hover { color: var(--color-dark); }
+        .pp-getinvolved__toggle-btn.active {
+          background: var(--color-dark); color: var(--color-cream);
+          box-shadow: 0 2px 6px -2px rgba(26,25,22,.3);
+        }
+        .pp-getinvolved__toggle-btn:focus-visible {
+          outline: 2px solid var(--color-gold); outline-offset: 2px;
+        }
+        .pp-getinvolved__perks {
+          margin-top: 18px; padding-top: 18px;
+          border-top: 1px solid rgba(26,25,22,.08);
+          display: flex; flex-direction: column; gap: 10px;
+        }
+        .pp-getinvolved__perk {
+          display: flex; align-items: flex-start; gap: 10px;
+          font-size: 13px; color: var(--color-muted); line-height: 1.55;
+        }
+        .pp-getinvolved__perk-icon {
+          width: 20px; height: 20px; border-radius: 50%;
+          background: rgba(232,168,56,.18); color: var(--color-gold-dark);
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0; margin-top: 1px;
+        }
+        .pp-getinvolved__perk-icon svg { width: 11px; height: 11px; stroke-width: 2; }
+        @media (prefers-reduced-motion: reduce) {
+          .pp-getinvolved__toggle-btn { transition: none !important; }
+        }
+
         /* SUGGEST FORM */
         .pp-suggest {
           max-width: 1040px; margin: 0 auto;
@@ -1265,18 +1309,56 @@ export default function PartnerPanels() {
 
       <hr className="pp-divider" />
 
-      {/* SUGGEST A PANEL */}
+      {/* GET INVOLVED — merged suggest + apply-to-speak in one card */}
       <section className="pp-suggest" id="suggest">
+        <a id="panelist" style={{ position: 'absolute', marginTop: '-90px' }} aria-hidden="true" />
         <div className="pp-suggest__layout">
           <div>
-            <p className="pp-suggest__intro-kicker">{t.suggestKicker}</p>
-            <h2 className="pp-suggest__intro-title">{t.suggestTitle}</h2>
+            <p className="pp-suggest__intro-kicker">{mode === 'suggest' ? t.suggestKicker : t.panelistKicker}</p>
+            <h2 className="pp-suggest__intro-title">{mode === 'suggest' ? t.suggestTitle : t.panelistTitle}</h2>
             <p className="pp-suggest__intro-body">
-              {t.suggestBody} <strong>{t.suggestBodyStrong}</strong> {t.suggestBodyTail}
+              {mode === 'suggest' ? (
+                <>{t.suggestBody} <strong>{t.suggestBodyStrong}</strong> {t.suggestBodyTail}</>
+              ) : (
+                <>{t.panelistBody} <strong>{t.panelistBodyStrong}</strong> {t.panelistBodyTail}</>
+              )}
             </p>
+            {mode === 'speak' && (
+              <div className="pp-getinvolved__perks">
+                {[t.panelistPerk1, t.panelistPerk2, t.panelistPerk3, t.panelistPerk4].map(p => (
+                  <div key={p} className="pp-getinvolved__perk">
+                    <span className="pp-getinvolved__perk-icon" aria-hidden="true">
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>
+                    </span>
+                    <span>{p}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <div className="pp-form-box">
-            {suggestSubmitted ? (
+            <div className="pp-getinvolved__toggle" role="tablist" aria-label={t.modeToggleLabel || 'Form mode'}>
+              <button
+                role="tab"
+                type="button"
+                aria-selected={mode === 'suggest'}
+                className={`pp-getinvolved__toggle-btn${mode === 'suggest' ? ' active' : ''}`}
+                onClick={() => setMode('suggest')}
+              >
+                {t.modeSuggestLabel || 'Suggest a topic'}
+              </button>
+              <button
+                role="tab"
+                type="button"
+                aria-selected={mode === 'speak'}
+                className={`pp-getinvolved__toggle-btn${mode === 'speak' ? ' active' : ''}`}
+                onClick={() => setMode('speak')}
+              >
+                {t.modeSpeakLabel || 'Apply to speak'}
+              </button>
+            </div>
+
+            {mode === 'suggest' && (suggestSubmitted ? (
               <div className="pp-form-success">
                 <div className="pp-form-success__icon pp-form-success__icon--gold">{t.suggestSuccessIcon}</div>
                 <div className="pp-form-success__title">{t.suggestSuccessTitle}</div>
@@ -1318,51 +1400,9 @@ export default function PartnerPanels() {
                 <button className="pp-form-btn" type="submit" disabled={suggestLoading || !suggestForm.topic.trim() || !suggestForm.why.trim() || !suggestForm.stage || !suggestForm.category}>{suggestLoading ? t.suggestBtnSubmitting : t.suggestBtnSubmit}</button>
                 <p className="pp-form-note">{t.suggestFormNote}</p>
               </form>
-            )}
-          </div>
-        </div>
-      </section>
+            ))}
 
-      <hr className="pp-divider" />
-
-      {/* BECOME A PANELIST */}
-      <section className="pp-panelist" id="panelist">
-        <div className="pp-panelist__inner">
-          <div>
-            <p className="pp-panelist__intro-kicker">{t.panelistKicker}</p>
-            <h2 className="pp-panelist__intro-title">{t.panelistTitle}</h2>
-            <p className="pp-panelist__intro-body">
-              {t.panelistBody} <strong>{t.panelistBodyStrong}</strong> {t.panelistBodyTail}
-            </p>
-            <div className="pp-panelist__perks">
-              <div className="pp-panelist__perk">
-                <span className="pp-panelist__perk-icon" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>
-                </span>
-                <span>{t.panelistPerk1}</span>
-              </div>
-              <div className="pp-panelist__perk">
-                <span className="pp-panelist__perk-icon" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>
-                </span>
-                <span>{t.panelistPerk2}</span>
-              </div>
-              <div className="pp-panelist__perk">
-                <span className="pp-panelist__perk-icon" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>
-                </span>
-                <span>{t.panelistPerk3}</span>
-              </div>
-              <div className="pp-panelist__perk">
-                <span className="pp-panelist__perk-icon" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>
-                </span>
-                <span>{t.panelistPerk4}</span>
-              </div>
-            </div>
-          </div>
-          <div className="pp-form-box pp-form-box--dark">
-            {panelistSubmitted ? (
+            {mode === 'speak' && (panelistSubmitted ? (
               <div className="pp-form-success">
                 <div className="pp-form-success__icon pp-form-success__icon--teal">{t.panelistSuccessIcon}</div>
                 <div className="pp-form-success__title">{t.panelistSuccessTitle}</div>
@@ -1404,10 +1444,10 @@ export default function PartnerPanels() {
                   <label className="pp-form-label" htmlFor="plNotes">{t.panelistLabelNotes}</label>
                   <textarea className="pp-form-textarea" id="plNotes" placeholder={t.panelistPlaceholderNotes} value={panelistForm.notes} onChange={e => setPanelistForm(f => ({ ...f, notes: e.target.value }))} />
                 </div>
-                {panelistError && <p role="alert" style={{ color: 'var(--color-cream)', fontSize: 13, marginBottom: 10, opacity: 0.85 }}>{panelistError}</p>}
+                {panelistError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{panelistError}</p>}
                 <button className="pp-form-btn" type="submit" disabled={panelistLoading || !panelistForm.name.trim() || !panelistForm.email.trim() || !panelistForm.linkedin.trim() || !panelistForm.role.trim() || !panelistForm.topic.trim() || !panelistForm.interest}>{panelistLoading ? t.panelistBtnSubmitting : t.panelistBtnSubmit}</button>
               </form>
-            )}
+            ))}
           </div>
         </div>
       </section>

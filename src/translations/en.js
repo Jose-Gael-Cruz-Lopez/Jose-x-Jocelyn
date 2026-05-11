@@ -2102,6 +2102,11 @@ export const en = {
     bridgeCopyEm: 'Tell us what we should host next.',
     bridgeCtaLabel: 'Suggest a panel',
 
+    // ── Get-involved mode toggle ──────────────────────────────────────────────
+    modeToggleLabel: 'What do you want to do?',
+    modeSuggestLabel: 'Suggest a topic',
+    modeSpeakLabel: 'Apply to speak',
+
     // ── Topic browse ──────────────────────────────────────────────────────────
     topicsKicker: 'Section 04',
     topicsTitle: 'Browse by Topic',
