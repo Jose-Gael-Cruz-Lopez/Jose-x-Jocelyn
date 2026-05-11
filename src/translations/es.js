@@ -2076,6 +2076,7 @@ export const es = {
     upcomingMetaZoom: 'Zoom',
     upcomingMetaBestFor: 'Ideal para:',
     upcomingPanelistsLabel: 'Panelistas',
+    upcomingFeaturedTag: 'Próximamente',
     upcomingBtnCalendar: 'Calendario',
     upcomingBtnFlyer: 'Volante',
     ctaReserve: 'Reserva Tu Lugar',
