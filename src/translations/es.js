@@ -72,6 +72,7 @@ export const es = {
     editorialTitle: 'La Voz del Día',
     editorialDesc: 'Artículos sobre reclutamiento, pasantías, ofertas de tiempo completo y supervivencia en los primeros años de carrera, escritos por ambos desde los dos lados del puente.',
     editorialViewAll: 'Ver Todos los Artículos',
+    skipToContent: 'Saltar al contenido',
     card1Tag: 'Jose',
     card1Title: 'Pasantías de Último Momento: Dónde Buscar Cuando Todos Dicen que Ya Terminó',
     card1Excerpt: 'Es abril y aún no tienes pasantía. Esto es lo que debes hacer ahora mismo.',

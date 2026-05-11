@@ -610,6 +610,7 @@ export default function Home() {
 
   return (
     <>
+      <a href="#hero" className="skip-link">{t.skipToContent}</a>
       {/* LOADER */}
       {!loaderDone && (
         <div className="loader" id="loader" ref={loaderRef}>

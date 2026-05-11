@@ -72,6 +72,7 @@ export const en = {
     editorialTitle: 'La Voz del Día',
     editorialDesc: 'Articles on recruiting, internships, full-time offers, and early-career survival, written by both of us from both sides of the bridge.',
     editorialViewAll: 'View All Articles',
+    skipToContent: 'Skip to main content',
     card1Tag: 'Jose',
     card1Title: "Late-Cycle Internships: Where to Look When Everyone Says It's Over",
     card1Excerpt: "It is April and you still don't have an internship. Here is what to do right now.",
