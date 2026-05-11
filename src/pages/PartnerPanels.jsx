@@ -400,13 +400,14 @@ export default function PartnerPanels() {
           gap: 20px;
         }
         .pp-panel-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: linear-gradient(180deg, rgba(255,250,242,.85) 0%, rgba(255,250,242,.55) 100%);
+          border: 1px solid rgba(26,25,22,.1);
           border-radius: 16px; padding: 26px;
           display: flex; flex-direction: column; gap: 14px;
-          transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(var(--pp-shadow-warm),.12);
+          transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s, border-color .22s;
         }
-        .pp-panel-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
+        .pp-panel-card:hover { transform: translateY(-3px); border-color: rgba(26,25,22,.22); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 32px -12px rgba(var(--pp-shadow-warm),.22); }
         .pp-panel-card__date-badge {
           display: inline-flex; align-items: center; gap: 6px;
           background: rgba(232,168,56,.12); color: var(--color-gold);
@@ -458,12 +459,12 @@ export default function PartnerPanels() {
         .pp-archive__head { margin-bottom: 32px; }
         .pp-archive__list { display: flex; flex-direction: column; gap: 16px; }
         .pp-archive-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: linear-gradient(180deg, rgba(255,250,242,.7) 0%, rgba(255,250,242,.45) 100%);
+          border: 1px solid rgba(26,25,22,.1);
           border-radius: 16px; overflow: hidden;
-          transition: border-color .2s, box-shadow .2s;
+          transition: border-color .22s, box-shadow .22s, transform .22s cubic-bezier(.16,1,.3,1);
         }
-        .pp-archive-card:hover { border-color: rgba(0,0,0,.15); box-shadow: 0 8px 24px rgba(0,0,0,.07); }
+        .pp-archive-card:hover { border-color: rgba(26,25,22,.22); transform: translateX(4px); box-shadow: 4px 4px 18px -6px rgba(var(--pp-shadow-warm),.18); }
         .pp-archive-card__main {
           padding: 26px 28px;
           display: grid; grid-template-columns: 1fr auto;
@@ -578,10 +579,11 @@ export default function PartnerPanels() {
         .pp-suggest__intro-body strong { color: var(--color-dark); font-weight: 600; }
 
         .pp-form-box {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: rgba(255,250,242,.7);
+          border: 1px solid rgba(26,25,22,.13);
           border-radius: 16px;
           padding: clamp(26px,4vw,44px);
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--pp-shadow-warm),.18);
         }
         .pp-form-row { margin-bottom: 16px; }
         .pp-form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
