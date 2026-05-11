@@ -158,11 +158,11 @@ function dbOpportunityToCard(row, t) {
   }
 }
 
-function OBCard({ card, featured, t }) {
+function OBCard({ card, featured, t, idx = 0 }) {
   const isExternal = card.postLink.startsWith('http')
   const typeKey = (card.type || '').split(' ')[0]
   return (
-    <article className={`ob-card${typeKey ? ' ob-card--' + typeKey : ''}${featured ? ' featured' : ''}`}>
+    <article className={`ob-card${typeKey ? ' ob-card--' + typeKey : ''}${featured ? ' featured' : ''}`} style={{ '--ob-i': idx % 12 }}>
       {featured && <span className="ob-card__featured-badge">{t.cardFeaturedBadge}</span>}
       <div className="ob-card__top">
         <div className="ob-card__company-logo" style={card.logoStyle}>{card.logo}</div>
@@ -315,9 +315,17 @@ export default function OpportunityBoard() {
         .ob-card--new-grad      { background: linear-gradient(180deg, rgba(232,168,56,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(232,168,56,.26); }
         .ob-card--fellowship    { background: linear-gradient(180deg, rgba(91,142,194,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(91,142,194,.22); }
         .ob-card--program       { background: linear-gradient(180deg, rgba(179,69,57,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(179,69,57,.22); }
-        .ob-card.featured { border-color: rgba(232,168,56,.42); border-width: 1.5px; }
+        .ob-card.featured { border-color: rgba(232,168,56,.42); border-width: 1.5px; background: linear-gradient(180deg, rgba(232,168,56,.07) 0%, rgba(255,250,242,.55) 60%); }
+        .ob-card.featured::before { content: ''; position: absolute; top: -1px; left: 18px; width: 36px; height: 6px; background: var(--color-gold); border-radius: 0 0 4px 4px; box-shadow: 0 1px 2px rgba(232,168,56,.4); }
         .ob-card.archived { opacity: .55; pointer-events: none; }
         .ob-card__featured-badge { position: absolute; top: -1px; right: 18px; background: var(--color-gold); color: var(--color-dark); font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 0 0 6px 6px; }
+        .ob-featured-grid > .ob-card,
+        .ob-main-grid > .ob-card { animation: ob-card-in .55s cubic-bezier(.16,1,.3,1) backwards; animation-delay: calc(var(--ob-i, 0) * 50ms); }
+        @keyframes ob-card-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @media (prefers-reduced-motion: reduce) {
+          .ob-featured-grid > .ob-card,
+          .ob-main-grid > .ob-card { animation: none !important; }
+        }
         .ob-card__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
         .ob-card__company-logo { width: 40px; height: 40px; border-radius: 10px; border: 1px solid rgba(0,0,0,.08); background: rgba(0,0,0,.04); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--color-dark); flex-shrink: 0; }
         .ob-card__deadline { font-size: 11px; font-weight: 700; color: var(--color-muted); letter-spacing: .04em; flex-shrink: 0; }
@@ -471,7 +479,7 @@ export default function OpportunityBoard() {
           <div className="ob-featured-strip">
             <p className="ob-featured-label">{t.featuredLabel}</p>
             <div className="ob-featured-grid">
-              {visibleFeatured.map(c => <OBCard key={c.id} card={c} featured t={t} />)}
+              {visibleFeatured.map((c, i) => <OBCard key={c.id} card={c} featured t={t} idx={i} />)}
             </div>
           </div>
         )}
@@ -479,7 +487,7 @@ export default function OpportunityBoard() {
         <div className="ob-main-grid">
           {visibleMain.length === 0 && visibleFeatured.length === 0
             ? <p className="ob-no-results">{t.noResults}</p>
-            : visibleMain.map(c => <OBCard key={c.id} card={c} featured={false} t={t} />)
+            : visibleMain.map((c, i) => <OBCard key={c.id} card={c} featured={false} t={t} idx={i} />)
           }
         </div>
 
