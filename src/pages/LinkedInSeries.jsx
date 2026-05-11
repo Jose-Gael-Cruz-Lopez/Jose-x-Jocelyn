@@ -149,7 +149,7 @@ const PAGE_CSS = `
   .ls-form-btn:active { transform:translateY(0);box-shadow:0 2px 4px -2px rgba(var(--ls-shadow-warm),.18); }
   .ls-form-btn:disabled { opacity:.55;cursor:not-allowed;transform:none;box-shadow:none; }
   .ls-form-error { color:var(--color-accent);font-size:13px;font-weight:600;margin-bottom:10px; }
-  .ls-form-error-card { display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding:14px 16px;background:rgba(179,69,57,.06);border:1px solid rgba(179,69,57,.22);border-left:3px solid var(--color-accent);border-radius:10px; }
+  .ls-form-error-card { display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding:14px 16px;background:rgba(179,69,57,.06);border:1px solid rgba(179,69,57,.35);border-radius:10px; }
   .ls-form-error-card__msg { flex:1;font-size:13px;color:var(--color-dark);line-height:1.5;font-weight:500; }
   .ls-form-error-card__msg strong { color:var(--color-accent);font-weight:700; }
   .ls-form-error-card__retry { flex-shrink:0;padding:7px 14px;background:transparent;border:1.5px solid var(--color-accent);color:var(--color-accent);border-radius:999px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:-.005em;cursor:pointer;transition:background .2s,color .2s; }
