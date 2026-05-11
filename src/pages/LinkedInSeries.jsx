@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
@@ -67,12 +67,15 @@ const PAGE_CSS = `
   }
   .ls-controls { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 40px; }
   .ls-filters { display:flex;flex-wrap:wrap;gap:8px; }
-  .ls-filter { padding:11px 18px;border-radius:999px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:-.005em;cursor:pointer;border:1.5px solid rgba(26,25,22,.1);background:rgba(255,255,255,.55);color:var(--color-muted);transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .15s ease,box-shadow .2s ease; }
+  .ls-filter { padding:9px 16px;border-radius:14px;font-family:var(--font-display);letter-spacing:-.005em;cursor:pointer;border:1.5px solid rgba(26,25,22,.1);background:rgba(255,255,255,.55);color:var(--color-muted);transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .15s ease,box-shadow .2s ease;display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;min-width:0; }
   .ls-filter:hover { color:var(--color-dark);border-color:rgba(26,25,22,.22);background:rgba(255,255,255,.85);transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(var(--ls-shadow-warm),.1); }
   .ls-filter:active { transform:translateY(0);box-shadow:0 1px 2px rgba(var(--ls-shadow-warm),.06); }
   .ls-filter--active { background:var(--color-dark);color:var(--color-cream);border-color:var(--color-dark);box-shadow:0 8px 18px -8px rgba(var(--ls-shadow-warm),.32),inset 0 1px 0 rgba(255,255,255,.08); }
   .ls-filter--active:hover { background:var(--color-dark);color:var(--color-cream); }
-  .ls-filter:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 999px; }
+  .ls-filter:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 14px; }
+  .ls-filter__label { font-size:12px;font-weight:700;letter-spacing:-.005em;line-height:1.2; }
+  .ls-filter__desc { font-size:10.5px;font-weight:500;opacity:.72;line-height:1.2;letter-spacing:.005em; }
+  .ls-filter--active .ls-filter__desc { opacity:.85; }
   .ls-filters__group { display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center; }
   .ls-filters__label { font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--color-muted);margin-right:6px; }
   .ls-filters__rule { width:1px;align-self:stretch;background:rgba(26,25,22,.1);margin:6px 8px; }
@@ -270,6 +273,23 @@ export default function LinkedInSeries() {
   const t = useT('linkedInSeries')
 
   const [searchParams, setSearchParams] = useSearchParams()
+  const filtersRef = useRef(null)
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstFilter = filtersRef.current?.querySelector('button')
+      if (firstFilter) {
+        e.preventDefault()
+        firstFilter.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
   const filterLens = searchParams.get('lens') || ''   // '' | 'jose' | 'jocelyn' | 'both'
   const filterTopic = searchParams.get('topic') || '' // '' | 'internships' | 'offers' | 'rejection' | 'on-the-job'
 
@@ -291,15 +311,15 @@ export default function LinkedInSeries() {
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   const LENS_OPTIONS = [
-    { v: 'jose',    label: t.filterJose },
-    { v: 'jocelyn', label: t.filterJocelyn },
-    { v: 'both',    label: t.filterBoth },
+    { v: 'jose',    label: t.filterJose,    desc: t.filterJoseDesc },
+    { v: 'jocelyn', label: t.filterJocelyn, desc: t.filterJocelynDesc },
+    { v: 'both',    label: t.filterBoth,    desc: t.filterBothDesc },
   ]
   const TOPIC_OPTIONS = [
-    { v: 'internships', label: t.filterInternships },
-    { v: 'offers',      label: t.filterOffers },
-    { v: 'rejection',   label: t.filterRejection },
-    { v: 'on-the-job',  label: t.filterOnTheJob },
+    { v: 'internships', label: t.filterInternships, desc: t.filterInternshipsDesc },
+    { v: 'offers',      label: t.filterOffers,      desc: t.filterOffersDesc },
+    { v: 'rejection',   label: t.filterRejection,   desc: t.filterRejectionDesc },
+    { v: 'on-the-job',  label: t.filterOnTheJob,    desc: t.filterOnTheJobDesc },
   ]
   const noFilters = !filterLens && !filterTopic
 
@@ -416,28 +436,37 @@ export default function LinkedInSeries() {
       )}
 
       <div className="ls-controls">
-        <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel}>
+        <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel} ref={filtersRef}>
           <button
             className={`ls-filter${noFilters ? ' ls-filter--active' : ''}`}
             aria-pressed={noFilters}
             onClick={() => setSearchParams({}, { replace: true })}
-          >{t.filterAll}</button>
-          {LENS_OPTIONS.map(({ v, label }) => (
+          >
+            <span className="ls-filter__label">{t.filterAll}</span>
+            {t.filterAllDesc && <span className="ls-filter__desc">{t.filterAllDesc}</span>}
+          </button>
+          {LENS_OPTIONS.map(({ v, label, desc }) => (
             <button
               key={v}
               className={`ls-filter${filterLens === v ? ' ls-filter--active' : ''}`}
               aria-pressed={filterLens === v}
               onClick={() => updateFilter('lens', filterLens === v ? '' : v)}
-            >{label}</button>
+            >
+              <span className="ls-filter__label">{label}</span>
+              {desc && <span className="ls-filter__desc">{desc}</span>}
+            </button>
           ))}
           <span className="ls-filters__rule" aria-hidden="true" />
-          {TOPIC_OPTIONS.map(({ v, label }) => (
+          {TOPIC_OPTIONS.map(({ v, label, desc }) => (
             <button
               key={v}
               className={`ls-filter${filterTopic === v ? ' ls-filter--active' : ''}`}
               aria-pressed={filterTopic === v}
               onClick={() => updateFilter('topic', filterTopic === v ? '' : v)}
-            >{label}</button>
+            >
+              <span className="ls-filter__label">{label}</span>
+              {desc && <span className="ls-filter__desc">{desc}</span>}
+            </button>
           ))}
         </div>
       </div>

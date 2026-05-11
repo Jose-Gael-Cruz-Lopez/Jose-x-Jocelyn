@@ -35,6 +35,23 @@ export default function CareerTemplates() {
   const [previewId, setPreviewId] = useState(null)
   const [copied, setCopied] = useState(false)
   const previewTriggerRef = useRef(null)
+  const filtersRef = useRef(null)
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstFilter = filtersRef.current?.querySelector('button')
+      if (firstFilter) {
+        e.preventDefault()
+        firstFilter.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   const handleFilterClick = useCallback(e => {
     const key = e.currentTarget.dataset.key
@@ -117,12 +134,12 @@ export default function CareerTemplates() {
   }
 
   const FILTERS = [
-    { key: 'all', label: t.filterAll },
-    { key: 'outreach', label: t.filterOutreach },
-    { key: 'apply', label: t.filterApply },
-    { key: 'interview', label: t.filterInterview },
-    { key: 'offers', label: t.filterOffers },
-    { key: 'job', label: t.filterJob },
+    { key: 'all', label: t.filterAll, desc: t.filterAllDesc },
+    { key: 'outreach', label: t.filterOutreach, desc: t.filterOutreachDesc },
+    { key: 'apply', label: t.filterApply, desc: t.filterApplyDesc },
+    { key: 'interview', label: t.filterInterview, desc: t.filterInterviewDesc },
+    { key: 'offers', label: t.filterOffers, desc: t.filterOffersDesc },
+    { key: 'job', label: t.filterJob, desc: t.filterJobDesc },
   ]
 
   const LEGEND_LABELS = {
@@ -240,21 +257,28 @@ export default function CareerTemplates() {
           gap: 8px;
         }
         .ct-filter {
-          padding: 11px 18px;
-          border-radius: 999px;
+          padding: 9px 16px;
+          border-radius: 14px;
           font-family: var(--font-display);
-          font-size: 12px;
-          font-weight: 700;
           letter-spacing: -.005em;
           cursor: pointer;
           border: 1.5px solid rgba(26,25,22,.1);
           background: rgba(255,255,255,.55);
           color: var(--color-muted);
           transition: background-color .2s, color .2s, border-color .2s, transform .15s, box-shadow .2s;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1px;
+          text-align: left;
+          min-width: 0;
         }
         .ct-filter:hover { color: var(--color-dark); border-color: rgba(26,25,22,.22); background: rgba(255,255,255,.85); transform: translateY(-1px); box-shadow: 0 4px 12px -4px rgba(63,42,28,.1); }
         .ct-filter:active { transform: translateY(0); }
-        .ct-filter:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 999px; }
+        .ct-filter:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 14px; }
+        .ct-filter__label { font-size: 12px; font-weight: 700; letter-spacing: -.005em; line-height: 1.2; }
+        .ct-filter__desc { font-size: 10.5px; font-weight: 500; opacity: .72; line-height: 1.2; letter-spacing: .005em; }
+        .ct-filter--active .ct-filter__desc { opacity: .85; }
         .ct-filter--active { background: var(--color-dark); color: var(--color-cream); border-color: var(--color-dark); box-shadow: 0 8px 18px -8px rgba(63,42,28,.32), inset 0 1px 0 rgba(255,255,255,.08); }
         .ct-filter--outreach.ct-filter--active { background: var(--color-teal);  border-color: var(--color-teal); }
         .ct-filter--apply.ct-filter--active    { background: var(--color-blue);  border-color: var(--color-blue); }
@@ -718,8 +742,8 @@ export default function CareerTemplates() {
       </header>
 
       <div className="ct-controls">
-        <div className="ct-filters" role="group" aria-label={t.filterAriaLabel}>
-          {FILTERS.map(({ key, label }) => (
+        <div className="ct-filters" role="group" aria-label={t.filterAriaLabel} ref={filtersRef}>
+          {FILTERS.map(({ key, label, desc }) => (
             <button
               key={key}
               data-key={key}
@@ -727,7 +751,8 @@ export default function CareerTemplates() {
               aria-pressed={activeFilter === key}
               onClick={handleFilterClick}
             >
-              {label}
+              <span className="ct-filter__label">{label}</span>
+              {desc && <span className="ct-filter__desc">{desc}</span>}
             </button>
           ))}
         </div>
