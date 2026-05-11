@@ -187,6 +187,38 @@ const PAGE_CSS = `
   .ls-bridge__cta:active { transform:translateY(0); }
   .ls-bridge__cta svg { transition:transform .22s cubic-bezier(.16,1,.3,1); }
   .ls-bridge__cta:hover svg { transform:translateY(2px); }
+  /* Live posts — published LinkedIn drops, sit above the episode grid */
+  .ls-live { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 48px;display:flex;flex-direction:column;gap:18px; }
+  .ls-live__head { display:flex;align-items:baseline;gap:14px;flex-wrap:wrap; }
+  .ls-live__heading { font-family:var(--font-display);font-size:clamp(22px,2.6vw,30px);font-weight:700;letter-spacing:-0.02em;color:var(--color-dark);margin:0;text-wrap:balance; }
+  .ls-live__count { font-size:11px;color:var(--color-muted);font-variant-numeric:tabular-nums;letter-spacing:.08em;text-transform:uppercase;font-weight:700; }
+  .ls-live__card { display:block;position:relative;overflow:hidden;padding:clamp(28px,3.6vw,44px);background:linear-gradient(180deg,rgba(232,168,56,.10) 0%,rgba(232,168,56,.04) 100%);border:1px solid rgba(232,168,56,.32);border-radius:18px;color:inherit;text-decoration:none;transition:border-color .3s var(--ease-out),transform .3s var(--ease-out),box-shadow .3s var(--ease-out); }
+  .ls-live__card:hover { border-color:rgba(232,168,56,.55);transform:translateY(-2px);box-shadow:0 18px 40px -20px rgba(var(--ls-shadow-warm),.32); }
+  .ls-live__card:active { transform:translateY(0); }
+  .ls-live__card:focus-visible { outline:2px solid var(--color-gold);outline-offset:4px; }
+  .ls-live__badges { display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap; }
+  .ls-live__live-pill { display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent);padding:4px 10px;border-radius:999px;background:rgba(179,69,57,.10);border:1px solid rgba(179,69,57,.28); }
+  .ls-live__live-pill::before { content:'';width:6px;height:6px;border-radius:50%;background:var(--color-accent);animation:ls-pulse 2s ease-in-out infinite; }
+  @keyframes ls-pulse { 0%,100% { opacity:1; } 50% { opacity:.35; } }
+  .ls-live__kicker { font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--color-muted); }
+  .ls-live__date { font-size:11px;color:var(--color-muted);font-variant-numeric:tabular-nums;letter-spacing:.04em;margin-left:auto; }
+  .ls-live__title { font-family:var(--font-display);font-size:clamp(22px,3.2vw,34px);font-weight:700;line-height:1.12;letter-spacing:-0.022em;color:var(--color-dark);margin:0 0 14px;max-width:30ch;text-wrap:balance; }
+  .ls-live__preview { font-size:clamp(14px,1.3vw,16px);line-height:1.6;color:var(--color-muted);margin:0 0 24px;max-width:70ch;text-wrap:pretty; }
+  .ls-live__footer { display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap; }
+  .ls-live__cta { display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:var(--color-dark);color:var(--color-cream);border-radius:999px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;box-shadow:0 4px 10px -4px rgba(var(--ls-shadow-warm),.35),inset 0 1px 0 rgba(255,255,255,.08);transition:background .25s,box-shadow .25s; }
+  .ls-live__card:hover .ls-live__cta { background:var(--color-accent);box-shadow:0 10px 22px -10px rgba(179,69,57,.5); }
+  .ls-live__cta svg { transition:transform .22s cubic-bezier(.16,1,.3,1); }
+  .ls-live__card:hover .ls-live__cta svg { transform:translate(2px,-2px); }
+  @media (max-width:560px) {
+    .ls-live__date { margin-left:0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ls-live__live-pill::before { animation:none; }
+    .ls-live__card,.ls-live__cta,.ls-live__cta svg { transition:none !important; }
+    .ls-live__card:hover { transform:none !important; }
+    .ls-live__card:hover .ls-live__cta svg { transform:none !important; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea,
     .ls-form-error-card__retry,.ls-toc__chip,.ls-bridge__cta { transition:none !important; }
