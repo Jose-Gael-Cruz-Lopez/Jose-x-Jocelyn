@@ -259,17 +259,32 @@ export default function PartnerPanels() {
         .pp-hero {
           padding: 120px clamp(20px,5vw,56px) 64px;
           max-width: 1040px; margin: 0 auto;
+          position: relative; overflow: hidden;
         }
+        .pp-hero::before {
+          content: ''; position: absolute; top: 96px; left: clamp(20px,5vw,56px);
+          width: 56px; height: 4px; background: var(--color-accent); border-radius: 2px; z-index: 1;
+        }
+        .pp-hero::after {
+          content: ''; position: absolute; top: -14%; right: -10%;
+          width: 520px; height: 520px;
+          background: radial-gradient(closest-side, rgba(179,69,57,.1), transparent 70%);
+          pointer-events: none; z-index: 0;
+        }
+        .pp-hero > * { position: relative; z-index: 1; }
         .pp-hero__kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: var(--color-muted); margin-bottom: 18px;
+          text-transform: uppercase; color: var(--color-accent); margin-bottom: 18px;
+          display: inline-flex; align-items: center; gap: 10px;
         }
+        .pp-hero__kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .pp-hero__title {
           font-family: var(--font-display);
           font-size: clamp(42px,7vw,80px); font-weight: 700;
           line-height: 1.04; color: var(--color-dark); margin-bottom: 14px;
         }
-        .pp-hero__title em { font-style: normal; color: var(--color-gold); }
+        .pp-hero__title em { font-style: italic; font-family: var(--font-serif, var(--font-display)); color: var(--color-gold-dark); font-weight: 500; padding-right: .04em; }
+        .pp-hero__tagline { font-family: var(--font-serif, var(--font-display)); font-size: clamp(18px,2.2vw,24px); font-style: italic; font-weight: 400; color: var(--color-accent); margin-bottom: 22px; letter-spacing: -.005em; max-width: 60ch; }
         .pp-hero__sub {
           font-family: var(--font-display);
           font-size: clamp(18px,2.5vw,26px); font-weight: 400;
@@ -781,6 +796,7 @@ export default function PartnerPanels() {
       <header className="pp-hero" id="top">
         <p className="pp-hero__kicker">{t.heroKicker}</p>
         <h1 className="pp-hero__title">{t.heroTitlePrefix}<em>{t.heroTitleEm}</em></h1>
+        {t.heroTagline && <p className="pp-hero__tagline">{t.heroTagline}</p>}
         <p className="pp-hero__sub">{t.heroSub}</p>
         <p className="pp-hero__body">
           {t.heroBody} <strong>{t.heroBodyStrong}</strong> {t.heroBodyTail}
