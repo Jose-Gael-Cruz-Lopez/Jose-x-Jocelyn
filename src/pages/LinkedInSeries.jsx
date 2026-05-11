@@ -344,6 +344,45 @@ export default function LinkedInSeries() {
         </div>
       </header>
 
+      {LIVE_POSTS.length > 0 && (
+        <section className="ls-live" aria-labelledby="ls-live-heading">
+          <div className="ls-live__head">
+            <h2 className="ls-live__heading" id="ls-live-heading">{t.livePostsHeading}</h2>
+            <span className="ls-live__count">{LIVE_POSTS.length} {LIVE_POSTS.length === 1 ? t.livePostsCountSingular : t.livePostsCountPlural}</span>
+          </div>
+          {LIVE_POSTS.map((p, i) => {
+            const data = t.livePosts?.[i] ?? {}
+            return (
+              <a
+                key={i}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ls-live__card"
+              >
+                <div className="ls-live__badges">
+                  <span className="ls-live__live-pill" aria-label={t.statusLive}>{t.statusLive}</span>
+                  {data.kicker && <span className="ls-live__kicker">{data.kicker}</span>}
+                  {data.dateLabel && <span className="ls-live__date">{data.dateLabel}</span>}
+                </div>
+                <h3 className="ls-live__title">{data.title}</h3>
+                <p className="ls-live__preview">{data.preview}</p>
+                <div className="ls-live__footer">
+                  <span className={`ls-post__author ${authorClass(p.author)}`}>{getAuthorLabel(p.author)}</span>
+                  <span className="ls-live__cta">
+                    {t.liveReadOnLinkedIn}
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M7 17 17 7"/>
+                      <polyline points="7 7 17 7 17 17"/>
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            )
+          })}
+        </section>
+      )}
+
       <div className="ls-controls">
         <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel}>
           <button
