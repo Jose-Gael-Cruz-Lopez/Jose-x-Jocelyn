@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -193,8 +193,17 @@ function OBCard({ card, featured, t, idx = 0 }) {
 
 export default function OpportunityBoard() {
   const t = useT('opportunityBoard')
-  const [tab, setTab] = useState('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const urlTab = searchParams.get('tab') || ''
+  const tab = TAB_KEYS.includes(urlTab) ? urlTab : 'all'
+  const setTab = useCallback(key => {
+    const next = new URLSearchParams(searchParams)
+    if (!key || key === 'all') next.delete('tab')
+    else next.set('tab', key)
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
   const [search, setSearch] = useState('')
+  const searchRef = useRef(null)
   const [stage, setStage] = useState('')
   const [location, setLocation] = useState('')
   const [deadline, setDeadline] = useState('')
@@ -470,7 +479,7 @@ export default function OpportunityBoard() {
               <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" strokeWidth="1.5"/>
               <path d="M10 10L14 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
-            <input type="text" className="ob-search" placeholder={t.searchPlaceholder} aria-label={t.searchAriaLabel} autoComplete="off" value={search} onChange={e => setSearch(e.target.value)} />
+            <input ref={searchRef} type="text" className="ob-search" placeholder={t.searchPlaceholder} aria-label={t.searchAriaLabel} autoComplete="off" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <select className="ob-filter-select" aria-label={t.filterStageAriaLabel} value={stage} onChange={e => setStage(e.target.value)}>
             <option value="">{t.filterStageAll}</option>
