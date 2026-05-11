@@ -537,7 +537,9 @@ export const en = {
       },
       {
         key: 'behavioral',
+        type: 'beh',
         label: 'Behavioral',
+        description: 'Stories, STAR method',
         desc: 'Behavioral interviews are used to <strong>predict future performance based on past actions</strong> - which is why the STAR method matters so much. Every question that starts with "tell me about a time when…" is an invitation to tell a story. The candidates who do well in behavioral rounds are not the ones with the most impressive stories; they are the ones who tell their stories with the most structure and specificity.',
         resources: [
           'STAR Story Bank',

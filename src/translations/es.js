@@ -539,7 +539,9 @@ export const es = {
       },
       {
         key: 'behavioral',
+        type: 'beh',
         label: 'Conductual',
+        description: 'Historias, método STAR',
         desc: 'Las entrevistas conductuales se usan para <strong>predecir el rendimiento futuro basándose en acciones pasadas</strong> - por eso el método STAR importa tanto. Cada pregunta que empieza con "cuéntame de una vez cuando…" es una invitación a contar una historia. Los candidatos que lo hacen bien en las rondas conductuales no son los que tienen las historias más impresionantes; son los que cuentan sus historias con más estructura y especificidad.',
         resources: [
           'Banco de Historias STAR',
