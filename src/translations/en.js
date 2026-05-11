@@ -1613,6 +1613,7 @@ export const en = {
     bridgeCopyEm: 'Tell us where you’re stuck.',
     bridgeCtaLabel: 'Suggest a topic',
     filterAll: 'All Posts',
+    filterAllDesc: 'Every episode',
     filterJose: "Jose's Lens",
     filterJocelyn: "Jocelyn's Lens",
     filterBoth: 'Both Perspectives',

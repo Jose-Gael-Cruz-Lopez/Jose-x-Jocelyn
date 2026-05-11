@@ -1613,6 +1613,7 @@ export const es = {
     bridgeCopyEm: 'Cuéntanos dónde estás atascado.',
     bridgeCtaLabel: 'Sugerir un tema',
     filterAll: 'Todas las publicaciones',
+    filterAllDesc: 'Todos los episodios',
     filterJose: 'Perspectiva de Jose',
     filterJocelyn: 'Perspectiva de Jocelyn',
     filterBoth: 'Ambas perspectivas',
