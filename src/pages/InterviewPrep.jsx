@@ -276,17 +276,35 @@ export default function InterviewPrep() {
           color: rgba(232,168,56,.9); margin-bottom: 48px;
           letter-spacing: -0.005em; line-height: 1.3;
         }
-        .ip-type-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 36px; }
+        .ip-type-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
         .ip-type-tab {
-          padding: 13px 18px; border-radius: 999px; font-family: var(--font-body);
-          font-size: 13px; font-weight: 600; cursor: pointer;
+          padding: 10px 16px; border-radius: 14px; font-family: var(--font-body);
+          cursor: pointer;
           border: 1.5px solid rgba(242,228,206,.2);
           background: transparent; color: rgba(242,228,206,.6);
-          transition: background .2s, color .2s, border-color .2s;
+          transition: background .2s, color .2s, border-color .2s, transform .22s cubic-bezier(.16,1,.3,1);
+          display: inline-flex; flex-direction: column; align-items: flex-start;
+          gap: 2px; text-align: left; min-width: 0;
         }
-        .ip-type-tab:hover { color: var(--color-cream); border-color: rgba(242,228,206,.45); }
+        .ip-type-tab:hover { color: var(--color-cream); border-color: rgba(242,228,206,.45); transform: translateY(-1px); }
+        .ip-type-tab:active { transform: translateY(0); }
+        .ip-type-tab__label { font-size: 13px; font-weight: 700; letter-spacing: -.005em; line-height: 1.2; }
+        .ip-type-tab__desc { font-size: 10.5px; font-weight: 500; opacity: .72; line-height: 1.2; letter-spacing: .005em; }
+        .ip-type-tab--active .ip-type-tab__desc { opacity: .85; }
+        /* Default active fallback — overridden by type-tinted variants below */
         .ip-type-tab--active { background: var(--color-cream); color: var(--color-dark); border-color: var(--color-cream); }
-        .ip-type-tab:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 999px; }
+        /* Type-tinted active states — each interview type gets its own brand color when active */
+        .ip-type-tab--active.ip-type-tab--rec  { background: var(--color-blue);      color: var(--color-cream); border-color: var(--color-blue); }
+        .ip-type-tab--active.ip-type-tab--beh  { background: var(--color-teal);      color: var(--color-cream); border-color: var(--color-teal); }
+        .ip-type-tab--active.ip-type-tab--tech { background: var(--color-gold-dark); color: var(--color-cream); border-color: var(--color-gold-dark); }
+        .ip-type-tab--active.ip-type-tab--case { background: var(--color-navy);      color: var(--color-cream); border-color: var(--color-navy); }
+        .ip-type-tab--active.ip-type-tab--ow   { background: var(--color-cream);     color: var(--color-dark);  border-color: var(--color-cream); }
+        .ip-type-tab--active.ip-type-tab--fin  { background: var(--color-accent);    color: var(--color-cream); border-color: var(--color-accent); }
+        .ip-type-tab:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 14px; }
+        @media (prefers-reduced-motion: reduce) {
+          .ip-type-tab { transition: none !important; }
+          .ip-type-tab:hover { transform: none !important; }
+        }
         .ip-type-panel__inner {
           display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;
         }
