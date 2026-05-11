@@ -133,11 +133,22 @@ export default function PartnerPanels() {
   const [suggestSubmitted, setSuggestSubmitted] = useState(false)
   const [suggestLoading, setSuggestLoading] = useState(false)
   const [suggestError, setSuggestError] = useState('')
+  const [suggestFieldErrors, setSuggestFieldErrors] = useState({ topic: '', why: '', stage: '', category: '', email: '' })
   const [panelistSubmitted, setPanelistSubmitted] = useState(false)
   const [panelistLoading, setPanelistLoading] = useState(false)
   const [panelistError, setPanelistError] = useState('')
+  const [panelistFieldErrors, setPanelistFieldErrors] = useState({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '' })
   const [suggestForm, setSuggestForm] = useState({ topic: '', why: '', stage: '', category: '', email: '' })
   const [panelistForm, setPanelistForm] = useState({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '', notes: '' })
+
+  const setSuggestField = (k, v) => {
+    setSuggestForm(f => ({ ...f, [k]: v }))
+    if (suggestFieldErrors[k]) setSuggestFieldErrors(s => ({ ...s, [k]: '' }))
+  }
+  const setPanelistField = (k, v) => {
+    setPanelistForm(f => ({ ...f, [k]: v }))
+    if (panelistFieldErrors[k]) setPanelistFieldErrors(s => ({ ...s, [k]: '' }))
+  }
 
   const topicChips = t.topicChips
 
@@ -189,18 +200,26 @@ export default function PartnerPanels() {
 
   async function submitSuggest(e) {
     e.preventDefault()
-    if (!suggestForm.topic || !suggestForm.why || !suggestForm.stage || !suggestForm.category) {
-      setSuggestError(t.suggestErrorRequired)
+    const errors = { topic: '', why: '', stage: '', category: '', email: '' }
+    if (!suggestForm.topic.trim()) errors.topic = t.suggestErrorTopic
+    if (!suggestForm.why.trim()) errors.why = t.suggestErrorWhy
+    if (!suggestForm.stage) errors.stage = t.suggestErrorStage
+    if (!suggestForm.category) errors.category = t.suggestErrorCategory
+    if (suggestForm.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(suggestForm.email.trim())) errors.email = t.suggestErrorEmail
+    if (Object.values(errors).some(Boolean)) {
+      setSuggestFieldErrors(errors)
+      setSuggestError('')
       return
     }
+    setSuggestFieldErrors({ topic: '', why: '', stage: '', category: '', email: '' })
     setSuggestLoading(true)
     setSuggestError('')
     const { error } = await supabase.from('panel_suggestions').insert({
-      topic: suggestForm.topic,
-      why_helpful: suggestForm.why,
+      topic: suggestForm.topic.trim(),
+      why_helpful: suggestForm.why.trim(),
       stage: suggestForm.stage,
       category: suggestForm.category,
-      email: suggestForm.email || null,
+      email: suggestForm.email.trim() || null,
     })
     setSuggestLoading(false)
     if (error) {
@@ -1109,35 +1128,60 @@ export default function PartnerPanels() {
               <form onSubmit={submitSuggest}>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="suggestTopic">{t.suggestLabelTopic} <span>{t.suggestLabelTopicRequired}</span></label>
-                  <input className="pp-form-input" type="text" id="suggestTopic" placeholder={t.suggestPlaceholderTopic} value={suggestForm.topic} onChange={e => setSuggestForm(f => ({ ...f, topic: e.target.value }))} />
+                  <input className={`pp-form-input${suggestFieldErrors.topic ? ' is-invalid' : ''}`} type="text" id="suggestTopic" placeholder={t.suggestPlaceholderTopic} value={suggestForm.topic} onChange={e => setSuggestField('topic', e.target.value)} aria-invalid={!!suggestFieldErrors.topic} aria-describedby={suggestFieldErrors.topic ? 'suggestTopic-error' : undefined} />
+                  {suggestFieldErrors.topic && <span id="suggestTopic-error" className="pp-form-row__error" role="alert">{suggestFieldErrors.topic}</span>}
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="suggestWhy">{t.suggestLabelWhy} <span>{t.suggestLabelWhyRequired}</span></label>
-                  <textarea className="pp-form-textarea" id="suggestWhy" placeholder={t.suggestPlaceholderWhy} value={suggestForm.why} onChange={e => setSuggestForm(f => ({ ...f, why: e.target.value }))} />
+                  <textarea className={`pp-form-textarea${suggestFieldErrors.why ? ' is-invalid' : ''}`} id="suggestWhy" placeholder={t.suggestPlaceholderWhy} value={suggestForm.why} onChange={e => setSuggestField('why', e.target.value)} aria-invalid={!!suggestFieldErrors.why} aria-describedby={suggestFieldErrors.why ? 'suggestWhy-error' : undefined} />
+                  {suggestFieldErrors.why && <span id="suggestWhy-error" className="pp-form-row__error" role="alert">{suggestFieldErrors.why}</span>}
                 </div>
                 <div className="pp-form-row pp-form-row-2">
                   <div>
                     <label className="pp-form-label" htmlFor="suggestStage">{t.suggestLabelStage} <span>{t.suggestLabelStageRequired}</span></label>
-                    <select className="pp-form-select" id="suggestStage" value={suggestForm.stage} onChange={e => setSuggestForm(f => ({ ...f, stage: e.target.value }))}>
+                    <select className={`pp-form-select${suggestFieldErrors.stage ? ' is-invalid' : ''}`} id="suggestStage" value={suggestForm.stage} onChange={e => setSuggestField('stage', e.target.value)} aria-invalid={!!suggestFieldErrors.stage} aria-describedby={suggestFieldErrors.stage ? 'suggestStage-error' : undefined}>
                       {t.suggestStageOptions.map(opt => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
+                    {suggestFieldErrors.stage && <span id="suggestStage-error" className="pp-form-row__error" role="alert">{suggestFieldErrors.stage}</span>}
                   </div>
                   <div>
                     <label className="pp-form-label" htmlFor="suggestCategory">{t.suggestLabelCategory} <span>{t.suggestLabelCategoryRequired}</span></label>
-                    <select className="pp-form-select" id="suggestCategory" value={suggestForm.category} onChange={e => setSuggestForm(f => ({ ...f, category: e.target.value }))}>
+                    <select className={`pp-form-select${suggestFieldErrors.category ? ' is-invalid' : ''}`} id="suggestCategory" value={suggestForm.category} onChange={e => setSuggestField('category', e.target.value)} aria-invalid={!!suggestFieldErrors.category} aria-describedby={suggestFieldErrors.category ? 'suggestCategory-error' : undefined}>
                       {t.suggestCategoryOptions.map(opt => (
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
+                    {suggestFieldErrors.category && <span id="suggestCategory-error" className="pp-form-row__error" role="alert">{suggestFieldErrors.category}</span>}
                   </div>
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="suggestEmail">{t.suggestLabelEmail} <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.suggestEmailNote}</span></label>
-                  <input className="pp-form-input" type="email" id="suggestEmail" placeholder={t.suggestPlaceholderEmail} value={suggestForm.email} onChange={e => setSuggestForm(f => ({ ...f, email: e.target.value }))} />
+                  <input
+                    className={`pp-form-input${suggestFieldErrors.email ? ' is-invalid' : ''}`}
+                    type="email"
+                    id="suggestEmail"
+                    placeholder={t.suggestPlaceholderEmail}
+                    value={suggestForm.email}
+                    onChange={e => setSuggestField('email', e.target.value)}
+                    onBlur={e => {
+                      const v = e.target.value.trim()
+                      if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                        setSuggestFieldErrors(s => ({ ...s, email: t.suggestErrorEmail }))
+                      }
+                    }}
+                    aria-invalid={!!suggestFieldErrors.email}
+                    aria-describedby={suggestFieldErrors.email ? 'suggestEmail-error' : undefined}
+                  />
+                  {suggestFieldErrors.email && <span id="suggestEmail-error" className="pp-form-row__error" role="alert">{suggestFieldErrors.email}</span>}
                 </div>
-                {suggestError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{suggestError}</p>}
+                {suggestError && (
+                  <div role="alert" className="pp-form-error-card">
+                    <span className="pp-form-error-card__msg"><strong>{t.suggestErrorLabel}</strong> {suggestError}</span>
+                    <button type="submit" className="pp-form-error-card__retry" disabled={suggestLoading}>{suggestLoading ? t.suggestBtnSubmitting : t.suggestRetryLabel}</button>
+                  </div>
+                )}
                 <button className="pp-form-btn" type="submit" disabled={suggestLoading}>{suggestLoading ? t.suggestBtnSubmitting : t.suggestBtnSubmit}</button>
                 <p className="pp-form-note">{t.suggestFormNote}</p>
               </form>
