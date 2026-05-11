@@ -30,6 +30,31 @@ export default function BridgeYear() {
   const [fieldErrors, setFieldErrors] = useState({ program: '', company: '', email: '' })
   const [form, setForm] = useState({ program: '', company: '', link: '', why: '', email: '' })
 
+  const [previewProgram, setPreviewProgram] = useState(null)
+  const previewTriggerRef = useRef(null)
+  const openPreview = (program, e) => {
+    previewTriggerRef.current = e?.currentTarget ?? null
+    setPreviewProgram(program)
+  }
+  const closePreview = useCallback(() => {
+    setPreviewProgram(null)
+    if (previewTriggerRef.current) {
+      previewTriggerRef.current.focus()
+      previewTriggerRef.current = null
+    }
+  }, [])
+
+  useEffect(() => {
+    if (previewProgram == null) { document.body.style.overflow = ''; return }
+    document.body.style.overflow = 'hidden'
+    const onKey = e => { if (e.key === 'Escape') closePreview() }
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [previewProgram, closePreview])
+
   const [captureEmail, setCaptureEmail] = useState('')
   const [captureLoading, setCaptureLoading] = useState(false)
   const [captureError, setCaptureError] = useState('')
