@@ -131,6 +131,23 @@ export default function PartnerPanels() {
       return next
     }, { replace: true })
   }
+  const filtersRef = useRef(null)
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstChip = filtersRef.current?.querySelector('button')
+      if (firstChip) {
+        e.preventDefault()
+        firstChip.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
   const [suggestSubmitted, setSuggestSubmitted] = useState(false)
   const [suggestLoading, setSuggestLoading] = useState(false)
   const [suggestError, setSuggestError] = useState('')
@@ -997,7 +1014,7 @@ export default function PartnerPanels() {
           <p className="pp-section-sub">{t.topicsSub}</p>
           <p className="pp-section-body">{t.topicsBody}</p>
         </div>
-        <div className="pp-topics__chips">
+        <div className="pp-topics__chips" ref={filtersRef}>
           {topicChips.map(chip => (
             <button
               key={chip.key}
