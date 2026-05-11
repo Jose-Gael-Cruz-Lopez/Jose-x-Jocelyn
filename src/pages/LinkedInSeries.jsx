@@ -174,7 +174,8 @@ const PAGE_CSS = `
   .ls-bridge__cta { display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:var(--color-dark);color:var(--color-cream);border-radius:999px;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:-.005em;text-decoration:none;box-shadow:0 6px 14px -8px rgba(var(--ls-shadow-warm),.4),inset 0 1px 0 rgba(255,255,255,.08);transition:background .25s,transform .22s cubic-bezier(.16,1,.3,1),box-shadow .25s; }
   .ls-bridge__cta:hover { background:var(--color-accent);transform:translateY(-1px);box-shadow:0 12px 22px -10px rgba(179,69,57,.5); }
   .ls-bridge__cta:active { transform:translateY(0); }
-  .ls-bridge__cta::after { content:'↓';font-size:13px;line-height:1; }
+  .ls-bridge__cta svg { transition:transform .22s cubic-bezier(.16,1,.3,1); }
+  .ls-bridge__cta:hover svg { transform:translateY(2px); }
   @media (prefers-reduced-motion: reduce) {
     .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea,
     .ls-form-error-card__retry,.ls-toc__chip,.ls-bridge__cta { transition:none !important; }
@@ -419,7 +420,13 @@ export default function LinkedInSeries() {
       <div className="ls-bridge">
         <div className="ls-bridge__inner">
           <p className="ls-bridge__copy">{t.bridgeCopyPrefix} <em>{t.bridgeCopyEm}</em></p>
-          <a href="#suggest" className="ls-bridge__cta">{t.bridgeCtaLabel}</a>
+          <a href="#suggest" className="ls-bridge__cta">
+            {t.bridgeCtaLabel}
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <polyline points="6 13 12 19 18 13"/>
+            </svg>
+          </a>
         </div>
       </div>
 
