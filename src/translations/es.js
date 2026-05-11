@@ -1617,6 +1617,7 @@ export const es = {
     filterJose: 'Perspectiva de Jose',
     filterJoseDesc: 'Vista de estudiante',
     filterJocelyn: 'Perspectiva de Jocelyn',
+    filterJocelynDesc: 'Vista post-graduación',
     filterBoth: 'Ambas perspectivas',
     filterInternships: 'Pasantías',
     filterOffers: 'Ofertas',

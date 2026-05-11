@@ -1617,6 +1617,7 @@ export const en = {
     filterJose: "Jose's Lens",
     filterJoseDesc: 'Student lens',
     filterJocelyn: "Jocelyn's Lens",
+    filterJocelynDesc: 'Post-grad lens',
     filterBoth: 'Both Perspectives',
     filterInternships: 'Internships',
     filterOffers: 'Offers',
