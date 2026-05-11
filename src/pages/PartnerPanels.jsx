@@ -428,17 +428,25 @@ export default function PartnerPanels() {
         .pp-upcoming__head { margin-bottom: 32px; }
         .pp-upcoming__grid {
           display: grid;
-          grid-template-columns: 1.4fr 1fr;
-          grid-template-rows: auto auto;
+          grid-template-columns: 1fr 1fr;
           gap: 20px;
         }
         .pp-panel-card--featured {
-          grid-row: 1 / 3;
-          padding: 32px 30px;
+          grid-column: 1 / -1;
+          padding: 36px 36px 30px;
           background: linear-gradient(180deg, rgba(232,168,56,.09) 0%, rgba(255,250,242,.5) 60%);
           border-color: rgba(232,168,56,.28);
+          display: grid; grid-template-columns: 1.3fr 1fr; column-gap: 36px; row-gap: 14px;
         }
         .pp-panel-card--featured:hover { border-color: rgba(232,168,56,.42); }
+        .pp-panel-card--featured > .pp-panel-card__featured-tag { grid-column: 1 / -1; }
+        .pp-panel-card--featured > .pp-panel-card__date-badge { grid-column: 1 / -1; }
+        .pp-panel-card--featured > .pp-panel-card__title { grid-column: 1; }
+        .pp-panel-card--featured > .pp-panel-card__desc { grid-column: 1; grid-row: span 2; }
+        .pp-panel-card--featured > .pp-panel-card__meta { grid-column: 2; grid-row: 3; }
+        .pp-panel-card--featured > .pp-panel-card__panelists { grid-column: 2; grid-row: 4; }
+        .pp-panel-card--featured > .pp-panel-card__tags { grid-column: 1 / -1; }
+        .pp-panel-card--featured > .pp-panel-card__actions { grid-column: 1 / -1; }
 
         /* Per-topic tint variants — mirrors CT's --outreach/--apply/--interview/--offers/--job system */
         .pp-panel-card--blue    { background: linear-gradient(180deg, rgba(91,142,194,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(91,142,194,.22); }
@@ -479,8 +487,15 @@ export default function PartnerPanels() {
           content: ''; width: 16px; height: 1px; background: var(--color-accent); opacity: .6;
         }
         @media (max-width: 760px) {
-          .pp-upcoming__grid { grid-template-columns: 1fr; grid-template-rows: auto; }
-          .pp-panel-card--featured { grid-row: auto; padding: 26px; }
+          .pp-upcoming__grid { grid-template-columns: 1fr; }
+          .pp-panel-card--featured {
+            grid-column: auto; padding: 26px;
+            grid-template-columns: 1fr;
+          }
+          .pp-panel-card--featured > .pp-panel-card__title,
+          .pp-panel-card--featured > .pp-panel-card__desc,
+          .pp-panel-card--featured > .pp-panel-card__meta,
+          .pp-panel-card--featured > .pp-panel-card__panelists { grid-column: 1; grid-row: auto; }
         }
         .pp-panel-card {
           background: linear-gradient(180deg, rgba(255,250,242,.85) 0%, rgba(255,250,242,.55) 100%);
