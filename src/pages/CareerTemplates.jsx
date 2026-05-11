@@ -81,21 +81,25 @@ export default function CareerTemplates() {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const errors = { request: '', email: '' }
+    const errors = { request: '', email: '', category: '' }
     if (!request.trim()) errors.request = t.formErrorRequired
     if (reqEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reqEmail.trim())) errors.email = t.formErrorEmail
-    if (errors.request || errors.email) {
+    if (reqCategory === 'other' && !reqCategoryOther.trim()) errors.category = t.formErrorCategoryOther
+    if (errors.request || errors.email || errors.category) {
       setFieldErrors(errors)
       setFormError('')
       return
     }
-    setFieldErrors({ request: '', email: '' })
+    setFieldErrors({ request: '', email: '', category: '' })
     setFormLoading(true)
     setFormError('')
+    const categoryValue = reqCategory === 'other'
+      ? `other: ${reqCategoryOther.trim()}`
+      : (reqCategory || null)
     const { error } = await supabase.from('template_requests').insert({
       request: request.trim(),
       email: reqEmail.trim() || null,
-      category: reqCategory || null,
+      category: categoryValue,
     })
     setFormLoading(false)
     if (error) { setFormError(t.formErrorGeneric) }
