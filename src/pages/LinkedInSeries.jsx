@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -226,8 +227,18 @@ const TAG_KEY_MAP = {
 export default function LinkedInSeries() {
   const t = useT('linkedInSeries')
 
-  const [filterLens, setFilterLens] = useState('')   // '' | 'jose' | 'jocelyn' | 'both'
-  const [filterTopic, setFilterTopic] = useState('') // '' | 'internships' | 'offers' | 'rejection' | 'on-the-job'
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filterLens = searchParams.get('lens') || ''   // '' | 'jose' | 'jocelyn' | 'both'
+  const filterTopic = searchParams.get('topic') || '' // '' | 'internships' | 'offers' | 'rejection' | 'on-the-job'
+
+  const updateFilter = (key, value) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      if (value) next.set(key, value)
+      else next.delete(key)
+      return next
+    }, { replace: true })
+  }
   const [topic, setTopic] = useState('')
   const [email, setEmail] = useState('')
   const [category, setCategory] = useState('')
@@ -328,14 +339,14 @@ export default function LinkedInSeries() {
           <button
             className={`ls-filter${noFilters ? ' ls-filter--active' : ''}`}
             aria-pressed={noFilters}
-            onClick={() => { setFilterLens(''); setFilterTopic('') }}
+            onClick={() => setSearchParams({}, { replace: true })}
           >{t.filterAll}</button>
           {LENS_OPTIONS.map(({ v, label }) => (
             <button
               key={v}
               className={`ls-filter${filterLens === v ? ' ls-filter--active' : ''}`}
               aria-pressed={filterLens === v}
-              onClick={() => setFilterLens(filterLens === v ? '' : v)}
+              onClick={() => updateFilter('lens', filterLens === v ? '' : v)}
             >{label}</button>
           ))}
           <span className="ls-filters__rule" aria-hidden="true" />
@@ -344,7 +355,7 @@ export default function LinkedInSeries() {
               key={v}
               className={`ls-filter${filterTopic === v ? ' ls-filter--active' : ''}`}
               aria-pressed={filterTopic === v}
-              onClick={() => setFilterTopic(filterTopic === v ? '' : v)}
+              onClick={() => updateFilter('topic', filterTopic === v ? '' : v)}
             >{label}</button>
           ))}
         </div>
