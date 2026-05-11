@@ -752,10 +752,10 @@ export default function Home() {
             </div>
           </div>
           <a href="#editorial" className="nav__link">{tNav.laVoz}</a>
-          <button className="nav__link nav__link--cta" onClick={openModal}>
+          <a href="#contact" className="nav__link nav__link--cta" onClick={scrollToContact}>
             <span className="nav__link-accent" aria-hidden="true" />
             <span className="nav__link-label">{tNav.getInTouch}</span>
-          </button>
+          </a>
         </div>
         <button className="nav__search-btn nav__search-btn--mobile" aria-label={tNav.searchBtnLabel} onClick={openSearch}>
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="19" height="19"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
@@ -791,7 +791,7 @@ export default function Home() {
         <a href="#about" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.about}</a>
         <a href="#services" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.services}</a>
         <a href="#editorial" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.laVoz}</a>
-        <button className="mobile-nav__link" onClick={() => { setMenuOpen(false); openModal() }}>{tNav.getInTouch}</button>
+        <a href="#contact" className="mobile-nav__link" onClick={scrollToContact}>{tNav.getInTouch}</a>
       </div>
 
       <main>
@@ -1239,9 +1239,9 @@ export default function Home() {
             <text x="190" y="252" className="footer__logo-x">x</text>
           </svg>
         </div>
-        <button className="footer__cta" id="footerCta" onClick={openModal}>
+        <a href="#contact" className="footer__cta" id="footerCta" onClick={scrollToContact}>
           <span className="footer__cta-text" dangerouslySetInnerHTML={{ __html: t.footerCta }} />
-        </button>
+        </a>
         <div className="footer__bottom">
           <span className="footer__credit">{t.footerCredit}</span>
           <div className="footer__legal">
