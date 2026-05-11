@@ -190,6 +190,9 @@ export default function PartnerPanels() {
     <ArticleLayout title={`${t.heroTitlePrefix}${t.heroTitleEm}`}>
       <style>{`
         html, body { background: var(--color-cream); }
+        :root { --pp-shadow-warm: 58, 38, 22; }
+        .pp-scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-gold) 100%); z-index: 1000; pointer-events: none; transform: scaleX(0); transform-origin: left; transition: transform .12s linear; will-change: transform; }
+        @media (prefers-reduced-motion: reduce) { .pp-scroll-progress { transition: none; } }
 
         .pp-wrap {
           max-width: 1040px;
@@ -201,7 +204,9 @@ export default function PartnerPanels() {
         .pp-kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
           text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px;
+          display: inline-flex; align-items: center; gap: 10px;
         }
+        .pp-kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .pp-section-title {
           font-family: var(--font-display);
           font-size: clamp(26px,4vw,40px); font-weight: 700;
