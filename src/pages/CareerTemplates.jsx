@@ -117,12 +117,12 @@ export default function CareerTemplates() {
   }
 
   const FILTERS = [
-    { key: 'all', label: t.filterAll },
-    { key: 'outreach', label: t.filterOutreach },
-    { key: 'apply', label: t.filterApply },
-    { key: 'interview', label: t.filterInterview },
-    { key: 'offers', label: t.filterOffers },
-    { key: 'job', label: t.filterJob },
+    { key: 'all', label: t.filterAll, desc: t.filterAllDesc },
+    { key: 'outreach', label: t.filterOutreach, desc: t.filterOutreachDesc },
+    { key: 'apply', label: t.filterApply, desc: t.filterApplyDesc },
+    { key: 'interview', label: t.filterInterview, desc: t.filterInterviewDesc },
+    { key: 'offers', label: t.filterOffers, desc: t.filterOffersDesc },
+    { key: 'job', label: t.filterJob, desc: t.filterJobDesc },
   ]
 
   const LEGEND_LABELS = {
