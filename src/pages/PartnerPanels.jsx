@@ -1023,7 +1023,8 @@ export default function PartnerPanels() {
               aria-pressed={activeTopic === chip.key}
               onClick={() => setActiveTopic(chip.key)}
             >
-              {chip.label}
+              <span className="pp-topic-chip__label">{chip.label}</span>
+              {chip.description && <span className="pp-topic-chip__desc">{chip.description}</span>}
             </button>
           ))}
         </div>
