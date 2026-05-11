@@ -1832,6 +1832,7 @@ export const es = {
     filterOutreach: 'Contacto y Networking',
     filterOutreachDesc: 'Correos en frío, info chats',
     filterApply: 'Aplicaciones',
+    filterApplyDesc: 'Currículums, aplicaciones',
     filterInterview: 'Entrevistas',
     filterOffers: 'Ofertas y Negociación',
     filterJob: 'En el Trabajo',
