@@ -661,7 +661,16 @@ export default function PartnerPanels() {
         }
         .pp-form-input:focus,
         .pp-form-select:focus,
-        .pp-form-textarea:focus { border-color: var(--color-gold); }
+        .pp-form-textarea:focus { border-color: var(--color-gold); box-shadow: 0 0 0 4px rgba(232,168,56,.16); }
+        .pp-form-input.is-invalid, .pp-form-select.is-invalid, .pp-form-textarea.is-invalid { border-color: rgba(179,69,57,.45); }
+        .pp-form-input.is-invalid:focus, .pp-form-select.is-invalid:focus, .pp-form-textarea.is-invalid:focus { border-color: var(--color-accent); box-shadow: 0 0 0 4px rgba(179,69,57,.14); }
+        .pp-form-row__error { display: block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--color-accent); line-height: 1.4; }
+        .pp-form-row__error::before { content: ''; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--color-accent); margin-right: 7px; vertical-align: .18em; }
+        .pp-form-error-card { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding: 14px 16px; background: rgba(179,69,57,.06); border: 1px solid rgba(179,69,57,.22); border-radius: 10px; }
+        .pp-form-error-card__msg { flex: 1; font-size: 13px; color: var(--color-dark); line-height: 1.5; font-weight: 500; }
+        .pp-form-error-card__msg strong { color: var(--color-accent); font-weight: 700; }
+        .pp-form-error-card__retry { flex-shrink: 0; padding: 7px 14px; background: transparent; border: 1.5px solid var(--color-accent); color: var(--color-accent); border-radius: 999px; font-family: var(--font-display); font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s, color .2s; }
+        .pp-form-error-card__retry:hover { background: var(--color-accent); color: var(--color-cream); }
         .pp-form-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
         .pp-form-select {
           appearance: none; cursor: pointer;
@@ -741,7 +750,20 @@ export default function PartnerPanels() {
         .pp-form-box--dark .pp-form-label { color: rgba(242,228,206,.55); }
         .pp-form-box--dark .pp-form-input:focus,
         .pp-form-box--dark .pp-form-select:focus,
-        .pp-form-box--dark .pp-form-textarea:focus { border-color: var(--color-gold); }
+        .pp-form-box--dark .pp-form-textarea:focus { border-color: var(--color-gold); box-shadow: 0 0 0 4px rgba(232,168,56,.16); }
+        .pp-form-box--dark .pp-form-input.is-invalid,
+        .pp-form-box--dark .pp-form-select.is-invalid,
+        .pp-form-box--dark .pp-form-textarea.is-invalid { border-color: rgba(232,168,56,.6); }
+        .pp-form-box--dark .pp-form-input.is-invalid:focus,
+        .pp-form-box--dark .pp-form-select.is-invalid:focus,
+        .pp-form-box--dark .pp-form-textarea.is-invalid:focus { border-color: var(--color-gold); box-shadow: 0 0 0 4px rgba(232,168,56,.24); }
+        .pp-form-box--dark .pp-form-row__error { color: var(--color-gold); }
+        .pp-form-box--dark .pp-form-row__error::before { background: var(--color-gold); }
+        .pp-form-error-card--dark { background: rgba(232,168,56,.08); border-color: rgba(232,168,56,.3); }
+        .pp-form-error-card--dark .pp-form-error-card__msg { color: var(--color-cream); }
+        .pp-form-error-card--dark .pp-form-error-card__msg strong { color: var(--color-gold); }
+        .pp-form-error-card--dark .pp-form-error-card__retry { border-color: var(--color-gold); color: var(--color-gold); }
+        .pp-form-error-card--dark .pp-form-error-card__retry:hover { background: var(--color-gold); color: var(--color-dark); }
         .pp-form-box--dark .pp-form-select {
           background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='rgba(242,228,206,0.45)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
           background-repeat: no-repeat; background-position: right 12px center;
