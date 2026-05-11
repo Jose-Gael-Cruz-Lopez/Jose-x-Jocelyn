@@ -327,7 +327,12 @@ export default function CoffeeChat() {
   }
 
   return (
-    <ArticleLayout title={t.pageTitle}>
+    <ArticleLayout
+      title={t.pageTitle}
+      signoffLine={t.signoffLine}
+      signoffSub={t.signoffSub}
+      signoffCta={t.signoffCta}
+    >
       <style>{`
         html, body { background: var(--color-cream); }
 
