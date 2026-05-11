@@ -320,6 +320,8 @@ export const es = {
           { label: 'Ingeniería', type: '' },
         ],
         rtags: 'new-grad engineering',
+        applicationStatus: 'open',
+        deadlineLabel: 'Actualizado cada hora',
         title: 'Roles de Ingeniería para Recién Graduados',
         company: 'Varias empresas · vía newgrad-jobs.com',
         why: '<strong>Actualizado cada hora.</strong> El agregador más completo de roles de ingeniería para recién graduados en la industria - cubre empresas adyacentes a FAANG, tecnología mediana, startups y fintech. Filtra por ubicación, stack y nivel de experiencia.',

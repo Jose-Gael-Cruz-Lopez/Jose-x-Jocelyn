@@ -323,6 +323,8 @@ export const en = {
         why: '<strong>Updated hourly.</strong> The most comprehensive aggregator of new grad engineering roles across the industry - covers FAANG-adjacent, mid-size tech, startups, and fintech. Filter by location, stack, and experience level.',
         ctaLabel: 'View Roles →',
         href: 'https://newgrad-jobs.com',
+        applicationStatus: 'open',
+        deadlineLabel: 'Updated hourly',
       },
       {
         tags: [
