@@ -869,6 +869,90 @@ export default function BridgeYear() {
           white-space: nowrap;
         }
         .by-role-card__cta:hover { background: var(--color-teal); color: var(--color-cream); }
+        .by-role-card__actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; flex-shrink: 0; }
+        .by-role-card__preview {
+          padding: 8px 14px;
+          border-radius: 999px;
+          background: transparent;
+          border: 1px solid rgba(26,25,22,.18);
+          color: var(--color-muted);
+          font-family: var(--font-display);
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: .02em;
+          cursor: pointer;
+          transition: background .2s, color .2s, border-color .2s;
+          white-space: nowrap;
+        }
+        .by-role-card__preview:hover { color: var(--color-dark); border-color: rgba(26,25,22,.4); background: rgba(255,250,242,.6); }
+        .by-role-card__preview:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; }
+
+        /* Preview modal — mirrors CT a11y pattern (focus restoration, Esc, scroll lock) */
+        .by-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: clamp(16px, 4vw, 40px); animation: by-modal-in .25s var(--ease-out); }
+        @keyframes by-modal-in { from { opacity: 0; } to { opacity: 1; } }
+        .by-modal__bg { position: absolute; inset: 0; background: rgba(26,25,22,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+        .by-modal__box {
+          position: relative;
+          background: var(--color-cream);
+          color: var(--color-dark);
+          padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 48px) clamp(24px, 3.5vw, 40px);
+          max-width: 620px;
+          width: 100%;
+          max-height: calc(100dvh - 48px);
+          overflow-y: auto;
+          border-radius: 4px;
+          box-shadow: 0 30px 80px -20px rgba(26,25,22,.55), 0 0 0 1px rgba(26,25,22,.06);
+          animation: by-modal-box-in .35s var(--ease-out);
+        }
+        @keyframes by-modal-box-in { from { transform: translateY(24px) scale(.97); } to { transform: translateY(0) scale(1); } }
+        .by-modal__box::before {
+          content: '';
+          position: absolute;
+          left: 0; right: 0; top: 0;
+          height: 4px;
+          background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent) 38%, var(--color-gold) 38%, var(--color-gold) 62%, var(--color-teal) 62%, var(--color-teal) 100%);
+          border-radius: 4px 4px 0 0;
+        }
+        .by-modal__close {
+          position: absolute; top: 14px; right: 14px;
+          width: 36px; height: 36px;
+          display: inline-flex; align-items: center; justify-content: center;
+          color: var(--color-muted);
+          background: transparent;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: background .2s, color .2s;
+        }
+        .by-modal__close:hover { background: rgba(26,25,22,.06); color: var(--color-dark); }
+        .by-modal__close:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+        .by-modal__tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 16px; }
+        .by-modal__title { font-family: var(--font-display); font-size: clamp(22px, 3vw, 30px); font-weight: 700; line-height: 1.15; letter-spacing: -.02em; color: var(--color-dark); margin: 0 0 8px; text-wrap: balance; }
+        .by-modal__company { font-size: 14px; color: var(--color-muted); margin: 0 0 20px; line-height: 1.5; }
+        .by-modal__why { font-size: 15px; color: var(--color-dark); line-height: 1.7; margin: 0 0 28px; text-wrap: pretty; }
+        .by-modal__why strong { color: var(--color-accent); font-weight: 600; }
+        .by-modal__cta {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 12px 22px;
+          background: var(--color-dark);
+          color: var(--color-cream);
+          border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: .02em;
+          text-decoration: none;
+          transition: background .25s, transform .22s, box-shadow .25s;
+          box-shadow: 0 6px 16px -8px rgba(var(--by-shadow-warm), .35);
+        }
+        .by-modal__cta:hover { background: var(--color-accent); transform: translateY(-2px); box-shadow: 0 14px 26px -12px rgba(179,69,57,.5); }
+        .by-modal__cta:active { transform: translateY(0); }
+        .by-modal__cta:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+        @media (prefers-reduced-motion: reduce) {
+          .by-modal, .by-modal__box { animation: none !important; }
+          .by-modal__cta { transition: none !important; }
+          .by-modal__cta:hover { transform: none !important; }
+        }
 
         /* BRIDGE CTA — surfaces the suggest form before users commit to scrolling further (LS pattern) */
         .by-bridge {
