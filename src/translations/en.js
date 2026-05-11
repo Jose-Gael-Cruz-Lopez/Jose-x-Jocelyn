@@ -2096,6 +2096,11 @@ export const en = {
     archiveBtnHideTakeaways: '✦ Hide Takeaways',
     archiveTakeawaysTitle: 'Key Takeaways from This Session',
 
+    // ── Mid-page bridge CTA ───────────────────────────────────────────────────
+    bridgeCopyPrefix: 'Don\'t see a panel that fits where you are?',
+    bridgeCopyEm: 'Tell us what we should host next.',
+    bridgeCtaLabel: 'Suggest a panel',
+
     // ── Topic browse ──────────────────────────────────────────────────────────
     topicsKicker: 'Section 04',
     topicsTitle: 'Browse by Topic',

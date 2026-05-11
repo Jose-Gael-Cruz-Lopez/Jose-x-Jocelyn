@@ -2096,6 +2096,11 @@ export const es = {
     archiveBtnHideTakeaways: '✦ Ocultar conclusiones',
     archiveTakeawaysTitle: 'Conclusiones clave de esta sesión',
 
+    // ── Mid-page bridge CTA ───────────────────────────────────────────────────
+    bridgeCopyPrefix: '¿No ves un panel que se ajuste a donde estás?',
+    bridgeCopyEm: 'Cuéntanos qué deberíamos organizar después.',
+    bridgeCtaLabel: 'Sugerir un panel',
+
     // ── Topic browse ──────────────────────────────────────────────────────────
     topicsKicker: 'Sección 04',
     topicsTitle: 'Explorar por tema',
