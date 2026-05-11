@@ -655,7 +655,20 @@ export default function InterviewPrep() {
           transform: translateY(12px);
           transition: transform .3s cubic-bezier(.16,1,.3,1);
           position: relative;
+          overflow-x: hidden;
           box-shadow: 0 36px 72px -24px rgba(26,25,22,.5), 0 0 0 1px rgba(26,25,22,.06);
+        }
+        /* Earthenware brand stripe — matches CT + BY modals for cross-page consistency */
+        .ip-modal::before {
+          content: '';
+          position: absolute;
+          left: 0; right: 0; top: 0;
+          height: 4px;
+          background: linear-gradient(90deg,
+            var(--color-accent) 0%, var(--color-accent) 38%,
+            var(--color-gold) 38%, var(--color-gold) 62%,
+            var(--color-teal) 62%, var(--color-teal) 100%);
+          border-radius: 18px 18px 0 0;
         }
         .ip-modal-overlay.open .ip-modal { transform: translateY(0); }
         .ip-modal__close {
