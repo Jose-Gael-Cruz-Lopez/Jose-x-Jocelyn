@@ -1834,6 +1834,7 @@ export const es = {
     filterApply: 'Aplicaciones',
     filterApplyDesc: 'Currículums, aplicaciones',
     filterInterview: 'Entrevistas',
+    filterInterviewDesc: 'Prep, agradecimientos',
     filterOffers: 'Ofertas y Negociación',
     filterJob: 'En el Trabajo',
     filterAriaLabel: 'Filtrar por etapa del proceso',
