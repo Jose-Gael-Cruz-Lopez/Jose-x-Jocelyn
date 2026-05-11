@@ -1219,6 +1219,9 @@ export const en = {
       { to: '/coffee-chat',       title: 'Coffee Chat Network',   desc: "Connect with people who've walked this path" },
       { to: '/articles',          title: 'La Voz del Día',        desc: 'Weekly essays on careers, identity & early-career life' },
     ],
+    signoffLine: 'The board you can actually read every week.',
+    signoffSub: 'Roles we wished we’d seen the year we were applying. Tell us what you’re hunting.',
+    signoffCta: 'Tell us what you’re hunting',
   },
 
   resumeReviews: {

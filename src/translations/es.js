@@ -1219,6 +1219,9 @@ export const es = {
       { to: '/coffee-chat',       title: 'Red de Conversaciones Informativas', desc: 'Conecta con personas que han recorrido este camino' },
       { to: '/articles',          title: 'La Voz del Día',        desc: 'Ensayos semanales sobre carreras, identidad y vida al inicio de carrera' },
     ],
+    signoffLine: 'El tablero que sí puedes leer cada semana.',
+    signoffSub: 'Roles que hubiéramos querido ver el año que aplicábamos. Dinos qué estás buscando.',
+    signoffCta: 'Dinos qué buscas',
   },
 
   resumeReviews: {

@@ -298,7 +298,12 @@ export default function OpportunityBoard() {
   ]
 
   return (
-    <ArticleLayout title="Opportunity Board">
+    <ArticleLayout
+      title="Opportunity Board"
+      signoffLine={t.signoffLine}
+      signoffSub={t.signoffSub}
+      signoffCta={t.signoffCta}
+    >
       <style>{`
         html, body { background: var(--color-cream); }
         :root { --ob-shadow-warm: 58, 38, 22; }
