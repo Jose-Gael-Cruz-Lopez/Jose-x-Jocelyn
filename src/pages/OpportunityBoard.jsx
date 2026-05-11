@@ -378,7 +378,7 @@ export default function OpportunityBoard() {
         .ob-submit__intro-title { font-family: var(--font-display); font-size: clamp(22px,3vw,32px); font-weight: 700; color: var(--color-dark); line-height: 1.2; margin-bottom: 16px; }
         .ob-submit__intro-body { font-size: clamp(14px,1.6vw,15px); color: var(--color-muted); line-height: 1.75; }
         .ob-submit__intro-body strong { color: var(--color-dark); font-weight: 600; }
-        .ob-form-box { background: var(--color-paper); border: 1px solid rgba(26,25,22,.07); border-radius: 10px; padding: clamp(28px,4vw,44px); }
+        .ob-form-box { background: rgba(255,250,242,.7); border: 1px solid rgba(26,25,22,.13); border-radius: 16px; padding: clamp(28px,4vw,44px); box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -22px rgba(var(--ob-shadow-warm),.18); }
         .ob-form-row { margin-bottom: 16px; }
         .ob-form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         .ob-form-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--color-muted); margin-bottom: 6px; }
