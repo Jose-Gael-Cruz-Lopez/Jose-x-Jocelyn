@@ -1621,6 +1621,7 @@ export const es = {
     filterBoth: 'Ambas perspectivas',
     filterBothDesc: 'Ambas vistas',
     filterInternships: 'Pasantías',
+    filterInternshipsDesc: 'Ciclo de reclutamiento',
     filterOffers: 'Ofertas',
     filterRejection: 'Rechazo',
     filterOnTheJob: 'En el trabajo',

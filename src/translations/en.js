@@ -1621,6 +1621,7 @@ export const en = {
     filterBoth: 'Both Perspectives',
     filterBothDesc: 'Both lenses',
     filterInternships: 'Internships',
+    filterInternshipsDesc: 'Recruiting cycle',
     filterOffers: 'Offers',
     filterRejection: 'Rejection',
     filterOnTheJob: 'On the Job',
