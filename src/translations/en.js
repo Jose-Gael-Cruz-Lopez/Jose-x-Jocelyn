@@ -1623,6 +1623,7 @@ export const en = {
     filterInternships: 'Internships',
     filterInternshipsDesc: 'Recruiting cycle',
     filterOffers: 'Offers',
+    filterOffersDesc: 'Negotiation, return',
     filterRejection: 'Rejection',
     filterOnTheJob: 'On the Job',
 

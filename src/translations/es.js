@@ -1623,6 +1623,7 @@ export const es = {
     filterInternships: 'Pasantías',
     filterInternshipsDesc: 'Ciclo de reclutamiento',
     filterOffers: 'Ofertas',
+    filterOffersDesc: 'Negociación, regreso',
     filterRejection: 'Rechazo',
     filterOnTheJob: 'En el trabajo',
 
