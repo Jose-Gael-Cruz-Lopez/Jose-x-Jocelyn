@@ -160,8 +160,9 @@ function dbOpportunityToCard(row, t) {
 
 function OBCard({ card, featured, t }) {
   const isExternal = card.postLink.startsWith('http')
+  const typeKey = (card.type || '').split(' ')[0]
   return (
-    <article className={`ob-card${featured ? ' featured' : ''}`}>
+    <article className={`ob-card${typeKey ? ' ob-card--' + typeKey : ''}${featured ? ' featured' : ''}`}>
       {featured && <span className="ob-card__featured-badge">{t.cardFeaturedBadge}</span>}
       <div className="ob-card__top">
         <div className="ob-card__company-logo" style={card.logoStyle}>{card.logo}</div>
@@ -307,9 +308,14 @@ export default function OpportunityBoard() {
         .ob-featured-label::before { content: ''; display: inline-block; width: 20px; height: 2px; background: var(--color-gold); border-radius: 1px; }
         .ob-featured-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px,1fr)); gap: 16px; }
 
-        .ob-card { background: var(--color-paper); border: 1px solid rgba(26,25,22,.08); border-radius: 10px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s; position: relative; }
-        .ob-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(26,25,22,.1); }
-        .ob-card.featured { border-color: rgba(232,168,56,.35); }
+        .ob-card { background: linear-gradient(180deg, rgba(255,250,242,.85) 0%, rgba(255,250,242,.55) 100%); border: 1px solid rgba(26,25,22,.1); border-radius: 12px; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 4px 12px -6px rgba(var(--ob-shadow-warm),.12); transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s, border-color .22s; position: relative; }
+        .ob-card:hover { transform: translateY(-3px); border-color: rgba(26,25,22,.22); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 32px -12px rgba(var(--ob-shadow-warm),.22); }
+        .ob-card--internship    { background: linear-gradient(180deg, rgba(22,43,68,.07)  0%, rgba(255,250,242,.55) 60%); border-color: rgba(22,43,68,.22); }
+        .ob-card--apprenticeship { background: linear-gradient(180deg, rgba(58,125,107,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(58,125,107,.22); }
+        .ob-card--new-grad      { background: linear-gradient(180deg, rgba(232,168,56,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(232,168,56,.26); }
+        .ob-card--fellowship    { background: linear-gradient(180deg, rgba(91,142,194,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(91,142,194,.22); }
+        .ob-card--program       { background: linear-gradient(180deg, rgba(179,69,57,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(179,69,57,.22); }
+        .ob-card.featured { border-color: rgba(232,168,56,.42); border-width: 1.5px; }
         .ob-card.archived { opacity: .55; pointer-events: none; }
         .ob-card__featured-badge { position: absolute; top: -1px; right: 18px; background: var(--color-gold); color: var(--color-dark); font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 10px; border-radius: 0 0 6px 6px; }
         .ob-card__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
