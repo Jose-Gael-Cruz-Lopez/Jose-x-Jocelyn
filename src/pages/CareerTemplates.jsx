@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -20,20 +21,30 @@ const ExternalIcon = () => (
 
 export default function CareerTemplates() {
   const t = useT('careerTemplates')
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeFilter = searchParams.get('filter') || 'all'
   const [request, setRequest] = useState('')
   const [reqEmail, setReqEmail] = useState('')
   const [reqCategory, setReqCategory] = useState('')
+  const [reqCategoryOther, setReqCategoryOther] = useState('')
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
-  const [fieldErrors, setFieldErrors] = useState({ request: '', email: '' })
+  const [fieldErrors, setFieldErrors] = useState({ request: '', email: '', category: '' })
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   const [previewId, setPreviewId] = useState(null)
   const [copied, setCopied] = useState(false)
   const previewTriggerRef = useRef(null)
 
-  const handleFilterClick = useCallback(e => setActiveFilter(e.currentTarget.dataset.key), [])
+  const handleFilterClick = useCallback(e => {
+    const key = e.currentTarget.dataset.key
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      if (key === 'all') next.delete('filter')
+      else next.set('filter', key)
+      return next
+    }, { replace: true })
+  }, [setSearchParams])
 
   const openPreview = (id, e) => {
     previewTriggerRef.current = e?.currentTarget ?? null
@@ -70,21 +81,25 @@ export default function CareerTemplates() {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    const errors = { request: '', email: '' }
+    const errors = { request: '', email: '', category: '' }
     if (!request.trim()) errors.request = t.formErrorRequired
     if (reqEmail.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(reqEmail.trim())) errors.email = t.formErrorEmail
-    if (errors.request || errors.email) {
+    if (reqCategory === 'other' && !reqCategoryOther.trim()) errors.category = t.formErrorCategoryOther
+    if (errors.request || errors.email || errors.category) {
       setFieldErrors(errors)
       setFormError('')
       return
     }
-    setFieldErrors({ request: '', email: '' })
+    setFieldErrors({ request: '', email: '', category: '' })
     setFormLoading(true)
     setFormError('')
+    const categoryValue = reqCategory === 'other'
+      ? `other: ${reqCategoryOther.trim()}`
+      : (reqCategory || null)
     const { error } = await supabase.from('template_requests').insert({
       request: request.trim(),
       email: reqEmail.trim() || null,
-      category: reqCategory || null,
+      category: categoryValue,
     })
     setFormLoading(false)
     if (error) { setFormError(t.formErrorGeneric) }
@@ -194,11 +209,8 @@ export default function CareerTemplates() {
           max-width: 18ch;
         }
         .ct-hero__title em {
-          font-style: italic;
-          font-family: var(--font-serif, var(--font-display));
-          color: var(--color-gold-dark);
-          font-weight: 500;
-          padding-right: .04em;
+          font-style: normal;
+          color: var(--color-teal);
         }
         .ct-hero__tagline {
           font-family: var(--font-serif, var(--font-display));
@@ -646,7 +658,7 @@ export default function CareerTemplates() {
         .ct-form-row__error::before { content: ''; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--color-gold); margin-right: 7px; vertical-align: .18em; }
         .ct-form-row__counter { display: block; margin-top: 6px; font-size: 11px; color: rgba(242,228,206,.5); text-align: right; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
         .ct-form-row__counter--warn { color: var(--color-gold); font-weight: 600; }
-        .ct-form-error-card { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding: 14px 16px; background: rgba(232,168,56,.08); border: 1px solid rgba(232,168,56,.3); border-left: 3px solid var(--color-gold); border-radius: 10px; }
+        .ct-form-error-card { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding: 14px 16px; background: rgba(232,168,56,.08); border: 1px solid rgba(232,168,56,.4); border-radius: 10px; }
         .ct-form-error-card__msg { flex: 1; font-size: 13px; color: var(--color-cream); line-height: 1.5; }
         .ct-form-error-card__msg strong { color: var(--color-gold); font-weight: 700; }
         .ct-form-error-card__retry { flex-shrink: 0; padding: 7px 14px; background: transparent; border: 1.5px solid var(--color-gold); color: var(--color-gold); border-radius: 999px; font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: -.005em; cursor: pointer; transition: background .2s, color .2s; }
@@ -697,7 +709,7 @@ export default function CareerTemplates() {
 
       <header className="ct-hero">
         <p className="ct-hero__kicker">{t.heroKicker}</p>
-        <h1 className="ct-hero__title">{t.heroTitle}</h1>
+        <h1 className="ct-hero__title" dangerouslySetInnerHTML={{ __html: t.heroTitle }} />
         <p className="ct-hero__tagline">{t.heroTagline}</p>
         <p className="ct-hero__sub">
           {t.heroSub}{' '}
@@ -850,15 +862,33 @@ export default function CareerTemplates() {
                     <option value="interview-prep">{t.catInterviewPrep}</option>
                     <option value="offers-negotiation">{t.catOffersNegotiation}</option>
                     <option value="first-job-onboarding">{t.catFirstJobOnboarding}</option>
+                    <option value="other">{t.catOther}</option>
                   </select>
                 </div>
+                {reqCategory === 'other' && (
+                  <div className="ct-form-row">
+                    <label className="ct-form-label" htmlFor="reqCatOther">{t.formLabelCategoryOther}</label>
+                    <input
+                      className={`ct-form-input${fieldErrors.category ? ' is-invalid' : ''}`}
+                      type="text"
+                      id="reqCatOther"
+                      placeholder={t.formPlaceholderCategoryOther}
+                      value={reqCategoryOther}
+                      onChange={e => { setReqCategoryOther(e.target.value); if (fieldErrors.category) setFieldErrors(s => ({ ...s, category: '' })) }}
+                      maxLength={120}
+                      aria-invalid={!!fieldErrors.category}
+                      aria-describedby={fieldErrors.category ? 'reqCatOther-error' : undefined}
+                    />
+                    {fieldErrors.category && <span id="reqCatOther-error" className="ct-form-row__error" role="alert">{fieldErrors.category}</span>}
+                  </div>
+                )}
                 {formError && (
                   <div role="alert" className="ct-form-error-card">
                     <span className="ct-form-error-card__msg"><strong>{t.formErrorLabel}</strong> {formError}</span>
                     <button type="submit" className="ct-form-error-card__retry" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formRetryLabel}</button>
                   </div>
                 )}
-                <button className="ct-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
+                <button className="ct-form-btn" type="submit" disabled={formLoading || !request.trim()}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
               </form>
             )}
           </div>

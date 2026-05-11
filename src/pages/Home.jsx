@@ -610,6 +610,7 @@ export default function Home() {
 
   return (
     <>
+      <a href="#hero" className="skip-link">{t.skipToContent}</a>
       {/* LOADER */}
       {!loaderDone && (
         <div className="loader" id="loader" ref={loaderRef}>
@@ -1131,6 +1132,7 @@ export default function Home() {
         <button className="footer__cta" id="footerCta" onClick={openModal}>
           <span className="footer__cta-text" dangerouslySetInnerHTML={{ __html: t.footerCta }} />
         </button>
+        <p className="footer__signoff" lang="es">{t.footerSignoff}</p>
         <div className="footer__bottom">
           <span className="footer__credit">{t.footerCredit}</span>
           <div className="footer__legal">
@@ -1144,26 +1146,42 @@ export default function Home() {
       <div className={`modal${modalOpen ? ' modal--open' : ''}`} id="modal">
         <div className="modal__bg" onClick={closeModal} />
         <div className="modal__box" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef} onKeyDown={handleModalKeyDown}>
-          <button className="modal__close" id="modalClose" onClick={closeModal} aria-label={t.modalClose}>&times;</button>
+          <button className="modal__close" id="modalClose" onClick={closeModal} aria-label={t.modalClose}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+              <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
+            </svg>
+          </button>
           {!modalSent ? (
             <>
+              <p className="modal__kicker">{t.modalKicker}</p>
               <h3 className="modal__title" id="modal-title">{t.modalTitle}</h3>
-              <label className="sr-only" htmlFor="modalName">{t.modalNameLabel}</label>
-              <input type="text" id="modalName" className="modal__input" placeholder={t.modalNamePlaceholder} value={modalName} onChange={e => setModalName(e.target.value)} />
-              <label className="sr-only" htmlFor="modalEmail">{t.modalEmailLabel}</label>
-              <input type="email" id="modalEmail" className="modal__input" placeholder={t.modalEmailPlaceholder} value={modalEmail} onChange={e => setModalEmail(e.target.value)} />
-              <label className="sr-only" htmlFor="modalMessage">{t.modalMessageLabel}</label>
-              <textarea id="modalMessage" className="modal__input modal__textarea" placeholder={t.modalMessagePlaceholder} value={modalMessage} onChange={e => setModalMessage(e.target.value)} rows={5} />
-              {modalError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginTop: '8px' }}>{modalError}</p>}
-              <button className="modal__btn" disabled={modalLoading || !modalEmail.trim() || !modalMessage.trim()} onClick={handleModalSubmit}>
-                {modalLoading ? t.modalSending : t.modalSend}
-              </button>
+              <div className="modal__field">
+                <label className="modal__label" htmlFor="modalName">{t.modalNameLabel}</label>
+                <input type="text" id="modalName" className="modal__input" placeholder={t.modalNamePlaceholder} value={modalName} onChange={e => setModalName(e.target.value)} />
+              </div>
+              <div className="modal__field">
+                <label className="modal__label" htmlFor="modalEmail">{t.modalEmailLabel}</label>
+                <input type="email" id="modalEmail" className="modal__input" placeholder={t.modalEmailPlaceholder} value={modalEmail} onChange={e => setModalEmail(e.target.value)} />
+              </div>
+              <div className="modal__field">
+                <label className="modal__label" htmlFor="modalMessage">{t.modalMessageLabel}</label>
+                <textarea id="modalMessage" className="modal__input modal__textarea" placeholder={t.modalMessagePlaceholder} value={modalMessage} onChange={e => setModalMessage(e.target.value)} rows={4} />
+              </div>
+              {modalError && <p role="alert" className="modal__error">{modalError}</p>}
+              <div className="modal__footer">
+                <button className="modal__btn" disabled={modalLoading || !modalEmail.trim() || !modalMessage.trim()} onClick={handleModalSubmit}>
+                  {modalLoading ? t.modalSending : t.modalSend}
+                </button>
+                <span className="modal__reassurance">{t.modalReassurance}</span>
+              </div>
             </>
           ) : (
             <>
-              <h3 className="modal__title" id="modal-title">{t.modalSentTitle}</h3>
+              <p className="modal__kicker">{t.modalKicker}</p>
+              <h3 className="modal__title modal__title--sent" id="modal-title">{t.modalSentTitle}</h3>
               <p className="modal__msg">{t.modalSentMsg}</p>
-              <button className="modal__btn modal__btn--done" onClick={closeModal}>{t.modalClose}</button>
+              <p className="modal__signature">{t.modalSentSignature}</p>
+              <button className="modal__btn modal__btn--ghost" onClick={closeModal}>{t.modalClose}</button>
             </>
           )}
         </div>

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -7,23 +7,64 @@ import { useT } from '../hooks/useT'
 export default function InterviewPrep() {
   const t = useT('interviewPrep')
 
-  const [activeTab, setActiveTab] = useState('recruiter')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const validTypeKeys = (t.interviewTypes || []).map(it => it.key)
+  const urlType = searchParams.get('type') || ''
+  const activeTab = urlType && validTypeKeys.includes(urlType) ? urlType : 'recruiter'
+  const setActiveTab = useCallback(key => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      if (!key || key === 'recruiter') next.delete('type')
+      else next.set('type', key)
+      return next
+    }, { replace: true })
+  }, [setSearchParams])
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
   const [form, setForm] = useState({ role: '', stage: '', type: '', need: '', email: '' })
   const [previewIndex, setPreviewIndex] = useState(null)
+  const previewTriggerRef = useRef(null)
+  const tabsRef = useRef(null)
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstTab = tabsRef.current?.querySelector('button')
+      if (firstTab) {
+        e.preventDefault()
+        firstTab.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
+
+  const openPreview = (i, e) => {
+    previewTriggerRef.current = e?.currentTarget ?? null
+    setPreviewIndex(i)
+  }
+  const closePreview = useCallback(() => {
+    setPreviewIndex(null)
+    if (previewTriggerRef.current) {
+      previewTriggerRef.current.focus()
+      previewTriggerRef.current = null
+    }
+  }, [])
 
   useEffect(() => {
     if (previewIndex == null) { document.body.style.overflow = ''; return }
     document.body.style.overflow = 'hidden'
-    const onKey = e => { if (e.key === 'Escape') setPreviewIndex(null) }
+    const onKey = e => { if (e.key === 'Escape') closePreview() }
     window.addEventListener('keydown', onKey)
     return () => {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
     }
-  }, [previewIndex])
+  }, [previewIndex, closePreview])
 
   const setField = (k, v) => setForm(f => ({ ...f, [k]: v }))
   const handleSubmit = async e => {
@@ -252,17 +293,35 @@ export default function InterviewPrep() {
           color: rgba(232,168,56,.9); margin-bottom: 48px;
           letter-spacing: -0.005em; line-height: 1.3;
         }
-        .ip-type-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 36px; }
+        .ip-type-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
         .ip-type-tab {
-          padding: 13px 18px; border-radius: 999px; font-family: var(--font-body);
-          font-size: 13px; font-weight: 600; cursor: pointer;
+          padding: 10px 16px; border-radius: 14px; font-family: var(--font-body);
+          cursor: pointer;
           border: 1.5px solid rgba(242,228,206,.2);
           background: transparent; color: rgba(242,228,206,.6);
-          transition: background .2s, color .2s, border-color .2s;
+          transition: background .2s, color .2s, border-color .2s, transform .22s cubic-bezier(.16,1,.3,1);
+          display: inline-flex; flex-direction: column; align-items: flex-start;
+          gap: 2px; text-align: left; min-width: 0;
         }
-        .ip-type-tab:hover { color: var(--color-cream); border-color: rgba(242,228,206,.45); }
+        .ip-type-tab:hover { color: var(--color-cream); border-color: rgba(242,228,206,.45); transform: translateY(-1px); }
+        .ip-type-tab:active { transform: translateY(0); }
+        .ip-type-tab__label { font-size: 13px; font-weight: 700; letter-spacing: -.005em; line-height: 1.2; }
+        .ip-type-tab__desc { font-size: 10.5px; font-weight: 500; opacity: .72; line-height: 1.2; letter-spacing: .005em; }
+        .ip-type-tab--active .ip-type-tab__desc { opacity: .85; }
+        /* Default active fallback — overridden by type-tinted variants below */
         .ip-type-tab--active { background: var(--color-cream); color: var(--color-dark); border-color: var(--color-cream); }
-        .ip-type-tab:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 999px; }
+        /* Type-tinted active states — each interview type gets its own brand color when active */
+        .ip-type-tab--active.ip-type-tab--rec  { background: var(--color-blue);      color: var(--color-cream); border-color: var(--color-blue); }
+        .ip-type-tab--active.ip-type-tab--beh  { background: var(--color-teal);      color: var(--color-cream); border-color: var(--color-teal); }
+        .ip-type-tab--active.ip-type-tab--tech { background: var(--color-gold-dark); color: var(--color-cream); border-color: var(--color-gold-dark); }
+        .ip-type-tab--active.ip-type-tab--case { background: var(--color-navy);      color: var(--color-cream); border-color: var(--color-navy); }
+        .ip-type-tab--active.ip-type-tab--ow   { background: var(--color-cream);     color: var(--color-dark);  border-color: var(--color-cream); }
+        .ip-type-tab--active.ip-type-tab--fin  { background: var(--color-accent);    color: var(--color-cream); border-color: var(--color-accent); }
+        .ip-type-tab:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; border-radius: 14px; }
+        @media (prefers-reduced-motion: reduce) {
+          .ip-type-tab { transition: none !important; }
+          .ip-type-tab:hover { transform: none !important; }
+        }
         .ip-type-panel__inner {
           display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;
         }
@@ -613,7 +672,20 @@ export default function InterviewPrep() {
           transform: translateY(12px);
           transition: transform .3s cubic-bezier(.16,1,.3,1);
           position: relative;
+          overflow-x: hidden;
           box-shadow: 0 36px 72px -24px rgba(26,25,22,.5), 0 0 0 1px rgba(26,25,22,.06);
+        }
+        /* Earthenware brand stripe — matches CT + BY modals for cross-page consistency */
+        .ip-modal::before {
+          content: '';
+          position: absolute;
+          left: 0; right: 0; top: 0;
+          height: 4px;
+          background: linear-gradient(90deg,
+            var(--color-accent) 0%, var(--color-accent) 38%,
+            var(--color-gold) 38%, var(--color-gold) 62%,
+            var(--color-teal) 62%, var(--color-teal) 100%);
+          border-radius: 18px 18px 0 0;
         }
         .ip-modal-overlay.open .ip-modal { transform: translateY(0); }
         .ip-modal__close {
@@ -797,7 +869,7 @@ export default function InterviewPrep() {
           <h2 className="ip-types__title">{t.typesTitle}</h2>
           <p className="ip-types__sub">{t.typesSub}</p>
 
-          <div className="ip-type-tabs" role="tablist" aria-label={t.typesTabsAriaLabel} onKeyDown={e => {
+          <div className="ip-type-tabs" role="tablist" aria-label={t.typesTabsAriaLabel} ref={tabsRef} onKeyDown={e => {
             const KEYS = t.interviewTypes.map(it => it.key)
             const idx = KEYS.indexOf(activeTab)
             let next = null
@@ -811,19 +883,20 @@ export default function InterviewPrep() {
               <button
                 key={it.key}
                 id={`ip-tab-${it.key}`}
-                className={`ip-type-tab${activeTab === it.key ? ' ip-type-tab--active' : ''}`}
+                className={`ip-type-tab${activeTab === it.key ? ' ip-type-tab--active' : ''}${it.type ? ` ip-type-tab--${it.type}` : ''}`}
                 role="tab"
                 aria-selected={activeTab === it.key}
                 tabIndex={activeTab === it.key ? 0 : -1}
                 onClick={() => setActiveTab(it.key)}
               >
-                {it.label}
+                <span className="ip-type-tab__label">{it.label}</span>
+                {it.description && <span className="ip-type-tab__desc">{it.description}</span>}
               </button>
             ))}
           </div>
 
           {activePanel && (
-            <div className="ip-type-panel__inner" role="tabpanel" aria-labelledby={`ip-tab-${activeTab}`}>
+            <div className="ip-type-panel__inner" role="tabpanel" aria-labelledby={`ip-tab-${activeTab}`} aria-live="polite">
               <div className="ip-type-panel__desc" dangerouslySetInnerHTML={{ __html: `<p>${activePanel.desc}</p>` }} />
               <div>
                 <p className="ip-type-panel__res-label">{t.typesResLabel}</p>
@@ -865,7 +938,7 @@ export default function InterviewPrep() {
                 <button
                   type="button"
                   className="ip-res-card__cta-secondary"
-                  onClick={() => setPreviewIndex(i)}
+                  onClick={e => openPreview(i, e)}
                   aria-haspopup="dialog"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -974,7 +1047,7 @@ export default function InterviewPrep() {
                 <input className="ip-form-input" type="email" id="ipEmail" placeholder={t.formPlaceholderEmail} value={form.email} onChange={e => setField('email', e.target.value)} />
               </div>
               {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
-              <button className="ip-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
+              <button className="ip-form-btn" type="submit" disabled={formLoading || !form.role.trim()}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
             </form>
           )}
         </div>
@@ -993,7 +1066,7 @@ export default function InterviewPrep() {
       {/* PREVIEW MODAL */}
       <div
         className={`ip-modal-overlay${previewIndex != null ? ' open' : ''}`}
-        onClick={() => setPreviewIndex(null)}
+        onClick={closePreview}
         aria-hidden={previewIndex == null}
       >
         {(() => {
@@ -1010,7 +1083,7 @@ export default function InterviewPrep() {
               <button
                 type="button"
                 className="ip-modal__close"
-                onClick={() => setPreviewIndex(null)}
+                onClick={closePreview}
                 aria-label={t.previewModalCloseLabel}
               >✕</button>
               <div className="ip-modal__num">{String(previewIndex + 1).padStart(2, '0')}</div>
@@ -1021,7 +1094,7 @@ export default function InterviewPrep() {
               </div>
               <h2 id="ip-modal-title" className="ip-modal__title">{card.name}</h2>
               <p className="ip-modal__desc">{card.desc}</p>
-              <Link to="/career-templates" className="ip-modal__cta" onClick={() => setPreviewIndex(null)}>
+              <Link to="/career-templates" className="ip-modal__cta" onClick={closePreview}>
                 {card.ctaLabel}
               </Link>
             </div>

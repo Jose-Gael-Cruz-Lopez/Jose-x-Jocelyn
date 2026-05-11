@@ -30,6 +30,31 @@ export default function BridgeYear() {
   const [fieldErrors, setFieldErrors] = useState({ program: '', company: '', email: '' })
   const [form, setForm] = useState({ program: '', company: '', link: '', why: '', email: '' })
 
+  const [previewProgram, setPreviewProgram] = useState(null)
+  const previewTriggerRef = useRef(null)
+  const openPreview = (program, e) => {
+    previewTriggerRef.current = e?.currentTarget ?? null
+    setPreviewProgram(program)
+  }
+  const closePreview = useCallback(() => {
+    setPreviewProgram(null)
+    if (previewTriggerRef.current) {
+      previewTriggerRef.current.focus()
+      previewTriggerRef.current = null
+    }
+  }, [])
+
+  useEffect(() => {
+    if (previewProgram == null) { document.body.style.overflow = ''; return }
+    document.body.style.overflow = 'hidden'
+    const onKey = e => { if (e.key === 'Escape') closePreview() }
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [previewProgram, closePreview])
+
   const [captureEmail, setCaptureEmail] = useState('')
   const [captureLoading, setCaptureLoading] = useState(false)
   const [captureError, setCaptureError] = useState('')
@@ -630,17 +655,6 @@ export default function BridgeYear() {
           border-color: var(--color-accent);
           position: relative;
         }
-        .by-prog--featured::before {
-          content: '';
-          position: absolute;
-          top: -1px;
-          left: 28px;
-          width: 36px;
-          height: 6px;
-          background: var(--color-gold);
-          border-radius: 0 0 4px 4px;
-          box-shadow: 0 1px 2px rgba(232,168,56,.4);
-        }
         .by-prog--featured .by-prog__company { color: rgba(242,228,206,.7); }
         .by-prog--featured .by-prog__name { color: var(--color-cream); }
         .by-prog--featured .by-prog__pill { background: rgba(242,228,206,.14); color: var(--color-cream); }
@@ -749,22 +763,55 @@ export default function BridgeYear() {
           margin: 0 auto;
         }
         .by-roles__head { margin-bottom: 28px; }
+        /* Applications-open spotlight — sits above filter chips, surfaces actively-accepting programs */
+        .by-live { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+        .by-live__head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+        .by-live__heading { font-family: var(--font-display); font-size: clamp(18px, 2vw, 22px); font-weight: 700; letter-spacing: -.015em; color: var(--color-dark); margin: 0; }
+        .by-live__count { font-size: 11px; color: var(--color-muted); font-variant-numeric: tabular-nums; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+        .by-live__card { display: block; position: relative; overflow: hidden; padding: 20px 22px; background: linear-gradient(180deg, rgba(58,125,107,.12) 0%, rgba(58,125,107,.04) 100%); border: 1px solid rgba(58,125,107,.35); border-radius: 14px; color: inherit; text-decoration: none; transition: border-color .3s var(--ease-out), transform .3s var(--ease-out), box-shadow .3s var(--ease-out); }
+        .by-live__card:hover { border-color: rgba(58,125,107,.55); transform: translateY(-2px); box-shadow: 0 16px 32px -18px rgba(var(--by-shadow-warm), .28); }
+        .by-live__card:active { transform: translateY(0); }
+        .by-live__card:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 4px; }
+        .by-live__badges { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .by-live__live-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--color-accent); padding: 4px 10px; border-radius: 999px; background: rgba(179,69,57,.10); border: 1px solid rgba(179,69,57,.28); }
+        .by-live__live-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); animation: by-pulse 2s ease-in-out infinite; }
+        @keyframes by-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+        .by-live__deadline { font-size: 11px; color: var(--color-muted); letter-spacing: .04em; font-variant-numeric: tabular-nums; margin-left: auto; }
+        .by-live__title { font-family: var(--font-display); font-size: clamp(17px, 2vw, 22px); font-weight: 700; line-height: 1.2; letter-spacing: -.02em; color: var(--color-dark); margin: 0 0 4px; }
+        .by-live__company { font-size: 13px; color: var(--color-muted); margin: 0 0 14px; line-height: 1.45; }
+        .by-live__cta { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: var(--color-teal); color: var(--color-cream); border-radius: 999px; font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: .02em; transition: background .25s, box-shadow .25s; }
+        .by-live__card:hover .by-live__cta { background: var(--color-dark); box-shadow: 0 8px 18px -8px rgba(var(--by-shadow-warm), .4); }
+        @media (prefers-reduced-motion: reduce) {
+          .by-live__live-pill::before { animation: none; }
+          .by-live__card, .by-live__cta { transition: none !important; }
+          .by-live__card:hover { transform: none !important; }
+        }
+        @media (max-width: 560px) {
+          .by-live__deadline { margin-left: 0; }
+        }
         .by-roles__filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
         .by-roles__filter {
-          padding: 13px 16px;
-          border-radius: 999px;
+          padding: 10px 16px;
+          border-radius: 14px;
           font-family: var(--font-body);
-          font-size: 12px;
-          font-weight: 600;
           cursor: pointer;
           border: 1.5px solid rgba(26,25,22,.12);
           background: rgba(255,250,242,.6);
           color: var(--color-muted);
           transition: background .2s, color .2s, border-color .2s;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1px;
+          text-align: left;
+          min-width: 0;
         }
         .by-roles__filter:hover { color: var(--color-dark); border-color: rgba(0,0,0,.22); }
         .by-roles__filter:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; }
         .by-roles__filter--active { background: var(--color-teal); color: var(--color-cream); border-color: var(--color-teal); }
+        .by-roles__filter-label { font-size: 12px; font-weight: 700; letter-spacing: -.005em; line-height: 1.2; }
+        .by-roles__filter-desc { font-size: 10.5px; font-weight: 500; opacity: .72; line-height: 1.2; letter-spacing: .005em; }
+        .by-roles__filter--active .by-roles__filter-desc { opacity: .85; }
         .by-roles__list { display: flex; flex-direction: column; gap: 14px; }
         .by-role-card {
           background: transparent;
@@ -822,6 +869,90 @@ export default function BridgeYear() {
           white-space: nowrap;
         }
         .by-role-card__cta:hover { background: var(--color-teal); color: var(--color-cream); }
+        .by-role-card__actions { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; flex-shrink: 0; }
+        .by-role-card__preview {
+          padding: 8px 14px;
+          border-radius: 999px;
+          background: transparent;
+          border: 1px solid rgba(26,25,22,.18);
+          color: var(--color-muted);
+          font-family: var(--font-display);
+          font-size: 11px;
+          font-weight: 600;
+          letter-spacing: .02em;
+          cursor: pointer;
+          transition: background .2s, color .2s, border-color .2s;
+          white-space: nowrap;
+        }
+        .by-role-card__preview:hover { color: var(--color-dark); border-color: rgba(26,25,22,.4); background: rgba(255,250,242,.6); }
+        .by-role-card__preview:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; }
+
+        /* Preview modal — mirrors CT a11y pattern (focus restoration, Esc, scroll lock) */
+        .by-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: clamp(16px, 4vw, 40px); animation: by-modal-in .25s var(--ease-out); }
+        @keyframes by-modal-in { from { opacity: 0; } to { opacity: 1; } }
+        .by-modal__bg { position: absolute; inset: 0; background: rgba(26,25,22,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+        .by-modal__box {
+          position: relative;
+          background: var(--color-cream);
+          color: var(--color-dark);
+          padding: clamp(28px, 4vw, 48px) clamp(24px, 4vw, 48px) clamp(24px, 3.5vw, 40px);
+          max-width: 620px;
+          width: 100%;
+          max-height: calc(100dvh - 48px);
+          overflow-y: auto;
+          border-radius: 4px;
+          box-shadow: 0 30px 80px -20px rgba(26,25,22,.55), 0 0 0 1px rgba(26,25,22,.06);
+          animation: by-modal-box-in .35s var(--ease-out);
+        }
+        @keyframes by-modal-box-in { from { transform: translateY(24px) scale(.97); } to { transform: translateY(0) scale(1); } }
+        .by-modal__box::before {
+          content: '';
+          position: absolute;
+          left: 0; right: 0; top: 0;
+          height: 4px;
+          background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent) 38%, var(--color-gold) 38%, var(--color-gold) 62%, var(--color-teal) 62%, var(--color-teal) 100%);
+          border-radius: 4px 4px 0 0;
+        }
+        .by-modal__close {
+          position: absolute; top: 14px; right: 14px;
+          width: 36px; height: 36px;
+          display: inline-flex; align-items: center; justify-content: center;
+          color: var(--color-muted);
+          background: transparent;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: background .2s, color .2s;
+        }
+        .by-modal__close:hover { background: rgba(26,25,22,.06); color: var(--color-dark); }
+        .by-modal__close:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+        .by-modal__tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 4px 0 16px; }
+        .by-modal__title { font-family: var(--font-display); font-size: clamp(22px, 3vw, 30px); font-weight: 700; line-height: 1.15; letter-spacing: -.02em; color: var(--color-dark); margin: 0 0 8px; text-wrap: balance; }
+        .by-modal__company { font-size: 14px; color: var(--color-muted); margin: 0 0 20px; line-height: 1.5; }
+        .by-modal__why { font-size: 15px; color: var(--color-dark); line-height: 1.7; margin: 0 0 28px; text-wrap: pretty; }
+        .by-modal__why strong { color: var(--color-accent); font-weight: 600; }
+        .by-modal__cta {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 12px 22px;
+          background: var(--color-dark);
+          color: var(--color-cream);
+          border-radius: 999px;
+          font-family: var(--font-display);
+          font-size: 13px;
+          font-weight: 700;
+          letter-spacing: .02em;
+          text-decoration: none;
+          transition: background .25s, transform .22s, box-shadow .25s;
+          box-shadow: 0 6px 16px -8px rgba(var(--by-shadow-warm), .35);
+        }
+        .by-modal__cta:hover { background: var(--color-accent); transform: translateY(-2px); box-shadow: 0 14px 26px -12px rgba(179,69,57,.5); }
+        .by-modal__cta:active { transform: translateY(0); }
+        .by-modal__cta:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 3px; }
+        @media (prefers-reduced-motion: reduce) {
+          .by-modal, .by-modal__box { animation: none !important; }
+          .by-modal__cta { transition: none !important; }
+          .by-modal__cta:hover { transform: none !important; }
+        }
 
         /* BRIDGE CTA — surfaces the suggest form before users commit to scrolling further (LS pattern) */
         .by-bridge {
@@ -1377,7 +1508,7 @@ export default function BridgeYear() {
                   aria-describedby={captureError ? 'captureEmail-error' : undefined}
                   autoComplete="email"
                 />
-                <button type="submit" className="by-capture__btn" disabled={captureLoading}>
+                <button type="submit" className="by-capture__btn" disabled={captureLoading || !captureEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(captureEmail.trim())}>
                   {captureLoading ? t.captureSubmitting : t.captureButton}
                 </button>
                 {captureError && <span id="captureEmail-error" className="by-capture__error" role="alert">{captureError}</span>}
@@ -1426,6 +1557,39 @@ export default function BridgeYear() {
           <p className="by-section-body">{t.rolesBody}</p>
         </div>
 
+        {(() => {
+          const openPrograms = (t.roleCards || []).filter(c => c.applicationStatus === 'open')
+          if (openPrograms.length === 0) return null
+          return (
+            <section className="by-live" aria-labelledby="by-live-heading">
+              <div className="by-live__head">
+                <h3 className="by-live__heading" id="by-live-heading">{t.openProgramsHeading}</h3>
+                <span className="by-live__count">{openPrograms.length} {openPrograms.length === 1 ? t.openProgramsCountSingular : t.openProgramsCountPlural}</span>
+              </div>
+              {openPrograms.map(p => (
+                <a
+                  key={p.title}
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="by-live__card"
+                >
+                  <div className="by-live__badges">
+                    <span className="by-live__live-pill" aria-label={t.statusOpen}>{t.statusOpen}</span>
+                    {p.deadlineLabel && <span className="by-live__deadline">{p.deadlineLabel}</span>}
+                  </div>
+                  <h4 className="by-live__title">{p.title}</h4>
+                  <p className="by-live__company">{p.company}</p>
+                  <span className="by-live__cta">
+                    {p.ctaLabel}
+                    <ExtIcon />
+                  </span>
+                </a>
+              ))}
+            </section>
+          )
+        })()}
+
         <div className="by-roles__filters" role="group" aria-label={t.rolesFiltersAriaLabel} ref={filtersRef}>
           {t.roleFilters.map(f => (
             <button
@@ -1434,7 +1598,8 @@ export default function BridgeYear() {
               className={`by-roles__filter${roleFilter === f.key ? ' by-roles__filter--active' : ''}`}
               onClick={handleRoleFilter}
             >
-              {f.label}
+              <span className="by-roles__filter-label">{f.label}</span>
+              {f.description && <span className="by-roles__filter-desc">{f.description}</span>}
             </button>
           ))}
         </div>
@@ -1452,11 +1617,39 @@ export default function BridgeYear() {
                 <p className="by-role-card__company">{card.company}</p>
                 <p className="by-role-card__why" dangerouslySetInnerHTML={{ __html: card.why }} />
               </div>
-              <a href={card.href} target="_blank" rel="noopener noreferrer" className="by-role-card__cta">{card.ctaLabel}</a>
+              <div className="by-role-card__actions">
+                <button type="button" className="by-role-card__preview" onClick={e => openPreview(card, e)}>{t.previewLabel}</button>
+                <a href={card.href} target="_blank" rel="noopener noreferrer" className="by-role-card__cta">{card.ctaLabel}</a>
+              </div>
             </div>
           ))}
         </div>
       </section>
+
+      {previewProgram && (
+        <div className="by-modal" onClick={closePreview}>
+          <div className="by-modal__bg" />
+          <div className="by-modal__box" role="dialog" aria-modal="true" aria-labelledby="by-modal-title" onClick={e => e.stopPropagation()}>
+            <button type="button" className="by-modal__close" onClick={closePreview} aria-label={t.modalCloseLabel}>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+                <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
+              </svg>
+            </button>
+            <div className="by-modal__tags">
+              {previewProgram.tags.map(tag => (
+                <span key={tag.label} className={`by-role-card__tag${tag.type ? ` by-role-card__tag--${tag.type}` : ''}`}>{tag.label}</span>
+              ))}
+            </div>
+            <h3 className="by-modal__title" id="by-modal-title">{previewProgram.title}</h3>
+            <p className="by-modal__company">{previewProgram.company}</p>
+            <p className="by-modal__why" dangerouslySetInnerHTML={{ __html: previewProgram.why }} />
+            <a href={previewProgram.href} target="_blank" rel="noopener noreferrer" className="by-modal__cta">
+              {previewProgram.ctaLabel}
+              <ExtIcon />
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* BRIDGE CTA */}
       <div className="by-bridge">
@@ -1618,7 +1811,7 @@ export default function BridgeYear() {
                   <button type="submit" className="by-suggest__error-card__retry" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formRetryLabel}</button>
                 </div>
               )}
-              <button className="by-suggest__btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
+              <button className="by-suggest__btn" type="submit" disabled={formLoading || !form.program.trim() || !form.company.trim()}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
             </form>
           )}
           </div>

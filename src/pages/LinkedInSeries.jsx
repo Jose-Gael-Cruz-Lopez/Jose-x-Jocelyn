@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -15,6 +16,16 @@ const EPISODES = [
   { num: '08', lens: 'both', topics: 'internships', tags: ['internships'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'carousel', author: 'both', status: 'coming-soon' }] },
   { num: '09', lens: 'both', topics: 'internships offers on-the-job', tags: ['internships', 'offers', 'on-the-job'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap', author: 'both', status: 'coming-soon' }] },
   { num: '10', lens: 'both', topics: 'internships offers rejection on-the-job', tags: ['internships', 'offers', 'rejection', 'on-the-job'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap-cta', author: 'both', status: 'coming-soon' }] },
+]
+
+// Published LinkedIn posts. Render above the episode grid so the live drops are the first content after the hero.
+const LIVE_POSTS = [
+  {
+    type: 'series-launch',
+    author: 'both',
+    date: '2026-05-05',
+    url: 'https://www.linkedin.com/posts/from-campus-to-career_fromcampustocareer-firstgen-careerdevelopment-activity-7457496865899626496-3eB_',
+  },
 ]
 
 function lensClass(a) {
@@ -93,7 +104,8 @@ const PAGE_CSS = `
   .ls-ep__tag { font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--color-muted);padding:4px 10px;border-radius:999px;background:rgba(26,25,22,.06); }
   .ls-ep__title { font-family:var(--font-display);font-size:clamp(22px,3vw,32px);font-weight:700;color:var(--color-dark);line-height:1.15;letter-spacing:-0.02em;text-wrap:balance;margin-bottom:10px; }
   .ls-ep__summary { font-size:15px;color:var(--color-muted);line-height:1.65;text-wrap:pretty;max-width:640px;margin-bottom:10px; }
-  .ls-ep__why { font-size:13px;color:var(--color-teal);font-weight:500;font-style:italic;font-family:var(--font-serif,var(--font-body));border-left:3px solid rgba(58,125,107,.5);padding-left:12px;line-height:1.55; }
+  .ls-ep__why { font-size:13px;color:var(--color-teal);font-weight:500;font-style:italic;font-family:var(--font-serif,var(--font-body));line-height:1.55; }
+  .ls-ep__why::before { content:'— ';color:rgba(58,125,107,.7);font-style:normal;font-weight:600;margin-right:2px; }
   .ls-ep__posts { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;min-width:0; }
   @media (max-width:960px) { .ls-ep__posts { grid-template-columns:repeat(2,minmax(0,1fr)); } }
   @media (max-width:560px) { .ls-ep__posts { grid-template-columns:1fr; } }
@@ -103,7 +115,6 @@ const PAGE_CSS = `
   .ls-post:hover { transform:translateY(-3px);border-color:rgba(26,25,22,.22);box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 16px 36px -12px rgba(var(--ls-shadow-warm),.22); }
   .ls-post--featured { border-color:rgba(232,168,56,.4);border-width:1.5px;background:linear-gradient(180deg,rgba(232,168,56,.07) 0%,rgba(232,168,56,.02) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.4); }
   .ls-post--featured:hover { border-color:rgba(232,168,56,.55);box-shadow:0 16px 36px -12px rgba(232,168,56,.32),inset 0 1px 0 rgba(255,255,255,.45); }
-  .ls-post--featured::before { content:'';position:absolute;top:-1px;left:18px;width:28px;height:5px;background:var(--color-gold);border-radius:0 0 4px 4px;box-shadow:0 1px 2px rgba(232,168,56,.4); }
   .ls-post__type { font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--color-muted); }
   .ls-post__title { font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--color-dark);line-height:1.4;text-wrap:balance; }
   .ls-post__preview { font-size:13px;color:var(--color-muted);line-height:1.55;flex:1; }
@@ -149,7 +160,7 @@ const PAGE_CSS = `
   .ls-form-btn:active { transform:translateY(0);box-shadow:0 2px 4px -2px rgba(var(--ls-shadow-warm),.18); }
   .ls-form-btn:disabled { opacity:.55;cursor:not-allowed;transform:none;box-shadow:none; }
   .ls-form-error { color:var(--color-accent);font-size:13px;font-weight:600;margin-bottom:10px; }
-  .ls-form-error-card { display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding:14px 16px;background:rgba(179,69,57,.06);border:1px solid rgba(179,69,57,.22);border-left:3px solid var(--color-accent);border-radius:10px; }
+  .ls-form-error-card { display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;padding:14px 16px;background:rgba(179,69,57,.06);border:1px solid rgba(179,69,57,.35);border-radius:10px; }
   .ls-form-error-card__msg { flex:1;font-size:13px;color:var(--color-dark);line-height:1.5;font-weight:500; }
   .ls-form-error-card__msg strong { color:var(--color-accent);font-weight:700; }
   .ls-form-error-card__retry { flex-shrink:0;padding:7px 14px;background:transparent;border:1.5px solid var(--color-accent);color:var(--color-accent);border-radius:999px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:-.005em;cursor:pointer;transition:background .2s,color .2s; }
@@ -174,7 +185,40 @@ const PAGE_CSS = `
   .ls-bridge__cta { display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:var(--color-dark);color:var(--color-cream);border-radius:999px;font-family:var(--font-display);font-size:13px;font-weight:700;letter-spacing:-.005em;text-decoration:none;box-shadow:0 6px 14px -8px rgba(var(--ls-shadow-warm),.4),inset 0 1px 0 rgba(255,255,255,.08);transition:background .25s,transform .22s cubic-bezier(.16,1,.3,1),box-shadow .25s; }
   .ls-bridge__cta:hover { background:var(--color-accent);transform:translateY(-1px);box-shadow:0 12px 22px -10px rgba(179,69,57,.5); }
   .ls-bridge__cta:active { transform:translateY(0); }
-  .ls-bridge__cta::after { content:'↓';font-size:13px;line-height:1; }
+  .ls-bridge__cta svg { transition:transform .22s cubic-bezier(.16,1,.3,1); }
+  .ls-bridge__cta:hover svg { transform:translateY(2px); }
+  /* Live posts — published LinkedIn drops, sit above the episode grid */
+  .ls-live { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 48px;display:flex;flex-direction:column;gap:18px; }
+  .ls-live__head { display:flex;align-items:baseline;gap:14px;flex-wrap:wrap; }
+  .ls-live__heading { font-family:var(--font-display);font-size:clamp(22px,2.6vw,30px);font-weight:700;letter-spacing:-0.02em;color:var(--color-dark);margin:0;text-wrap:balance; }
+  .ls-live__count { font-size:11px;color:var(--color-muted);font-variant-numeric:tabular-nums;letter-spacing:.08em;text-transform:uppercase;font-weight:700; }
+  .ls-live__card { display:block;position:relative;overflow:hidden;padding:clamp(28px,3.6vw,44px);background:linear-gradient(180deg,rgba(232,168,56,.10) 0%,rgba(232,168,56,.04) 100%);border:1px solid rgba(232,168,56,.32);border-radius:18px;color:inherit;text-decoration:none;transition:border-color .3s var(--ease-out),transform .3s var(--ease-out),box-shadow .3s var(--ease-out); }
+  .ls-live__card:hover { border-color:rgba(232,168,56,.55);transform:translateY(-2px);box-shadow:0 18px 40px -20px rgba(var(--ls-shadow-warm),.32); }
+  .ls-live__card:active { transform:translateY(0); }
+  .ls-live__card:focus-visible { outline:2px solid var(--color-gold);outline-offset:4px; }
+  .ls-live__badges { display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap; }
+  .ls-live__live-pill { display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent);padding:4px 10px;border-radius:999px;background:rgba(179,69,57,.10);border:1px solid rgba(179,69,57,.28); }
+  .ls-live__live-pill::before { content:'';width:6px;height:6px;border-radius:50%;background:var(--color-accent);animation:ls-pulse 2s ease-in-out infinite; }
+  @keyframes ls-pulse { 0%,100% { opacity:1; } 50% { opacity:.35; } }
+  .ls-live__kicker { font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--color-muted); }
+  .ls-live__date { font-size:11px;color:var(--color-muted);font-variant-numeric:tabular-nums;letter-spacing:.04em;margin-left:auto; }
+  .ls-live__title { font-family:var(--font-display);font-size:clamp(22px,3.2vw,34px);font-weight:700;line-height:1.12;letter-spacing:-0.022em;color:var(--color-dark);margin:0 0 14px;max-width:30ch;text-wrap:balance; }
+  .ls-live__preview { font-size:clamp(14px,1.3vw,16px);line-height:1.6;color:var(--color-muted);margin:0 0 24px;max-width:70ch;text-wrap:pretty; }
+  .ls-live__footer { display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap; }
+  .ls-live__cta { display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:var(--color-dark);color:var(--color-cream);border-radius:999px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:.02em;text-transform:uppercase;box-shadow:0 4px 10px -4px rgba(var(--ls-shadow-warm),.35),inset 0 1px 0 rgba(255,255,255,.08);transition:background .25s,box-shadow .25s; }
+  .ls-live__card:hover .ls-live__cta { background:var(--color-accent);box-shadow:0 10px 22px -10px rgba(179,69,57,.5); }
+  .ls-live__cta svg { transition:transform .22s cubic-bezier(.16,1,.3,1); }
+  .ls-live__card:hover .ls-live__cta svg { transform:translate(2px,-2px); }
+  @media (max-width:560px) {
+    .ls-live__date { margin-left:0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ls-live__live-pill::before { animation:none; }
+    .ls-live__card,.ls-live__cta,.ls-live__cta svg { transition:none !important; }
+    .ls-live__card:hover { transform:none !important; }
+    .ls-live__card:hover .ls-live__cta svg { transform:none !important; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .ls-post,.ls-filter,.ls-form-btn,.ls-form-input,.ls-form-select,.ls-form-textarea,
     .ls-form-error-card__retry,.ls-toc__chip,.ls-bridge__cta { transition:none !important; }
@@ -225,8 +269,18 @@ const TAG_KEY_MAP = {
 export default function LinkedInSeries() {
   const t = useT('linkedInSeries')
 
-  const [filterLens, setFilterLens] = useState('')   // '' | 'jose' | 'jocelyn' | 'both'
-  const [filterTopic, setFilterTopic] = useState('') // '' | 'internships' | 'offers' | 'rejection' | 'on-the-job'
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filterLens = searchParams.get('lens') || ''   // '' | 'jose' | 'jocelyn' | 'both'
+  const filterTopic = searchParams.get('topic') || '' // '' | 'internships' | 'offers' | 'rejection' | 'on-the-job'
+
+  const updateFilter = (key, value) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      if (value) next.set(key, value)
+      else next.delete(key)
+      return next
+    }, { replace: true })
+  }
   const [topic, setTopic] = useState('')
   const [email, setEmail] = useState('')
   const [category, setCategory] = useState('')
@@ -322,19 +376,58 @@ export default function LinkedInSeries() {
         </div>
       </header>
 
+      {LIVE_POSTS.length > 0 && (
+        <section className="ls-live" aria-labelledby="ls-live-heading">
+          <div className="ls-live__head">
+            <h2 className="ls-live__heading" id="ls-live-heading">{t.livePostsHeading}</h2>
+            <span className="ls-live__count">{LIVE_POSTS.length} {LIVE_POSTS.length === 1 ? t.livePostsCountSingular : t.livePostsCountPlural}</span>
+          </div>
+          {LIVE_POSTS.map((p, i) => {
+            const data = t.livePosts?.[i] ?? {}
+            return (
+              <a
+                key={i}
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ls-live__card"
+              >
+                <div className="ls-live__badges">
+                  <span className="ls-live__live-pill" aria-label={t.statusLive}>{t.statusLive}</span>
+                  {data.kicker && <span className="ls-live__kicker">{data.kicker}</span>}
+                  {data.dateLabel && <span className="ls-live__date">{data.dateLabel}</span>}
+                </div>
+                <h3 className="ls-live__title">{data.title}</h3>
+                <p className="ls-live__preview">{data.preview}</p>
+                <div className="ls-live__footer">
+                  <span className={`ls-post__author ${authorClass(p.author)}`}>{getAuthorLabel(p.author)}</span>
+                  <span className="ls-live__cta">
+                    {t.liveReadOnLinkedIn}
+                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M7 17 17 7"/>
+                      <polyline points="7 7 17 7 17 17"/>
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            )
+          })}
+        </section>
+      )}
+
       <div className="ls-controls">
         <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel}>
           <button
             className={`ls-filter${noFilters ? ' ls-filter--active' : ''}`}
             aria-pressed={noFilters}
-            onClick={() => { setFilterLens(''); setFilterTopic('') }}
+            onClick={() => setSearchParams({}, { replace: true })}
           >{t.filterAll}</button>
           {LENS_OPTIONS.map(({ v, label }) => (
             <button
               key={v}
               className={`ls-filter${filterLens === v ? ' ls-filter--active' : ''}`}
               aria-pressed={filterLens === v}
-              onClick={() => setFilterLens(filterLens === v ? '' : v)}
+              onClick={() => updateFilter('lens', filterLens === v ? '' : v)}
             >{label}</button>
           ))}
           <span className="ls-filters__rule" aria-hidden="true" />
@@ -343,7 +436,7 @@ export default function LinkedInSeries() {
               key={v}
               className={`ls-filter${filterTopic === v ? ' ls-filter--active' : ''}`}
               aria-pressed={filterTopic === v}
-              onClick={() => setFilterTopic(filterTopic === v ? '' : v)}
+              onClick={() => updateFilter('topic', filterTopic === v ? '' : v)}
             >{label}</button>
           ))}
         </div>
@@ -419,7 +512,13 @@ export default function LinkedInSeries() {
       <div className="ls-bridge">
         <div className="ls-bridge__inner">
           <p className="ls-bridge__copy">{t.bridgeCopyPrefix} <em>{t.bridgeCopyEm}</em></p>
-          <a href="#suggest" className="ls-bridge__cta">{t.bridgeCtaLabel}</a>
+          <a href="#suggest" className="ls-bridge__cta">
+            {t.bridgeCtaLabel}
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <polyline points="6 13 12 19 18 13"/>
+            </svg>
+          </a>
         </div>
       </div>
 
@@ -548,7 +647,7 @@ export default function LinkedInSeries() {
                   <button type="submit" className="ls-form-error-card__retry" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formRetryLabel}</button>
                 </div>
               )}
-              <button className="ls-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
+              <button className="ls-form-btn" type="submit" disabled={formLoading || !topic.trim()}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
             </form>
           )}
         </div>
