@@ -555,7 +555,7 @@ export default function CoffeeChat() {
         .cc-card-skel__id-line { height: 10px; background: rgba(26,25,22,.06); border-radius: 4px; }
         .cc-card-skel__id-line--w50 { width: 50%; }
         .cc-card-skel__badge { width: 60px; height: 18px; background: rgba(26,25,22,.05); border-radius: 999px; flex-shrink: 0; }
-        .cc-card-skel__topic { padding: 14px 16px; background: rgba(255,255,255,.4); border-radius: 10px; border-left: 3px solid rgba(179,69,57,.18); display: flex; flex-direction: column; gap: 8px; }
+        .cc-card-skel__topic { padding: 14px 16px; background: linear-gradient(180deg, rgba(179,69,57,.05) 0%, rgba(255,255,255,.4) 60%); border-radius: 10px; border: 1px solid rgba(179,69,57,.16); display: flex; flex-direction: column; gap: 8px; }
         .cc-card-skel__topic-line { height: 10px; background: rgba(26,25,22,.05); border-radius: 4px; }
         .cc-card-skel__topic-line--w70 { width: 70%; }
         .cc-card-skel__tags { display: flex; gap: 6px; }
