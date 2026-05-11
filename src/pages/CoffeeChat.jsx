@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -166,11 +166,24 @@ function dbProfileToCard(row) {
 
 export default function CoffeeChat() {
   const t = useT('coffeeChat')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filterRole = searchParams.get('role') || ''
+  const filterFunc = searchParams.get('func') || ''
+  const filterStage = searchParams.get('stage') || ''
+  const filterIdentity = searchParams.get('identity') || ''
+  const setSearchParam = useCallback((key, value) => {
+    const next = new URLSearchParams(searchParams)
+    if (!value) next.delete(key)
+    else next.set(key, value)
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
+  const setFilterRole = (v) => setSearchParam('role', v)
+  const setFilterFunc = (v) => setSearchParam('func', v)
+  const setFilterStage = (v) => setSearchParam('stage', v)
+  const setFilterIdentity = (v) => setSearchParam('identity', v)
   const [search, setSearch] = useState('')
-  const [filterRole, setFilterRole] = useState('')
-  const [filterFunc, setFilterFunc] = useState('')
-  const [filterStage, setFilterStage] = useState('')
-  const [filterIdentity, setFilterIdentity] = useState('')
+  const searchRef = useRef(null)
+  const progressRef = useRef(null)
 
   const [modalOpen, setModalOpen] = useState(false)
   const [modalName, setModalName] = useState('')
@@ -196,6 +209,43 @@ export default function CoffeeChat() {
   const [profilesLoading, setProfilesLoading] = useState(true)
   const [profilesError, setProfilesError] = useState(false)
   const ccModalRef = useRef(null)
+
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const el = progressRef.current
+      if (!el) return
+      const doc = document.documentElement
+      const max = (doc.scrollHeight - doc.clientHeight) || 1
+      const ratio = Math.min(1, Math.max(0, window.scrollY / max))
+      el.style.transform = 'scaleX(' + ratio + ')'
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      if (searchRef.current) {
+        e.preventDefault()
+        searchRef.current.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   useEffect(() => {
     supabase.from('coffee_chat_profiles')
@@ -333,6 +383,7 @@ export default function CoffeeChat() {
       signoffSub={t.signoffSub}
       signoffCta={t.signoffCta}
     >
+      <div ref={progressRef} className="cc-scroll-progress" aria-hidden="true" />
       <style>{`
         html, body { background: var(--color-cream); }
         .cc-scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-gold) 100%); z-index: 1000; pointer-events: none; transform: scaleX(0); transform-origin: left; transition: transform .12s linear; will-change: transform; }
@@ -664,6 +715,7 @@ export default function CoffeeChat() {
             </svg>
             <input
               type="text"
+              ref={searchRef}
               className="cc-search"
               placeholder={t.searchPlaceholder}
               aria-label={t.searchAriaLabel}
