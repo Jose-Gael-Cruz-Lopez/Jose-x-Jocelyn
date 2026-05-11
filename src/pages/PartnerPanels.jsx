@@ -492,6 +492,13 @@ export default function PartnerPanels() {
           transition: transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s, border-color .22s;
         }
         .pp-panel-card:hover { transform: translateY(-3px); border-color: rgba(26,25,22,.22); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 32px -12px rgba(var(--pp-shadow-warm),.22); }
+        .pp-upcoming__grid > .pp-panel-card,
+        .pp-archive__list > .pp-archive-card { animation: pp-card-in .55s cubic-bezier(.16,1,.3,1) backwards; animation-delay: calc(var(--pp-i, 0) * 50ms); }
+        @keyframes pp-card-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @media (prefers-reduced-motion: reduce) {
+          .pp-upcoming__grid > .pp-panel-card,
+          .pp-archive__list > .pp-archive-card { animation: none !important; }
+        }
         .pp-panel-card__date-badge {
           display: inline-flex; align-items: center; gap: 6px;
           background: rgba(232,168,56,.12); color: var(--color-gold);
@@ -996,8 +1003,8 @@ export default function PartnerPanels() {
           <p className="pp-section-body">{t.upcomingBody} <strong>{t.upcomingBodyStrong}</strong></p>
         </div>
         <div className="pp-upcoming__grid">
-          {UPCOMING_PANELS.map(panel => (
-            <article key={panel.id} className="pp-panel-card">
+          {UPCOMING_PANELS.map((panel, i) => (
+            <article key={panel.id} className="pp-panel-card" style={{ '--pp-i': i % 12 }}>
               <span className="pp-panel-card__date-badge">{panel.date}</span>
               <h3 className="pp-panel-card__title">{panel.title}</h3>
               <p className="pp-panel-card__desc">{panel.desc}</p>
@@ -1046,8 +1053,8 @@ export default function PartnerPanels() {
           {filteredArchive.length === 0 && (
             <p style={{ color: 'var(--color-muted)', fontSize: 15, padding: '40px 0' }}>{t.archiveEmptyState}</p>
           )}
-          {filteredArchive.map(card => (
-            <article key={card.id} className="pp-archive-card">
+          {filteredArchive.map((card, i) => (
+            <article key={card.id} className="pp-archive-card" style={{ '--pp-i': i % 12 }}>
               <div className="pp-archive-card__main">
                 <div>
                   <p className="pp-archive-card__date">{card.date}</p>
