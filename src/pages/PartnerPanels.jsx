@@ -231,20 +231,30 @@ export default function PartnerPanels() {
 
   async function submitPanelist(e) {
     e.preventDefault()
-    if (!panelistForm.name || !panelistForm.email || !panelistForm.linkedin || !panelistForm.role || !panelistForm.topic || !panelistForm.interest) {
-      setPanelistError(t.panelistErrorRequired)
+    const errors = { name: '', email: '', linkedin: '', role: '', topic: '', interest: '' }
+    if (!panelistForm.name.trim()) errors.name = t.panelistErrorName
+    if (!panelistForm.email.trim()) errors.email = t.panelistErrorEmail
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(panelistForm.email.trim())) errors.email = t.panelistErrorEmailFormat
+    if (!panelistForm.linkedin.trim()) errors.linkedin = t.panelistErrorLinkedin
+    if (!panelistForm.role.trim()) errors.role = t.panelistErrorRole
+    if (!panelistForm.topic) errors.topic = t.panelistErrorTopic
+    if (!panelistForm.interest) errors.interest = t.panelistErrorInterest
+    if (Object.values(errors).some(Boolean)) {
+      setPanelistFieldErrors(errors)
+      setPanelistError('')
       return
     }
+    setPanelistFieldErrors({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '' })
     setPanelistLoading(true)
     setPanelistError('')
     const { error } = await supabase.from('panelists').insert({
-      name: panelistForm.name,
-      email: panelistForm.email,
-      linkedin_url: panelistForm.linkedin,
-      role_title: panelistForm.role,
+      name: panelistForm.name.trim(),
+      email: panelistForm.email.trim(),
+      linkedin_url: panelistForm.linkedin.trim(),
+      role_title: panelistForm.role.trim(),
       topic: panelistForm.topic,
       interested_in: panelistForm.interest,
-      notes: panelistForm.notes || null,
+      notes: panelistForm.notes.trim() || null,
     })
     setPanelistLoading(false)
     if (error) {
@@ -1232,38 +1242,49 @@ export default function PartnerPanels() {
                 <div className="pp-form-row pp-form-row-2">
                   <div>
                     <label className="pp-form-label" htmlFor="plName">{t.panelistLabelName} <span>{t.panelistLabelNameRequired}</span></label>
-                    <input className="pp-form-input" type="text" id="plName" placeholder={t.panelistPlaceholderName} value={panelistForm.name} onChange={e => setPanelistForm(f => ({ ...f, name: e.target.value }))} />
+                    <input className={`pp-form-input${panelistFieldErrors.name ? ' is-invalid' : ''}`} type="text" id="plName" placeholder={t.panelistPlaceholderName} value={panelistForm.name} onChange={e => setPanelistField('name', e.target.value)} aria-invalid={!!panelistFieldErrors.name} aria-describedby={panelistFieldErrors.name ? 'plName-error' : undefined} />
+                    {panelistFieldErrors.name && <span id="plName-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.name}</span>}
                   </div>
                   <div>
                     <label className="pp-form-label" htmlFor="plEmail">{t.panelistLabelEmail} <span>{t.panelistLabelEmailRequired}</span></label>
-                    <input className="pp-form-input" type="email" id="plEmail" placeholder={t.panelistPlaceholderEmail} value={panelistForm.email} onChange={e => setPanelistForm(f => ({ ...f, email: e.target.value }))} />
+                    <input className={`pp-form-input${panelistFieldErrors.email ? ' is-invalid' : ''}`} type="email" id="plEmail" placeholder={t.panelistPlaceholderEmail} value={panelistForm.email} onChange={e => setPanelistField('email', e.target.value)} onBlur={e => { const v = e.target.value.trim(); if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) setPanelistFieldErrors(s => ({ ...s, email: t.panelistErrorEmailFormat })) }} aria-invalid={!!panelistFieldErrors.email} aria-describedby={panelistFieldErrors.email ? 'plEmail-error' : undefined} />
+                    {panelistFieldErrors.email && <span id="plEmail-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.email}</span>}
                   </div>
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="plLinkedIn">{t.panelistLabelLinkedIn} <span>{t.panelistLabelLinkedInRequired}</span></label>
-                  <input className="pp-form-input" type="url" id="plLinkedIn" placeholder={t.panelistPlaceholderLinkedIn} value={panelistForm.linkedin} onChange={e => setPanelistForm(f => ({ ...f, linkedin: e.target.value }))} />
+                  <input className={`pp-form-input${panelistFieldErrors.linkedin ? ' is-invalid' : ''}`} type="url" id="plLinkedIn" placeholder={t.panelistPlaceholderLinkedIn} value={panelistForm.linkedin} onChange={e => setPanelistField('linkedin', e.target.value)} aria-invalid={!!panelistFieldErrors.linkedin} aria-describedby={panelistFieldErrors.linkedin ? 'plLinkedIn-error' : undefined} />
+                  {panelistFieldErrors.linkedin && <span id="plLinkedIn-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.linkedin}</span>}
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="plRole">{t.panelistLabelRole} <span>{t.panelistLabelRoleRequired}</span></label>
-                  <input className="pp-form-input" type="text" id="plRole" placeholder={t.panelistPlaceholderRole} value={panelistForm.role} onChange={e => setPanelistForm(f => ({ ...f, role: e.target.value }))} />
+                  <input className={`pp-form-input${panelistFieldErrors.role ? ' is-invalid' : ''}`} type="text" id="plRole" placeholder={t.panelistPlaceholderRole} value={panelistForm.role} onChange={e => setPanelistField('role', e.target.value)} aria-invalid={!!panelistFieldErrors.role} aria-describedby={panelistFieldErrors.role ? 'plRole-error' : undefined} />
+                  {panelistFieldErrors.role && <span id="plRole-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.role}</span>}
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="plTopic">{t.panelistLabelTopic} <span>{t.panelistLabelTopicRequired}</span></label>
-                  <textarea className="pp-form-textarea" id="plTopic" placeholder={t.panelistPlaceholderTopic} value={panelistForm.topic} onChange={e => setPanelistForm(f => ({ ...f, topic: e.target.value }))} />
+                  <textarea className={`pp-form-textarea${panelistFieldErrors.topic ? ' is-invalid' : ''}`} id="plTopic" placeholder={t.panelistPlaceholderTopic} value={panelistForm.topic} onChange={e => setPanelistField('topic', e.target.value)} aria-invalid={!!panelistFieldErrors.topic} aria-describedby={panelistFieldErrors.topic ? 'plTopic-error' : undefined} />
+                  {panelistFieldErrors.topic && <span id="plTopic-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.topic}</span>}
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="plInterest">{t.panelistLabelInterest} <span>{t.panelistLabelInterestRequired}</span></label>
-                  <select className="pp-form-select" id="plInterest" value={panelistForm.interest} onChange={e => setPanelistForm(f => ({ ...f, interest: e.target.value }))}>
+                  <select className={`pp-form-select${panelistFieldErrors.interest ? ' is-invalid' : ''}`} id="plInterest" value={panelistForm.interest} onChange={e => setPanelistField('interest', e.target.value)} aria-invalid={!!panelistFieldErrors.interest} aria-describedby={panelistFieldErrors.interest ? 'plInterest-error' : undefined}>
                     {t.panelistInterestOptions.map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
                   </select>
+                  {panelistFieldErrors.interest && <span id="plInterest-error" className="pp-form-row__error" role="alert">{panelistFieldErrors.interest}</span>}
                 </div>
                 <div className="pp-form-row">
                   <label className="pp-form-label" htmlFor="plNotes">{t.panelistLabelNotes}</label>
-                  <textarea className="pp-form-textarea" id="plNotes" placeholder={t.panelistPlaceholderNotes} value={panelistForm.notes} onChange={e => setPanelistForm(f => ({ ...f, notes: e.target.value }))} />
+                  <textarea className="pp-form-textarea" id="plNotes" placeholder={t.panelistPlaceholderNotes} value={panelistForm.notes} onChange={e => setPanelistField('notes', e.target.value)} />
                 </div>
-                {panelistError && <p role="alert" style={{ color: 'var(--color-cream)', fontSize: 13, marginBottom: 10, opacity: 0.85 }}>{panelistError}</p>}
+                {panelistError && (
+                  <div role="alert" className="pp-form-error-card pp-form-error-card--dark">
+                    <span className="pp-form-error-card__msg"><strong>{t.panelistErrorLabel}</strong> {panelistError}</span>
+                    <button type="submit" className="pp-form-error-card__retry" disabled={panelistLoading}>{panelistLoading ? t.panelistBtnSubmitting : t.panelistRetryLabel}</button>
+                  </div>
+                )}
                 <button className="pp-form-btn" type="submit" disabled={panelistLoading}>{panelistLoading ? t.panelistBtnSubmitting : t.panelistBtnSubmit}</button>
               </form>
             )}
