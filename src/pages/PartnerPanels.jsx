@@ -753,37 +753,54 @@ export default function PartnerPanels() {
 
         @media (max-width: 740px) { .pp-panelist__inner { grid-template-columns: 1fr; gap: 36px; } }
 
-        /* ECOSYSTEM */
-        .pp-eco { background: var(--color-dark); padding: 80px clamp(20px,5vw,56px); }
-        .pp-eco__inner { max-width: 1040px; margin: 0 auto; }
-        .pp-eco__kicker {
-          font-size: 11px; font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: rgba(242,228,206,.4); margin-bottom: 10px;
+        /* ECOSYSTEM (cream surface — inverted from dark to break the cascading dark stripes at page bottom; matches CC pattern) */
+        .pp-eco {
+          background: linear-gradient(180deg, rgba(242,228,206,.55) 0%, rgba(242,228,206,.25) 100%);
+          padding: 88px clamp(20px,5vw,56px); position: relative; overflow: hidden;
         }
+        .pp-eco__inner { max-width: 1040px; margin: 0 auto; position: relative; }
+        .pp-eco__kicker {
+          font-size: 11px; font-weight: 800; letter-spacing: .2em;
+          text-transform: uppercase; color: var(--color-accent); margin-bottom: 14px;
+          display: inline-flex; align-items: center; gap: 10px;
+        }
+        .pp-eco__kicker::after { content: ''; width: 24px; height: 1px; background: var(--color-accent); opacity: .5; }
         .pp-eco__title {
           font-family: var(--font-display);
           font-size: clamp(20px,3vw,30px); font-weight: 700;
-          color: var(--color-cream); margin-bottom: 8px; line-height: 1.25;
+          color: var(--color-dark); margin-bottom: 8px; line-height: 1.25;
+          letter-spacing: -.02em;
         }
         .pp-eco__body {
-          font-size: clamp(14px,1.6vw,15px); color: rgba(242,228,206,.55);
+          font-size: clamp(14px,1.6vw,15px); color: rgba(26,25,22,.7);
           line-height: 1.75; max-width: 680px; margin-bottom: 36px;
         }
-        .pp-eco__body strong { color: var(--color-gold); font-weight: 600; }
+        .pp-eco__body strong { color: var(--color-gold-dark); font-weight: 600; }
         .pp-eco__grid {
           display: grid;
           grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
           gap: 14px;
         }
         .pp-eco__link {
-          background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09);
-          border-radius: 12px; padding: 18px 20px; text-decoration: none;
-          transition: background .2s, transform .2s cubic-bezier(.16,1,.3,1);
-          display: block;
+          background: rgba(255,255,255,.6); border: 1px solid rgba(26,25,22,.08);
+          border-radius: 14px; padding: 22px 24px; text-decoration: none;
+          transition: background .25s, border-color .25s, transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s;
+          display: block; position: relative;
         }
-        .pp-eco__link:hover { background: rgba(255,255,255,.09); transform: translateY(-2px); }
-        .pp-eco__link-title { font-family: var(--font-display); font-size: 14px; font-weight: 600; color: var(--color-cream); margin-bottom: 4px; }
-        .pp-eco__link-desc { font-size: 12px; color: rgba(242,228,206,.45); line-height: 1.5; }
+        .pp-eco__link::after {
+          content: '→'; position: absolute; top: 22px; right: 22px;
+          font-size: 14px; color: var(--color-accent);
+          opacity: 0; transform: translateX(-4px);
+          transition: opacity .25s, transform .25s cubic-bezier(.16,1,.3,1);
+        }
+        .pp-eco__link:hover {
+          background: rgba(255,255,255,.9); border-color: rgba(179,69,57,.22);
+          transform: translateY(-2px);
+          box-shadow: 0 12px 24px -16px rgba(63,42,28,.22);
+        }
+        .pp-eco__link:hover::after { opacity: 1; transform: translateX(0); }
+        .pp-eco__link-title { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--color-dark); margin-bottom: 6px; letter-spacing: -.005em; }
+        .pp-eco__link-desc { font-size: 12px; color: rgba(26,25,22,.6); line-height: 1.55; }
 
         /* CLOSING */
         .pp-closing { background: var(--color-accent); padding: 64px clamp(20px,5vw,56px); text-align: center; }
