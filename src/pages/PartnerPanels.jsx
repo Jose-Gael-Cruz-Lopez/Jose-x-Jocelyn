@@ -277,6 +277,18 @@ export default function PartnerPanels() {
         }
         .pp-btn-secondary:hover { border-color: var(--color-dark); color: var(--color-accent); transform: translateY(-1px); }
 
+        /* DISABLED / COMING-SOON CTA STATE */
+        .pp-cta--disabled,
+        a.pp-cta--disabled,
+        button.pp-cta--disabled {
+          opacity: .55; cursor: not-allowed; pointer-events: none;
+          background: transparent !important;
+          color: var(--color-muted) !important;
+          border-color: rgba(0,0,0,.12) !important;
+          box-shadow: none !important;
+        }
+        .pp-cta--disabled::after { content: ' · soon'; font-size: .85em; opacity: .7; letter-spacing: 0; }
+
         /* HERO */
         .pp-hero {
           padding: 120px clamp(20px,5vw,56px) 64px;
@@ -953,9 +965,9 @@ export default function PartnerPanels() {
               <div className="pp-featured-card__panelist">A recruiter focused on early-career access and inclusion</div>
             </div>
             <div className="pp-featured-card__actions">
-              <a href="#" className="pp-btn-primary">{t.featuredBtnRsvp}</a>
+              <a href="#" className="pp-btn-primary pp-cta--disabled" aria-disabled="true" tabIndex={-1}>{t.featuredBtnRsvp}</a>
               <button className="pp-btn-secondary" onClick={() => addToCalendar('Breaking Into Tech Without a Traditional Path', '2026-05-08T19:00', '2026-05-08T20:30')}>{t.featuredBtnCalendar}</button>
-              <a href="#" className="pp-btn-secondary">{t.featuredBtnFlyer}</a>
+              <a href="#" className="pp-btn-secondary pp-cta--disabled" aria-disabled="true" tabIndex={-1}>{t.featuredBtnFlyer}</a>
             </div>
             <p className="pp-featured-card__note">{t.featuredNote}</p>
           </div>
@@ -1035,9 +1047,9 @@ export default function PartnerPanels() {
                 ))}
               </div>
               <div className="pp-panel-card__actions">
-                <a href="#" className="pp-panel-card__cta-primary">{t[panel.ctaKey]}</a>
+                <a href="#" className="pp-panel-card__cta-primary pp-cta--disabled" aria-disabled="true" tabIndex={-1}>{t[panel.ctaKey]}</a>
                 <button className="pp-panel-card__cta-sm" onClick={() => addToCalendar(panel.title, panel.calStart, panel.calEnd)}>{t.upcomingBtnCalendar}</button>
-                <a href="#" className="pp-panel-card__cta-sm">{t.upcomingBtnFlyer}</a>
+                <a href="#" className="pp-panel-card__cta-sm pp-cta--disabled" aria-disabled="true" tabIndex={-1}>{t.upcomingBtnFlyer}</a>
               </div>
             </article>
           ))}
@@ -1075,8 +1087,8 @@ export default function PartnerPanels() {
                   </div>
                 </div>
                 <div className="pp-archive-card__actions">
-                  <a href="#" className="pp-archive-card__cta pp-archive-card__cta--watch">{t.archiveBtnWatch}</a>
-                  <a href="#" className="pp-archive-card__cta pp-archive-card__cta--flyer">{t.archiveBtnFlyer}</a>
+                  <a href="#" className="pp-archive-card__cta pp-archive-card__cta--watch pp-cta--disabled" aria-disabled="true" tabIndex={-1}>{t.archiveBtnWatch}</a>
+                  <a href="#" className="pp-archive-card__cta pp-archive-card__cta--flyer pp-cta--disabled" aria-disabled="true" tabIndex={-1}>{t.archiveBtnFlyer}</a>
                   <button
                     className="pp-archive-card__cta pp-archive-card__cta--takeaways"
                     aria-expanded={openTakeaway === card.id}
