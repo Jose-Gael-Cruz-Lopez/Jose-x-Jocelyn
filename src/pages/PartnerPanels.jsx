@@ -556,17 +556,26 @@ export default function PartnerPanels() {
         .pp-topics__head { margin-bottom: 28px; }
         .pp-topics__chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
         .pp-topic-chip {
-          display: inline-flex; align-items: center; gap: 6px;
-          padding: 16px 18px;
+          display: inline-flex; flex-direction: column; align-items: flex-start; gap: 1px;
+          padding: 9px 16px;
           border: 1.5px solid rgba(0,0,0,.1);
-          border-radius: 24px;
-          font-family: var(--font-body); font-size: 13px; font-weight: 600;
+          border-radius: 14px;
+          font-family: var(--font-body);
           color: var(--color-muted); cursor: pointer;
-          transition: border-color .18s, color .18s, background .18s;
+          transition: border-color .18s, color .18s, background .18s, transform .15s cubic-bezier(.16,1,.3,1);
           user-select: none;
+          text-align: left; min-width: 0;
         }
-        .pp-topic-chip:hover { border-color: var(--color-dark); color: var(--color-dark); }
+        .pp-topic-chip:hover { border-color: var(--color-dark); color: var(--color-dark); transform: translateY(-1px); }
+        .pp-topic-chip:active { transform: translateY(0); }
         .pp-topic-chip.active { border-color: var(--color-navy); background: var(--color-navy); color: var(--color-cream); }
+        .pp-topic-chip__label { font-size: 13px; font-weight: 700; letter-spacing: -.005em; line-height: 1.2; }
+        .pp-topic-chip__desc { font-size: 10.5px; font-weight: 500; opacity: .72; line-height: 1.2; letter-spacing: .005em; }
+        .pp-topic-chip.active .pp-topic-chip__desc { opacity: .85; }
+        @media (prefers-reduced-motion: reduce) {
+          .pp-topic-chip { transition: none !important; }
+          .pp-topic-chip:hover { transform: none !important; }
+        }
         .pp-topics__note {
           font-size: clamp(14px,1.6vw,15px); color: var(--color-muted); line-height: 1.7;
           max-width: 640px; font-style: italic; margin-top: 4px;
