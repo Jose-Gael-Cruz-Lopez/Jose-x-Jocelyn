@@ -67,12 +67,15 @@ const PAGE_CSS = `
   }
   .ls-controls { max-width:1240px;margin:0 auto;padding:0 clamp(20px,5vw,56px) 40px; }
   .ls-filters { display:flex;flex-wrap:wrap;gap:8px; }
-  .ls-filter { padding:11px 18px;border-radius:999px;font-family:var(--font-display);font-size:12px;font-weight:700;letter-spacing:-.005em;cursor:pointer;border:1.5px solid rgba(26,25,22,.1);background:rgba(255,255,255,.55);color:var(--color-muted);transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .15s ease,box-shadow .2s ease; }
+  .ls-filter { padding:9px 16px;border-radius:14px;font-family:var(--font-display);letter-spacing:-.005em;cursor:pointer;border:1.5px solid rgba(26,25,22,.1);background:rgba(255,255,255,.55);color:var(--color-muted);transition:background-color .2s ease,color .2s ease,border-color .2s ease,transform .15s ease,box-shadow .2s ease;display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:left;min-width:0; }
   .ls-filter:hover { color:var(--color-dark);border-color:rgba(26,25,22,.22);background:rgba(255,255,255,.85);transform:translateY(-1px);box-shadow:0 4px 12px -4px rgba(var(--ls-shadow-warm),.1); }
   .ls-filter:active { transform:translateY(0);box-shadow:0 1px 2px rgba(var(--ls-shadow-warm),.06); }
   .ls-filter--active { background:var(--color-dark);color:var(--color-cream);border-color:var(--color-dark);box-shadow:0 8px 18px -8px rgba(var(--ls-shadow-warm),.32),inset 0 1px 0 rgba(255,255,255,.08); }
   .ls-filter--active:hover { background:var(--color-dark);color:var(--color-cream); }
-  .ls-filter:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 999px; }
+  .ls-filter:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 14px; }
+  .ls-filter__label { font-size:12px;font-weight:700;letter-spacing:-.005em;line-height:1.2; }
+  .ls-filter__desc { font-size:10.5px;font-weight:500;opacity:.72;line-height:1.2;letter-spacing:.005em; }
+  .ls-filter--active .ls-filter__desc { opacity:.85; }
   .ls-filters__group { display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center; }
   .ls-filters__label { font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--color-muted);margin-right:6px; }
   .ls-filters__rule { width:1px;align-self:stretch;background:rgba(26,25,22,.1);margin:6px 8px; }
