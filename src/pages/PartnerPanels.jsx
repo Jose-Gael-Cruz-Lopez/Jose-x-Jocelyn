@@ -658,6 +658,41 @@ export default function PartnerPanels() {
           max-width: 640px; font-style: italic; margin-top: 4px;
         }
 
+        /* FAQ (side-by-side list — not an accordion, per audit rules) */
+        .pp-faq {
+          max-width: 1040px; margin: 0 auto;
+          padding: 80px clamp(20px,5vw,56px) 88px;
+        }
+        .pp-faq__head { margin-bottom: 32px; max-width: 640px; }
+        .pp-faq__title {
+          font-family: var(--font-display);
+          font-size: clamp(24px,3.4vw,36px); font-weight: 700;
+          color: var(--color-dark); line-height: 1.15; letter-spacing: -.015em;
+          margin-bottom: 6px;
+        }
+        .pp-faq__grid {
+          display: grid; grid-template-columns: 1fr 1fr;
+          column-gap: 48px; row-gap: 28px;
+        }
+        .pp-faq__item { display: flex; flex-direction: column; gap: 8px; }
+        .pp-faq__q {
+          font-family: var(--font-display);
+          font-size: 16px; font-weight: 700; color: var(--color-dark);
+          line-height: 1.35; letter-spacing: -.005em;
+          display: flex; gap: 10px; align-items: flex-start;
+        }
+        .pp-faq__q::before {
+          content: ''; flex-shrink: 0; width: 4px; height: 18px;
+          background: var(--color-gold); border-radius: 999px; margin-top: 3px;
+        }
+        .pp-faq__a {
+          font-size: 14px; color: var(--color-muted);
+          line-height: 1.7; padding-left: 14px;
+        }
+        @media (max-width: 720px) {
+          .pp-faq__grid { grid-template-columns: 1fr; row-gap: 24px; }
+        }
+
         /* SUGGEST FORM */
         .pp-suggest {
           max-width: 1040px; margin: 0 auto;
@@ -1145,6 +1180,24 @@ export default function PartnerPanels() {
           ))}
         </div>
         <p className="pp-topics__note">{t.topicsNote}</p>
+      </section>
+
+      <hr className="pp-divider" />
+
+      {/* FAQ */}
+      <section className="pp-faq" id="faq">
+        <div className="pp-faq__head">
+          <p className="pp-kicker">{t.faqKicker}</p>
+          <h2 className="pp-faq__title">{t.faqTitle}</h2>
+        </div>
+        <div className="pp-faq__grid">
+          {(t.faqItems || []).map(item => (
+            <div key={item.q} className="pp-faq__item">
+              <h3 className="pp-faq__q">{item.q}</h3>
+              <p className="pp-faq__a">{item.a}</p>
+            </div>
+          ))}
+        </div>
       </section>
 
       <hr className="pp-divider" />
