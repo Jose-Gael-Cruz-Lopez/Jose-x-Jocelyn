@@ -501,10 +501,8 @@ export default function PartnerPanels() {
         .pp-takeaways.open { grid-template-rows: 1fr; }
         .pp-takeaways__inner {
           overflow: hidden; min-height: 0;
-          padding: 0 28px;
-          transition: padding .35s cubic-bezier(.16,1,.3,1);
+          padding: 22px 28px;
         }
-        .pp-takeaways.open .pp-takeaways__inner { padding: 22px 28px; }
         .pp-takeaways__title {
           font-size: 11px; font-weight: 700; letter-spacing: .1em;
           text-transform: uppercase; color: var(--color-teal); margin-bottom: 12px;
