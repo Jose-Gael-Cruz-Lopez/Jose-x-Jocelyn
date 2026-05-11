@@ -201,7 +201,13 @@ export default function OpportunityBoard() {
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({ role: '', company: '', type: '', link: '', why: '', email: '' })
   const [form, setForm] = useState({ role: '', company: '', type: '', link: '', deadline: '', eligibility: '', why: '', email: '', location: '', pay: '' })
+
+  const setField = (k, v) => {
+    setForm(f => ({ ...f, [k]: v }))
+    if (fieldErrors[k]) setFieldErrors(s => ({ ...s, [k]: '' }))
+  }
 
   const [dbOpportunities, setDbOpportunities] = useState([])
 
@@ -225,25 +231,33 @@ export default function OpportunityBoard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const { role, company, type, link, why } = form
-    if (!role || !company || !type || !link || !why) {
-      setFormError(t.formErrorRequired)
+    const errors = { role: '', company: '', type: '', link: '', why: '', email: '' }
+    if (!form.role.trim()) errors.role = t.formErrorRole
+    if (!form.company.trim()) errors.company = t.formErrorCompany
+    if (!form.type) errors.type = t.formErrorType
+    if (!form.link.trim()) errors.link = t.formErrorLink
+    if (!form.why.trim()) errors.why = t.formErrorWhy
+    if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errors.email = t.formErrorEmail
+    if (Object.values(errors).some(Boolean)) {
+      setFieldErrors(errors)
+      setFormError('')
       return
     }
+    setFieldErrors({ role: '', company: '', type: '', link: '', why: '', email: '' })
     setFormLoading(true)
     setFormError('')
     const { error } = await supabase.from('opportunities').insert({
-      role: form.role,
-      company: form.company,
+      role: form.role.trim(),
+      company: form.company.trim(),
       role_type: form.type,
-      link: form.link,
-      deadline: form.deadline || null,
-      eligibility: form.eligibility || null,
-      why: form.why,
-      submitted_by: form.email || null,
+      link: form.link.trim(),
+      deadline: form.deadline.trim() || null,
+      eligibility: form.eligibility.trim() || null,
+      why: form.why.trim(),
+      submitted_by: form.email.trim() || null,
       status: 'approved',
-      location: form.location || null,
-      pay: form.pay || null,
+      location: form.location.trim() || null,
+      pay: form.pay.trim() || null,
     })
     setFormLoading(false)
     if (error) {
@@ -384,7 +398,16 @@ export default function OpportunityBoard() {
         .ob-form-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--color-muted); margin-bottom: 6px; }
         .ob-form-label span { color: var(--color-accent); }
         .ob-form-input, .ob-form-select, .ob-form-textarea { width: 100%; font-family: var(--font-body); font-size: 15px; padding: 11px 14px; border: 1.5px solid rgba(0,0,0,.12); border-radius: 8px; background: var(--color-white); color: var(--color-dark); outline: none; transition: border-color .2s; }
-        .ob-form-input:focus, .ob-form-select:focus, .ob-form-textarea:focus { border-color: var(--color-gold); }
+        .ob-form-input:focus, .ob-form-select:focus, .ob-form-textarea:focus { border-color: var(--color-gold); box-shadow: 0 0 0 4px rgba(232,168,56,.16); }
+        .ob-form-input.is-invalid, .ob-form-select.is-invalid, .ob-form-textarea.is-invalid { border-color: rgba(179,69,57,.45); }
+        .ob-form-input.is-invalid:focus, .ob-form-select.is-invalid:focus, .ob-form-textarea.is-invalid:focus { border-color: var(--color-accent); box-shadow: 0 0 0 4px rgba(179,69,57,.14); }
+        .ob-form-row__error { display: block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--color-accent); line-height: 1.4; }
+        .ob-form-row__error::before { content: ''; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--color-accent); margin-right: 7px; vertical-align: .18em; }
+        .ob-form-error-card { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding: 14px 16px; background: rgba(179,69,57,.06); border: 1px solid rgba(179,69,57,.22); border-radius: 10px; }
+        .ob-form-error-card__msg { flex: 1; font-size: 13px; color: var(--color-dark); line-height: 1.5; font-weight: 500; }
+        .ob-form-error-card__msg strong { color: var(--color-accent); font-weight: 700; }
+        .ob-form-error-card__retry { flex-shrink: 0; padding: 7px 14px; background: transparent; border: 1.5px solid var(--color-accent); color: var(--color-accent); border-radius: 999px; font-family: var(--font-display); font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s, color .2s; }
+        .ob-form-error-card__retry:hover { background: var(--color-accent); color: var(--color-cream); }
         .ob-form-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
         .ob-form-select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B5E52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
         .ob-form-btn { width: 100%; padding: 14px 24px; background: var(--color-dark); color: var(--color-cream); border: none; border-radius: 8px; font-family: var(--font-display); font-size: 14px; font-weight: 600; cursor: pointer; transition: background .2s, transform .18s; margin-top: 6px; }
@@ -561,16 +584,18 @@ export default function OpportunityBoard() {
               <form onSubmit={handleSubmit}>
                 <div className="ob-form-row">
                   <label className="ob-form-label" htmlFor="obRoleName">{t.formLabelRole} <span>{t.formLabelRoleRequired}</span></label>
-                  <input className="ob-form-input" type="text" id="obRoleName" placeholder={t.formPlaceholderRole} value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} />
+                  <input className={`ob-form-input${fieldErrors.role ? ' is-invalid' : ''}`} type="text" id="obRoleName" placeholder={t.formPlaceholderRole} value={form.role} onChange={e => setField('role', e.target.value)} aria-invalid={!!fieldErrors.role} aria-describedby={fieldErrors.role ? 'obRoleName-error' : undefined} />
+                  {fieldErrors.role && <span id="obRoleName-error" className="ob-form-row__error" role="alert">{fieldErrors.role}</span>}
                 </div>
                 <div className="ob-form-row ob-form-row-2">
                   <div>
                     <label className="ob-form-label" htmlFor="obCompany">{t.formLabelCompany} <span>{t.formLabelCompanyRequired}</span></label>
-                    <input className="ob-form-input" type="text" id="obCompany" placeholder={t.formPlaceholderCompany} value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} />
+                    <input className={`ob-form-input${fieldErrors.company ? ' is-invalid' : ''}`} type="text" id="obCompany" placeholder={t.formPlaceholderCompany} value={form.company} onChange={e => setField('company', e.target.value)} aria-invalid={!!fieldErrors.company} aria-describedby={fieldErrors.company ? 'obCompany-error' : undefined} />
+                    {fieldErrors.company && <span id="obCompany-error" className="ob-form-row__error" role="alert">{fieldErrors.company}</span>}
                   </div>
                   <div>
                     <label className="ob-form-label" htmlFor="obRoleType">{t.formLabelType} <span>{t.formLabelTypeRequired}</span></label>
-                    <select className="ob-form-select" id="obRoleType" value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
+                    <select className={`ob-form-select${fieldErrors.type ? ' is-invalid' : ''}`} id="obRoleType" value={form.type} onChange={e => setField('type', e.target.value)} aria-invalid={!!fieldErrors.type} aria-describedby={fieldErrors.type ? 'obRoleType-error' : undefined}>
                       <option value="">{t.formTypeDefault}</option>
                       <option value="internship">{t.formTypeInternship}</option>
                       <option value="apprenticeship">{t.formTypeApprenticeship}</option>
@@ -579,11 +604,13 @@ export default function OpportunityBoard() {
                       <option value="program">{t.formTypeProgram}</option>
                       <option value="scholarship">{t.formTypeScholarship}</option>
                     </select>
+                    {fieldErrors.type && <span id="obRoleType-error" className="ob-form-row__error" role="alert">{fieldErrors.type}</span>}
                   </div>
                 </div>
                 <div className="ob-form-row">
                   <label className="ob-form-label" htmlFor="obLink">{t.formLabelLink} <span>{t.formLabelLinkRequired}</span></label>
-                  <input className="ob-form-input" type="url" id="obLink" placeholder={t.formPlaceholderLink} value={form.link} onChange={e => setForm(f => ({ ...f, link: e.target.value }))} />
+                  <input className={`ob-form-input${fieldErrors.link ? ' is-invalid' : ''}`} type="url" id="obLink" placeholder={t.formPlaceholderLink} value={form.link} onChange={e => setField('link', e.target.value)} aria-invalid={!!fieldErrors.link} aria-describedby={fieldErrors.link ? 'obLink-error' : undefined} />
+                  {fieldErrors.link && <span id="obLink-error" className="ob-form-row__error" role="alert">{fieldErrors.link}</span>}
                 </div>
                 <div className="ob-form-row ob-form-row-2">
                   <div>
@@ -607,13 +634,35 @@ export default function OpportunityBoard() {
                 </div>
                 <div className="ob-form-row">
                   <label className="ob-form-label" htmlFor="obWhy">{t.formLabelWhy} <span>{t.formLabelWhyRequired}</span></label>
-                  <textarea className="ob-form-textarea" id="obWhy" placeholder={t.formPlaceholderWhy} value={form.why} onChange={e => setForm(f => ({ ...f, why: e.target.value }))}></textarea>
+                  <textarea className={`ob-form-textarea${fieldErrors.why ? ' is-invalid' : ''}`} id="obWhy" placeholder={t.formPlaceholderWhy} value={form.why} onChange={e => setField('why', e.target.value)} aria-invalid={!!fieldErrors.why} aria-describedby={fieldErrors.why ? 'obWhy-error' : undefined}></textarea>
+                  {fieldErrors.why && <span id="obWhy-error" className="ob-form-row__error" role="alert">{fieldErrors.why}</span>}
                 </div>
                 <div className="ob-form-row">
                   <label className="ob-form-label" htmlFor="obEmail">{t.formLabelEmail} <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.formEmailOptional}</span></label>
-                  <input className="ob-form-input" type="email" id="obEmail" placeholder={t.formPlaceholderEmail} value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} />
+                  <input
+                    className={`ob-form-input${fieldErrors.email ? ' is-invalid' : ''}`}
+                    type="email"
+                    id="obEmail"
+                    placeholder={t.formPlaceholderEmail}
+                    value={form.email}
+                    onChange={e => setField('email', e.target.value)}
+                    onBlur={e => {
+                      const v = e.target.value.trim()
+                      if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) {
+                        setFieldErrors(s => ({ ...s, email: t.formErrorEmail }))
+                      }
+                    }}
+                    aria-invalid={!!fieldErrors.email}
+                    aria-describedby={fieldErrors.email ? 'obEmail-error' : undefined}
+                  />
+                  {fieldErrors.email && <span id="obEmail-error" className="ob-form-row__error" role="alert">{fieldErrors.email}</span>}
                 </div>
-                {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{formError}</p>}
+                {formError && (
+                  <div role="alert" className="ob-form-error-card">
+                    <span className="ob-form-error-card__msg"><strong>{t.formErrorLabel}</strong> {formError}</span>
+                    <button type="submit" className="ob-form-error-card__retry" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formRetryLabel}</button>
+                  </div>
+                )}
                 <button className="ob-form-btn" type="submit" disabled={formLoading}>
                   {formLoading ? t.formSubmitting : t.formSubmit}
                 </button>
