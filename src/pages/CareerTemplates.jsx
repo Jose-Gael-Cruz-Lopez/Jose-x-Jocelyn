@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -20,7 +21,8 @@ const ExternalIcon = () => (
 
 export default function CareerTemplates() {
   const t = useT('careerTemplates')
-  const [activeFilter, setActiveFilter] = useState('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const activeFilter = searchParams.get('filter') || 'all'
   const [request, setRequest] = useState('')
   const [reqEmail, setReqEmail] = useState('')
   const [reqCategory, setReqCategory] = useState('')
@@ -33,7 +35,15 @@ export default function CareerTemplates() {
   const [copied, setCopied] = useState(false)
   const previewTriggerRef = useRef(null)
 
-  const handleFilterClick = useCallback(e => setActiveFilter(e.currentTarget.dataset.key), [])
+  const handleFilterClick = useCallback(e => {
+    const key = e.currentTarget.dataset.key
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      if (key === 'all') next.delete('filter')
+      else next.set('filter', key)
+      return next
+    }, { replace: true })
+  }, [setSearchParams])
 
   const openPreview = (id, e) => {
     previewTriggerRef.current = e?.currentTarget ?? null
