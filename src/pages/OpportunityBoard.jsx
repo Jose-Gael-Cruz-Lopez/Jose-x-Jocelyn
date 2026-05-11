@@ -283,10 +283,6 @@ export default function OpportunityBoard() {
         .ob-hero__sub { font-family: var(--font-display); font-size: clamp(18px,2.5vw,26px); font-weight: 400; color: var(--color-dark); line-height: 1.4; max-width: 720px; margin-bottom: 24px; }
         .ob-hero__body { font-size: clamp(15px,1.8vw,17px); color: var(--color-muted); line-height: 1.8; max-width: 680px; margin-bottom: 40px; }
         .ob-hero__body strong { color: var(--color-dark); font-weight: 600; }
-        .ob-hero__stats { display: flex; flex-wrap: wrap; gap: 28px; }
-        .ob-hero__stat-num { font-family: var(--font-display); font-size: clamp(28px,4vw,40px); font-weight: 700; color: var(--color-dark); line-height: 1; }
-        .ob-hero__stat-num em { font-style: normal; color: var(--color-gold); }
-        .ob-hero__stat-label { font-size: 12px; color: var(--color-muted); margin-top: 4px; letter-spacing: .02em; }
 
         .ob-board { max-width: 1040px; margin: 0 auto; padding: 72px clamp(20px,5vw,56px) 80px; }
         .ob-board__head { margin-bottom: 32px; }
@@ -411,11 +407,6 @@ export default function OpportunityBoard() {
         <p className="ob-hero__body">
           {t.heroBody1} <strong>{t.heroBodyStrong}</strong>{t.heroBody2}
         </p>
-        <div className="ob-hero__stats">
-          <div><div className="ob-hero__stat-num">{t.heroStatNum1}<em>{t.heroStatNumEm1}</em></div><div className="ob-hero__stat-label">{t.heroStatLabel1}</div></div>
-          <div><div className="ob-hero__stat-num">{t.heroStatNum2}</div><div className="ob-hero__stat-label">{t.heroStatLabel2}</div></div>
-          <div><div className="ob-hero__stat-num">{t.heroStatNum3}<em>{t.heroStatNumEm3}</em></div><div className="ob-hero__stat-label">{t.heroStatLabel3}</div></div>
-        </div>
       </header>
 
       <hr className="ob-divider" />
