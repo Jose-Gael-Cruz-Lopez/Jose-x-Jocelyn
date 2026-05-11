@@ -271,8 +271,12 @@ export default function OpportunityBoard() {
         .ob-section-body strong { color: var(--color-dark); font-weight: 600; }
         .ob-divider { border: none; border-top: 1px solid rgba(0,0,0,.08); margin: 0; }
 
-        .ob-hero { padding: 120px clamp(20px,5vw,56px) 64px; max-width: 1040px; margin: 0 auto; }
-        .ob-hero__kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 18px; }
+        .ob-hero { padding: 120px clamp(20px,5vw,56px) 64px; max-width: 1040px; margin: 0 auto; position: relative; overflow: hidden; }
+        .ob-hero::before { content: ''; position: absolute; top: 96px; left: clamp(20px,5vw,56px); width: 56px; height: 4px; background: var(--color-accent); border-radius: 2px; z-index: 1; }
+        .ob-hero::after { content: ''; position: absolute; top: -14%; right: -10%; width: 520px; height: 520px; background: radial-gradient(closest-side, rgba(179,69,57,.1), transparent 70%); pointer-events: none; z-index: 0; }
+        .ob-hero > * { position: relative; z-index: 1; }
+        .ob-hero__kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 18px; display: inline-flex; align-items: center; gap: 10px; }
+        .ob-hero__kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .ob-hero__title { font-family: var(--font-display); font-size: clamp(42px,7vw,80px); font-weight: 700; line-height: 1.04; color: var(--color-dark); margin-bottom: 14px; }
         .ob-hero__title em { font-style: normal; color: var(--color-gold); }
         .ob-hero__sub { font-family: var(--font-display); font-size: clamp(18px,2.5vw,26px); font-weight: 400; color: var(--color-dark); line-height: 1.4; max-width: 720px; margin-bottom: 24px; }
