@@ -35,6 +35,23 @@ export default function CareerTemplates() {
   const [previewId, setPreviewId] = useState(null)
   const [copied, setCopied] = useState(false)
   const previewTriggerRef = useRef(null)
+  const filtersRef = useRef(null)
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstFilter = filtersRef.current?.querySelector('button')
+      if (firstFilter) {
+        e.preventDefault()
+        firstFilter.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   const handleFilterClick = useCallback(e => {
     const key = e.currentTarget.dataset.key
@@ -725,8 +742,8 @@ export default function CareerTemplates() {
       </header>
 
       <div className="ct-controls">
-        <div className="ct-filters" role="group" aria-label={t.filterAriaLabel}>
-          {FILTERS.map(({ key, label }) => (
+        <div className="ct-filters" role="group" aria-label={t.filterAriaLabel} ref={filtersRef}>
+          {FILTERS.map(({ key, label, desc }) => (
             <button
               key={key}
               data-key={key}
