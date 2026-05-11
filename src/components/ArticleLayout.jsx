@@ -96,13 +96,13 @@ export default function ArticleLayout({ children, title, footerWidth = 680, sign
             <Link
               key={to}
               to={to}
-              className="art-nav__link"
-              style={pathname === to ? { color: 'var(--color-dark)', fontWeight: 600 } : undefined}
+              className={`art-nav__link${pathname === to ? ' art-nav__link--active' : ''}`}
+              aria-current={pathname === to ? 'page' : undefined}
             >
               {label}
             </Link>
           ))}
-          <Link to="/#contact" className="art-nav__link">{t.navGetInTouch}</Link>
+          <Link to="/#contact" className="art-nav__link art-nav__link--cta">{t.navGetInTouch}</Link>
         </div>
         <button
           ref={burgerRef}
