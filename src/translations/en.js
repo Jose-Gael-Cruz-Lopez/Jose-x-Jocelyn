@@ -591,7 +591,9 @@ export const en = {
       },
       {
         key: 'final',
+        type: 'fin',
         label: 'Final Round',
+        description: 'Onsites, panels',
         desc: 'Final round interviews often involve hiring managers, team members, and sometimes senior leadership. They are testing <strong>maturity, team fit, communication style, and readiness for the actual day-to-day work.</strong> The questions are less predictable than earlier rounds - interviewers at this stage want to have a conversation, not run a checklist. The candidates who advance are the ones who seem genuinely ready to show up.',
         resources: [
           'Final Round Prep Guide',

@@ -593,7 +593,9 @@ export const es = {
       },
       {
         key: 'final',
+        type: 'fin',
         label: 'Ronda Final',
+        description: 'Presenciales, paneles',
         desc: 'Las entrevistas de ronda final suelen involucrar gerentes de contratación, miembros del equipo y a veces liderazgo senior. Evalúan <strong>madurez, ajuste al equipo, estilo de comunicación y preparación para el trabajo diario real.</strong> Las preguntas son menos predecibles que en rondas anteriores - los entrevistadores en esta etapa quieren tener una conversación, no ejecutar una lista. Los candidatos que avanzan son los que parecen genuinamente listos para presentarse.',
         resources: [
           'Guía de Preparación para Ronda Final',
