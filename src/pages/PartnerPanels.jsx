@@ -755,8 +755,9 @@ export default function PartnerPanels() {
         @media (max-width: 740px) { .pp-panelist__inner { grid-template-columns: 1fr; gap: 36px; } }
 
         /* ECOSYSTEM */
-        .pp-eco { background: var(--color-dark); padding: 80px clamp(20px,5vw,56px); }
-        .pp-eco__inner { max-width: 1040px; margin: 0 auto; }
+        .pp-eco { background: var(--color-dark); padding: 80px clamp(20px,5vw,56px); position: relative; overflow: hidden; }
+        .pp-eco::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle at 84% 76%, rgba(232,168,56,.12) 0%, transparent 50%); pointer-events: none; }
+        .pp-eco__inner { max-width: 1040px; margin: 0 auto; position: relative; }
         .pp-eco__kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
           text-transform: uppercase; color: var(--color-gold); margin-bottom: 10px;
