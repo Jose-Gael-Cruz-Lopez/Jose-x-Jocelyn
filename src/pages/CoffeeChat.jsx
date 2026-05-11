@@ -342,6 +342,7 @@ export default function CoffeeChat() {
     if (!formData.linkedin.trim()) errors.linkedin = t.formErrorLinkedin
     if (!formData.role.trim()) errors.role = t.formErrorRole
     if (funcChips.length === 0) errors.func = t.formErrorFunc
+    else if (funcChips.includes('Other') && !funcOtherText.trim()) errors.func = t.formErrorFuncOther
     if (!formData.topics.trim()) errors.topics = t.formErrorTopics
     if (!formData.capacity) errors.capacity = t.formErrorCapacity
     if (!formData.consent1) errors.consent1 = t.formErrorConsent1
@@ -1041,11 +1042,11 @@ export default function CoffeeChat() {
                   {funcChips.length > 0 && <div className="cc-selected-tags">{funcChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => { setFuncChips(p => p.filter(v => v !== c)); if (c === 'Other') setFuncOtherText('') }}>×</button></span>)}</div>}
                   {funcChips.includes('Other') && (
                     <input
-                      className="cc-form-input"
+                      className={`cc-form-input${fieldErrors.func && !funcOtherText.trim() ? ' is-invalid' : ''}`}
                       type="text"
                       placeholder={t.formFunctionOtherPlaceholder}
                       value={funcOtherText}
-                      onChange={e => setFuncOtherText(e.target.value)}
+                      onChange={e => { setFuncOtherText(e.target.value); if (fieldErrors.func) setFieldErrors(s => ({ ...s, func: '' })) }}
                       style={{ marginTop: '10px' }}
                     />
                   )}

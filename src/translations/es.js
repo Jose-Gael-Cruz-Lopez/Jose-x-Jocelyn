@@ -993,6 +993,7 @@ export const es = {
     formErrorLinkedin: 'Déjanos tu LinkedIn para confirmar contexto.',
     formErrorRole: 'Dinos tu rol o título actual.',
     formErrorFunc: 'Elige al menos una función para que puedan encontrarte.',
+    formErrorFuncOther: 'Dinos qué función (elegiste "Otra").',
     formErrorTopics: 'Una línea de qué puedes platicar ayuda a que la gente encaje.',
     formErrorCapacity: 'Elige con qué frecuencia puedes recibir una conversación.',
     formErrorConsent1: 'Necesitas confirmar que entiendes que el directorio es público.',

@@ -993,6 +993,7 @@ export const en = {
     formErrorLinkedin: 'Drop your LinkedIn so people can confirm context.',
     formErrorRole: 'Tell us your current role or title.',
     formErrorFunc: 'Pick at least one function so people can find you.',
+    formErrorFuncOther: 'Tell us which function you mean (you picked "Other").',
     formErrorTopics: 'A line on what you can talk about helps people self-match.',
     formErrorCapacity: 'Pick how often you can take a chat.',
     formErrorConsent1: 'You need to confirm you understand the directory is public.',
