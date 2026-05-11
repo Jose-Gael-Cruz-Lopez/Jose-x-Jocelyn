@@ -1500,11 +1500,39 @@ export default function BridgeYear() {
                 <p className="by-role-card__company">{card.company}</p>
                 <p className="by-role-card__why" dangerouslySetInnerHTML={{ __html: card.why }} />
               </div>
-              <a href={card.href} target="_blank" rel="noopener noreferrer" className="by-role-card__cta">{card.ctaLabel}</a>
+              <div className="by-role-card__actions">
+                <button type="button" className="by-role-card__preview" onClick={e => openPreview(card, e)}>{t.previewLabel}</button>
+                <a href={card.href} target="_blank" rel="noopener noreferrer" className="by-role-card__cta">{card.ctaLabel}</a>
+              </div>
             </div>
           ))}
         </div>
       </section>
+
+      {previewProgram && (
+        <div className="by-modal" onClick={closePreview}>
+          <div className="by-modal__bg" />
+          <div className="by-modal__box" role="dialog" aria-modal="true" aria-labelledby="by-modal-title" onClick={e => e.stopPropagation()}>
+            <button type="button" className="by-modal__close" onClick={closePreview} aria-label={t.modalCloseLabel}>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+                <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
+              </svg>
+            </button>
+            <div className="by-modal__tags">
+              {previewProgram.tags.map(tag => (
+                <span key={tag.label} className={`by-role-card__tag${tag.type ? ` by-role-card__tag--${tag.type}` : ''}`}>{tag.label}</span>
+              ))}
+            </div>
+            <h3 className="by-modal__title" id="by-modal-title">{previewProgram.title}</h3>
+            <p className="by-modal__company">{previewProgram.company}</p>
+            <p className="by-modal__why" dangerouslySetInnerHTML={{ __html: previewProgram.why }} />
+            <a href={previewProgram.href} target="_blank" rel="noopener noreferrer" className="by-modal__cta">
+              {previewProgram.ctaLabel}
+              <ExtIcon />
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* BRIDGE CTA */}
       <div className="by-bridge">
