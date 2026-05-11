@@ -1440,6 +1440,39 @@ export default function BridgeYear() {
           <p className="by-section-body">{t.rolesBody}</p>
         </div>
 
+        {(() => {
+          const openPrograms = (t.roleCards || []).filter(c => c.applicationStatus === 'open')
+          if (openPrograms.length === 0) return null
+          return (
+            <section className="by-live" aria-labelledby="by-live-heading">
+              <div className="by-live__head">
+                <h3 className="by-live__heading" id="by-live-heading">{t.openProgramsHeading}</h3>
+                <span className="by-live__count">{openPrograms.length} {openPrograms.length === 1 ? t.openProgramsCountSingular : t.openProgramsCountPlural}</span>
+              </div>
+              {openPrograms.map(p => (
+                <a
+                  key={p.title}
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="by-live__card"
+                >
+                  <div className="by-live__badges">
+                    <span className="by-live__live-pill" aria-label={t.statusOpen}>{t.statusOpen}</span>
+                    {p.deadlineLabel && <span className="by-live__deadline">{p.deadlineLabel}</span>}
+                  </div>
+                  <h4 className="by-live__title">{p.title}</h4>
+                  <p className="by-live__company">{p.company}</p>
+                  <span className="by-live__cta">
+                    {p.ctaLabel}
+                    <ExtIcon />
+                  </span>
+                </a>
+              ))}
+            </section>
+          )
+        })()}
+
         <div className="by-roles__filters" role="group" aria-label={t.rolesFiltersAriaLabel} ref={filtersRef}>
           {t.roleFilters.map(f => (
             <button
