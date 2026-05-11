@@ -1828,6 +1828,7 @@ export const en = {
 
     // ── Filter labels ─────────────────────────────────────────────────────────
     filterAll: 'All',
+    filterAllDesc: 'Every template',
     filterOutreach: 'Outreach & Networking',
     filterApply: 'Applications',
     filterInterview: 'Interviews',

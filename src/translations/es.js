@@ -1828,6 +1828,7 @@ export const es = {
 
     // ── Filter labels ─────────────────────────────────────────────────────────
     filterAll: 'Todas',
+    filterAllDesc: 'Todas las plantillas',
     filterOutreach: 'Contacto y Networking',
     filterApply: 'Aplicaciones',
     filterInterview: 'Entrevistas',
