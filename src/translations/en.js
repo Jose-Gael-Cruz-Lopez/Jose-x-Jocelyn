@@ -1999,6 +1999,7 @@ export const en = {
     heroKicker: 'Community · Live Conversations',
     heroTitlePrefix: 'Partner ',
     heroTitleEm: 'Panels',
+    heroTagline: 'The conversations we wish someone had pulled us into when we were applying.',
     heroSub: 'Live conversations with people who have actually walked the path.',
     heroBody: 'Partner Panels are live Zoom conversations hosted by Jose and Jocelyn with students, recent grads, professionals, recruiters, founders, and community leaders across tech, data, and adjacent career spaces. These sessions are built to',
     heroBodyStrong: 'make career paths more visible, more honest, and more actionable',

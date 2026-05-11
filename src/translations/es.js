@@ -1999,6 +1999,7 @@ export const es = {
     heroKicker: 'Comunidad · Conversaciones en Vivo',
     heroTitlePrefix: 'Paneles con ',
     heroTitleEm: 'Socios',
+    heroTagline: 'Las conversaciones que hubiéramos querido que alguien nos invitara cuando aplicábamos.',
     heroSub: 'Conversaciones en vivo con personas que han recorrido este camino.',
     heroBody: 'Los Paneles con Socios son conversaciones en vivo por Zoom organizadas por Jose y Jocelyn con estudiantes, recién egresados, profesionales, reclutadores, fundadores y líderes comunitarios del mundo de la tecnología, los datos y carreras afines. Estas sesiones están diseñadas para',
     heroBodyStrong: 'hacer los caminos profesionales más visibles, más honestos y más accionables',
