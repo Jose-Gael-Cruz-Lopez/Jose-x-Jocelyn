@@ -2050,7 +2050,7 @@ export const en = {
     stat4Label: 'Growing archive of recordings & flyers',
 
     // ── Featured panel ────────────────────────────────────────────────────────
-    featuredKicker: 'Section 01 · Next Up',
+    featuredKicker: 'Next up',
     featuredTitle: 'Featured Next Panel',
     featuredLiveBadge: 'Coming up',
     featuredDetailDate: 'Date',
@@ -2068,7 +2068,7 @@ export const en = {
     featuredPanelistsLabel: 'Panelists',
 
     // ── Upcoming panels ───────────────────────────────────────────────────────
-    upcomingKicker: 'Section 03',
+    upcomingKicker: 'Section 02',
     upcomingTitle: 'Upcoming Panels',
     upcomingSub: 'Register. Show up. Ask the questions you never had the chance to ask.',
     upcomingBody: 'Join live conversations designed to help students and early-career talent hear directly from people who have navigated the internships, first offers, pivots, rejections, and wins that shape the road from campus to career. Each session is built around',
@@ -2084,7 +2084,7 @@ export const en = {
     ctaSaveSpot: 'Save My Spot',
 
     // ── Past panels archive ───────────────────────────────────────────────────
-    archiveKicker: 'Section 04',
+    archiveKicker: 'Section 03',
     archiveTitle: 'Past Panels',
     archiveSub: 'A growing archive of conversations you can come back to.',
     archiveBody: 'Missed a live session? Past panels live here as a growing archive of conversations, recordings, flyers, and takeaways. Every session is meant to stay useful after the event ends, so you can come back to the conversations',
@@ -2130,7 +2130,7 @@ export const en = {
     ],
 
     // ── FAQ ───────────────────────────────────────────────────────────────────
-    faqKicker: 'Section 02',
+    faqKicker: 'Section 01',
     faqTitle: 'A few things you might be wondering.',
     faqItems: [
       { q: 'Are the panels free to attend?', a: 'Yes. Every Partner Panel is free for students, recent grads, and anyone in between. No tickets, no paywall, no waitlist.' },
@@ -2142,7 +2142,7 @@ export const en = {
     ],
 
     // ── Suggest a panel form ──────────────────────────────────────────────────
-    suggestKicker: 'Section 05',
+    suggestKicker: 'Section 04',
     suggestTitle: 'What panel should we host next?',
     suggestBody: 'The best panel ideas come directly from the questions people are already living through. If there is a conversation, role, industry, or perspective you want us to feature in a future Partner Panel,',
     suggestBodyStrong: 'send it here.',

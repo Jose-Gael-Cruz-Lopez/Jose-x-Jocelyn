@@ -2050,7 +2050,7 @@ export const es = {
     stat4Label: 'Archivo creciente de grabaciones y volantes',
 
     // ── Featured panel ────────────────────────────────────────────────────────
-    featuredKicker: 'Sección 01 · Próximamente',
+    featuredKicker: 'Próximamente',
     featuredTitle: 'Panel Destacado',
     featuredLiveBadge: 'Próximamente',
     featuredDetailDate: 'Fecha',
@@ -2068,7 +2068,7 @@ export const es = {
     featuredPanelistsLabel: 'Panelistas',
 
     // ── Upcoming panels ───────────────────────────────────────────────────────
-    upcomingKicker: 'Sección 03',
+    upcomingKicker: 'Sección 02',
     upcomingTitle: 'Próximos Paneles',
     upcomingSub: 'Regístrate. Asiste. Haz las preguntas que nunca tuviste la oportunidad de hacer.',
     upcomingBody: 'Únete a conversaciones en vivo diseñadas para que estudiantes y profesionales en etapas tempranas escuchen directamente de personas que han navegado las pasantías, primeras ofertas, cambios, rechazos y logros que definen el camino del campus a la carrera. Cada sesión está construida en torno a',
@@ -2084,7 +2084,7 @@ export const es = {
     ctaSaveSpot: 'Guarda Mi Lugar',
 
     // ── Past panels archive ───────────────────────────────────────────────────
-    archiveKicker: 'Sección 04',
+    archiveKicker: 'Sección 03',
     archiveTitle: 'Paneles Pasados',
     archiveSub: 'Un archivo creciente de conversaciones a las que puedes volver.',
     archiveBody: '¿Te perdiste una sesión en vivo? Los paneles pasados viven aquí como un archivo creciente de conversaciones, grabaciones, volantes y conclusiones. Cada sesión está pensada para seguir siendo útil después del evento, para que puedas volver a las conversaciones',
@@ -2130,7 +2130,7 @@ export const es = {
     ],
 
     // ── FAQ ───────────────────────────────────────────────────────────────────
-    faqKicker: 'Sección 02',
+    faqKicker: 'Sección 01',
     faqTitle: 'Algunas cosas que tal vez te estás preguntando.',
     faqItems: [
       { q: '¿Es gratis asistir a los paneles?', a: 'Sí. Cada Panel con Socios es gratis para estudiantes, recién graduados y cualquier persona en el medio. Sin boletos, sin pago, sin lista de espera.' },
@@ -2142,7 +2142,7 @@ export const es = {
     ],
 
     // ── Suggest a panel form ──────────────────────────────────────────────────
-    suggestKicker: 'Sección 05',
+    suggestKicker: 'Sección 04',
     suggestTitle: '¿Qué panel deberíamos organizar a continuación?',
     suggestBody: 'Las mejores ideas para paneles vienen directamente de las preguntas que la gente ya está viviendo. Si hay una conversación, puesto, industria o perspectiva que quieres que presentemos en un futuro Panel con Socios,',
     suggestBodyStrong: 'envíala aquí.',
