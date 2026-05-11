@@ -296,20 +296,7 @@ export default function PartnerPanels() {
           line-height: 1.8; max-width: 680px; margin-bottom: 36px;
         }
         .pp-hero__body strong { color: var(--color-dark); font-weight: 600; }
-        .pp-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 48px; }
-
-        .pp-stats {
-          display: flex; flex-wrap: wrap; gap: 36px;
-          padding-top: 32px;
-          border-top: 1px solid rgba(0,0,0,.08);
-        }
-        .pp-stat__num {
-          font-family: var(--font-display);
-          font-size: clamp(28px,4vw,40px); font-weight: 700;
-          color: var(--color-dark); line-height: 1;
-        }
-        .pp-stat__num em { font-style: normal; color: var(--color-gold); }
-        .pp-stat__label { font-size: 13px; color: var(--color-muted); margin-top: 5px; }
+        .pp-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; }
 
         /* FEATURED */
         .pp-featured {
@@ -804,24 +791,6 @@ export default function PartnerPanels() {
         <div className="pp-hero__ctas">
           <a href="#upcoming" className="pp-btn-primary">{t.heroCtaUpcoming}</a>
           <a href="#archive" className="pp-btn-secondary">{t.heroCtaArchive}</a>
-        </div>
-        <div className="pp-stats">
-          <div>
-            <div className="pp-stat__num">{t.stat1Num}</div>
-            <div className="pp-stat__label">{t.stat1Label}</div>
-          </div>
-          <div>
-            <div className="pp-stat__num">{t.stat2Num}</div>
-            <div className="pp-stat__label">{t.stat2Label}</div>
-          </div>
-          <div>
-            <div className="pp-stat__num">{t.stat3Num}</div>
-            <div className="pp-stat__label">{t.stat3Label}</div>
-          </div>
-          <div>
-            <div className="pp-stat__num">{t.stat4Num}</div>
-            <div className="pp-stat__label">{t.stat4Label}</div>
-          </div>
         </div>
       </header>
 
