@@ -2124,6 +2124,18 @@ export const en = {
       { key: 'community',       label: 'Community Building',   description: 'Building, leading' },
     ],
 
+    // ── FAQ ───────────────────────────────────────────────────────────────────
+    faqKicker: 'Common questions',
+    faqTitle: 'A few things you might be wondering.',
+    faqItems: [
+      { q: 'Are the panels free to attend?', a: 'Yes. Every Partner Panel is free for students, recent grads, and anyone in between. No tickets, no paywall, no waitlist.' },
+      { q: 'Will the sessions be recorded?', a: 'Yes. Every live session is recorded and posted to the archive within 72 hours, along with a short written recap and key takeaways.' },
+      { q: 'Do I have to keep my camera on?', a: 'No. Attendees join cameras off and mics muted by default. You can ask questions through the chat or the live Q&A queue without ever appearing on screen.' },
+      { q: 'Are panels closed-captioned?', a: 'Yes. Live captions run during every session, and recorded versions in the archive include reviewed captions in English and Spanish.' },
+      { q: 'Can I send questions in advance?', a: 'Yes. The RSVP confirmation includes a short form where you can submit questions ahead of time. We prioritize those during the moderated Q&A.' },
+      { q: 'Will speakers share their LinkedIn?', a: 'Usually yes, and we send the speaker bios and links to attendees the day before. We never share attendee information with speakers without consent.' },
+    ],
+
     // ── Suggest a panel form ──────────────────────────────────────────────────
     suggestKicker: 'Section 05',
     suggestTitle: 'What panel should we host next?',

@@ -2124,6 +2124,18 @@ export const es = {
       { key: 'community',       label: 'Construcción de comunidad',             description: 'Construir, liderar' },
     ],
 
+    // ── FAQ ───────────────────────────────────────────────────────────────────
+    faqKicker: 'Preguntas frecuentes',
+    faqTitle: 'Algunas cosas que tal vez te estás preguntando.',
+    faqItems: [
+      { q: '¿Es gratis asistir a los paneles?', a: 'Sí. Cada Panel con Socios es gratis para estudiantes, recién graduados y cualquier persona en el medio. Sin boletos, sin pago, sin lista de espera.' },
+      { q: '¿Se graban las sesiones?', a: 'Sí. Cada sesión en vivo se graba y se publica en el archivo en las próximas 72 horas, junto con un resumen escrito breve y las conclusiones clave.' },
+      { q: '¿Tengo que mantener la cámara encendida?', a: 'No. Los asistentes entran con cámaras apagadas y micrófonos silenciados por defecto. Puedes hacer preguntas por chat o por la cola de preguntas en vivo sin aparecer en pantalla.' },
+      { q: '¿Los paneles tienen subtítulos?', a: 'Sí. Hay subtítulos en vivo durante cada sesión, y las versiones grabadas del archivo incluyen subtítulos revisados en inglés y español.' },
+      { q: '¿Puedo enviar preguntas con anticipación?', a: 'Sí. La confirmación del RSVP incluye un formulario breve donde puedes enviar preguntas con anticipación. Priorizamos esas durante la sesión de preguntas moderada.' },
+      { q: '¿Los ponentes comparten su LinkedIn?', a: 'Normalmente sí, y enviamos las biografías y enlaces de los ponentes a los asistentes el día anterior. Nunca compartimos la información de los asistentes con los ponentes sin consentimiento.' },
+    ],
+
     // ── Suggest a panel form ──────────────────────────────────────────────────
     suggestKicker: 'Sección 05',
     suggestTitle: '¿Qué panel deberíamos organizar a continuación?',
