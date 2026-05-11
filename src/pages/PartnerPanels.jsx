@@ -419,7 +419,7 @@ export default function PartnerPanels() {
           display: flex; flex-direction: column; gap: 14px;
           transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
         }
-        .pp-panel-card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(0,0,0,.09); }
+        .pp-panel-card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px -14px rgba(63,42,28,.22); }
         .pp-panel-card__date-badge {
           display: inline-flex; align-items: center; gap: 6px;
           background: rgba(232,168,56,.12); color: var(--color-gold);
@@ -476,7 +476,7 @@ export default function PartnerPanels() {
           border-radius: 16px; overflow: hidden;
           transition: border-color .2s, box-shadow .2s;
         }
-        .pp-archive-card:hover { border-color: rgba(0,0,0,.15); box-shadow: 0 8px 24px rgba(0,0,0,.07); }
+        .pp-archive-card:hover { border-color: rgba(26,25,22,.15); box-shadow: 0 10px 26px -14px rgba(63,42,28,.2); }
         .pp-archive-card__main {
           padding: 26px 28px;
           display: grid; grid-template-columns: 1fr auto;
