@@ -763,22 +763,55 @@ export default function BridgeYear() {
           margin: 0 auto;
         }
         .by-roles__head { margin-bottom: 28px; }
+        /* Applications-open spotlight — sits above filter chips, surfaces actively-accepting programs */
+        .by-live { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+        .by-live__head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+        .by-live__heading { font-family: var(--font-display); font-size: clamp(18px, 2vw, 22px); font-weight: 700; letter-spacing: -.015em; color: var(--color-dark); margin: 0; }
+        .by-live__count { font-size: 11px; color: var(--color-muted); font-variant-numeric: tabular-nums; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; }
+        .by-live__card { display: block; position: relative; overflow: hidden; padding: 20px 22px; background: linear-gradient(180deg, rgba(58,125,107,.12) 0%, rgba(58,125,107,.04) 100%); border: 1px solid rgba(58,125,107,.35); border-radius: 14px; color: inherit; text-decoration: none; transition: border-color .3s var(--ease-out), transform .3s var(--ease-out), box-shadow .3s var(--ease-out); }
+        .by-live__card:hover { border-color: rgba(58,125,107,.55); transform: translateY(-2px); box-shadow: 0 16px 32px -18px rgba(var(--by-shadow-warm), .28); }
+        .by-live__card:active { transform: translateY(0); }
+        .by-live__card:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 4px; }
+        .by-live__badges { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .by-live__live-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--color-accent); padding: 4px 10px; border-radius: 999px; background: rgba(179,69,57,.10); border: 1px solid rgba(179,69,57,.28); }
+        .by-live__live-pill::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent); animation: by-pulse 2s ease-in-out infinite; }
+        @keyframes by-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+        .by-live__deadline { font-size: 11px; color: var(--color-muted); letter-spacing: .04em; font-variant-numeric: tabular-nums; margin-left: auto; }
+        .by-live__title { font-family: var(--font-display); font-size: clamp(17px, 2vw, 22px); font-weight: 700; line-height: 1.2; letter-spacing: -.02em; color: var(--color-dark); margin: 0 0 4px; }
+        .by-live__company { font-size: 13px; color: var(--color-muted); margin: 0 0 14px; line-height: 1.45; }
+        .by-live__cta { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: var(--color-teal); color: var(--color-cream); border-radius: 999px; font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: .02em; transition: background .25s, box-shadow .25s; }
+        .by-live__card:hover .by-live__cta { background: var(--color-dark); box-shadow: 0 8px 18px -8px rgba(var(--by-shadow-warm), .4); }
+        @media (prefers-reduced-motion: reduce) {
+          .by-live__live-pill::before { animation: none; }
+          .by-live__card, .by-live__cta { transition: none !important; }
+          .by-live__card:hover { transform: none !important; }
+        }
+        @media (max-width: 560px) {
+          .by-live__deadline { margin-left: 0; }
+        }
         .by-roles__filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
         .by-roles__filter {
-          padding: 13px 16px;
-          border-radius: 999px;
+          padding: 10px 16px;
+          border-radius: 14px;
           font-family: var(--font-body);
-          font-size: 12px;
-          font-weight: 600;
           cursor: pointer;
           border: 1.5px solid rgba(26,25,22,.12);
           background: rgba(255,250,242,.6);
           color: var(--color-muted);
           transition: background .2s, color .2s, border-color .2s;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1px;
+          text-align: left;
+          min-width: 0;
         }
         .by-roles__filter:hover { color: var(--color-dark); border-color: rgba(0,0,0,.22); }
         .by-roles__filter:focus-visible { outline: 2px solid var(--color-teal); outline-offset: 2px; }
         .by-roles__filter--active { background: var(--color-teal); color: var(--color-cream); border-color: var(--color-teal); }
+        .by-roles__filter-label { font-size: 12px; font-weight: 700; letter-spacing: -.005em; line-height: 1.2; }
+        .by-roles__filter-desc { font-size: 10.5px; font-weight: 500; opacity: .72; line-height: 1.2; letter-spacing: .005em; }
+        .by-roles__filter--active .by-roles__filter-desc { opacity: .85; }
         .by-roles__list { display: flex; flex-direction: column; gap: 14px; }
         .by-role-card {
           background: transparent;
