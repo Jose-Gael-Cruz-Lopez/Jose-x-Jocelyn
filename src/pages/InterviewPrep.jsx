@@ -866,19 +866,20 @@ export default function InterviewPrep() {
               <button
                 key={it.key}
                 id={`ip-tab-${it.key}`}
-                className={`ip-type-tab${activeTab === it.key ? ' ip-type-tab--active' : ''}`}
+                className={`ip-type-tab${activeTab === it.key ? ' ip-type-tab--active' : ''}${it.type ? ` ip-type-tab--${it.type}` : ''}`}
                 role="tab"
                 aria-selected={activeTab === it.key}
                 tabIndex={activeTab === it.key ? 0 : -1}
                 onClick={() => setActiveTab(it.key)}
               >
-                {it.label}
+                <span className="ip-type-tab__label">{it.label}</span>
+                {it.description && <span className="ip-type-tab__desc">{it.description}</span>}
               </button>
             ))}
           </div>
 
           {activePanel && (
-            <div className="ip-type-panel__inner" role="tabpanel" aria-labelledby={`ip-tab-${activeTab}`}>
+            <div className="ip-type-panel__inner" role="tabpanel" aria-labelledby={`ip-tab-${activeTab}`} aria-live="polite">
               <div className="ip-type-panel__desc" dangerouslySetInnerHTML={{ __html: `<p>${activePanel.desc}</p>` }} />
               <div>
                 <p className="ip-type-panel__res-label">{t.typesResLabel}</p>
