@@ -192,6 +192,7 @@ export default function CoffeeChat() {
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({ name: '', email: '', linkedin: '', role: '', func: '', topics: '', capacity: '', consent1: '', consent2: '' })
   const [funcChips, setFuncChips] = useState([])
   const [identityChips, setIdentityChips] = useState([])
   const [photoFile, setPhotoFile] = useState(null)
@@ -327,17 +328,30 @@ export default function CoffeeChat() {
     })
   }
 
+  const setFormField = (k, v) => {
+    setFormData(f => ({ ...f, [k]: v }))
+    if (fieldErrors[k]) setFieldErrors(s => ({ ...s, [k]: '' }))
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const { name, email, linkedin, role, topics, capacity, consent1, consent2 } = formData
-    if (!name || !email || !linkedin || !role || !topics || !capacity || funcChips.length === 0) {
-      setFormError(t.formErrorRequired)
+    const errors = { name: '', email: '', linkedin: '', role: '', func: '', topics: '', capacity: '', consent1: '', consent2: '' }
+    if (!formData.name.trim()) errors.name = t.formErrorName
+    if (!formData.email.trim()) errors.email = t.formErrorEmail
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) errors.email = t.formErrorEmailFormat
+    if (!formData.linkedin.trim()) errors.linkedin = t.formErrorLinkedin
+    if (!formData.role.trim()) errors.role = t.formErrorRole
+    if (funcChips.length === 0) errors.func = t.formErrorFunc
+    if (!formData.topics.trim()) errors.topics = t.formErrorTopics
+    if (!formData.capacity) errors.capacity = t.formErrorCapacity
+    if (!formData.consent1) errors.consent1 = t.formErrorConsent1
+    if (!formData.consent2) errors.consent2 = t.formErrorConsent2
+    if (Object.values(errors).some(Boolean)) {
+      setFieldErrors(errors)
+      setFormError('')
       return
     }
-    if (!consent1 || !consent2) {
-      setFormError(t.formErrorConsent)
-      return
-    }
+    setFieldErrors({ name: '', email: '', linkedin: '', role: '', func: '', topics: '', capacity: '', consent1: '', consent2: '' })
     setFormLoading(true)
     setFormError('')
     let avatar_url = null
