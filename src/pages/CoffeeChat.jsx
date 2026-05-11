@@ -522,6 +522,15 @@ export default function CoffeeChat() {
         .cc-reach__templates-link::before { content: '→'; color: var(--color-accent); transition: transform .2s; }
         .cc-reach__templates-link:hover { color: var(--color-accent); }
 
+        .cc-bridge { max-width: 1040px; margin: 0 auto; padding: 0 clamp(20px,5vw,56px) 24px; }
+        .cc-bridge__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; padding: 24px 28px; background: rgba(232,168,56,.06); border: 1px solid rgba(232,168,56,.22); border-radius: 14px; }
+        .cc-bridge__copy { font-family: var(--font-display); font-size: clamp(17px,2vw,21px); font-weight: 600; color: var(--color-dark); line-height: 1.3; letter-spacing: -.005em; }
+        .cc-bridge__copy em { font-style: italic; font-family: var(--font-serif, var(--font-display)); color: var(--color-gold-dark); font-weight: 500; }
+        .cc-bridge__cta { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; background: var(--color-dark); color: var(--color-cream); border-radius: 999px; font-family: var(--font-display); font-size: 13px; font-weight: 700; letter-spacing: -.005em; text-decoration: none; box-shadow: 0 6px 14px -8px rgba(63,42,28,.4), inset 0 1px 0 rgba(255,255,255,.08); transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s; }
+        .cc-bridge__cta:hover { background: var(--color-teal); transform: translateY(-1px); box-shadow: 0 12px 22px -10px rgba(58,125,107,.5); }
+        .cc-bridge__cta::after { content: '↓'; font-size: 13px; line-height: 1; }
+        @media (prefers-reduced-motion: reduce) { .cc-bridge__cta { transition: none !important; } .cc-bridge__cta:hover { transform: none !important; } }
+
         .cc-apply { max-width: 1040px; margin: 0 auto; padding: 88px clamp(20px,5vw,56px); position: relative; }
         .cc-apply__layout { display: grid; grid-template-columns: 1fr 1.5fr; gap: 60px; align-items: flex-start; }
         .cc-apply__intro-kicker { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--color-teal); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 10px; }
@@ -921,6 +930,13 @@ export default function CoffeeChat() {
           </div>
         </div>
       </section>
+
+      <div className="cc-bridge">
+        <div className="cc-bridge__inner">
+          <p className="cc-bridge__copy">{t.bridgeCopyPrefix} <em>{t.bridgeCopyEm}</em></p>
+          <a href="#apply" className="cc-bridge__cta">{t.bridgeCtaLabel}</a>
+        </div>
+      </div>
 
       <hr className="cc-divider" />
 

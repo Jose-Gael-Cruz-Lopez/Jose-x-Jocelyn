@@ -999,6 +999,9 @@ export const en = {
     formErrorConsent2: 'You need to confirm the J&J guidelines.',
     formErrorLabel: 'Could not save your profile.',
     formRetryLabel: 'Retry',
+    bridgeCopyPrefix: 'Want to be on the other side of these chats?',
+    bridgeCopyEm: 'Add yourself.',
+    bridgeCtaLabel: 'Apply as a connection',
     formSubmit: 'Submit my profile',
     formSubmitting: 'Submitting…',
 

@@ -999,6 +999,9 @@ export const es = {
     formErrorConsent2: 'Necesitas confirmar las pautas de J&J.',
     formErrorLabel: 'No se pudo guardar tu perfil.',
     formRetryLabel: 'Reintentar',
+    bridgeCopyPrefix: '¿Quieres estar del otro lado de estas conversaciones?',
+    bridgeCopyEm: 'Súmate.',
+    bridgeCtaLabel: 'Aplica como contacto',
     formSubmit: 'Enviar mi perfil',
     formSubmitting: 'Enviando…',
 
