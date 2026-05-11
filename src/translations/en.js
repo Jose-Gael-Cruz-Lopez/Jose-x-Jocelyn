@@ -2068,7 +2068,7 @@ export const en = {
     featuredPanelistsLabel: 'Panelists',
 
     // ── Upcoming panels ───────────────────────────────────────────────────────
-    upcomingKicker: 'Section 02',
+    upcomingKicker: 'Section 03',
     upcomingTitle: 'Upcoming Panels',
     upcomingSub: 'Register. Show up. Ask the questions you never had the chance to ask.',
     upcomingBody: 'Join live conversations designed to help students and early-career talent hear directly from people who have navigated the internships, first offers, pivots, rejections, and wins that shape the road from campus to career. Each session is built around',
@@ -2130,7 +2130,7 @@ export const en = {
     ],
 
     // ── FAQ ───────────────────────────────────────────────────────────────────
-    faqKicker: 'Section 03',
+    faqKicker: 'Section 02',
     faqTitle: 'A few things you might be wondering.',
     faqItems: [
       { q: 'Are the panels free to attend?', a: 'Yes. Every Partner Panel is free for students, recent grads, and anyone in between. No tickets, no paywall, no waitlist.' },
@@ -2166,6 +2166,7 @@ export const en = {
       { value: 'Career Transition', label: 'Career Transition' },
       { value: 'Other',             label: 'Other' },
     ],
+    suggestStageOtherPlaceholder: 'Tell us your stage',
     suggestLabelCategory: 'Category',
     suggestLabelCategoryRequired: '*',
     suggestCategoryOptions: [
@@ -2183,6 +2184,7 @@ export const en = {
       { value: 'Workplace Readiness', label: 'Workplace Readiness' },
       { value: 'Other',               label: 'Other' },
     ],
+    suggestCategoryOtherPlaceholder: 'Tell us the category',
     suggestLabelEmail: 'Email',
     suggestEmailNote: '(optional - if you want a heads-up when we host it)',
     suggestPlaceholderEmail: 'your@email.com',

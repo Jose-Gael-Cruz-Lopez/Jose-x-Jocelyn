@@ -2068,7 +2068,7 @@ export const es = {
     featuredPanelistsLabel: 'Panelistas',
 
     // ── Upcoming panels ───────────────────────────────────────────────────────
-    upcomingKicker: 'Sección 02',
+    upcomingKicker: 'Sección 03',
     upcomingTitle: 'Próximos Paneles',
     upcomingSub: 'Regístrate. Asiste. Haz las preguntas que nunca tuviste la oportunidad de hacer.',
     upcomingBody: 'Únete a conversaciones en vivo diseñadas para que estudiantes y profesionales en etapas tempranas escuchen directamente de personas que han navegado las pasantías, primeras ofertas, cambios, rechazos y logros que definen el camino del campus a la carrera. Cada sesión está construida en torno a',
@@ -2130,7 +2130,7 @@ export const es = {
     ],
 
     // ── FAQ ───────────────────────────────────────────────────────────────────
-    faqKicker: 'Sección 03',
+    faqKicker: 'Sección 02',
     faqTitle: 'Algunas cosas que tal vez te estás preguntando.',
     faqItems: [
       { q: '¿Es gratis asistir a los paneles?', a: 'Sí. Cada Panel con Socios es gratis para estudiantes, recién graduados y cualquier persona en el medio. Sin boletos, sin pago, sin lista de espera.' },
@@ -2166,6 +2166,7 @@ export const es = {
       { value: 'Career Transition', label: 'Transición de carrera' },
       { value: 'Other',             label: 'Otro' },
     ],
+    suggestStageOtherPlaceholder: 'Cuéntanos tu etapa',
     suggestLabelCategory: 'Categoría',
     suggestLabelCategoryRequired: '*',
     suggestCategoryOptions: [
@@ -2183,6 +2184,7 @@ export const es = {
       { value: 'Workplace Readiness',  label: 'Preparación laboral' },
       { value: 'Other',                label: 'Otro' },
     ],
+    suggestCategoryOtherPlaceholder: 'Cuéntanos la categoría',
     suggestLabelEmail: 'Correo electrónico',
     suggestEmailNote: '(opcional — para avisarte cuando lo organicemos)',
     suggestPlaceholderEmail: 'tu@correo.com',

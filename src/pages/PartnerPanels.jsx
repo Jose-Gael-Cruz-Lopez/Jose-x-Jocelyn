@@ -155,7 +155,7 @@ export default function PartnerPanels() {
   const [panelistSubmitted, setPanelistSubmitted] = useState(false)
   const [panelistLoading, setPanelistLoading] = useState(false)
   const [panelistError, setPanelistError] = useState('')
-  const [suggestForm, setSuggestForm] = useState({ topic: '', why: '', stage: '', category: '', email: '' })
+  const [suggestForm, setSuggestForm] = useState({ topic: '', why: '', stage: '', stageOther: '', category: '', categoryOther: '', email: '' })
   const [panelistForm, setPanelistForm] = useState({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '', notes: '' })
 
   const filteredArchive = activeTopic === 'all'
@@ -173,17 +173,25 @@ export default function PartnerPanels() {
 
   async function submitSuggest(e) {
     e.preventDefault()
-    if (!suggestForm.topic || !suggestForm.why || !suggestForm.stage || !suggestForm.category) {
+    const stageOtherNeeded = suggestForm.stage === 'Other' && !suggestForm.stageOther.trim()
+    const categoryOtherNeeded = suggestForm.category === 'Other' && !suggestForm.categoryOther.trim()
+    if (!suggestForm.topic || !suggestForm.why || !suggestForm.stage || !suggestForm.category || stageOtherNeeded || categoryOtherNeeded) {
       setSuggestError(t.suggestErrorRequired)
       return
     }
+    const stagePayload = suggestForm.stage === 'Other'
+      ? `Other: ${suggestForm.stageOther.trim()}`
+      : suggestForm.stage
+    const categoryPayload = suggestForm.category === 'Other'
+      ? `Other: ${suggestForm.categoryOther.trim()}`
+      : suggestForm.category
     setSuggestLoading(true)
     setSuggestError('')
     const { error } = await supabase.from('panel_suggestions').insert({
       topic: suggestForm.topic,
       why_helpful: suggestForm.why,
-      stage: suggestForm.stage,
-      category: suggestForm.category,
+      stage: stagePayload,
+      category: categoryPayload,
       email: suggestForm.email || null,
     })
     setSuggestLoading(false)
@@ -1079,6 +1087,24 @@ export default function PartnerPanels() {
 
       <hr className="pp-divider" />
 
+      {/* FAQ — moved to top so attendees get logistics before browsing what's on offer */}
+      <section className="pp-faq" id="faq">
+        <div className="pp-faq__head">
+          <p className="pp-kicker">{t.faqKicker}</p>
+          <h2 className="pp-faq__title">{t.faqTitle}</h2>
+        </div>
+        <div className="pp-faq__grid">
+          {(t.faqItems || []).map(item => (
+            <div key={item.q} className="pp-faq__item">
+              <h3 className="pp-faq__q">{item.q}</h3>
+              <p className="pp-faq__a">{item.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <hr className="pp-divider" />
+
       {/* FEATURED PANEL */}
       <section className="pp-featured" id="featured">
         <div className="pp-featured__head">
@@ -1198,24 +1224,6 @@ export default function PartnerPanels() {
             </article>
             )
           })}
-        </div>
-      </section>
-
-      <hr className="pp-divider" />
-
-      {/* FAQ — moved up; logistics belong before the archive deep-dive */}
-      <section className="pp-faq" id="faq">
-        <div className="pp-faq__head">
-          <p className="pp-kicker">{t.faqKicker}</p>
-          <h2 className="pp-faq__title">{t.faqTitle}</h2>
-        </div>
-        <div className="pp-faq__grid">
-          {(t.faqItems || []).map(item => (
-            <div key={item.q} className="pp-faq__item">
-              <h3 className="pp-faq__q">{item.q}</h3>
-              <p className="pp-faq__a">{item.a}</p>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -1378,6 +1386,17 @@ export default function PartnerPanels() {
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
+                    {suggestForm.stage === 'Other' && (
+                      <input
+                        className="pp-form-input"
+                        type="text"
+                        placeholder={t.suggestStageOtherPlaceholder || 'Tell us your stage'}
+                        value={suggestForm.stageOther}
+                        onChange={e => setSuggestForm(f => ({ ...f, stageOther: e.target.value }))}
+                        aria-label={t.suggestStageOtherPlaceholder || 'Tell us your stage'}
+                        style={{ marginTop: 8 }}
+                      />
+                    )}
                   </div>
                   <div>
                     <label className="pp-form-label" htmlFor="suggestCategory">{t.suggestLabelCategory} <span>{t.suggestLabelCategoryRequired}</span></label>
@@ -1386,6 +1405,17 @@ export default function PartnerPanels() {
                         <option key={opt.value} value={opt.value}>{opt.label}</option>
                       ))}
                     </select>
+                    {suggestForm.category === 'Other' && (
+                      <input
+                        className="pp-form-input"
+                        type="text"
+                        placeholder={t.suggestCategoryOtherPlaceholder || 'Tell us the category'}
+                        value={suggestForm.categoryOther}
+                        onChange={e => setSuggestForm(f => ({ ...f, categoryOther: e.target.value }))}
+                        aria-label={t.suggestCategoryOtherPlaceholder || 'Tell us the category'}
+                        style={{ marginTop: 8 }}
+                      />
+                    )}
                   </div>
                 </div>
                 <div className="pp-form-row">
@@ -1393,7 +1423,7 @@ export default function PartnerPanels() {
                   <input className="pp-form-input" type="email" id="suggestEmail" placeholder={t.suggestPlaceholderEmail} value={suggestForm.email} onChange={e => setSuggestForm(f => ({ ...f, email: e.target.value }))} />
                 </div>
                 {suggestError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{suggestError}</p>}
-                <button className="pp-form-btn" type="submit" disabled={suggestLoading || !suggestForm.topic.trim() || !suggestForm.why.trim() || !suggestForm.stage || !suggestForm.category}>{suggestLoading ? t.suggestBtnSubmitting : t.suggestBtnSubmit}</button>
+                <button className="pp-form-btn" type="submit" disabled={suggestLoading || !suggestForm.topic.trim() || !suggestForm.why.trim() || !suggestForm.stage || !suggestForm.category || (suggestForm.stage === 'Other' && !suggestForm.stageOther.trim()) || (suggestForm.category === 'Other' && !suggestForm.categoryOther.trim())}>{suggestLoading ? t.suggestBtnSubmitting : t.suggestBtnSubmit}</button>
                 <p className="pp-form-note">{t.suggestFormNote}</p>
               </form>
             ))}
