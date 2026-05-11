@@ -355,13 +355,13 @@ export const en = {
     ],
     // ── ROLE_FILTERS array ────────────────────────────────────────────────
     roleFilters: [
-      { key: 'all', label: 'All' },
-      { key: 'new-grad', label: 'New Grad' },
-      { key: 'rotational', label: 'Rotational' },
-      { key: 'data', label: 'Data' },
-      { key: 'engineering', label: 'Engineering' },
-      { key: 'non-cs', label: 'Non-CS Background' },
-      { key: 'remote', label: 'Remote' },
+      { key: 'all', label: 'All', description: 'Every program' },
+      { key: 'new-grad', label: 'New Grad', description: 'Full-time, post-grad' },
+      { key: 'rotational', label: 'Rotational', description: 'Cohort, multi-team' },
+      { key: 'data', label: 'Data', description: 'Analyst, scientist, ML' },
+      { key: 'engineering', label: 'Engineering', description: 'SWE, infra, embedded' },
+      { key: 'non-cs', label: 'Non-CS Background', description: 'Open to non-CS majors' },
+      { key: 'remote', label: 'Remote', description: 'Work from anywhere' },
     ],
     // ── SPRINT_STEPS array ────────────────────────────────────────────────
     sprintSteps: [

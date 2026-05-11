@@ -357,13 +357,13 @@ export const es = {
     ],
     // ── ROLE_FILTERS array (keys unchanged; only labels translated) ────────
     roleFilters: [
-      { key: 'all', label: 'Todos' },
-      { key: 'new-grad', label: 'Recién Graduado' },
-      { key: 'rotational', label: 'Rotacional' },
-      { key: 'data', label: 'Datos' },
-      { key: 'engineering', label: 'Ingeniería' },
-      { key: 'non-cs', label: 'Sin Carrera de CS' },
-      { key: 'remote', label: 'Remoto' },
+      { key: 'all', label: 'Todos', description: 'Todos los programas' },
+      { key: 'new-grad', label: 'Recién Graduado', description: 'Tiempo completo, post-grado' },
+      { key: 'rotational', label: 'Rotacional', description: 'Cohorte, multi-equipo' },
+      { key: 'data', label: 'Datos', description: 'Analista, científico, ML' },
+      { key: 'engineering', label: 'Ingeniería', description: 'SWE, infra, embebido' },
+      { key: 'non-cs', label: 'Sin Carrera de CS', description: 'Para no-CS' },
+      { key: 'remote', label: 'Remoto', description: 'Desde cualquier lugar' },
     ],
     // ── SPRINT_STEPS array ────────────────────────────────────────────────
     sprintSteps: [
