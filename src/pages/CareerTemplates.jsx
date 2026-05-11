@@ -26,9 +26,10 @@ export default function CareerTemplates() {
   const [request, setRequest] = useState('')
   const [reqEmail, setReqEmail] = useState('')
   const [reqCategory, setReqCategory] = useState('')
+  const [reqCategoryOther, setReqCategoryOther] = useState('')
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
-  const [fieldErrors, setFieldErrors] = useState({ request: '', email: '' })
+  const [fieldErrors, setFieldErrors] = useState({ request: '', email: '', category: '' })
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   const [previewId, setPreviewId] = useState(null)
@@ -857,8 +858,26 @@ export default function CareerTemplates() {
                     <option value="interview-prep">{t.catInterviewPrep}</option>
                     <option value="offers-negotiation">{t.catOffersNegotiation}</option>
                     <option value="first-job-onboarding">{t.catFirstJobOnboarding}</option>
+                    <option value="other">{t.catOther}</option>
                   </select>
                 </div>
+                {reqCategory === 'other' && (
+                  <div className="ct-form-row">
+                    <label className="ct-form-label" htmlFor="reqCatOther">{t.formLabelCategoryOther}</label>
+                    <input
+                      className={`ct-form-input${fieldErrors.category ? ' is-invalid' : ''}`}
+                      type="text"
+                      id="reqCatOther"
+                      placeholder={t.formPlaceholderCategoryOther}
+                      value={reqCategoryOther}
+                      onChange={e => { setReqCategoryOther(e.target.value); if (fieldErrors.category) setFieldErrors(s => ({ ...s, category: '' })) }}
+                      maxLength={120}
+                      aria-invalid={!!fieldErrors.category}
+                      aria-describedby={fieldErrors.category ? 'reqCatOther-error' : undefined}
+                    />
+                    {fieldErrors.category && <span id="reqCatOther-error" className="ct-form-row__error" role="alert">{fieldErrors.category}</span>}
+                  </div>
+                )}
                 {formError && (
                   <div role="alert" className="ct-form-error-card">
                     <span className="ct-form-error-card__msg"><strong>{t.formErrorLabel}</strong> {formError}</span>
