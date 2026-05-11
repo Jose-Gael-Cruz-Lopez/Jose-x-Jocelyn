@@ -204,11 +204,8 @@ export default function CareerTemplates() {
           max-width: 18ch;
         }
         .ct-hero__title em {
-          font-style: italic;
-          font-family: var(--font-serif, var(--font-display));
-          color: var(--color-gold-dark);
-          font-weight: 500;
-          padding-right: .04em;
+          font-style: normal;
+          color: var(--color-teal);
         }
         .ct-hero__tagline {
           font-family: var(--font-serif, var(--font-display));
@@ -707,7 +704,7 @@ export default function CareerTemplates() {
 
       <header className="ct-hero">
         <p className="ct-hero__kicker">{t.heroKicker}</p>
-        <h1 className="ct-hero__title">{t.heroTitle}</h1>
+        <h1 className="ct-hero__title" dangerouslySetInnerHTML={{ __html: t.heroTitle }} />
         <p className="ct-hero__tagline">{t.heroTagline}</p>
         <p className="ct-hero__sub">
           {t.heroSub}{' '}
