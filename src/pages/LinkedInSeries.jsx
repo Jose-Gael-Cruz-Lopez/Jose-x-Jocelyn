@@ -18,6 +18,16 @@ const EPISODES = [
   { num: '10', lens: 'both', topics: 'internships offers rejection on-the-job', tags: ['internships', 'offers', 'rejection', 'on-the-job'], posts: [{ type: 'student-lens', author: 'jose', status: 'coming-soon' }, { type: 'post-grad-lens', author: 'jocelyn', status: 'coming-soon' }, { type: 'recap-cta', author: 'both', status: 'coming-soon' }] },
 ]
 
+// Published LinkedIn posts. Render above the episode grid so the live drops are the first content after the hero.
+const LIVE_POSTS = [
+  {
+    type: 'series-launch',
+    author: 'both',
+    date: '2026-05-05',
+    url: 'https://www.linkedin.com/posts/from-campus-to-career_fromcampustocareer-firstgen-careerdevelopment-activity-7457496865899626496-3eB_',
+  },
+]
+
 function lensClass(a) {
   return a === 'jose' ? 'ls-ep__lens--jose' : a === 'jocelyn' ? 'ls-ep__lens--jocelyn' : 'ls-ep__lens--both'
 }
