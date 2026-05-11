@@ -1800,7 +1800,7 @@ export const en = {
   careerTemplates: {
     // ── Hero ─────────────────────────────────────────────────────────────────
     heroKicker: 'From Campus to Career · Resource Library',
-    heroTitle: 'Career Templates',
+    heroTitle: 'Career <em>Templates</em>',
     heroTagline: 'Copy. Edit. Send.',
     heroSub: 'Real scripts, trackers, and frameworks from',
     heroSubStrong: 'two people who are actually doing this',

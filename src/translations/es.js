@@ -1800,7 +1800,7 @@ export const es = {
   careerTemplates: {
     // ── Hero ─────────────────────────────────────────────────────────────────
     heroKicker: 'Del Campus a la Carrera · Biblioteca de Recursos',
-    heroTitle: 'Plantillas de Carrera',
+    heroTitle: '<em>Plantillas</em> de Carrera',
     heroTagline: 'Copia. Edita. Envía.',
     heroSub: 'Scripts reales, rastreadores y marcos de trabajo de',
     heroSubStrong: 'dos personas que realmente están haciendo esto',
