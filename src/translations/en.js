@@ -1615,6 +1615,7 @@ export const en = {
     filterAll: 'All Posts',
     filterAllDesc: 'Every episode',
     filterJose: "Jose's Lens",
+    filterJoseDesc: 'Student lens',
     filterJocelyn: "Jocelyn's Lens",
     filterBoth: 'Both Perspectives',
     filterInternships: 'Internships',

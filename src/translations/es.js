@@ -1615,6 +1615,7 @@ export const es = {
     filterAll: 'Todas las publicaciones',
     filterAllDesc: 'Todos los episodios',
     filterJose: 'Perspectiva de Jose',
+    filterJoseDesc: 'Vista de estudiante',
     filterJocelyn: 'Perspectiva de Jocelyn',
     filterBoth: 'Ambas perspectivas',
     filterInternships: 'Pasantías',
