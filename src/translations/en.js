@@ -1830,6 +1830,7 @@ export const en = {
     filterAll: 'All',
     filterAllDesc: 'Every template',
     filterOutreach: 'Outreach & Networking',
+    filterOutreachDesc: 'Cold emails, info chats',
     filterApply: 'Applications',
     filterInterview: 'Interviews',
     filterOffers: 'Offers & Negotiation',
