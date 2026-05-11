@@ -1968,7 +1968,7 @@ export const es = {
     modalCopiedLabel: '¡Copiado!',
     formErrorRequired: 'Por favor describe la plantilla que necesitas.',
     formErrorEmail: 'Ese correo no parece válido.',
-    formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    formErrorGeneric: 'No se pudo enviar. Inténtalo otra vez, o escríbenos a campustocareerteam@gmail.com.',
     formErrorLabel: 'No se pudo enviar.',
     formRetryLabel: 'Intentar de nuevo',
     formBtnSubmit: 'Enviar Solicitud',

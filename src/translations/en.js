@@ -1968,7 +1968,7 @@ export const en = {
     modalCopiedLabel: 'Copied!',
     formErrorRequired: 'Please describe the template you need.',
     formErrorEmail: "That doesn't look like a valid email.",
-    formErrorGeneric: 'Something went wrong. Please try again.',
+    formErrorGeneric: 'Couldn’t send. Try again, or email us at campustocareerteam@gmail.com.',
     formErrorLabel: "Couldn't send.",
     formRetryLabel: 'Try again',
     formBtnSubmit: 'Submit Request',
