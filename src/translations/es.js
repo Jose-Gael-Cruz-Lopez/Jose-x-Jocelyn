@@ -1058,6 +1058,7 @@ export const es = {
     heroKicker: 'Del Campus a la Carrera · Roles Seleccionados',
     heroTitle: 'Tablero de',
     heroTitleEm: 'Oportunidades',
+    heroTagline: 'El tablero que hubiéramos querido tener cuando aplicábamos.',
     heroSub: 'Un tablero vivo de pasantías, aprendizajes, roles para recién graduados y programas seleccionados por J&J.',
     heroBody1: 'Cada semana, Jose y Jocelyn destacan roles, programas y aprendizajes en LinkedIn — desde alertas de pasantías en TikTok hasta aprendizajes en Pinterest y becas de investigación locales. El Tablero de Oportunidades los reúne en un solo lugar, con filtros que realmente tienen sentido para estudiantes y talento al inicio de carrera: etapa, tipo de rol, elegibilidad y tiempo.',
     heroBodyStrong: 'Aquí es donde vas cuando quieres dejar de desplazarte por feeds aleatorios',

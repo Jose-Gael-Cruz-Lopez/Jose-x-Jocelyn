@@ -1058,6 +1058,7 @@ export const en = {
     heroKicker: 'From Campus to Career · Curated Roles',
     heroTitle: 'Opportunity',
     heroTitleEm: 'Board',
+    heroTagline: 'The board we wish we’d had when we were applying.',
     heroSub: 'A living board of internships, apprenticeships, new grad roles, and programs curated by J&J.',
     heroBody1: 'Every week, Jose and Jocelyn surface roles, programs, and apprenticeships on LinkedIn - from TikTok internship alerts to Pinterest apprenticeships to local research fellowships. The Opportunity Board pulls those into one place, with filters that actually make sense for students and early-career talent: stage, role type, eligibility, and timeline.',
     heroBodyStrong: 'This is where you go when you want to stop scrolling random feeds',
