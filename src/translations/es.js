@@ -2084,7 +2084,7 @@ export const es = {
     ctaSaveSpot: 'Guarda Mi Lugar',
 
     // ── Past panels archive ───────────────────────────────────────────────────
-    archiveKicker: 'Sección 03',
+    archiveKicker: 'Sección 04',
     archiveTitle: 'Paneles Pasados',
     archiveSub: 'Un archivo creciente de conversaciones a las que puedes volver.',
     archiveBody: '¿Te perdiste una sesión en vivo? Los paneles pasados viven aquí como un archivo creciente de conversaciones, grabaciones, volantes y conclusiones. Cada sesión está pensada para seguir siendo útil después del evento, para que puedas volver a las conversaciones',
@@ -2130,7 +2130,7 @@ export const es = {
     ],
 
     // ── FAQ ───────────────────────────────────────────────────────────────────
-    faqKicker: 'Preguntas frecuentes',
+    faqKicker: 'Sección 03',
     faqTitle: 'Algunas cosas que tal vez te estás preguntando.',
     faqItems: [
       { q: '¿Es gratis asistir a los paneles?', a: 'Sí. Cada Panel con Socios es gratis para estudiantes, recién graduados y cualquier persona en el medio. Sin boletos, sin pago, sin lista de espera.' },

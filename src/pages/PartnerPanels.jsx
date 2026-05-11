@@ -560,7 +560,8 @@ export default function PartnerPanels() {
           max-width: 1040px; margin: 0 auto;
           padding: 80px clamp(20px,5vw,56px) 88px;
         }
-        .pp-archive__head { margin-bottom: 32px; }
+        .pp-archive__head { margin-bottom: 24px; }
+        .pp-archive .pp-topics__chips { margin-bottom: 28px; }
         .pp-archive__list { display: flex; flex-direction: column; gap: 16px; }
         .pp-archive-card {
           background: linear-gradient(180deg, rgba(255,250,242,.85) 0%, rgba(255,250,242,.55) 100%);
@@ -1197,7 +1198,25 @@ export default function PartnerPanels() {
 
       <hr className="pp-divider" />
 
-      {/* PAST PANELS ARCHIVE */}
+      {/* FAQ — moved up; logistics belong before the archive deep-dive */}
+      <section className="pp-faq" id="faq">
+        <div className="pp-faq__head">
+          <p className="pp-kicker">{t.faqKicker}</p>
+          <h2 className="pp-faq__title">{t.faqTitle}</h2>
+        </div>
+        <div className="pp-faq__grid">
+          {(t.faqItems || []).map(item => (
+            <div key={item.q} className="pp-faq__item">
+              <h3 className="pp-faq__q">{item.q}</h3>
+              <p className="pp-faq__a">{item.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <hr className="pp-divider" />
+
+      {/* PAST PANELS ARCHIVE — topic filter chips integrated above the list */}
       <section className="pp-archive" id="archive">
         <div className="pp-archive__head">
           <p className="pp-kicker">{t.archiveKicker}</p>
@@ -1205,6 +1224,23 @@ export default function PartnerPanels() {
           <p className="pp-section-sub">{t.archiveSub}</p>
           <p className="pp-section-body">{t.archiveBody} <strong>{t.archiveBodyStrong}</strong></p>
         </div>
+
+        {/* Topic filter chips — moved here from former standalone section */}
+        <div className="pp-topics__chips" ref={filtersRef} role="tablist" aria-label={t.topicsTitle}>
+          {topicChips.map(chip => (
+            <button
+              key={chip.key}
+              type="button"
+              className={`pp-topic-chip${activeTopic === chip.key ? ' active' : ''}`}
+              aria-pressed={activeTopic === chip.key}
+              onClick={() => setActiveTopic(chip.key)}
+            >
+              <span className="pp-topic-chip__label">{chip.label}</span>
+              {chip.description && <span className="pp-topic-chip__desc">{chip.description}</span>}
+            </button>
+          ))}
+        </div>
+
         <div className="pp-archive__list">
           {filteredArchive.length === 0 && (
             <p style={{ color: 'var(--color-muted)', fontSize: 15, padding: '40px 0' }}>{t.archiveEmptyState}</p>
@@ -1261,51 +1297,6 @@ export default function PartnerPanels() {
           <a href="#suggest" className="pp-bridge__cta">{t.bridgeCtaLabel}</a>
         </div>
       </div>
-
-      <hr className="pp-divider" />
-
-      {/* TOPIC BROWSE */}
-      <section className="pp-topics" id="topics">
-        <div className="pp-topics__head">
-          <p className="pp-kicker">{t.topicsKicker}</p>
-          <h2 className="pp-section-title">{t.topicsTitle}</h2>
-          <p className="pp-section-sub">{t.topicsSub}</p>
-          <p className="pp-section-body">{t.topicsBody}</p>
-        </div>
-        <div className="pp-topics__chips" ref={filtersRef}>
-          {topicChips.map(chip => (
-            <button
-              key={chip.key}
-              type="button"
-              className={`pp-topic-chip${activeTopic === chip.key ? ' active' : ''}`}
-              aria-pressed={activeTopic === chip.key}
-              onClick={() => setActiveTopic(chip.key)}
-            >
-              <span className="pp-topic-chip__label">{chip.label}</span>
-              {chip.description && <span className="pp-topic-chip__desc">{chip.description}</span>}
-            </button>
-          ))}
-        </div>
-        <p className="pp-topics__note">{t.topicsNote}</p>
-      </section>
-
-      <hr className="pp-divider" />
-
-      {/* FAQ */}
-      <section className="pp-faq" id="faq">
-        <div className="pp-faq__head">
-          <p className="pp-kicker">{t.faqKicker}</p>
-          <h2 className="pp-faq__title">{t.faqTitle}</h2>
-        </div>
-        <div className="pp-faq__grid">
-          {(t.faqItems || []).map(item => (
-            <div key={item.q} className="pp-faq__item">
-              <h3 className="pp-faq__q">{item.q}</h3>
-              <p className="pp-faq__a">{item.a}</p>
-            </div>
-          ))}
-        </div>
-      </section>
 
       <hr className="pp-divider" />
 

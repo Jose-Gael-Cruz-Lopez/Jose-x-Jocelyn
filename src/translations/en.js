@@ -2084,7 +2084,7 @@ export const en = {
     ctaSaveSpot: 'Save My Spot',
 
     // ── Past panels archive ───────────────────────────────────────────────────
-    archiveKicker: 'Section 03',
+    archiveKicker: 'Section 04',
     archiveTitle: 'Past Panels',
     archiveSub: 'A growing archive of conversations you can come back to.',
     archiveBody: 'Missed a live session? Past panels live here as a growing archive of conversations, recordings, flyers, and takeaways. Every session is meant to stay useful after the event ends, so you can come back to the conversations',
@@ -2130,7 +2130,7 @@ export const en = {
     ],
 
     // ── FAQ ───────────────────────────────────────────────────────────────────
-    faqKicker: 'Common questions',
+    faqKicker: 'Section 03',
     faqTitle: 'A few things you might be wondering.',
     faqItems: [
       { q: 'Are the panels free to attend?', a: 'Yes. Every Partner Panel is free for students, recent grads, and anyone in between. No tickets, no paywall, no waitlist.' },
