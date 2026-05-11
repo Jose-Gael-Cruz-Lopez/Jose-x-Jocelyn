@@ -1625,6 +1625,7 @@ export const es = {
     filterOffers: 'Ofertas',
     filterOffersDesc: 'Negociación, regreso',
     filterRejection: 'Rechazo',
+    filterRejectionDesc: 'Cómo recuperarse',
     filterOnTheJob: 'En el trabajo',
 
     // ── No results ────────────────────────────────────────────────────────────

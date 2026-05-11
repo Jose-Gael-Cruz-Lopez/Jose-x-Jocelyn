@@ -1625,6 +1625,7 @@ export const en = {
     filterOffers: 'Offers',
     filterOffersDesc: 'Negotiation, return',
     filterRejection: 'Rejection',
+    filterRejectionDesc: 'How to recover',
     filterOnTheJob: 'On the Job',
 
     // ── No results ────────────────────────────────────────────────────────────
