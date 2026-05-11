@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
@@ -273,6 +273,23 @@ export default function LinkedInSeries() {
   const t = useT('linkedInSeries')
 
   const [searchParams, setSearchParams] = useSearchParams()
+  const filtersRef = useRef(null)
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstFilter = filtersRef.current?.querySelector('button')
+      if (firstFilter) {
+        e.preventDefault()
+        firstFilter.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
   const filterLens = searchParams.get('lens') || ''   // '' | 'jose' | 'jocelyn' | 'both'
   const filterTopic = searchParams.get('topic') || '' // '' | 'internships' | 'offers' | 'rejection' | 'on-the-job'
 
@@ -419,7 +436,7 @@ export default function LinkedInSeries() {
       )}
 
       <div className="ls-controls">
-        <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel}>
+        <div className="ls-filters" role="group" aria-label={t.filtersAriaLabel} ref={filtersRef}>
           <button
             className={`ls-filter${noFilters ? ' ls-filter--active' : ''}`}
             aria-pressed={noFilters}
