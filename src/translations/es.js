@@ -1621,6 +1621,14 @@ export const es = {
     livePostsCountSingular: 'publicación en vivo',
     livePostsCountPlural: 'publicaciones en vivo',
     liveReadOnLinkedIn: 'Leer en LinkedIn',
+    livePosts: [
+      {
+        kicker: 'Lanzamiento de la serie · Anuncio',
+        title: 'El 5 de mayo de 1862, México estaba superado en número.',
+        preview: 'Tenían todas las razones para perder. Ganaron de todos modos. Esa misma energía es exactamente lo que define a estudiantes de primera generación — aparecer sin un manual, construir redes desde cero, y convertir la adversidad en lo que nos hace, nosotros. Hemos estado construyendo algo en silencio. Deja tu correo en los comentarios para ser el primero en enterarte.',
+        dateLabel: '5 de mayo, 2026',
+      },
+    ],
     typeAnnouncement: 'Anuncio',
     typeStudentLens: 'Perspectiva del estudiante',
     typePostGradLens: 'Perspectiva posuniversitaria',

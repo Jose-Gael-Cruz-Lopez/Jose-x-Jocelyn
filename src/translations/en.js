@@ -1621,6 +1621,14 @@ export const en = {
     livePostsCountSingular: 'live post',
     livePostsCountPlural: 'live posts',
     liveReadOnLinkedIn: 'Read on LinkedIn',
+    livePosts: [
+      {
+        kicker: 'Series Launch · Announcement',
+        title: 'On May 5th, 1862, Mexico stood outnumbered.',
+        preview: 'They had every reason to lose. They won anyway. That same energy is exactly what shapes first-gen students — showing up without a rulebook, building networks from nothing, and turning adversity into the very thing that makes us, us. We’ve been building something quietly. Drop your email in the comments to be the first to know.',
+        dateLabel: 'May 5, 2026',
+      },
+    ],
     typeAnnouncement: 'Announcement',
     typeStudentLens: 'Student Lens',
     typePostGradLens: 'Post-Grad Lens',
