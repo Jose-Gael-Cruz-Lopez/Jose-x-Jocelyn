@@ -25,6 +25,23 @@ export default function InterviewPrep() {
   const [form, setForm] = useState({ role: '', stage: '', type: '', need: '', email: '' })
   const [previewIndex, setPreviewIndex] = useState(null)
   const previewTriggerRef = useRef(null)
+  const tabsRef = useRef(null)
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstTab = tabsRef.current?.querySelector('button')
+      if (firstTab) {
+        e.preventDefault()
+        firstTab.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   const openPreview = (i, e) => {
     previewTriggerRef.current = e?.currentTarget ?? null
@@ -852,7 +869,7 @@ export default function InterviewPrep() {
           <h2 className="ip-types__title">{t.typesTitle}</h2>
           <p className="ip-types__sub">{t.typesSub}</p>
 
-          <div className="ip-type-tabs" role="tablist" aria-label={t.typesTabsAriaLabel} onKeyDown={e => {
+          <div className="ip-type-tabs" role="tablist" aria-label={t.typesTabsAriaLabel} ref={tabsRef} onKeyDown={e => {
             const KEYS = t.interviewTypes.map(it => it.key)
             const idx = KEYS.indexOf(activeTab)
             let next = null
