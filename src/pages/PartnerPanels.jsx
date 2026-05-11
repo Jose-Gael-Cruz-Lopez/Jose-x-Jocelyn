@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -117,8 +117,19 @@ function addToCalendar(title, start, end) {
 
 export default function PartnerPanels() {
   const t = useT('partnerPanels')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const validTopics = ['all', ...new Set(ARCHIVE_CARDS.flatMap(c => c.topics))]
+  const urlTopic = searchParams.get('topic') || ''
+  const activeTopic = urlTopic && validTopics.includes(urlTopic) ? urlTopic : 'all'
+  const setActiveTopic = useCallback(key => {
+    const next = new URLSearchParams(searchParams)
+    if (!key || key === 'all') next.delete('topic')
+    else next.set('topic', key)
+    setSearchParams(next, { replace: true })
+  }, [searchParams, setSearchParams])
   const [openTakeaway, setOpenTakeaway] = useState(null)
-  const [activeTopic, setActiveTopic] = useState('all')
+  const topicsRef = useRef(null)
+  const progressRef = useRef(null)
   const [suggestSubmitted, setSuggestSubmitted] = useState(false)
   const [suggestLoading, setSuggestLoading] = useState(false)
   const [suggestError, setSuggestError] = useState('')
@@ -137,6 +148,44 @@ export default function PartnerPanels() {
   function toggleTakeaway(id) {
     setOpenTakeaway(prev => prev === id ? null : id)
   }
+
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const el = progressRef.current
+      if (!el) return
+      const doc = document.documentElement
+      const max = (doc.scrollHeight - doc.clientHeight) || 1
+      const ratio = Math.min(1, Math.max(0, window.scrollY / max))
+      el.style.transform = 'scaleX(' + ratio + ')'
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      const firstChip = topicsRef.current?.querySelector('button, [tabindex]:not([tabindex="-1"])')
+      if (firstChip) {
+        e.preventDefault()
+        firstChip.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
 
   async function submitSuggest(e) {
     e.preventDefault()
@@ -187,7 +236,13 @@ export default function PartnerPanels() {
   }
 
   return (
-    <ArticleLayout title={`${t.heroTitlePrefix}${t.heroTitleEm}`}>
+    <ArticleLayout
+      title={`${t.heroTitlePrefix}${t.heroTitleEm}`}
+      signoffLine={t.signoffLine}
+      signoffSub={t.signoffSub}
+      signoffCta={t.signoffCta}
+    >
+      <div ref={progressRef} className="pp-scroll-progress" aria-hidden="true" />
       <style>{`
         html, body { background: var(--color-cream); }
         :root { --pp-shadow-warm: 58, 38, 22; }
@@ -992,7 +1047,7 @@ export default function PartnerPanels() {
           <p className="pp-section-sub">{t.topicsSub}</p>
           <p className="pp-section-body">{t.topicsBody}</p>
         </div>
-        <div className="pp-topics__chips">
+        <div className="pp-topics__chips" ref={topicsRef}>
           {topicChips.map(chip => (
             <button
               key={chip.key}
