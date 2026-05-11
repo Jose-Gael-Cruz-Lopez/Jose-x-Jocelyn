@@ -375,7 +375,8 @@ export default function PartnerPanels() {
           display: flex; align-items: flex-start; gap: 8px;
         }
         .pp-featured-card__panelist::before {
-          content: '-'; color: var(--color-muted); flex-shrink: 0; font-size: 12px;
+          content: ''; flex-shrink: 0; width: 5px; height: 5px; border-radius: 50%;
+          background: var(--color-gold); margin-top: 8px; opacity: .85;
         }
         .pp-featured-card__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
         .pp-featured-card__note {
@@ -462,7 +463,8 @@ export default function PartnerPanels() {
           display: flex; align-items: center; gap: 8px;
           font-size: 12px; color: var(--color-muted);
         }
-        .pp-panel-card__meta-icon { flex-shrink: 0; font-size: 13px; }
+        .pp-panel-card__meta-icon { flex-shrink: 0; display: inline-flex; color: var(--color-gold-dark); opacity: .8; }
+        .pp-panel-card__meta-icon svg { width: 13px; height: 13px; stroke-width: 1.6; }
         .pp-panel-card__meta-val { font-weight: 500; color: var(--color-dark); }
         .pp-panel-card__panelists { font-size: 12px; color: var(--color-muted); line-height: 1.65; }
         .pp-panel-card__panelists strong { color: var(--color-dark); font-weight: 600; font-size: 11px; letter-spacing:.04em; text-transform:uppercase; display:block; margin-bottom:4px; }
@@ -747,8 +749,9 @@ export default function PartnerPanels() {
           width: 22px; height: 22px; border-radius: 50%;
           background: rgba(232,168,56,.2); color: var(--color-gold);
           display: flex; align-items: center; justify-content: center;
-          font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+          flex-shrink: 0; margin-top: 1px;
         }
+        .pp-panelist__perk-icon svg { width: 12px; height: 12px; stroke-width: 2; }
         .pp-form-box--dark {
           background: rgba(255,255,255,.05);
           border: 1px solid rgba(255,255,255,.1);
@@ -1008,11 +1011,15 @@ export default function PartnerPanels() {
               <p className="pp-panel-card__desc">{panel.desc}</p>
               <div className="pp-panel-card__meta">
                 <div className="pp-panel-card__meta-row">
-                  <span className="pp-panel-card__meta-icon">–</span>
+                  <span className="pp-panel-card__meta-icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.4 1.6"/></svg>
+                  </span>
                   <span>{panel.time} &nbsp;·&nbsp; <span className="pp-panel-card__meta-val">{t.upcomingMetaZoom}</span></span>
                 </div>
                 <div className="pp-panel-card__meta-row">
-                  <span className="pp-panel-card__meta-icon">–</span>
+                  <span className="pp-panel-card__meta-icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="6" r="2.5"/><path d="M2 13.5c0-2.2 1.8-3.5 4-3.5s4 1.3 4 3.5"/><circle cx="11.5" cy="5.5" r="2"/><path d="M11 10c1.8 0 3.5 1.1 3.5 3"/></svg>
+                  </span>
                   <span>{t.upcomingMetaBestFor} <span className="pp-panel-card__meta-val">{panel.bestFor}</span></span>
                 </div>
               </div>
@@ -1201,19 +1208,27 @@ export default function PartnerPanels() {
             </p>
             <div className="pp-panelist__perks">
               <div className="pp-panelist__perk">
-                <span className="pp-panelist__perk-icon">✓</span>
+                <span className="pp-panelist__perk-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>
+                </span>
                 <span>{t.panelistPerk1}</span>
               </div>
               <div className="pp-panelist__perk">
-                <span className="pp-panelist__perk-icon">✓</span>
+                <span className="pp-panelist__perk-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>
+                </span>
                 <span>{t.panelistPerk2}</span>
               </div>
               <div className="pp-panelist__perk">
-                <span className="pp-panelist__perk-icon">✓</span>
+                <span className="pp-panelist__perk-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>
+                </span>
                 <span>{t.panelistPerk3}</span>
               </div>
               <div className="pp-panelist__perk">
-                <span className="pp-panelist__perk-icon">✓</span>
+                <span className="pp-panelist__perk-icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>
+                </span>
                 <span>{t.panelistPerk4}</span>
               </div>
             </div>
