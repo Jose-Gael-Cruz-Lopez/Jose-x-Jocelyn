@@ -727,7 +727,8 @@ export default function CareerTemplates() {
               aria-pressed={activeFilter === key}
               onClick={handleFilterClick}
             >
-              {label}
+              <span className="ct-filter__label">{label}</span>
+              {desc && <span className="ct-filter__desc">{desc}</span>}
             </button>
           ))}
         </div>
