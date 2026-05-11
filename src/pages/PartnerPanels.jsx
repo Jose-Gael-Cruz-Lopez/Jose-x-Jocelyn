@@ -1000,8 +1000,9 @@ export default function PartnerPanels() {
           <p className="pp-section-body">{t.upcomingBody} <strong>{t.upcomingBodyStrong}</strong></p>
         </div>
         <div className="pp-upcoming__grid">
-          {UPCOMING_PANELS.map(panel => (
-            <article key={panel.id} className="pp-panel-card">
+          {UPCOMING_PANELS.map((panel, idx) => (
+            <article key={panel.id} className={`pp-panel-card${idx === 0 ? ' pp-panel-card--featured' : ''}`}>
+              {idx === 0 && <span className="pp-panel-card__featured-tag">{t.upcomingFeaturedTag || 'Next up'}</span>}
               <span className="pp-panel-card__date-badge">{panel.date}</span>
               <h3 className="pp-panel-card__title">{panel.title}</h3>
               <p className="pp-panel-card__desc">{panel.desc}</p>
