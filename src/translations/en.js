@@ -1627,6 +1627,7 @@ export const en = {
     filterRejection: 'Rejection',
     filterRejectionDesc: 'How to recover',
     filterOnTheJob: 'On the Job',
+    filterOnTheJobDesc: 'First 90 days',
 
     // ── No results ────────────────────────────────────────────────────────────
     noResults: 'No episodes match that filter.',
