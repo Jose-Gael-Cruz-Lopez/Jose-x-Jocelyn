@@ -548,6 +548,44 @@ export default function PartnerPanels() {
           .pp-archive-card__actions { flex-direction: row; flex-wrap: wrap; }
         }
 
+        /* MID-PAGE BRIDGE CTA (ported from CC/LS) */
+        .pp-bridge { max-width: 1040px; margin: 0 auto; padding: 0 clamp(20px,5vw,56px) 24px; }
+        .pp-bridge__inner {
+          display: flex; align-items: center; justify-content: space-between; gap: 24px;
+          flex-wrap: wrap; padding: 24px 28px;
+          background: rgba(232,168,56,.06);
+          border: 1px solid rgba(232,168,56,.22);
+          border-radius: 14px;
+        }
+        .pp-bridge__copy {
+          font-family: var(--font-display);
+          font-size: clamp(17px,2vw,21px); font-weight: 600;
+          color: var(--color-dark); line-height: 1.3; letter-spacing: -.005em;
+        }
+        .pp-bridge__copy em {
+          font-style: italic;
+          font-family: var(--font-serif, var(--font-display));
+          color: var(--color-gold-dark); font-weight: 500;
+        }
+        .pp-bridge__cta {
+          display: inline-flex; align-items: center; gap: 8px;
+          padding: 11px 20px; background: var(--color-dark); color: var(--color-cream);
+          border-radius: 999px; font-family: var(--font-display);
+          font-size: 13px; font-weight: 700; letter-spacing: -.005em;
+          text-decoration: none;
+          box-shadow: 0 6px 14px -8px rgba(63,42,28,.4), inset 0 1px 0 rgba(255,255,255,.08);
+          transition: background .25s, transform .22s cubic-bezier(.16,1,.3,1), box-shadow .25s;
+        }
+        .pp-bridge__cta:hover {
+          background: var(--color-teal); transform: translateY(-1px);
+          box-shadow: 0 12px 22px -10px rgba(58,125,107,.5);
+        }
+        .pp-bridge__cta::after { content: '↓'; font-size: 13px; line-height: 1; }
+        @media (prefers-reduced-motion: reduce) {
+          .pp-bridge__cta { transition: none !important; }
+          .pp-bridge__cta:hover { transform: none !important; }
+        }
+
         /* TOPICS */
         .pp-topics {
           max-width: 1040px; margin: 0 auto;
