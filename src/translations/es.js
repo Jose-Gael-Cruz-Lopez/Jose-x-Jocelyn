@@ -92,6 +92,7 @@ export const es = {
     card6Excerpt: 'Puedes hacer todo bien y aún así ser rechazado. Cómo procesarlo y seguir adelante.',
     footerCta: 'Conectemos',
     footerCredit: 'Jose x Jocelyn © 2026',
+    footerSignoff: 'El sol sale para todos —',
     footerPrivacy: 'Privacidad',
     footerTerms: 'Términos',
     modalTitle: 'Escríbenos',

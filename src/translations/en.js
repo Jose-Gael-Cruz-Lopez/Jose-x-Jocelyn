@@ -92,6 +92,7 @@ export const en = {
     card6Excerpt: 'You can do everything right and still get rejected. How to process it and keep moving.',
     footerCta: "Let's<br/>connect",
     footerCredit: 'Jose x Jocelyn © 2026',
+    footerSignoff: 'El sol sale para todos —',
     footerPrivacy: 'Privacy',
     footerTerms: 'Terms',
     modalTitle: 'Get in touch',

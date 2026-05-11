@@ -1899,16 +1899,33 @@ ul { list-style: none; }
   white-space: nowrap;
 }
 
+.footer__signoff {
+  position: relative;
+  z-index: 1;
+  margin-top: 56px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(18px, 2vw, 26px);
+  letter-spacing: -0.005em;
+  color: var(--color-dark);
+  text-align: left;
+}
+
 .footer__bottom {
   position: relative;
   z-index: 1;
-  display: flex; justify-content: space-between; align-items: center;
-  margin-top: 60px; padding: 20px 0;
-  border-top: 1px solid rgba(26,25,22,0.08);
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 28px; padding: 22px 0 8px;
+  border-top: 1px solid rgba(26,25,22,0.12);
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .footer__credit {
-  font-size: 13px; color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--color-dark);
 }
 
 .footer__legal {

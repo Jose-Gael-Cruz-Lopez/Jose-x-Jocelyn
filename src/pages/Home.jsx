@@ -1131,6 +1131,7 @@ export default function Home() {
         <button className="footer__cta" id="footerCta" onClick={openModal}>
           <span className="footer__cta-text" dangerouslySetInnerHTML={{ __html: t.footerCta }} />
         </button>
+        <p className="footer__signoff" lang="es">{t.footerSignoff}</p>
         <div className="footer__bottom">
           <span className="footer__credit">{t.footerCredit}</span>
           <div className="footer__legal">
