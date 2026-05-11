@@ -435,11 +435,14 @@ export default function PartnerPanels() {
         .pp-panel-card--featured {
           grid-column: 1 / -1;
           padding: 36px 36px 30px;
-          background: linear-gradient(180deg, rgba(232,168,56,.09) 0%, rgba(255,250,242,.5) 60%);
-          border-color: rgba(232,168,56,.28);
+          background: linear-gradient(180deg, rgba(232,168,56,.2) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%);
+          border-color: rgba(232,168,56,.42);
           display: grid; grid-template-columns: 1.3fr 1fr; column-gap: 36px; row-gap: 14px;
         }
-        .pp-panel-card--featured:hover { border-color: rgba(232,168,56,.42); }
+        .pp-panel-card--featured:hover {
+          border-color: rgba(232,168,56,.62);
+          box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 22px 44px -16px rgba(232,168,56,.38);
+        }
         .pp-panel-card--featured > .pp-panel-card__featured-tag { grid-column: 1 / -1; }
         .pp-panel-card--featured > .pp-panel-card__date-badge { grid-column: 1 / -1; }
         .pp-panel-card--featured > .pp-panel-card__title { grid-column: 1; }
@@ -449,28 +452,30 @@ export default function PartnerPanels() {
         .pp-panel-card--featured > .pp-panel-card__tags { grid-column: 1 / -1; }
         .pp-panel-card--featured > .pp-panel-card__actions { grid-column: 1 / -1; }
 
-        /* Per-topic tint variants — mirrors CT's --outreach/--apply/--interview/--offers/--job system */
-        .pp-panel-card--blue    { background: linear-gradient(180deg, rgba(91,142,194,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(91,142,194,.22); }
-        .pp-panel-card--teal    { background: linear-gradient(180deg, rgba(58,125,107,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(58,125,107,.22); }
-        .pp-panel-card--gold    { background: linear-gradient(180deg, rgba(232,168,56,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(232,168,56,.26); }
-        .pp-panel-card--accent  { background: linear-gradient(180deg, rgba(179,69,57,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(179,69,57,.22); }
-        .pp-panel-card--navy    { background: linear-gradient(180deg, rgba(22,43,68,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(22,43,68,.2); }
-        .pp-panel-card--blue:hover    { border-color: rgba(91,142,194,.38); }
-        .pp-panel-card--teal:hover    { border-color: rgba(58,125,107,.4); }
-        .pp-panel-card--gold:hover    { border-color: rgba(232,168,56,.42); }
-        .pp-panel-card--accent:hover  { border-color: rgba(179,69,57,.38); }
-        .pp-panel-card--navy:hover    { border-color: rgba(22,43,68,.4); }
+        /* Per-topic tint variants — mirrors CT's --outreach/--apply/--interview/--offers/--job system.
+           Tints boosted ~2x from initial pass since PP cards are wider/taller and the previous .06-.09
+           opacities read as washed out at this scale. */
+        .pp-panel-card--blue    { background: linear-gradient(180deg, rgba(91,142,194,.16) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%); border-color: rgba(91,142,194,.35); }
+        .pp-panel-card--teal    { background: linear-gradient(180deg, rgba(58,125,107,.16) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%); border-color: rgba(58,125,107,.35); }
+        .pp-panel-card--gold    { background: linear-gradient(180deg, rgba(232,168,56,.18) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%); border-color: rgba(232,168,56,.4); }
+        .pp-panel-card--accent  { background: linear-gradient(180deg, rgba(179,69,57,.14) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%); border-color: rgba(179,69,57,.32); }
+        .pp-panel-card--navy    { background: linear-gradient(180deg, rgba(22,43,68,.14) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%); border-color: rgba(22,43,68,.32); }
+        .pp-panel-card--blue:hover    { border-color: rgba(91,142,194,.52); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 18px 36px -14px rgba(91,142,194,.32); }
+        .pp-panel-card--teal:hover    { border-color: rgba(58,125,107,.55); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 18px 36px -14px rgba(58,125,107,.32); }
+        .pp-panel-card--gold:hover    { border-color: rgba(232,168,56,.6);  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 18px 36px -14px rgba(232,168,56,.32); }
+        .pp-panel-card--accent:hover  { border-color: rgba(179,69,57,.5);   box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 18px 36px -14px rgba(179,69,57,.3); }
+        .pp-panel-card--navy:hover    { border-color: rgba(22,43,68,.55);   box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 18px 36px -14px rgba(22,43,68,.32); }
 
-        .pp-archive-card--blue    { background: linear-gradient(180deg, rgba(91,142,194,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(91,142,194,.22); }
-        .pp-archive-card--teal    { background: linear-gradient(180deg, rgba(58,125,107,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(58,125,107,.22); }
-        .pp-archive-card--gold    { background: linear-gradient(180deg, rgba(232,168,56,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(232,168,56,.26); }
-        .pp-archive-card--accent  { background: linear-gradient(180deg, rgba(179,69,57,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(179,69,57,.22); }
-        .pp-archive-card--navy    { background: linear-gradient(180deg, rgba(22,43,68,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(22,43,68,.2); }
-        .pp-archive-card--blue:hover    { border-color: rgba(91,142,194,.38); }
-        .pp-archive-card--teal:hover    { border-color: rgba(58,125,107,.4); }
-        .pp-archive-card--gold:hover    { border-color: rgba(232,168,56,.42); }
-        .pp-archive-card--accent:hover  { border-color: rgba(179,69,57,.38); }
-        .pp-archive-card--navy:hover    { border-color: rgba(22,43,68,.4); }
+        .pp-archive-card--blue    { background: linear-gradient(180deg, rgba(91,142,194,.16) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%); border-color: rgba(91,142,194,.35); }
+        .pp-archive-card--teal    { background: linear-gradient(180deg, rgba(58,125,107,.16) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%); border-color: rgba(58,125,107,.35); }
+        .pp-archive-card--gold    { background: linear-gradient(180deg, rgba(232,168,56,.18) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%); border-color: rgba(232,168,56,.4); }
+        .pp-archive-card--accent  { background: linear-gradient(180deg, rgba(179,69,57,.14) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%); border-color: rgba(179,69,57,.32); }
+        .pp-archive-card--navy    { background: linear-gradient(180deg, rgba(22,43,68,.14) 0%, rgba(255,250,242,.35) 65%, rgba(255,250,242,.55) 100%); border-color: rgba(22,43,68,.32); }
+        .pp-archive-card--blue:hover    { border-color: rgba(91,142,194,.52); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 32px -14px rgba(91,142,194,.32); }
+        .pp-archive-card--teal:hover    { border-color: rgba(58,125,107,.55); box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 32px -14px rgba(58,125,107,.32); }
+        .pp-archive-card--gold:hover    { border-color: rgba(232,168,56,.6);  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 32px -14px rgba(232,168,56,.32); }
+        .pp-archive-card--accent:hover  { border-color: rgba(179,69,57,.5);   box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 32px -14px rgba(179,69,57,.3); }
+        .pp-archive-card--navy:hover    { border-color: rgba(22,43,68,.55);   box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 16px 32px -14px rgba(22,43,68,.32); }
         .pp-panel-card--featured .pp-panel-card__title {
           font-size: clamp(20px,2.5vw,26px);
         }
