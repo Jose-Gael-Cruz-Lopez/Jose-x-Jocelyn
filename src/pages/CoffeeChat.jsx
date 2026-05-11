@@ -984,29 +984,33 @@ export default function CoffeeChat() {
                 <div className="cc-form-row cc-form-row-2">
                   <div>
                     <label className="cc-form-label" htmlFor="ccName">{t.formLabelName} <span>*</span></label>
-                    <input className="cc-form-input" type="text" id="ccName" placeholder={t.formPlaceholderName} value={formData.name} onChange={e => setFormData(d => ({ ...d, name: e.target.value }))} />
+                    <input className={`cc-form-input${fieldErrors.name ? ' is-invalid' : ''}`} type="text" id="ccName" placeholder={t.formPlaceholderName} value={formData.name} onChange={e => setFormField('name', e.target.value)} aria-invalid={!!fieldErrors.name} aria-describedby={fieldErrors.name ? 'ccName-error' : undefined} />
+                    {fieldErrors.name && <span id="ccName-error" className="cc-form-row__error" role="alert">{fieldErrors.name}</span>}
                   </div>
                   <div>
                     <label className="cc-form-label" htmlFor="ccPronouns">{t.formLabelPronouns}</label>
-                    <input className="cc-form-input" type="text" id="ccPronouns" placeholder={t.formPlaceholderPronouns} value={formData.pronouns} onChange={e => setFormData(d => ({ ...d, pronouns: e.target.value }))} />
+                    <input className="cc-form-input" type="text" id="ccPronouns" placeholder={t.formPlaceholderPronouns} value={formData.pronouns} onChange={e => setFormField('pronouns', e.target.value)} />
                   </div>
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccEmail">{t.formLabelEmail} <span>*</span> <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>{t.formEmailNote}</span></label>
-                  <input className="cc-form-input" type="email" id="ccEmail" placeholder={t.formPlaceholderEmail} value={formData.email} onChange={e => setFormData(d => ({ ...d, email: e.target.value }))} />
+                  <input className={`cc-form-input${fieldErrors.email ? ' is-invalid' : ''}`} type="email" id="ccEmail" placeholder={t.formPlaceholderEmail} value={formData.email} onChange={e => setFormField('email', e.target.value)} onBlur={e => { const v = e.target.value.trim(); if (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) setFieldErrors(s => ({ ...s, email: t.formErrorEmailFormat })) }} aria-invalid={!!fieldErrors.email} aria-describedby={fieldErrors.email ? 'ccEmail-error' : undefined} />
+                  {fieldErrors.email && <span id="ccEmail-error" className="cc-form-row__error" role="alert">{fieldErrors.email}</span>}
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccLinkedIn">{t.formLabelLinkedIn} <span>*</span></label>
-                  <input className="cc-form-input" type="url" id="ccLinkedIn" placeholder={t.formPlaceholderLinkedIn} value={formData.linkedin} onChange={e => setFormData(d => ({ ...d, linkedin: e.target.value }))} />
+                  <input className={`cc-form-input${fieldErrors.linkedin ? ' is-invalid' : ''}`} type="url" id="ccLinkedIn" placeholder={t.formPlaceholderLinkedIn} value={formData.linkedin} onChange={e => setFormField('linkedin', e.target.value)} aria-invalid={!!fieldErrors.linkedin} aria-describedby={fieldErrors.linkedin ? 'ccLinkedIn-error' : undefined} />
+                  {fieldErrors.linkedin && <span id="ccLinkedIn-error" className="cc-form-row__error" role="alert">{fieldErrors.linkedin}</span>}
                 </div>
                 <div className="cc-form-row cc-form-row-2">
                   <div>
                     <label className="cc-form-label" htmlFor="ccCurrentRole">{t.formLabelRole} <span>*</span></label>
-                    <input className="cc-form-input" type="text" id="ccCurrentRole" placeholder={t.formPlaceholderRole} value={formData.role} onChange={e => setFormData(d => ({ ...d, role: e.target.value }))} />
+                    <input className={`cc-form-input${fieldErrors.role ? ' is-invalid' : ''}`} type="text" id="ccCurrentRole" placeholder={t.formPlaceholderRole} value={formData.role} onChange={e => setFormField('role', e.target.value)} aria-invalid={!!fieldErrors.role} aria-describedby={fieldErrors.role ? 'ccCurrentRole-error' : undefined} />
+                    {fieldErrors.role && <span id="ccCurrentRole-error" className="cc-form-row__error" role="alert">{fieldErrors.role}</span>}
                   </div>
                   <div>
                     <label className="cc-form-label" htmlFor="ccLocation">{t.formLabelLocation}</label>
-                    <input className="cc-form-input" type="text" id="ccLocation" placeholder={t.formPlaceholderLocation} value={formData.location} onChange={e => setFormData(d => ({ ...d, location: e.target.value }))} />
+                    <input className="cc-form-input" type="text" id="ccLocation" placeholder={t.formPlaceholderLocation} value={formData.location} onChange={e => setFormField('location', e.target.value)} />
                   </div>
                 </div>
                 <div className="cc-form-row">
@@ -1014,9 +1018,10 @@ export default function CoffeeChat() {
                   <MultiSelectDropdown
                     options={FUNCTION_OPTIONS}
                     selected={funcChips}
-                    onChange={setFuncChips}
+                    onChange={(updater) => { setFuncChips(updater); if (fieldErrors.func) setFieldErrors(s => ({ ...s, func: '' })) }}
                     placeholder={t.formFunctionPlaceholder}
                   />
+                  {fieldErrors.func && <span className="cc-form-row__error" role="alert">{fieldErrors.func}</span>}
                   {funcChips.length > 0 && <div className="cc-selected-tags">{funcChips.map(c => <span key={c} className="cc-selected-tag">{c} <button type="button" onClick={() => { setFuncChips(p => p.filter(v => v !== c)); if (c === 'Other') setFuncOtherText('') }}>×</button></span>)}</div>}
                   {funcChips.includes('Other') && (
                     <input
@@ -1051,28 +1056,37 @@ export default function CoffeeChat() {
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccTopics">{t.formLabelTopics} <span>*</span></label>
-                  <textarea className="cc-form-textarea" id="ccTopics" placeholder={t.formPlaceholderTopics} value={formData.topics} onChange={e => setFormData(d => ({ ...d, topics: e.target.value }))}></textarea>
+                  <textarea className={`cc-form-textarea${fieldErrors.topics ? ' is-invalid' : ''}`} id="ccTopics" placeholder={t.formPlaceholderTopics} value={formData.topics} onChange={e => setFormField('topics', e.target.value)} aria-invalid={!!fieldErrors.topics} aria-describedby={fieldErrors.topics ? 'ccTopics-error' : undefined}></textarea>
+                  {fieldErrors.topics && <span id="ccTopics-error" className="cc-form-row__error" role="alert">{fieldErrors.topics}</span>}
                 </div>
                 <div className="cc-form-row">
                   <label className="cc-form-label" htmlFor="ccCapacity">{t.formLabelCapacity} <span>*</span></label>
-                  <select className="cc-form-select" id="ccCapacity" value={formData.capacity} onChange={e => setFormData(d => ({ ...d, capacity: e.target.value }))}>
+                  <select className={`cc-form-select${fieldErrors.capacity ? ' is-invalid' : ''}`} id="ccCapacity" value={formData.capacity} onChange={e => setFormField('capacity', e.target.value)} aria-invalid={!!fieldErrors.capacity} aria-describedby={fieldErrors.capacity ? 'ccCapacity-error' : undefined}>
                     <option value="">{t.formCapacityDefault}</option>
                     <option value="1-2">{t.formCapacity1}</option>
                     <option value="3-5">{t.formCapacity2}</option>
                     <option value="6+">{t.formCapacity3}</option>
                   </select>
+                  {fieldErrors.capacity && <span id="ccCapacity-error" className="cc-form-row__error" role="alert">{fieldErrors.capacity}</span>}
                 </div>
                 <div className="cc-form-row" style={{ marginBottom: '20px' }}>
                   <div className="cc-form-check">
-                    <input type="checkbox" id="ccConsent1" checked={formData.consent1} onChange={e => setFormData(d => ({ ...d, consent1: e.target.checked }))} />
+                    <input type="checkbox" id="ccConsent1" checked={formData.consent1} onChange={e => { setFormData(d => ({ ...d, consent1: e.target.checked })); if (fieldErrors.consent1) setFieldErrors(s => ({ ...s, consent1: '' })) }} />
                     <label className="cc-form-check-label" htmlFor="ccConsent1">{t.formConsent1}</label>
                   </div>
+                  {fieldErrors.consent1 && <span className="cc-form-row__error" role="alert" style={{ marginLeft: 26 }}>{fieldErrors.consent1}</span>}
                   <div className="cc-form-check">
-                    <input type="checkbox" id="ccConsent2" checked={formData.consent2} onChange={e => setFormData(d => ({ ...d, consent2: e.target.checked }))} />
+                    <input type="checkbox" id="ccConsent2" checked={formData.consent2} onChange={e => { setFormData(d => ({ ...d, consent2: e.target.checked })); if (fieldErrors.consent2) setFieldErrors(s => ({ ...s, consent2: '' })) }} />
                     <label className="cc-form-check-label" htmlFor="ccConsent2">{t.formConsent2}</label>
                   </div>
+                  {fieldErrors.consent2 && <span className="cc-form-row__error" role="alert" style={{ marginLeft: 26 }}>{fieldErrors.consent2}</span>}
                 </div>
-                {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
+                {formError && (
+                  <div role="alert" className="cc-form-error-card">
+                    <span className="cc-form-error-card__msg"><strong>{t.formErrorLabel}</strong> {formError}</span>
+                    <button type="submit" className="cc-form-error-card__retry" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formRetryLabel}</button>
+                  </div>
+                )}
                 <button className="cc-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
               </form>
             )}
