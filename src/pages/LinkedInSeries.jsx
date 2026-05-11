@@ -291,15 +291,15 @@ export default function LinkedInSeries() {
   const [formSubmitted, setFormSubmitted] = useState(false)
 
   const LENS_OPTIONS = [
-    { v: 'jose',    label: t.filterJose },
-    { v: 'jocelyn', label: t.filterJocelyn },
-    { v: 'both',    label: t.filterBoth },
+    { v: 'jose',    label: t.filterJose,    desc: t.filterJoseDesc },
+    { v: 'jocelyn', label: t.filterJocelyn, desc: t.filterJocelynDesc },
+    { v: 'both',    label: t.filterBoth,    desc: t.filterBothDesc },
   ]
   const TOPIC_OPTIONS = [
-    { v: 'internships', label: t.filterInternships },
-    { v: 'offers',      label: t.filterOffers },
-    { v: 'rejection',   label: t.filterRejection },
-    { v: 'on-the-job',  label: t.filterOnTheJob },
+    { v: 'internships', label: t.filterInternships, desc: t.filterInternshipsDesc },
+    { v: 'offers',      label: t.filterOffers,      desc: t.filterOffersDesc },
+    { v: 'rejection',   label: t.filterRejection,   desc: t.filterRejectionDesc },
+    { v: 'on-the-job',  label: t.filterOnTheJob,    desc: t.filterOnTheJobDesc },
   ]
   const noFilters = !filterLens && !filterTopic
 
