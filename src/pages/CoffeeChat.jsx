@@ -347,6 +347,7 @@ export default function CoffeeChat() {
         .cc-hero__kicker::after { content: ''; width: 24px; height: 1px; background: var(--color-teal); opacity: .5; }
         .cc-hero__title { font-family: var(--font-display); font-size: clamp(46px,7.6vw,90px); font-weight: 700; line-height: .98; letter-spacing: -.025em; color: var(--color-dark); margin-bottom: 22px; max-width: 18ch; }
         .cc-hero__title em { font-style: italic; font-family: var(--font-serif, var(--font-display)); color: var(--color-gold-dark); font-weight: 500; padding-right: .04em; }
+        .cc-hero__tagline { font-family: var(--font-serif, var(--font-display)); font-size: clamp(18px,2.2vw,24px); font-style: italic; font-weight: 400; color: var(--color-accent); margin-bottom: 22px; letter-spacing: -.005em; max-width: 60ch; }
         .cc-hero__sub { font-family: var(--font-display); font-size: clamp(18px,2.5vw,26px); font-weight: 400; color: var(--color-dark); line-height: 1.4; max-width: 600px; margin-bottom: 18px; }
         .cc-hero__body { font-size: clamp(15px,1.8vw,17px); color: var(--color-muted); line-height: 1.7; max-width: 580px; margin-bottom: 36px; }
         .cc-hero__body strong { color: var(--color-dark); font-weight: 600; }
@@ -603,6 +604,7 @@ export default function CoffeeChat() {
       <header className="cc-hero" id="top">
         <p className="cc-hero__kicker">{t.heroKicker}</p>
         <h1 className="cc-hero__title">{t.heroTitle} <em>{t.heroTitleEm}</em></h1>
+        {t.heroTagline && <p className="cc-hero__tagline">{t.heroTagline}</p>}
         <p className="cc-hero__sub">{t.heroSub}</p>
         <p className="cc-hero__body">
           {t.heroBody1} <strong>{t.heroBodyQuote}</strong> {t.heroBody2}
