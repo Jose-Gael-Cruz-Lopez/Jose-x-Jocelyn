@@ -974,7 +974,7 @@ export default function InterviewPrep() {
                 <input className="ip-form-input" type="email" id="ipEmail" placeholder={t.formPlaceholderEmail} value={form.email} onChange={e => setField('email', e.target.value)} />
               </div>
               {formError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: '13px', marginBottom: '10px' }}>{formError}</p>}
-              <button className="ip-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
+              <button className="ip-form-btn" type="submit" disabled={formLoading || !form.role.trim()}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
             </form>
           )}
         </div>
