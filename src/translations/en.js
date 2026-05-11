@@ -208,7 +208,7 @@ export const en = {
     formSuccessTitle: 'Thanks for the submission!',
     formSuccessBody: 'We review every suggestion and update this list as new programs open. We appreciate you helping keep it current.',
     formErrorRequired: 'Program name and company are required.',
-    formErrorGeneric: 'Something went wrong. Please try again.',
+    formErrorGeneric: 'Couldn’t send. Try again, or email us at campustocareerteam@gmail.com.',
     bridgeCopyPrefix: 'Know a program we missed?',
     bridgeCopyEm: 'Send it to us.',
     bridgeCtaLabel: 'Suggest a program',

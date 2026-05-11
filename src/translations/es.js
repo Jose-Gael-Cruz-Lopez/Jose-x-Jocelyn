@@ -210,7 +210,7 @@ export const es = {
     formSuccessCta: 'Ver plantillas →',
     formSuccessCtaTo: '/career-templates',
     formErrorRequired: 'El nombre del programa y la empresa son obligatorios.',
-    formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    formErrorGeneric: 'No se pudo enviar. Inténtalo otra vez, o escríbenos a campustocareerteam@gmail.com.',
     bridgeCopyPrefix: '¿Conoces un programa que se nos pasó?',
     bridgeCopyEm: 'Envíalo.',
     bridgeCtaLabel: 'Sugerir un programa',
