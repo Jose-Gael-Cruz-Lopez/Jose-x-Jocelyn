@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
@@ -24,17 +24,30 @@ export default function InterviewPrep() {
   const [formError, setFormError] = useState('')
   const [form, setForm] = useState({ role: '', stage: '', type: '', need: '', email: '' })
   const [previewIndex, setPreviewIndex] = useState(null)
+  const previewTriggerRef = useRef(null)
+
+  const openPreview = (i, e) => {
+    previewTriggerRef.current = e?.currentTarget ?? null
+    setPreviewIndex(i)
+  }
+  const closePreview = useCallback(() => {
+    setPreviewIndex(null)
+    if (previewTriggerRef.current) {
+      previewTriggerRef.current.focus()
+      previewTriggerRef.current = null
+    }
+  }, [])
 
   useEffect(() => {
     if (previewIndex == null) { document.body.style.overflow = ''; return }
     document.body.style.overflow = 'hidden'
-    const onKey = e => { if (e.key === 'Escape') setPreviewIndex(null) }
+    const onKey = e => { if (e.key === 'Escape') closePreview() }
     window.addEventListener('keydown', onKey)
     return () => {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
     }
-  }, [previewIndex])
+  }, [previewIndex, closePreview])
 
   const setField = (k, v) => setForm(f => ({ ...f, [k]: v }))
   const handleSubmit = async e => {
@@ -876,7 +889,7 @@ export default function InterviewPrep() {
                 <button
                   type="button"
                   className="ip-res-card__cta-secondary"
-                  onClick={() => setPreviewIndex(i)}
+                  onClick={e => openPreview(i, e)}
                   aria-haspopup="dialog"
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -1004,7 +1017,7 @@ export default function InterviewPrep() {
       {/* PREVIEW MODAL */}
       <div
         className={`ip-modal-overlay${previewIndex != null ? ' open' : ''}`}
-        onClick={() => setPreviewIndex(null)}
+        onClick={closePreview}
         aria-hidden={previewIndex == null}
       >
         {(() => {
@@ -1021,7 +1034,7 @@ export default function InterviewPrep() {
               <button
                 type="button"
                 className="ip-modal__close"
-                onClick={() => setPreviewIndex(null)}
+                onClick={closePreview}
                 aria-label={t.previewModalCloseLabel}
               >✕</button>
               <div className="ip-modal__num">{String(previewIndex + 1).padStart(2, '0')}</div>
@@ -1032,7 +1045,7 @@ export default function InterviewPrep() {
               </div>
               <h2 id="ip-modal-title" className="ip-modal__title">{card.name}</h2>
               <p className="ip-modal__desc">{card.desc}</p>
-              <Link to="/career-templates" className="ip-modal__cta" onClick={() => setPreviewIndex(null)}>
+              <Link to="/career-templates" className="ip-modal__cta" onClick={closePreview}>
                 {card.ctaLabel}
               </Link>
             </div>
