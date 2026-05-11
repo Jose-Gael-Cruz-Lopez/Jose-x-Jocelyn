@@ -578,7 +578,9 @@ export const en = {
       },
       {
         key: 'oneway',
+        type: 'ow',
         label: 'One-Way / Recorded',
+        description: 'OAs, async, take-homes',
         desc: 'Asynchronous and recorded interviews are increasingly common - and they need their own strategy. <strong>Timing, tone, environment, and on-camera presence matter differently</strong> when there is no human on the other side reacting to you. The biggest traps are reading answers off a script, running over time, and a poor setup that distracts from your answers.',
         resources: [
           'One-Way Interview Checklist',

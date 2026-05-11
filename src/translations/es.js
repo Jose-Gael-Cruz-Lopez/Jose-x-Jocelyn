@@ -580,7 +580,9 @@ export const es = {
       },
       {
         key: 'oneway',
+        type: 'ow',
         label: 'Grabada / Unidireccional',
+        description: 'OAs, asíncronas, take-homes',
         desc: 'Las entrevistas asincrónicas y grabadas son cada vez más comunes - y necesitan su propia estrategia. <strong>El tiempo, el tono, el entorno y la presencia en cámara importan diferente</strong> cuando no hay un humano al otro lado reaccionando. Las trampas más grandes son leer respuestas de un guion, pasarse del tiempo y un entorno deficiente que distrae de tus respuestas.',
         resources: [
           'Lista de Verificación para Entrevista Grabada',
