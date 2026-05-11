@@ -656,7 +656,7 @@ export default function CareerTemplates() {
         .ct-form-row__error::before { content: ''; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--color-gold); margin-right: 7px; vertical-align: .18em; }
         .ct-form-row__counter { display: block; margin-top: 6px; font-size: 11px; color: rgba(242,228,206,.5); text-align: right; font-variant-numeric: tabular-nums; letter-spacing: .02em; }
         .ct-form-row__counter--warn { color: var(--color-gold); font-weight: 600; }
-        .ct-form-error-card { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding: 14px 16px; background: rgba(232,168,56,.08); border: 1px solid rgba(232,168,56,.3); border-left: 3px solid var(--color-gold); border-radius: 10px; }
+        .ct-form-error-card { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding: 14px 16px; background: rgba(232,168,56,.08); border: 1px solid rgba(232,168,56,.4); border-radius: 10px; }
         .ct-form-error-card__msg { flex: 1; font-size: 13px; color: var(--color-cream); line-height: 1.5; }
         .ct-form-error-card__msg strong { color: var(--color-gold); font-weight: 700; }
         .ct-form-error-card__retry { flex-shrink: 0; padding: 7px 14px; background: transparent; border: 1.5px solid var(--color-gold); color: var(--color-gold); border-radius: 999px; font-family: var(--font-display); font-size: 12px; font-weight: 700; letter-spacing: -.005em; cursor: pointer; transition: background .2s, color .2s; }
