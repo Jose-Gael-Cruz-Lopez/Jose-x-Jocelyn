@@ -321,7 +321,7 @@ export default function PartnerPanels() {
         /* FEATURED */
         .pp-featured {
           max-width: 1040px; margin: 0 auto;
-          padding: 80px clamp(20px,5vw,56px);
+          padding: 80px clamp(20px,5vw,56px) 88px;
         }
         .pp-featured__head { margin-bottom: 28px; }
         .pp-featured-card {
@@ -404,7 +404,7 @@ export default function PartnerPanels() {
         /* UPCOMING */
         .pp-upcoming {
           max-width: 1040px; margin: 0 auto;
-          padding: 80px clamp(20px,5vw,56px);
+          padding: 80px clamp(20px,5vw,56px) 88px;
         }
         .pp-upcoming__head { margin-bottom: 32px; }
         .pp-upcoming__grid {
@@ -466,7 +466,7 @@ export default function PartnerPanels() {
         /* ARCHIVE */
         .pp-archive {
           max-width: 1040px; margin: 0 auto;
-          padding: 80px clamp(20px,5vw,56px);
+          padding: 80px clamp(20px,5vw,56px) 88px;
         }
         .pp-archive__head { margin-bottom: 32px; }
         .pp-archive__list { display: flex; flex-direction: column; gap: 16px; }
@@ -589,7 +589,7 @@ export default function PartnerPanels() {
         /* TOPICS */
         .pp-topics {
           max-width: 1040px; margin: 0 auto;
-          padding: 80px clamp(20px,5vw,56px);
+          padding: 80px clamp(20px,5vw,56px) 88px;
         }
         .pp-topics__head { margin-bottom: 28px; }
         .pp-topics__chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; }
@@ -622,7 +622,7 @@ export default function PartnerPanels() {
         /* SUGGEST FORM */
         .pp-suggest {
           max-width: 1040px; margin: 0 auto;
-          padding: 80px clamp(20px,5vw,56px);
+          padding: 80px clamp(20px,5vw,56px) 88px;
         }
         .pp-suggest__layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: flex-start; }
         .pp-suggest__intro-kicker {
@@ -697,7 +697,7 @@ export default function PartnerPanels() {
         }
 
         /* PANELIST SECTION */
-        .pp-panelist { background: var(--color-navy); padding: 80px clamp(20px,5vw,56px); }
+        .pp-panelist { background: var(--color-navy); padding: 80px clamp(20px,5vw,56px) 88px; }
         .pp-panelist__inner {
           max-width: 1040px; margin: 0 auto;
           display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: flex-start;
