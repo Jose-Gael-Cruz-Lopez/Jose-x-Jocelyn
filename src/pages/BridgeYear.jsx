@@ -1481,7 +1481,8 @@ export default function BridgeYear() {
               className={`by-roles__filter${roleFilter === f.key ? ' by-roles__filter--active' : ''}`}
               onClick={handleRoleFilter}
             >
-              {f.label}
+              <span className="by-roles__filter-label">{f.label}</span>
+              {f.description && <span className="by-roles__filter-desc">{f.description}</span>}
             </button>
           ))}
         </div>
