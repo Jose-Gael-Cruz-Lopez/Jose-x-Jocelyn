@@ -421,23 +421,32 @@ export default function LinkedInSeries() {
             className={`ls-filter${noFilters ? ' ls-filter--active' : ''}`}
             aria-pressed={noFilters}
             onClick={() => setSearchParams({}, { replace: true })}
-          >{t.filterAll}</button>
-          {LENS_OPTIONS.map(({ v, label }) => (
+          >
+            <span className="ls-filter__label">{t.filterAll}</span>
+            {t.filterAllDesc && <span className="ls-filter__desc">{t.filterAllDesc}</span>}
+          </button>
+          {LENS_OPTIONS.map(({ v, label, desc }) => (
             <button
               key={v}
               className={`ls-filter${filterLens === v ? ' ls-filter--active' : ''}`}
               aria-pressed={filterLens === v}
               onClick={() => updateFilter('lens', filterLens === v ? '' : v)}
-            >{label}</button>
+            >
+              <span className="ls-filter__label">{label}</span>
+              {desc && <span className="ls-filter__desc">{desc}</span>}
+            </button>
           ))}
           <span className="ls-filters__rule" aria-hidden="true" />
-          {TOPIC_OPTIONS.map(({ v, label }) => (
+          {TOPIC_OPTIONS.map(({ v, label, desc }) => (
             <button
               key={v}
               className={`ls-filter${filterTopic === v ? ' ls-filter--active' : ''}`}
               aria-pressed={filterTopic === v}
               onClick={() => updateFilter('topic', filterTopic === v ? '' : v)}
-            >{label}</button>
+            >
+              <span className="ls-filter__label">{label}</span>
+              {desc && <span className="ls-filter__desc">{desc}</span>}
+            </button>
           ))}
         </div>
       </div>
