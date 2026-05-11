@@ -2210,7 +2210,7 @@ export const es = {
     panelistLabelNotes: '¿Hay algo más que debamos saber?',
     panelistPlaceholderNotes: 'Opcional — cualquier contexto que nos ayude a entender tu interés o experiencia',
     panelistErrorRequired: 'Por favor completa todos los campos requeridos antes de enviar.',
-    panelistErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    panelistErrorGeneric: 'No se pudo enviar. Inténtalo otra vez, o escríbenos a campustocareerteam@gmail.com.',
     panelistBtnSubmit: 'Expresar interés',
     panelistBtnSubmitting: 'Enviando…',
     panelistSuccessIcon: '✓',
