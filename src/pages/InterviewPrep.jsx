@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useCallback } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import ArticleLayout from '../components/ArticleLayout'
 import { supabase } from '../lib/supabase'
 import { useT } from '../hooks/useT'
@@ -7,7 +7,18 @@ import { useT } from '../hooks/useT'
 export default function InterviewPrep() {
   const t = useT('interviewPrep')
 
-  const [activeTab, setActiveTab] = useState('recruiter')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const validTypeKeys = (t.interviewTypes || []).map(it => it.key)
+  const urlType = searchParams.get('type') || ''
+  const activeTab = urlType && validTypeKeys.includes(urlType) ? urlType : 'recruiter'
+  const setActiveTab = useCallback(key => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev)
+      if (!key || key === 'recruiter') next.delete('type')
+      else next.set('type', key)
+      return next
+    }, { replace: true })
+  }, [setSearchParams])
   const [formSubmitted, setFormSubmitted] = useState(false)
   const [formLoading, setFormLoading] = useState(false)
   const [formError, setFormError] = useState('')
