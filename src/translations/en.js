@@ -551,7 +551,9 @@ export const en = {
       },
       {
         key: 'technical',
+        type: 'tech',
         label: 'Technical',
+        description: 'Coding, system design',
         desc: 'Technical interviews test <strong>problem-solving, clarity of thought, and communication under pressure</strong> - not just whether you get the perfect answer. Interviewers often care as much about how you think out loud as about what you produce. If you get stuck, narrating your thought process and asking clarifying questions will always serve you better than going silent and hoping.',
         resources: [
           'Technical Interview Prep Checklist',

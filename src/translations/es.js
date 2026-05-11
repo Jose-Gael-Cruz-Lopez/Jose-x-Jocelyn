@@ -553,7 +553,9 @@ export const es = {
       },
       {
         key: 'technical',
+        type: 'tech',
         label: 'Técnica',
+        description: 'Coding, diseño de sistemas',
         desc: 'Las entrevistas técnicas evalúan <strong>resolución de problemas, claridad de pensamiento y comunicación bajo presión</strong> - no solo si obtienes la respuesta perfecta. Los entrevistadores suelen importarles tanto cómo piensas en voz alta como lo que produces. Si te quedas atascado, narrar tu proceso de pensamiento y hacer preguntas aclaratorias siempre te servirá mejor que quedarte en silencio y esperar.',
         resources: [
           'Lista de Verificación para Preparación de Entrevista Técnica',
