@@ -2202,6 +2202,9 @@ export const es = {
     closingHeadline: 'Ven a escuchar. Ven a preguntar. Ven a ver lo que es posible.',
     closingBtnUpcoming: 'Ver próximos paneles',
     closingBtnArchive: 'Explorar el archivo',
+    signoffLine: 'La sala a la que hubiéramos querido que nos invitaran.',
+    signoffSub: 'En vivo, gratis, y grabado. Dinos qué quieres escuchar después.',
+    signoffCta: 'Sugiere un panel',
   },
 
   articlesIndex: {

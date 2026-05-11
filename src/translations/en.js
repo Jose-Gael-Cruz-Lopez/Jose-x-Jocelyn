@@ -2202,6 +2202,9 @@ export const en = {
     closingHeadline: 'Come to listen. Come to ask. Come to see what is possible.',
     closingBtnUpcoming: 'Browse Upcoming Panels',
     closingBtnArchive: 'Explore the Archive',
+    signoffLine: 'The room we wish we’d been pulled into.',
+    signoffSub: 'Live, free, and recorded. Tell us what you want to hear next.',
+    signoffCta: 'Suggest a panel',
   },
 
   articlesIndex: {
