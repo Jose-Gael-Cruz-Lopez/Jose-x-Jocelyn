@@ -204,6 +204,7 @@ export default function OpportunityBoard() {
   }, [searchParams, setSearchParams])
   const [search, setSearch] = useState('')
   const searchRef = useRef(null)
+  const progressRef = useRef(null)
   const [stage, setStage] = useState('')
   const [location, setLocation] = useState('')
   const [deadline, setDeadline] = useState('')
@@ -219,6 +220,28 @@ export default function OpportunityBoard() {
   }
 
   const [dbOpportunities, setDbOpportunities] = useState([])
+
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const el = progressRef.current
+      if (!el) return
+      const doc = document.documentElement
+      const max = (doc.scrollHeight - doc.clientHeight) || 1
+      const ratio = Math.min(1, Math.max(0, window.scrollY / max))
+      el.style.transform = 'scaleX(' + ratio + ')'
+    }
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    update()
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
 
   useEffect(() => {
     const onKeyDown = e => {
@@ -304,9 +327,12 @@ export default function OpportunityBoard() {
       signoffSub={t.signoffSub}
       signoffCta={t.signoffCta}
     >
+      <div ref={progressRef} className="ob-scroll-progress" aria-hidden="true" />
       <style>{`
         html, body { background: var(--color-cream); }
         :root { --ob-shadow-warm: 58, 38, 22; }
+        .ob-scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-gold) 100%); z-index: 1000; pointer-events: none; transform: scaleX(0); transform-origin: left; transition: transform .12s linear; will-change: transform; }
+        @media (prefers-reduced-motion: reduce) { .ob-scroll-progress { transition: none; } }
         .ob-kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 10px; }
         .ob-kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .ob-section-title { font-family: var(--font-display); font-size: clamp(26px,4vw,40px); font-weight: 700; color: var(--color-dark); line-height: 1.15; margin-bottom: 10px; }
