@@ -630,17 +630,6 @@ export default function BridgeYear() {
           border-color: var(--color-accent);
           position: relative;
         }
-        .by-prog--featured::before {
-          content: '';
-          position: absolute;
-          top: -1px;
-          left: 28px;
-          width: 36px;
-          height: 6px;
-          background: var(--color-gold);
-          border-radius: 0 0 4px 4px;
-          box-shadow: 0 1px 2px rgba(232,168,56,.4);
-        }
         .by-prog--featured .by-prog__company { color: rgba(242,228,206,.7); }
         .by-prog--featured .by-prog__name { color: var(--color-cream); }
         .by-prog--featured .by-prog__pill { background: rgba(242,228,206,.14); color: var(--color-cream); }
