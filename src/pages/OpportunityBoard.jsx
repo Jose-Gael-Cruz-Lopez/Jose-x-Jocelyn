@@ -262,7 +262,9 @@ export default function OpportunityBoard() {
     <ArticleLayout title="Opportunity Board">
       <style>{`
         html, body { background: var(--color-cream); }
-        .ob-kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px; }
+        :root { --ob-shadow-warm: 58, 38, 22; }
+        .ob-kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px; display: inline-flex; align-items: center; gap: 10px; }
+        .ob-kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .ob-section-title { font-family: var(--font-display); font-size: clamp(26px,4vw,40px); font-weight: 700; color: var(--color-dark); line-height: 1.15; margin-bottom: 10px; }
         .ob-section-sub { font-family: var(--font-display); font-size: clamp(16px,2vw,20px); font-weight: 400; color: var(--color-accent); margin-bottom: 20px; }
         .ob-section-body { font-size: clamp(15px,1.8vw,17px); color: var(--color-muted); line-height: 1.75; max-width: 700px; }
