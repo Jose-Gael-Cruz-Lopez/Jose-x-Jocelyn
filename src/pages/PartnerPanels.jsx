@@ -1055,7 +1055,7 @@ export default function PartnerPanels() {
                   <input className="pp-form-input" type="email" id="suggestEmail" placeholder={t.suggestPlaceholderEmail} value={suggestForm.email} onChange={e => setSuggestForm(f => ({ ...f, email: e.target.value }))} />
                 </div>
                 {suggestError && <p role="alert" style={{ color: 'var(--color-accent)', fontSize: 13, marginBottom: 10 }}>{suggestError}</p>}
-                <button className="pp-form-btn" type="submit" disabled={suggestLoading}>{suggestLoading ? t.suggestBtnSubmitting : t.suggestBtnSubmit}</button>
+                <button className="pp-form-btn" type="submit" disabled={suggestLoading || !suggestForm.topic.trim() || !suggestForm.why.trim() || !suggestForm.stage || !suggestForm.category}>{suggestLoading ? t.suggestBtnSubmitting : t.suggestBtnSubmit}</button>
                 <p className="pp-form-note">{t.suggestFormNote}</p>
               </form>
             )}
