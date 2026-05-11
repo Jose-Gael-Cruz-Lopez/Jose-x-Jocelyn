@@ -305,11 +305,18 @@ export default function PartnerPanels() {
         }
         .pp-featured__head { margin-bottom: 28px; }
         .pp-featured-card {
-          background: var(--color-white);
-          border: 1px solid rgba(0,0,0,.08);
+          background: linear-gradient(180deg, rgba(255,250,242,.85) 0%, rgba(255,250,242,.55) 100%);
+          border: 1.5px solid rgba(232,168,56,.32);
           border-radius: 20px; overflow: hidden;
           display: grid; grid-template-columns: 1fr 340px;
           min-height: 380px;
+          box-shadow: 0 1px 0 rgba(255,255,255,.5) inset, 0 18px 40px -20px rgba(var(--pp-shadow-warm),.22);
+          position: relative;
+        }
+        .pp-featured-card::before {
+          content: ''; position: absolute; top: -1px; left: 28px;
+          width: 36px; height: 6px; background: var(--color-gold);
+          border-radius: 0 0 4px 4px; box-shadow: 0 1px 2px rgba(232,168,56,.4);
         }
         .pp-featured-card__body {
           padding: clamp(28px,4vw,52px);
