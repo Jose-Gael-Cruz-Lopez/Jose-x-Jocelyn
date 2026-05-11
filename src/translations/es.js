@@ -795,6 +795,7 @@ export const es = {
     heroKicker: 'Del Campus a la Carrera · Comunidad',
     heroTitle: 'Red de Conversaciones',
     heroTitleEm: 'Informativas',
+    heroTagline: 'El directorio que hubiéramos querido que alguien nos mostrara cuando mandábamos mensajes en frío.',
     heroSub: 'Un directorio en vivo de estudiantes, egresados y profesionales que realmente quieren ser contactados.',
     heroBody1: 'Es difícil hacer contacto en frío cuando no sabes quién está dispuesto a hablar. La Red de Conversaciones Informativas es un directorio de autoservicio de personas que han levantado la mano para decir,',
     heroBodyQuote: '"Sí, puedes contactarme."',
@@ -1018,6 +1019,9 @@ export const es = {
     modalCopyBtn: 'Copiar al portapapeles',
     modalCopied: '¡Copiado!',
     modalClose: 'Cerrar',
+    signoffLine: 'Los “sí, contáctame” que hubiéramos querido tener.',
+    signoffSub: 'Un directorio de gente que ya levantó la mano. Dinos qué intentas preguntar.',
+    signoffCta: 'Dinos qué intentas preguntar',
   },
 
   opportunityBoard: {

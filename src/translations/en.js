@@ -795,6 +795,7 @@ export const en = {
     heroKicker: 'From Campus to Career · Community',
     heroTitle: 'Coffee Chat',
     heroTitleEm: 'Network',
+    heroTagline: 'The directory we wish someone had pointed us to when we were sending cold messages alone.',
     heroSub: 'A live directory of students, grads, and professionals who actually want to be reached out to.',
     heroBody1: 'Cold outreach is hard when you don’t know who is open to talking. The Coffee Chat Network is a self-serve directory of people who have raised their hand to say,',
     heroBodyQuote: '“Yes, you can reach out to me.”',
@@ -1018,6 +1019,9 @@ export const en = {
     modalCopyBtn: 'Copy to clipboard',
     modalCopied: 'Copied!',
     modalClose: 'Close',
+    signoffLine: 'The yeses we wished someone had handed us.',
+    signoffSub: 'A directory of people who have already raised their hand. Tell us what you’re trying to ask.',
+    signoffCta: 'Tell us what you’re trying to ask',
   },
 
   opportunityBoard: {
