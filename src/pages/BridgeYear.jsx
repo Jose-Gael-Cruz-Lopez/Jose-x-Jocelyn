@@ -1618,7 +1618,7 @@ export default function BridgeYear() {
                   <button type="submit" className="by-suggest__error-card__retry" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formRetryLabel}</button>
                 </div>
               )}
-              <button className="by-suggest__btn" type="submit" disabled={formLoading}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
+              <button className="by-suggest__btn" type="submit" disabled={formLoading || !form.program.trim() || !form.company.trim()}>{formLoading ? t.formSubmitting : t.formSubmit}</button>
             </form>
           )}
           </div>
