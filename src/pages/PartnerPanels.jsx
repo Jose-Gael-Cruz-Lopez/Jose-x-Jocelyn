@@ -165,6 +165,11 @@ export default function PartnerPanels() {
     setOpenTakeaway(prev => prev === id ? null : id)
   }
 
+  function tintFromTags(tags) {
+    const first = tags?.find(t => t.type && t.type !== 'muted')
+    return first ? first.type : ''
+  }
+
   async function submitSuggest(e) {
     e.preventDefault()
     if (!suggestForm.topic || !suggestForm.why || !suggestForm.stage || !suggestForm.category) {
@@ -434,6 +439,29 @@ export default function PartnerPanels() {
           border-color: rgba(232,168,56,.28);
         }
         .pp-panel-card--featured:hover { border-color: rgba(232,168,56,.42); }
+
+        /* Per-topic tint variants — mirrors CT's --outreach/--apply/--interview/--offers/--job system */
+        .pp-panel-card--blue    { background: linear-gradient(180deg, rgba(91,142,194,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(91,142,194,.22); }
+        .pp-panel-card--teal    { background: linear-gradient(180deg, rgba(58,125,107,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(58,125,107,.22); }
+        .pp-panel-card--gold    { background: linear-gradient(180deg, rgba(232,168,56,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(232,168,56,.26); }
+        .pp-panel-card--accent  { background: linear-gradient(180deg, rgba(179,69,57,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(179,69,57,.22); }
+        .pp-panel-card--navy    { background: linear-gradient(180deg, rgba(22,43,68,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(22,43,68,.2); }
+        .pp-panel-card--blue:hover    { border-color: rgba(91,142,194,.38); }
+        .pp-panel-card--teal:hover    { border-color: rgba(58,125,107,.4); }
+        .pp-panel-card--gold:hover    { border-color: rgba(232,168,56,.42); }
+        .pp-panel-card--accent:hover  { border-color: rgba(179,69,57,.38); }
+        .pp-panel-card--navy:hover    { border-color: rgba(22,43,68,.4); }
+
+        .pp-archive-card--blue    { background: linear-gradient(180deg, rgba(91,142,194,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(91,142,194,.22); }
+        .pp-archive-card--teal    { background: linear-gradient(180deg, rgba(58,125,107,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(58,125,107,.22); }
+        .pp-archive-card--gold    { background: linear-gradient(180deg, rgba(232,168,56,.07) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(232,168,56,.26); }
+        .pp-archive-card--accent  { background: linear-gradient(180deg, rgba(179,69,57,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(179,69,57,.22); }
+        .pp-archive-card--navy    { background: linear-gradient(180deg, rgba(22,43,68,.06) 0%, rgba(255,250,242,.55) 60%); border-color: rgba(22,43,68,.2); }
+        .pp-archive-card--blue:hover    { border-color: rgba(91,142,194,.38); }
+        .pp-archive-card--teal:hover    { border-color: rgba(58,125,107,.4); }
+        .pp-archive-card--gold:hover    { border-color: rgba(232,168,56,.42); }
+        .pp-archive-card--accent:hover  { border-color: rgba(179,69,57,.38); }
+        .pp-archive-card--navy:hover    { border-color: rgba(22,43,68,.4); }
         .pp-panel-card--featured .pp-panel-card__title {
           font-size: clamp(20px,2.5vw,26px);
         }
@@ -1064,8 +1092,10 @@ export default function PartnerPanels() {
           <p className="pp-section-body">{t.upcomingBody} <strong>{t.upcomingBodyStrong}</strong></p>
         </div>
         <div className="pp-upcoming__grid">
-          {UPCOMING_PANELS.map((panel, idx) => (
-            <article key={panel.id} className={`pp-panel-card${idx === 0 ? ' pp-panel-card--featured' : ''}`}>
+          {UPCOMING_PANELS.map((panel, idx) => {
+            const tint = tintFromTags(panel.tags)
+            return (
+            <article key={panel.id} className={`pp-panel-card${idx === 0 ? ' pp-panel-card--featured' : (tint ? ` pp-panel-card--${tint}` : '')}`}>
               {idx === 0 && <span className="pp-panel-card__featured-tag">{t.upcomingFeaturedTag || 'Next up'}</span>}
               <span className="pp-panel-card__date-badge">{panel.date}</span>
               <h3 className="pp-panel-card__title">{panel.title}</h3>
@@ -1101,7 +1131,8 @@ export default function PartnerPanels() {
                 <a href="#" className="pp-panel-card__cta-sm pp-cta--disabled" aria-disabled="true" tabIndex={-1}>{t.upcomingBtnFlyer}</a>
               </div>
             </article>
-          ))}
+            )
+          })}
         </div>
       </section>
 
@@ -1119,8 +1150,10 @@ export default function PartnerPanels() {
           {filteredArchive.length === 0 && (
             <p style={{ color: 'var(--color-muted)', fontSize: 15, padding: '40px 0' }}>{t.archiveEmptyState}</p>
           )}
-          {filteredArchive.map(card => (
-            <article key={card.id} className="pp-archive-card">
+          {filteredArchive.map(card => {
+            const tint = tintFromTags(card.tags)
+            return (
+            <article key={card.id} className={`pp-archive-card${tint ? ` pp-archive-card--${tint}` : ''}`}>
               <div className="pp-archive-card__main">
                 <div>
                   <p className="pp-archive-card__date">{card.date}</p>
@@ -1158,7 +1191,8 @@ export default function PartnerPanels() {
                 </div>
               </div>
             </article>
-          ))}
+            )
+          })}
         </div>
       </section>
 
