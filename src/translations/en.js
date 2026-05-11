@@ -1838,6 +1838,7 @@ export const en = {
     filterOffers: 'Offers & Negotiation',
     filterOffersDesc: 'Negotiation, offers',
     filterJob: 'On the Job',
+    filterJobDesc: 'Onboarding, manager 1:1s',
     filterAriaLabel: 'Filter by pipeline stage',
 
     // ── Stage labels (used in card badges) ───────────────────────────────────

@@ -1838,6 +1838,7 @@ export const es = {
     filterOffers: 'Ofertas y Negociación',
     filterOffersDesc: 'Negociación, ofertas',
     filterJob: 'En el Trabajo',
+    filterJobDesc: 'Onboarding, juntas 1:1',
     filterAriaLabel: 'Filtrar por etapa del proceso',
 
     // ── Stage labels (used in card badges) ───────────────────────────────────
