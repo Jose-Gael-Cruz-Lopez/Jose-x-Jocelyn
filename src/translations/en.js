@@ -565,7 +565,9 @@ export const en = {
       },
       {
         key: 'case',
+        type: 'case',
         label: 'Case',
+        description: 'Consulting, product',
         desc: 'Case interviews test <strong>structure, logic, prioritization, and communication</strong> rather than memorized knowledge. They are most common in consulting, product, strategy, and business internships. The biggest mistake candidates make is jumping to conclusions before structuring the problem. The interviewers are evaluating your process - how you break down ambiguous problems - more than your final answer.',
         resources: [
           'Case Interview Framework Sheet',

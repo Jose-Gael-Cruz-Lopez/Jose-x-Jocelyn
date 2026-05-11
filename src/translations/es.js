@@ -567,7 +567,9 @@ export const es = {
       },
       {
         key: 'case',
+        type: 'case',
         label: 'Caso',
+        description: 'Consultoría, producto',
         desc: 'Las entrevistas de caso evalúan <strong>estructura, lógica, priorización y comunicación</strong> más que conocimiento memorizado. Son más comunes en pasantías de consultoría, producto, estrategia y negocios. El mayor error que cometen los candidatos es saltar a conclusiones antes de estructurar el problema. Los entrevistadores evalúan tu proceso - cómo desglosas problemas ambiguos - más que tu respuesta final.',
         resources: [
           'Hoja de Marco para Entrevista de Caso',
