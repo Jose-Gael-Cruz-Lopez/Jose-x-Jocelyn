@@ -1051,6 +1051,13 @@ export default function PartnerPanels() {
         </div>
       </section>
 
+      <div className="pp-bridge">
+        <div className="pp-bridge__inner">
+          <p className="pp-bridge__copy">{t.bridgeCopyPrefix} <em>{t.bridgeCopyEm}</em></p>
+          <a href="#suggest" className="pp-bridge__cta">{t.bridgeCtaLabel}</a>
+        </div>
+      </div>
+
       <hr className="pp-divider" />
 
       {/* TOPIC BROWSE */}
