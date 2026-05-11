@@ -2006,14 +2006,6 @@ export const en = {
     heroBodyTail: 'for first-gen and underrepresented talent navigating campus to career.',
     heroCtaUpcoming: 'View Upcoming Panels',
     heroCtaArchive: 'Watch Past Panels',
-    stat1Num: '12+',
-    stat1Label: 'Panels hosted',
-    stat2Num: '35+',
-    stat2Label: 'Speakers featured',
-    stat3Num: '8+',
-    stat3Label: 'Career topics covered',
-    stat4Num: '↗',
-    stat4Label: 'Growing archive of recordings & flyers',
 
     // ── Featured panel ────────────────────────────────────────────────────────
     featuredKicker: 'Section 01 · Next Up',

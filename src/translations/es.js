@@ -2006,14 +2006,6 @@ export const es = {
     heroBodyTail: 'para talento de primera generación y subrepresentado navegando del campus a la carrera.',
     heroCtaUpcoming: 'Ver Próximos Paneles',
     heroCtaArchive: 'Ver Paneles Pasados',
-    stat1Num: '12+',
-    stat1Label: 'Paneles realizados',
-    stat2Num: '35+',
-    stat2Label: 'Ponentes presentados',
-    stat3Num: '8+',
-    stat3Label: 'Temas de carrera cubiertos',
-    stat4Num: '↗',
-    stat4Label: 'Archivo creciente de grabaciones y volantes',
 
     // ── Featured panel ────────────────────────────────────────────────────────
     featuredKicker: 'Sección 01 · Próximamente',
