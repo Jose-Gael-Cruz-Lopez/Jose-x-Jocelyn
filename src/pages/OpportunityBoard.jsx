@@ -221,6 +221,21 @@ export default function OpportunityBoard() {
   const [dbOpportunities, setDbOpportunities] = useState([])
 
   useEffect(() => {
+    const onKeyDown = e => {
+      if (e.key !== '/') return
+      const el = document.activeElement
+      const tag = el?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || el?.isContentEditable) return
+      if (searchRef.current) {
+        e.preventDefault()
+        searchRef.current.focus()
+      }
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [])
+
+  useEffect(() => {
     supabase.from('opportunities')
       .select('*')
       .in('status', ['approved', 'featured'])
