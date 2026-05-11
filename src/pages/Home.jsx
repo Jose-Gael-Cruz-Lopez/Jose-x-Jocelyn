@@ -59,6 +59,13 @@ export default function Home() {
   const [navHidden, setNavHidden] = useState(false)
   const [loaderDone, setLoaderDone] = useState(false)
 
+  const [contactEmail, setContactEmail] = useState('')
+  const [contactMessage, setContactMessage] = useState('')
+  const [contactEmailTouched, setContactEmailTouched] = useState(false)
+  const [contactSent, setContactSent] = useState(false)
+  const [contactLoading, setContactLoading] = useState(false)
+  const [contactError, setContactError] = useState('')
+
   const pinataRef = useRef(null)
   const pinataImgRef = useRef(null)
   const pinataHitsRef = useRef(0)
@@ -112,6 +119,51 @@ export default function Home() {
     }
     setModalLoading(false)
   }, [modalName, modalEmail, modalMessage, t])
+
+  const scrollToContact = useCallback((e) => {
+    e?.preventDefault()
+    setMenuOpen(false)
+    document.getElementById('contact')?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start',
+    })
+  }, [])
+
+  const handleContactSubmit = useCallback(async (e) => {
+    e?.preventDefault()
+    const emailTrim = contactEmail.trim()
+    const messageTrim = contactMessage.trim()
+    const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrim)
+    if (!valid || !messageTrim) {
+      setContactEmailTouched(true)
+      return
+    }
+    setContactLoading(true)
+    setContactError('')
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({ name: '', email: emailTrim, message: messageTrim }),
+      })
+      if (!res.ok) throw new Error('Failed to send')
+      setContactSent(true)
+    } catch {
+      setContactError(t.contactError)
+    }
+    setContactLoading(false)
+  }, [contactEmail, contactMessage, t])
+
+  const resetContact = useCallback(() => {
+    setContactSent(false)
+    setContactEmail('')
+    setContactMessage('')
+    setContactEmailTouched(false)
+    setContactError('')
+  }, [])
 
   const handleModalKeyDown = useCallback((e) => {
     if (e.key !== 'Tab' || !modalRef.current) return
@@ -1114,10 +1166,69 @@ export default function Home() {
         </div>
       </section>
 
+      {/* CONTACT (inline, replaces home modal entry points) */}
+      <section className="contact" id="contact" aria-labelledby="contact-prompt">
+        <div className="contact__inner">
+          {!contactSent ? (
+            <form className="contact__form" onSubmit={handleContactSubmit} noValidate>
+              <h2 className="contact__prompt" id="contact-prompt">{t.contactPrompt}</h2>
+
+              <label className="sr-only" htmlFor="contactMessage">{t.contactMessageLabel}</label>
+              <textarea
+                id="contactMessage"
+                className="contact__field"
+                placeholder={t.contactPlaceholder}
+                value={contactMessage}
+                onChange={e => setContactMessage(e.target.value)}
+                rows={3}
+              />
+
+              <div className="contact__row">
+                <div className="contact__email-wrap">
+                  <label className="sr-only" htmlFor="contactEmail">{t.contactEmailLabel}</label>
+                  <input
+                    id="contactEmail"
+                    type="email"
+                    className={`contact__email${contactEmailTouched && contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail.trim()) ? ' contact__email--invalid' : ''}`}
+                    placeholder={t.contactEmailPlaceholder}
+                    value={contactEmail}
+                    onChange={e => setContactEmail(e.target.value)}
+                    onBlur={() => setContactEmailTouched(true)}
+                    autoComplete="email"
+                  />
+                  {contactEmailTouched && contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactEmail.trim()) && (
+                    <p className="contact__field-error" role="alert">{t.contactEmailInvalid}</p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  className="contact__submit"
+                  disabled={contactLoading || !contactEmail.trim() || !contactMessage.trim()}
+                >
+                  {contactLoading ? t.contactSubmitting : t.contactSubmit}
+                </button>
+              </div>
+
+              {contactError && <p className="contact__error" role="alert">{contactError}</p>}
+
+              <p className="contact__reassurance">{t.contactReassurance}</p>
+            </form>
+          ) : (
+            <div className="contact__success" role="status">
+              <p className="contact__success-line">{t.contactSuccessLine}</p>
+              <p className="contact__success-signature">{t.contactSuccessSignature}</p>
+              <button type="button" className="contact__send-another" onClick={resetContact}>
+                {t.contactSendAnother}
+              </button>
+            </div>
+          )}
+        </div>
+      </section>
+
       </main>
 
       {/* FOOTER */}
-      <footer className="footer" id="contact" ref={footerRef}>
+      <footer className="footer" ref={footerRef}>
         <canvas className="footer__dots-canvas" aria-hidden="true" ref={canvasRef} />
         <div className="footer__logo">
           <svg viewBox="0 0 560 400" className="footer__logo-svg" aria-label="Jose x Jocelyn">
