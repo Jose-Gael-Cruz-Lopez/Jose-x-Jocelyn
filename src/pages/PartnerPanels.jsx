@@ -568,8 +568,10 @@ export default function PartnerPanels() {
         .pp-suggest__layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: flex-start; }
         .pp-suggest__intro-kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: var(--color-muted); margin-bottom: 12px;
+          text-transform: uppercase; color: var(--color-accent); margin-bottom: 12px;
+          display: inline-flex; align-items: center; gap: 10px;
         }
+        .pp-suggest__intro-kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .pp-suggest__intro-title {
           font-family: var(--font-display);
           font-size: clamp(22px,3vw,32px); font-weight: 700;
@@ -646,8 +648,10 @@ export default function PartnerPanels() {
         }
         .pp-panelist__intro-kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: rgba(242,228,206,.45); margin-bottom: 12px;
+          text-transform: uppercase; color: var(--color-gold); margin-bottom: 12px;
+          display: inline-flex; align-items: center; gap: 10px;
         }
+        .pp-panelist__intro-kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .pp-panelist__intro-title {
           font-family: var(--font-display);
           font-size: clamp(22px,3vw,32px); font-weight: 700;
@@ -700,8 +704,10 @@ export default function PartnerPanels() {
         .pp-eco__inner { max-width: 1040px; margin: 0 auto; }
         .pp-eco__kicker {
           font-size: 11px; font-weight: 700; letter-spacing: .14em;
-          text-transform: uppercase; color: rgba(242,228,206,.4); margin-bottom: 10px;
+          text-transform: uppercase; color: var(--color-gold); margin-bottom: 10px;
+          display: inline-flex; align-items: center; gap: 10px;
         }
+        .pp-eco__kicker::after { content: ''; width: 24px; height: 1px; background: currentColor; opacity: .5; }
         .pp-eco__title {
           font-family: var(--font-display);
           font-size: clamp(20px,3vw,30px); font-weight: 700;
