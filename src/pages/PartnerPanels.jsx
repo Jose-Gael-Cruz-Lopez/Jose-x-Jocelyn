@@ -140,8 +140,6 @@ export default function PartnerPanels() {
   const [suggestForm, setSuggestForm] = useState({ topic: '', why: '', stage: '', category: '', email: '' })
   const [panelistForm, setPanelistForm] = useState({ name: '', email: '', linkedin: '', role: '', topic: '', interest: '', notes: '' })
 
-  const topicChips = t.topicChips
-
   const filteredArchive = activeTopic === 'all'
     ? ARCHIVE_CARDS
     : ARCHIVE_CARDS.filter(c => c.topics.includes(activeTopic))
