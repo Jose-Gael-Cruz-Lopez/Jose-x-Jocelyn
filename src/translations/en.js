@@ -523,7 +523,9 @@ export const en = {
     interviewTypes: [
       {
         key: 'recruiter',
+        type: 'rec',
         label: 'Recruiter Screen',
+        description: 'Phone screen, behavioral fit',
         desc: 'Recruiter screens are usually the <strong>first filter</strong> and are less about technical depth than about clarity, fit, communication, and whether your story makes sense. The recruiter is not trying to trip you up - they are trying to decide if they should send you further. Your job is to be clear, specific, and easy to advocate for. Practice your "tell me about yourself" and your "why this company" until they are effortless.',
         resources: [
           'Recruiter Screen Prep Checklist',

@@ -525,7 +525,9 @@ export const es = {
     interviewTypes: [
       {
         key: 'recruiter',
+        type: 'rec',
         label: 'Pantalla con Reclutador',
+        description: 'Llamada inicial, fit conductual',
         desc: 'Las pantallas con reclutadores suelen ser el <strong>primer filtro</strong> y son menos sobre profundidad técnica que sobre claridad, ajuste, comunicación y si tu historia tiene sentido. El reclutador no intenta atraparte - intenta decidir si debe enviarte más lejos. Tu trabajo es ser claro, específico y fácil de defender. Practica tu "háblame de ti" y tu "por qué esta empresa" hasta que sean naturales.',
         resources: [
           'Lista de Verificación para Pantalla con Reclutador',
