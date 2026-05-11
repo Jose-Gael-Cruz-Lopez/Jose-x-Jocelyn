@@ -1377,7 +1377,7 @@ export default function BridgeYear() {
                   aria-describedby={captureError ? 'captureEmail-error' : undefined}
                   autoComplete="email"
                 />
-                <button type="submit" className="by-capture__btn" disabled={captureLoading}>
+                <button type="submit" className="by-capture__btn" disabled={captureLoading || !captureEmail.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(captureEmail.trim())}>
                   {captureLoading ? t.captureSubmitting : t.captureButton}
                 </button>
                 {captureError && <span id="captureEmail-error" className="by-capture__error" role="alert">{captureError}</span>}
