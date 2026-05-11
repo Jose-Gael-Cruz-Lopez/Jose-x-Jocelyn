@@ -1768,7 +1768,7 @@ export const en = {
     formErrorEmail: "That doesn't look like a valid email.",
     formErrorLabel: "Couldn't send.",
     formRetryLabel: 'Try again',
-    formErrorGeneric: 'Something went wrong. Please try again.',
+    formErrorGeneric: 'Couldn’t send. Try again, or email us at campustocareerteam@gmail.com.',
     formBtnSubmit: 'Submit Topic',
     formBtnSubmitting: 'Submitting…',
     formSuccessTitle: 'Topic submitted!',

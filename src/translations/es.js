@@ -1768,7 +1768,7 @@ export const es = {
     formErrorEmail: 'Ese correo no parece válido.',
     formErrorLabel: 'No se pudo enviar.',
     formRetryLabel: 'Intentar de nuevo',
-    formErrorGeneric: 'Algo salió mal. Por favor intenta de nuevo.',
+    formErrorGeneric: 'No se pudo enviar. Inténtalo otra vez, o escríbenos a campustocareerteam@gmail.com.',
     formBtnSubmit: 'Enviar tema',
     formBtnSubmitting: 'Enviando…',
     formSuccessTitle: '¡Tema enviado!',
