@@ -527,6 +527,15 @@ export default function CoffeeChat() {
         .cc-form-label span { color: var(--color-accent); }
         .cc-form-input, .cc-form-select, .cc-form-textarea { width: 100%; font-family: var(--font-body); font-size: 15px; padding: 12px 14px; border: 1.5px solid rgba(26,25,22,.12); border-radius: 10px; background: rgba(255,255,255,.85); color: var(--color-dark); outline: none; transition: border-color .2s, background .2s, box-shadow .2s; }
         .cc-form-input:focus, .cc-form-select:focus, .cc-form-textarea:focus { border-color: var(--color-gold); background: var(--color-white); box-shadow: 0 0 0 4px rgba(232,168,56,.12); }
+        .cc-form-input.is-invalid, .cc-form-select.is-invalid, .cc-form-textarea.is-invalid, .cc-ms-trigger.is-invalid { border-color: rgba(179,69,57,.45); }
+        .cc-form-input.is-invalid:focus, .cc-form-select.is-invalid:focus, .cc-form-textarea.is-invalid:focus, .cc-ms-trigger.is-invalid:focus { border-color: var(--color-accent); box-shadow: 0 0 0 4px rgba(179,69,57,.14); }
+        .cc-form-row__error { display: block; margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--color-accent); line-height: 1.4; }
+        .cc-form-row__error::before { content: ''; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--color-accent); margin-right: 7px; vertical-align: .18em; }
+        .cc-form-error-card { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; padding: 14px 16px; background: rgba(179,69,57,.06); border: 1px solid rgba(179,69,57,.22); border-radius: 10px; }
+        .cc-form-error-card__msg { flex: 1; font-size: 13px; color: var(--color-dark); line-height: 1.5; font-weight: 500; }
+        .cc-form-error-card__msg strong { color: var(--color-accent); font-weight: 700; }
+        .cc-form-error-card__retry { flex-shrink: 0; padding: 7px 14px; background: transparent; border: 1.5px solid var(--color-accent); color: var(--color-accent); border-radius: 999px; font-family: var(--font-display); font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s, color .2s; }
+        .cc-form-error-card__retry:hover { background: var(--color-accent); color: var(--color-cream); }
         .cc-form-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
         .cc-form-select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B5E52' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
         .cc-form-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
