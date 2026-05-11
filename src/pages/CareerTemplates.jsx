@@ -868,7 +868,7 @@ export default function CareerTemplates() {
                     <button type="submit" className="ct-form-error-card__retry" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formRetryLabel}</button>
                   </div>
                 )}
-                <button className="ct-form-btn" type="submit" disabled={formLoading}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
+                <button className="ct-form-btn" type="submit" disabled={formLoading || !request.trim()}>{formLoading ? t.formBtnSubmitting : t.formBtnSubmit}</button>
               </form>
             )}
           </div>
