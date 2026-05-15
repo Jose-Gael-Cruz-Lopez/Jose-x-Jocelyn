@@ -22,7 +22,7 @@ serve(async (req) => {
   try {
     const { name, email, school, lang } = await req.json()
 
-    if (!name || !email || !school) {
+    if (!name || !email) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -34,12 +34,14 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
+    const schoolValue = typeof school === 'string' && school.trim() ? school.trim() : null
+
     const { error: dbErr } = await supabase
       .from('waitlist_subscribers')
       .insert({
         name: String(name).trim(),
         email: String(email).trim().toLowerCase(),
-        school: String(school).trim(),
+        school: schoolValue,
         lang: typeof lang === 'string' ? lang : null,
       })
 
@@ -69,8 +71,8 @@ serve(async (req) => {
               <p style="margin:0 0 16px;font-size:16px;color:#1A1916;">${name}</p>
               <p style="margin:0 0 8px;color:#6B5E52;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">Email</p>
               <p style="margin:0 0 16px;font-size:16px;color:#1A1916;">${email}</p>
-              <p style="margin:0 0 8px;color:#6B5E52;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">School</p>
-              <p style="margin:0 0 16px;font-size:16px;color:#1A1916;">${school}</p>
+              <p style="margin:0 0 8px;color:#6B5E52;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">School or occupation</p>
+              <p style="margin:0 0 16px;font-size:16px;color:#1A1916;">${schoolValue ?? '<em style="color:#6B5E52;">(not provided)</em>'}</p>
               <p style="margin:0 0 8px;color:#6B5E52;font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;">Language</p>
               <p style="margin:0;font-size:16px;color:#1A1916;">${lang ?? 'n/a'}</p>
             </div>
