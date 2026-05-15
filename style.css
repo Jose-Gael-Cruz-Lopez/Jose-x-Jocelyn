@@ -704,6 +704,57 @@ ul { list-style: none; }
 }
 
 /* ============================================
+   HERO — Waitlist CTA (pre-launch mode)
+   Sharp poster-stamp in the brand's editorial voice
+   ============================================ */
+.hero__waitlist-cta {
+  margin-top: clamp(-10px, -0.4vw, 0px);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: clamp(14px, 1.9vw, 18px) clamp(28px, 4.2vw, 40px);
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.65vw, 17px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-dark);
+  background: var(--color-gold);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transform: rotate(-2deg);
+  transition: transform 0.32s var(--ease-out), background 0.22s var(--ease-out);
+}
+
+.hero__waitlist-cta:hover {
+  background: var(--color-gold-hover);
+  transform: rotate(0deg) scale(1.02);
+}
+
+.hero__waitlist-cta:active {
+  transform: rotate(0deg) scale(0.99);
+}
+
+.hero__waitlist-cta:focus-visible {
+  outline: 2px solid var(--color-cream);
+  outline-offset: 3px;
+}
+
+.hero__waitlist-cta-arrow {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  top: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__waitlist-cta { transition: background 0.22s ease; transform: rotate(-2deg); }
+  .hero__waitlist-cta:hover { transform: rotate(-2deg); }
+  .hero__waitlist-cta:active { transform: rotate(-2deg); }
+}
+
+/* ============================================
    INTRO — 50/50 split (2×2 banners left, text right)
    ============================================ */
 .intro {
@@ -2186,7 +2237,8 @@ ul { list-style: none; }
   line-height: 1.55;
   color: var(--color-dark);
   margin: 0 0 8px;
-  max-width: 30ch;
+  max-width: 44ch;
+  text-wrap: balance;
 }
 
 .modal__signature {
@@ -2197,6 +2249,95 @@ ul { list-style: none; }
   text-transform: uppercase;
   color: var(--color-dark);
   margin: 0;
+}
+
+/* ============================================
+   WAITLIST CELEBRATION — sol · stagger
+   ============================================ */
+.modal__celebrate {
+  position: relative;
+  isolation: isolate;
+}
+
+.modal__title-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 12px;
+}
+.modal__title-row > .modal__title {
+  margin-bottom: 0;
+}
+
+.modal__sun {
+  flex: 0 0 auto;
+  width: clamp(56px, 9vw, 84px);
+  height: auto;
+  margin-left: clamp(2px, 0.6vw, 10px);
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center center;
+  animation: sun-enter 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.55s forwards;
+}
+
+@keyframes sun-enter {
+  0%   { opacity: 0; transform: scale(0.3) rotate(-30deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+.modal__celebrate > .modal__kicker--celebrate,
+.modal__celebrate > .modal__title--celebrate,
+.modal__celebrate > .modal__msg--celebrate,
+.modal__celebrate > .modal__signature--celebrate,
+.modal__celebrate > .modal__btn--celebrate {
+  position: relative;
+  z-index: 2;
+}
+
+.modal__kicker--celebrate {
+  opacity: 0;
+  animation: celebrate-fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
+}
+.modal__title--celebrate {
+  opacity: 0;
+  animation: celebrate-title-pop 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s forwards;
+}
+.modal__msg--celebrate {
+  opacity: 0;
+  animation: celebrate-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards;
+}
+.modal__signature--celebrate {
+  opacity: 0;
+  animation: celebrate-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.85s forwards;
+}
+.modal__btn--celebrate {
+  opacity: 0;
+  animation: celebrate-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1.0s forwards;
+}
+
+@keyframes celebrate-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes celebrate-title-pop {
+  0%   { opacity: 0; transform: scale(0.55) translateY(-6px) rotate(-2deg); }
+  55%  { opacity: 1; transform: scale(1.12) translateY(0)    rotate(1deg); }
+  80%  { transform: scale(0.97) rotate(0); }
+  100% { opacity: 1; transform: scale(1)    translateY(0)    rotate(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal__kicker--celebrate,
+  .modal__title--celebrate,
+  .modal__msg--celebrate,
+  .modal__signature--celebrate,
+  .modal__btn--celebrate {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 @media (max-width: 520px) {

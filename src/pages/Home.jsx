@@ -36,6 +36,10 @@ const CONFETTI_COLORS = ['#E8A838','#B34539','#3A7D6B','#5B8EC2','#F2E4CE','#f5c
 const PINATA_STAGES = [{ at: 0, src: '/pinanta/step1.png' },{ at: 3, src: '/pinanta/step2.png' },{ at: 5, src: '/pinanta/step3.png' }]
 const HITS_TO_BREAK = 7
 
+// Pre-launch waitlist mode: hides nav links, search, and every section after the hero,
+// and replaces the Get in Touch CTA with a Waitlist button. Flip to false to restore the full site.
+const WAITLIST_MODE = true
+
 export default function Home() {
   const navigate = useNavigate()
   const { lang, setLang } = useLang()
@@ -54,6 +58,14 @@ export default function Home() {
   const [modalMessage, setModalMessage] = useState('')
   const [modalLoading, setModalLoading] = useState(false)
   const [modalError, setModalError] = useState('')
+  const [waitlistOpen, setWaitlistOpen] = useState(false)
+  const [waitlistSent, setWaitlistSent] = useState(false)
+  const [waitlistName, setWaitlistName] = useState('')
+  const [waitlistEmail, setWaitlistEmail] = useState('')
+  const [waitlistSchool, setWaitlistSchool] = useState('')
+  const [waitlistLoading, setWaitlistLoading] = useState(false)
+  const [waitlistError, setWaitlistError] = useState('')
+  const waitlistRef = useRef(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [navOnHero, setNavOnHero] = useState(true)
   const [navHidden, setNavHidden] = useState(false)
@@ -140,14 +152,107 @@ export default function Home() {
   }, [modalOpen, closeModal])
 
   useEffect(() => {
-    document.body.style.overflow = modalOpen ? 'hidden' : ''
+    document.body.style.overflow = (modalOpen || waitlistOpen || menuOpen) ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
-  }, [modalOpen])
+  }, [modalOpen, waitlistOpen, menuOpen])
+
+  const openWaitlist = useCallback((e) => {
+    e?.preventDefault()
+    setWaitlistOpen(true)
+  }, [])
+
+  const closeWaitlist = useCallback(() => {
+    setWaitlistOpen(false)
+    setTimeout(() => {
+      setWaitlistSent(false)
+      setWaitlistName('')
+      setWaitlistEmail('')
+      setWaitlistSchool('')
+      setWaitlistError('')
+    }, 400)
+  }, [])
+
+  const handleWaitlistSubmit = useCallback(async () => {
+    if (!waitlistName.trim() || !waitlistEmail.trim()) return
+    setWaitlistLoading(true)
+    setWaitlistError('')
+    try {
+      const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/add-to-waitlist`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          name: waitlistName.trim(),
+          email: waitlistEmail.trim(),
+          school: waitlistSchool.trim() || null,
+          lang,
+        }),
+      })
+      if (!res.ok) throw new Error('Failed to sign up')
+      setWaitlistSent(true)
+    } catch {
+      setWaitlistError(t.waitlistError)
+    }
+    setWaitlistLoading(false)
+  }, [waitlistName, waitlistEmail, waitlistSchool, lang, t])
+
+  const handleWaitlistKeyDown = useCallback((e) => {
+    if (e.key !== 'Tab' || !waitlistRef.current) return
+    const focusable = Array.from(
+      waitlistRef.current.querySelectorAll('input, button:not([disabled]), [tabindex]:not([tabindex="-1"])')
+    ).filter(el => !el.closest('[aria-hidden="true"]'))
+    if (!focusable.length) return
+    const first = focusable[0]
+    const last = focusable[focusable.length - 1]
+    if (e.shiftKey) {
+      if (document.activeElement === first) { e.preventDefault(); last.focus() }
+    } else {
+      if (document.activeElement === last) { e.preventDefault(); first.focus() }
+    }
+  }, [])
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
-  }, [menuOpen])
+    if (waitlistOpen) {
+      setTimeout(() => {
+        waitlistRef.current?.querySelector('input, button:not([disabled])')?.focus()
+      }, 50)
+      const onKey = (e) => { if (e.key === 'Escape') closeWaitlist() }
+      document.addEventListener('keydown', onKey)
+      return () => document.removeEventListener('keydown', onKey)
+    }
+  }, [waitlistOpen, closeWaitlist])
+
+  useEffect(() => {
+    if (!waitlistSent) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const box = waitlistRef.current
+    if (!box) return
+    const rect = box.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + Math.min(rect.height * 0.32, 180)
+    const pieces = 96
+    for (let i = 0; i < pieces; i++) {
+      const w = 7 + Math.random() * 14
+      const h = 3 + Math.random() * 9
+      const color = CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0]
+      const el = document.createElement('div')
+      el.setAttribute('aria-hidden', 'true')
+      el.style.cssText = `position:fixed;left:${cx}px;top:${cy}px;width:${w}px;height:${h}px;background:${color};border-radius:2px;pointer-events:none;z-index:10100;will-change:transform,opacity;`
+      document.body.appendChild(el)
+      const angle = Math.random() * Math.PI * 2
+      const dist = 140 + Math.random() * 320
+      const dur = 1.1 + Math.random() * 1.1
+      gsap.set(el, { xPercent: -50, yPercent: -50 })
+      const tl = gsap.timeline({ onComplete: () => el.remove() })
+      tl.fromTo(el,
+        { opacity: 1, scale: 0.6, rotation: Math.random() * 360, x: 0, y: 0 },
+        { x: Math.cos(angle) * dist, y: Math.sin(angle) * dist + 140, rotation: `+=${(Math.random() - 0.5) * 760}`, scale: 0.45, duration: dur, ease: 'power3.out' }
+      )
+      tl.fromTo(el, { opacity: 1 }, { opacity: 0, duration: dur * 0.42, ease: 'power2.in' }, dur * 0.58)
+    }
+  }, [waitlistSent])
 
   /* ── Gallery carousel ── */
   function initGallery() {
@@ -671,57 +776,72 @@ export default function Home() {
             <span className="nav__lang-sep"> · </span>
             <span className={lang === 'es' ? 'nav__lang-active' : 'nav__lang-inactive'}>ES</span>
           </button>
-          <button className="nav__search-btn" aria-label={tNav.searchBtnLabel} onClick={openSearch}>
-            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="17" height="17"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
-          </button>
-          <a href="#about" className="nav__link">{tNav.about}</a>
-          <div className="nav__services-wrap">
-            <a href="#services" className="nav__link" onClick={e => {
-              e.preventDefault()
-              document.getElementById('services')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
-            }}>{tNav.services}</a>
-            <div className="nav__services-dropdown">
-              <div className="nav__services-group">
-                <span className="nav__services-label">{tNav.contentLabel}</span>
-                <Link to="/linkedin-series" className="nav__services-item">{tNav.linkedInSeries}</Link>
-                <Link to="/career-templates" className="nav__services-item">{tNav.careerTemplates}</Link>
+          {!WAITLIST_MODE && (
+            <>
+              <button className="nav__search-btn" aria-label={tNav.searchBtnLabel} onClick={openSearch}>
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="17" height="17"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              </button>
+              <a href="#about" className="nav__link">{tNav.about}</a>
+              <div className="nav__services-wrap">
+                <a href="#services" className="nav__link" onClick={e => {
+                  e.preventDefault()
+                  document.getElementById('services')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' })
+                }}>{tNav.services}</a>
+                <div className="nav__services-dropdown">
+                  <div className="nav__services-group">
+                    <span className="nav__services-label">{tNav.contentLabel}</span>
+                    <Link to="/linkedin-series" className="nav__services-item">{tNav.linkedInSeries}</Link>
+                    <Link to="/career-templates" className="nav__services-item">{tNav.careerTemplates}</Link>
+                  </div>
+                  <div className="nav__services-group">
+                    <span className="nav__services-label">{tNav.sprintsLabel}</span>
+                    <Link to="/bridge-year" className="nav__services-item">{tNav.bridgeYearSprint}</Link>
+                    <Link to="/interview-prep" className="nav__services-item">{tNav.interviewPrep}</Link>
+                  </div>
+                  <div className="nav__services-group">
+                    <span className="nav__services-label">{tNav.communityLabel}</span>
+                    <Link to="/opportunity-board" className="nav__services-item">{tNav.opportunityBoard}</Link>
+                    <Link to="/coffee-chat" className="nav__services-item">{tNav.coffeeChatNetwork}</Link>
+                    <Link to="/resume-reviews" className="nav__services-item">{tNav.resumeReviews}</Link>
+                    <Link to="/partner-panels" className="nav__services-item">{tNav.partnerPanels}</Link>
+                  </div>
+                </div>
               </div>
-              <div className="nav__services-group">
-                <span className="nav__services-label">{tNav.sprintsLabel}</span>
-                <Link to="/bridge-year" className="nav__services-item">{tNav.bridgeYearSprint}</Link>
-                <Link to="/interview-prep" className="nav__services-item">{tNav.interviewPrep}</Link>
-              </div>
-              <div className="nav__services-group">
-                <span className="nav__services-label">{tNav.communityLabel}</span>
-                <Link to="/opportunity-board" className="nav__services-item">{tNav.opportunityBoard}</Link>
-                <Link to="/coffee-chat" className="nav__services-item">{tNav.coffeeChatNetwork}</Link>
-                <Link to="/resume-reviews" className="nav__services-item">{tNav.resumeReviews}</Link>
-                <Link to="/partner-panels" className="nav__services-item">{tNav.partnerPanels}</Link>
-              </div>
-            </div>
-          </div>
-          <a href="#editorial" className="nav__link">{tNav.laVoz}</a>
-          <button className="nav__link nav__link--cta" onClick={openModal}>
-            <span className="nav__link-accent" aria-hidden="true" />
-            <span className="nav__link-label">{tNav.getInTouch}</span>
-          </button>
+              <a href="#editorial" className="nav__link">{tNav.laVoz}</a>
+              <button className="nav__link nav__link--cta" onClick={openModal}>
+                <span className="nav__link-accent" aria-hidden="true" />
+                <span className="nav__link-label">{tNav.getInTouch}</span>
+              </button>
+            </>
+          )}
+          {WAITLIST_MODE && (
+            <button className="nav__link nav__link--cta" onClick={openWaitlist}>
+              <span className="nav__link-accent" aria-hidden="true" />
+              <span className="nav__link-label">{tNav.waitlist}</span>
+            </button>
+          )}
         </div>
-        <button className="nav__search-btn nav__search-btn--mobile" aria-label={tNav.searchBtnLabel} onClick={openSearch}>
-          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="19" height="19"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
-        </button>
-        <button
-          className={`nav__burger${menuOpen ? ' nav__burger--open' : ''}`}
-          id="navBurger"
-          aria-label={menuOpen ? tNav.closeMenu : tNav.openMenu}
-          aria-expanded={menuOpen}
-          aria-controls="mobileNav"
-          onClick={() => setMenuOpen(o => !o)}
-        >
-          <span /><span /><span />
-        </button>
+        {!WAITLIST_MODE && (
+          <button className="nav__search-btn nav__search-btn--mobile" aria-label={tNav.searchBtnLabel} onClick={openSearch}>
+            <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="19" height="19"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.8"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>
+          </button>
+        )}
+        {!WAITLIST_MODE && (
+          <button
+            className={`nav__burger${menuOpen ? ' nav__burger--open' : ''}`}
+            id="navBurger"
+            aria-label={menuOpen ? tNav.closeMenu : tNav.openMenu}
+            aria-expanded={menuOpen}
+            aria-controls="mobileNav"
+            onClick={() => setMenuOpen(o => !o)}
+          >
+            <span /><span /><span />
+          </button>
+        )}
       </nav>
 
       {/* MOBILE NAV */}
+      {!WAITLIST_MODE && (
       <div className={`mobile-nav${menuOpen ? ' mobile-nav--open' : ''}`} id="mobileNav" role="navigation" aria-label="Mobile navigation" aria-hidden={!menuOpen}>
         <button className="mobile-nav__search" aria-label={tNav.searchBtnLabel} onClick={() => { setMenuOpen(false); openSearch() }}>
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true" width="20" height="20"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" strokeWidth="1.7"/><path d="M13 13l3.5 3.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/></svg>
@@ -742,6 +862,7 @@ export default function Home() {
         <a href="#editorial" className="mobile-nav__link" onClick={() => setMenuOpen(false)}>{tNav.laVoz}</a>
         <button className="mobile-nav__link" onClick={() => { setMenuOpen(false); openModal() }}>{tNav.getInTouch}</button>
       </div>
+      )}
 
       <main>
 
@@ -780,10 +901,28 @@ export default function Home() {
             <span className="hero__foot-sep" aria-hidden="true"> · </span>
             <span className="hero__foot-phrase">{t.heroFoot3}</span>
           </p>
+          {WAITLIST_MODE && (
+            <button
+              type="button"
+              className="hero__waitlist-cta"
+              onClick={openWaitlist}
+              aria-haspopup="dialog"
+              aria-controls="waitlistModal"
+            >
+              <span className="hero__waitlist-cta-label">{tNav.waitlist}</span>
+              <span className="hero__waitlist-cta-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="13 6 19 12 13 18" />
+                </svg>
+              </span>
+            </button>
+          )}
         </div>
         <div className="hero__chrome-strip hero__chrome-strip--bottom" aria-hidden="true" />
       </section>
 
+      {!WAITLIST_MODE && (<>
       {/* INTRO */}
       <section className="intro" id="intro">
         <div className="intro__left">
@@ -1114,9 +1253,11 @@ export default function Home() {
           </Link>
         </div>
       </section>
+      </>)}
 
       </main>
 
+      {!WAITLIST_MODE && (<>
       {/* FOOTER */}
       <footer className="footer" id="contact" ref={footerRef}>
         <canvas className="footer__dots-canvas" aria-hidden="true" ref={canvasRef} />
@@ -1141,8 +1282,9 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      </>)}
 
-      {/* MODAL */}
+      {/* CONTACT MODAL */}
       <div className={`modal${modalOpen ? ' modal--open' : ''}`} id="modal">
         <div className="modal__bg" onClick={closeModal} />
         <div className="modal__box" role="dialog" aria-modal="true" aria-labelledby="modal-title" ref={modalRef} onKeyDown={handleModalKeyDown}>
@@ -1183,6 +1325,60 @@ export default function Home() {
               <p className="modal__signature">{t.modalSentSignature}</p>
               <button className="modal__btn modal__btn--ghost" onClick={closeModal}>{t.modalClose}</button>
             </>
+          )}
+        </div>
+      </div>
+
+      {/* WAITLIST MODAL */}
+      <div className={`modal${waitlistOpen ? ' modal--open' : ''}`} id="waitlistModal">
+        <div className="modal__bg" onClick={closeWaitlist} />
+        <div className="modal__box" role="dialog" aria-modal="true" aria-labelledby="waitlist-title" ref={waitlistRef} onKeyDown={handleWaitlistKeyDown}>
+          <button className="modal__close" onClick={closeWaitlist} aria-label={t.modalClose}>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+              <line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>
+            </svg>
+          </button>
+          {!waitlistSent ? (
+            <>
+              <p className="modal__kicker">{t.waitlistKicker}</p>
+              <h3 className="modal__title" id="waitlist-title">{t.waitlistTitle}</h3>
+              <div className="modal__field">
+                <label className="modal__label" htmlFor="waitlistName">{t.waitlistNameLabel}</label>
+                <input type="text" id="waitlistName" className="modal__input" placeholder={t.waitlistNamePlaceholder} value={waitlistName} onChange={e => setWaitlistName(e.target.value)} />
+              </div>
+              <div className="modal__field">
+                <label className="modal__label" htmlFor="waitlistEmail">{t.waitlistEmailLabel}</label>
+                <input type="email" id="waitlistEmail" className="modal__input" placeholder={t.waitlistEmailPlaceholder} value={waitlistEmail} onChange={e => setWaitlistEmail(e.target.value)} />
+              </div>
+              <div className="modal__field">
+                <label className="modal__label" htmlFor="waitlistSchool">{t.waitlistSchoolLabel}</label>
+                <input type="text" id="waitlistSchool" className="modal__input" placeholder={t.waitlistSchoolPlaceholder} value={waitlistSchool} onChange={e => setWaitlistSchool(e.target.value)} />
+              </div>
+              {waitlistError && <p role="alert" className="modal__error">{waitlistError}</p>}
+              <div className="modal__footer">
+                <button className="modal__btn" disabled={waitlistLoading || !waitlistName.trim() || !waitlistEmail.trim()} onClick={handleWaitlistSubmit}>
+                  {waitlistLoading ? t.waitlistSubmitting : t.waitlistSubmit}
+                </button>
+                <span className="modal__reassurance">{t.waitlistReassurance}</span>
+              </div>
+            </>
+          ) : (
+            <div className="modal__celebrate">
+              <p className="modal__kicker modal__kicker--celebrate">{t.waitlistKicker}</p>
+              <div className="modal__title-row modal__title--celebrate">
+                <h3 className="modal__title modal__title--sent" id="waitlist-title">{t.waitlistSentTitle}</h3>
+                <img
+                  src="/images/sun.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="modal__sun"
+                  draggable="false"
+                />
+              </div>
+              <p className="modal__msg modal__msg--celebrate">{t.waitlistSentMsg}</p>
+              <p className="modal__signature modal__signature--celebrate">{t.waitlistSentSignature}</p>
+              <button className="modal__btn modal__btn--ghost modal__btn--celebrate" onClick={closeWaitlist}>{t.modalClose}</button>
+            </div>
           )}
         </div>
       </div>
