@@ -2237,7 +2237,8 @@ ul { list-style: none; }
   line-height: 1.55;
   color: var(--color-dark);
   margin: 0 0 8px;
-  max-width: 30ch;
+  max-width: 44ch;
+  text-wrap: balance;
 }
 
 .modal__signature {
