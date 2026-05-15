@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>if("scrollRestoration"in history)history.scrollRestoration="auto";</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partner Panels | Jose x Jocelyn</title>
+  <meta name="description" content="Live Zoom conversations hosted by Jose and Jocelyn with students, recent grads, and professionals across tech and adjacent career spaces. Watch recordings, RSVP, and suggest future panels." />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/article.css" />
+  <style>
+    html, body { background: var(--color-cream); }
+
+    /* ─── Shared layout shell ─── */
+    .pp-wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding-left:  clamp(20px,5vw,56px);
+      padding-right: clamp(20px,5vw,56px);
+    }
+
+    /* ─── Section typography ─── */
+    .pp-kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 14px;
+    }
+    .pp-section-title {
+      font-family: var(--font-display);
+      font-size: clamp(26px,4vw,40px); font-weight: 700;
+      color: var(--color-dark); line-height: 1.15; margin-bottom: 10px;
+    }
+    .pp-section-sub {
+      font-family: var(--font-display);
+      font-size: clamp(16px,2vw,20px); font-weight: 400;
+      color: var(--color-accent); margin-bottom: 20px;
+    }
+    .pp-section-body {
+      font-size: clamp(15px,1.8vw,17px); color: var(--color-muted);
+      line-height: 1.75; max-width: 700px;
+    }
+    .pp-section-body strong { color: var(--color-dark); font-weight: 600; }
+
+    .pp-divider { border: none; border-top: 1px solid rgba(0,0,0,.08); margin: 0; }
+
+    /* ─── Shared tag pills ─── */
+    .pp-tag {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px;
+    }
+    .pp-tag--blue    { background: rgba(91,142,194,.12);  color: var(--color-blue); }
+    .pp-tag--teal    { background: rgba(58,125,107,.1);   color: var(--color-teal); }
+    .pp-tag--gold    { background: rgba(232,168,56,.14);  color: var(--color-gold-dark); }
+    .pp-tag--accent  { background: rgba(179,69,57,.1);    color: var(--color-accent); }
+    .pp-tag--navy    { background: rgba(22,43,68,.1);     color: var(--color-navy); }
+    .pp-tag--muted   { background: rgba(0,0,0,.06);       color: var(--color-muted); }
+
+    /* ─── Shared CTA buttons ─── */
+    .pp-btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; background: var(--color-dark);
+      color: var(--color-cream); border-radius: 8px;
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      text-decoration: none; border: 1.5px solid var(--color-dark); cursor: pointer;
+      transition: background .2s, transform .18s cubic-bezier(.16,1,.3,1);
+    }
+    .pp-btn-primary:hover { background: var(--color-accent); border-color: var(--color-accent); transform: translateY(-1px); }
+    .pp-btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px; background: transparent;
+      color: var(--color-dark); border-radius: 8px;
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      text-decoration: none; border: 1.5px solid rgba(0,0,0,.2); cursor: pointer;
+      transition: border-color .2s, color .2s, transform .18s cubic-bezier(.16,1,.3,1);
+    }
+    .pp-btn-secondary:hover { border-color: var(--color-dark); color: var(--color-accent); transform: translateY(-1px); }
+
+    /* ═══════════════════════════
+       HERO
+    ═══════════════════════════ */
+    .pp-hero {
+      padding: 120px clamp(20px,5vw,56px) 64px;
+      max-width: 1040px; margin: 0 auto;
+    }
+    .pp-hero__kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 18px;
+    }
+    .pp-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(42px,7vw,80px); font-weight: 700;
+      line-height: 1.04; color: var(--color-dark); margin-bottom: 14px;
+    }
+    .pp-hero__title em { font-style: normal; color: var(--color-gold); }
+    .pp-hero__sub {
+      font-family: var(--font-display);
+      font-size: clamp(18px,2.5vw,26px); font-weight: 400;
+      color: var(--color-dark); line-height: 1.4;
+      max-width: 700px; margin-bottom: 22px;
+    }
+    .pp-hero__body {
+      font-size: clamp(15px,1.8vw,17px); color: var(--color-muted);
+      line-height: 1.8; max-width: 680px; margin-bottom: 36px;
+    }
+    .pp-hero__body strong { color: var(--color-dark); font-weight: 600; }
+    .pp-hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 48px; }
+
+    /* Stat strip */
+    .pp-stats {
+      display: flex; flex-wrap: wrap; gap: 36px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(0,0,0,.08);
+    }
+    .pp-stat__num {
+      font-family: var(--font-display);
+      font-size: clamp(28px,4vw,40px); font-weight: 700;
+      color: var(--color-dark); line-height: 1;
+    }
+    .pp-stat__num em { font-style: normal; color: var(--color-gold); }
+    .pp-stat__label { font-size: 13px; color: var(--color-muted); margin-top: 5px; }
+
+    /* ═══════════════════════════
+       FEATURED PANEL
+    ═══════════════════════════ */
+    .pp-featured {
+      max-width: 1040px; margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .pp-featured__head { margin-bottom: 28px; }
+
+    .pp-featured-card {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 20px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      min-height: 380px;
+    }
+    .pp-featured-card__body {
+      padding: clamp(28px,4vw,52px);
+      display: flex; flex-direction: column; gap: 18px;
+      border-right: 1px solid rgba(0,0,0,.07);
+    }
+    .pp-featured-card__eyebrow {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .pp-featured-card__live-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 20px;
+      background: rgba(58,125,107,.1); color: var(--color-teal);
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .pp-featured-card__live-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--color-teal); flex-shrink: 0;
+      animation: pulseDot 1.8s ease-in-out infinite;
+    }
+    @keyframes pulseDot {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: .4; transform: scale(.75); }
+    }
+    .pp-featured-card__title {
+      font-family: var(--font-display);
+      font-size: clamp(22px,3vw,32px); font-weight: 700;
+      color: var(--color-dark); line-height: 1.2;
+    }
+    .pp-featured-card__desc {
+      font-size: clamp(14px,1.6vw,15px); color: var(--color-muted);
+      line-height: 1.75; flex: 1;
+    }
+    .pp-featured-card__desc strong { color: var(--color-dark); font-weight: 600; }
+    .pp-featured-card__panelists {
+      display: flex; flex-direction: column; gap: 6px;
+    }
+    .pp-featured-card__panelists-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 4px;
+    }
+    .pp-featured-card__panelist {
+      font-size: 13px; color: var(--color-dark); line-height: 1.5;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .pp-featured-card__panelist::before {
+      content: '-'; color: var(--color-muted); flex-shrink: 0; font-size: 12px;
+    }
+    .pp-featured-card__actions {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px;
+    }
+    .pp-featured-card__note {
+      font-size: 12px; color: var(--color-muted);
+      line-height: 1.55; margin-top: 10px; font-style: italic;
+    }
+
+    /* Right sidebar */
+    .pp-featured-card__sidebar {
+      padding: clamp(24px,3vw,40px);
+      background: rgba(242,228,206,.35);
+      display: flex; flex-direction: column; gap: 22px;
+    }
+    .pp-featured-card__detail-label {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 2px;
+    }
+    .pp-featured-card__detail-value {
+      font-size: clamp(13px,1.5vw,14px); color: var(--color-dark); font-weight: 600;
+    }
+    .pp-featured-card__detail-sub {
+      font-size: 12px; color: var(--color-muted); margin-top: 1px;
+    }
+
+    @media (max-width: 760px) {
+      .pp-featured-card { grid-template-columns: 1fr; }
+      .pp-featured-card__body { border-right: none; border-bottom: 1px solid rgba(0,0,0,.07); }
+    }
+
+    /* ═══════════════════════════
+       UPCOMING PANELS
+    ═══════════════════════════ */
+    .pp-upcoming {
+      max-width: 1040px; margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .pp-upcoming__head { margin-bottom: 32px; }
+    .pp-upcoming__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+      gap: 20px;
+    }
+
+    /* Upcoming panel card */
+    .pp-panel-card {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 16px; padding: 26px;
+      display: flex; flex-direction: column; gap: 14px;
+      transition: transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s;
+    }
+    .pp-panel-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(0,0,0,.09);
+    }
+    .pp-panel-card__date-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(232,168,56,.12); color: var(--color-gold-dark);
+      font-size: 11px; font-weight: 700;
+      padding: 5px 11px; border-radius: 6px;
+      align-self: flex-start;
+    }
+    .pp-panel-card__title {
+      font-family: var(--font-display);
+      font-size: clamp(16px,1.9vw,19px); font-weight: 700;
+      color: var(--color-dark); line-height: 1.25;
+    }
+    .pp-panel-card__desc {
+      font-size: 13px; color: var(--color-muted); line-height: 1.7; flex: 1;
+    }
+    .pp-panel-card__meta {
+      display: flex; flex-direction: column; gap: 5px;
+    }
+    .pp-panel-card__meta-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--color-muted);
+    }
+    .pp-panel-card__meta-icon { flex-shrink: 0; font-size: 13px; }
+    .pp-panel-card__meta-val { font-weight: 500; color: var(--color-dark); }
+
+    .pp-panel-card__panelists { font-size: 12px; color: var(--color-muted); line-height: 1.65; }
+    .pp-panel-card__panelists strong { color: var(--color-dark); font-weight: 600; font-size: 11px; letter-spacing:.04em; text-transform:uppercase; display:block; margin-bottom:4px; }
+
+    .pp-panel-card__tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+    .pp-panel-card__actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    .pp-panel-card__cta-primary {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 16px; background: var(--color-dark); color: var(--color-cream);
+      border-radius: 8px; font-family: var(--font-display); font-size: 12px; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer; flex: 1;
+      transition: background .2s, transform .15s;
+    }
+    .pp-panel-card__cta-primary:hover { background: var(--color-accent); transform: translateY(-1px); }
+    .pp-panel-card__cta-sm {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 10px 12px; background: transparent;
+      color: var(--color-muted); border-radius: 8px;
+      font-family: var(--font-display); font-size: 11px; font-weight: 600;
+      text-decoration: none; border: 1.5px solid rgba(0,0,0,.12); cursor: pointer; flex-shrink: 0;
+      transition: border-color .2s, color .2s;
+    }
+    .pp-panel-card__cta-sm:hover { border-color: var(--color-dark); color: var(--color-dark); }
+
+    @media (max-width: 560px) {
+      .pp-upcoming__grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════
+       PAST PANELS ARCHIVE
+    ═══════════════════════════ */
+    .pp-archive {
+      max-width: 1040px; margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .pp-archive__head { margin-bottom: 32px; }
+    .pp-archive__list { display: flex; flex-direction: column; gap: 16px; }
+
+    /* Archive card */
+    .pp-archive-card {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,.08);
+      border-radius: 16px; overflow: hidden;
+      transition: box-shadow .2s;
+    }
+    .pp-archive-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,.08); }
+    .pp-archive-card__main {
+      padding: 26px 28px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .pp-archive-card__date {
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 8px;
+    }
+    .pp-archive-card__title {
+      font-family: var(--font-display);
+      font-size: clamp(17px,2.2vw,22px); font-weight: 700;
+      color: var(--color-dark); line-height: 1.2; margin-bottom: 10px;
+    }
+    .pp-archive-card__recap {
+      font-size: 13px; color: var(--color-muted); line-height: 1.75;
+      max-width: 560px; margin-bottom: 12px;
+    }
+    .pp-archive-card__panelists {
+      font-size: 12px; color: var(--color-muted); margin-bottom: 10px; line-height: 1.6;
+    }
+    .pp-archive-card__panelists strong { color: var(--color-dark); font-weight: 600; }
+    .pp-archive-card__tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .pp-archive-card__actions {
+      display: flex; flex-direction: column; gap: 8px;
+      flex-shrink: 0; min-width: 150px; align-items: stretch;
+    }
+    .pp-archive-card__cta {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 14px; border-radius: 8px;
+      font-family: var(--font-display); font-size: 12px; font-weight: 600;
+      text-decoration: none; border: 1.5px solid; cursor: pointer;
+      transition: background .2s, color .2s, border-color .2s, transform .15s;
+      text-align: center;
+    }
+    .pp-archive-card__cta--watch {
+      background: var(--color-dark); color: var(--color-cream); border-color: var(--color-dark);
+    }
+    .pp-archive-card__cta--watch:hover { background: var(--color-accent); border-color: var(--color-accent); transform: translateY(-1px); }
+    .pp-archive-card__cta--flyer {
+      background: transparent; color: var(--color-muted); border-color: rgba(0,0,0,.12);
+    }
+    .pp-archive-card__cta--flyer:hover { border-color: var(--color-dark); color: var(--color-dark); }
+    .pp-archive-card__cta--takeaways {
+      background: transparent; color: var(--color-teal); border-color: rgba(58,125,107,.25);
+    }
+    .pp-archive-card__cta--takeaways:hover { background: rgba(58,125,107,.06); }
+
+    /* Expandable takeaways */
+    .pp-takeaways {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows .4s cubic-bezier(.16,1,.3,1);
+      border-top: 1px solid rgba(0,0,0,.07);
+      background: rgba(242,228,206,.3);
+    }
+    .pp-takeaways.open { grid-template-rows: 1fr; }
+    .pp-takeaways__inner {
+      overflow: hidden;
+      min-height: 0;
+      padding: 0 28px;
+      transition: padding .35s cubic-bezier(.16,1,.3,1);
+    }
+    .pp-takeaways.open .pp-takeaways__inner { padding: 22px 28px; }
+    .pp-takeaways__title {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--color-teal); margin-bottom: 12px;
+    }
+    .pp-takeaways__list { display: flex; flex-direction: column; gap: 10px; }
+    .pp-takeaways__item {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13px; color: var(--color-muted); line-height: 1.65;
+    }
+    .pp-takeaways__item::before {
+      content: '→'; color: var(--color-teal); flex-shrink: 0; font-weight: 700; font-size: 12px; margin-top: 1px;
+    }
+
+    @media (max-width: 640px) {
+      .pp-archive-card__main { grid-template-columns: 1fr; }
+      .pp-archive-card__actions { flex-direction: row; flex-wrap: wrap; }
+    }
+
+    /* ═══════════════════════════
+       TOPIC BROWSE
+    ═══════════════════════════ */
+    .pp-topics {
+      max-width: 1040px; margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .pp-topics__head { margin-bottom: 28px; }
+    .pp-topics__chips {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px;
+    }
+    .pp-topic-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 18px;
+      border: 1.5px solid rgba(0,0,0,.1);
+      border-radius: 24px;
+      font-family: var(--font-body); font-size: 13px; font-weight: 600;
+      color: var(--color-muted); cursor: pointer;
+      transition: border-color .18s, color .18s, background .18s;
+      user-select: none;
+    }
+    .pp-topic-chip:hover { border-color: var(--color-dark); color: var(--color-dark); }
+    .pp-topic-chip.active {
+      border-color: var(--color-navy); background: var(--color-navy); color: var(--color-cream);
+    }
+    .pp-topics__note {
+      font-size: clamp(14px,1.6vw,15px); color: var(--color-muted); line-height: 1.7;
+      max-width: 640px; font-style: italic; margin-top: 4px;
+    }
+
+    /* ═══════════════════════════
+       SUGGEST A PANEL FORM
+    ═══════════════════════════ */
+    .pp-suggest {
+      max-width: 1040px; margin: 0 auto;
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .pp-suggest__layout {
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: flex-start;
+    }
+    .pp-suggest__intro-kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--color-muted); margin-bottom: 12px;
+    }
+    .pp-suggest__intro-title {
+      font-family: var(--font-display);
+      font-size: clamp(22px,3vw,32px); font-weight: 700;
+      color: var(--color-dark); line-height: 1.2; margin-bottom: 16px;
+    }
+    .pp-suggest__intro-body {
+      font-size: clamp(14px,1.6vw,15px); color: var(--color-muted); line-height: 1.75;
+    }
+    .pp-suggest__intro-body strong { color: var(--color-dark); font-weight: 600; }
+
+    /* Form elements (shared) */
+    .pp-form-box {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,.07);
+      border-radius: 16px;
+      padding: clamp(26px,4vw,44px);
+    }
+    .pp-form-row { margin-bottom: 16px; }
+    .pp-form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .pp-form-label {
+      display: block; font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .09em;
+      color: var(--color-muted); margin-bottom: 6px;
+    }
+    .pp-form-label span { color: var(--color-accent); }
+    .pp-form-input,
+    .pp-form-select,
+    .pp-form-textarea {
+      width: 100%; font-family: var(--font-body); font-size: 15px;
+      padding: 11px 14px; border: 1.5px solid rgba(0,0,0,.12);
+      border-radius: 8px; background: var(--color-white);
+      color: var(--color-dark); outline: none; transition: border-color .2s;
+    }
+    .pp-form-input:focus,
+    .pp-form-select:focus,
+    .pp-form-textarea:focus { border-color: var(--color-gold); }
+    .pp-form-textarea { min-height: 80px; resize: vertical; line-height: 1.6; }
+    .pp-form-select {
+      appearance: none; cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%238A7E72' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+    }
+    .pp-form-note {
+      font-size: 12px; color: var(--color-muted); line-height: 1.6;
+      margin-top: 10px; font-style: italic;
+    }
+    .pp-form-btn {
+      width: 100%; padding: 14px 24px; background: var(--color-dark);
+      color: var(--color-cream); border: none; border-radius: 8px;
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      cursor: pointer; transition: background .2s, transform .18s; margin-top: 4px;
+    }
+    .pp-form-btn:hover { background: var(--color-accent); transform: translateY(-1px); }
+    .pp-form-success {
+      display: none; text-align: center; padding: 40px 20px;
+    }
+    .pp-form-success__icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin: 0 auto 16px;
+    }
+    .pp-form-success__icon--gold { background: rgba(232,168,56,.12); color: var(--color-gold-dark); }
+    .pp-form-success__icon--teal { background: rgba(58,125,107,.1);  color: var(--color-teal); }
+    .pp-form-success__title {
+      font-family: var(--font-display); font-size: 22px;
+      font-weight: 700; color: var(--color-dark); margin-bottom: 8px;
+    }
+    .pp-form-success__body { font-size: 14px; color: var(--color-muted); line-height: 1.7; }
+
+    @media (max-width: 740px) {
+      .pp-suggest__layout { grid-template-columns: 1fr; gap: 36px; }
+      .pp-form-row-2 { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════
+       BECOME A PANELIST / PARTNER
+    ═══════════════════════════ */
+    .pp-panelist {
+      background: var(--color-navy);
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .pp-panelist__inner {
+      max-width: 1040px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 60px; align-items: flex-start;
+    }
+    .pp-panelist__intro-kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: rgba(242,228,206,.45); margin-bottom: 12px;
+    }
+    .pp-panelist__intro-title {
+      font-family: var(--font-display);
+      font-size: clamp(22px,3vw,32px); font-weight: 700;
+      color: var(--color-cream); line-height: 1.2; margin-bottom: 16px;
+    }
+    .pp-panelist__intro-body {
+      font-size: clamp(14px,1.6vw,15px); color: rgba(242,228,206,.65); line-height: 1.75;
+    }
+    .pp-panelist__intro-body strong { color: var(--color-cream); font-weight: 600; }
+    .pp-panelist__perks { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+    .pp-panelist__perk {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: rgba(242,228,206,.65); line-height: 1.5;
+    }
+    .pp-panelist__perk-icon {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(232,168,56,.2); color: var(--color-gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    }
+    /* Dark-bg form box */
+    .pp-form-box--dark {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+    .pp-form-box--dark .pp-form-input,
+    .pp-form-box--dark .pp-form-select,
+    .pp-form-box--dark .pp-form-textarea {
+      background: rgba(255,255,255,.07);
+      border-color: rgba(255,255,255,.15);
+      color: var(--color-cream);
+    }
+    .pp-form-box--dark .pp-form-input::placeholder,
+    .pp-form-box--dark .pp-form-textarea::placeholder { color: rgba(242,228,206,.35); }
+    .pp-form-box--dark .pp-form-label { color: rgba(242,228,206,.55); }
+    .pp-form-box--dark .pp-form-input:focus,
+    .pp-form-box--dark .pp-form-select:focus,
+    .pp-form-box--dark .pp-form-textarea:focus { border-color: var(--color-gold); }
+    .pp-form-box--dark .pp-form-select {
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='rgba(242,228,206,0.45)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 12px center;
+      color-scheme: dark;
+    }
+    .pp-form-box--dark .pp-form-btn { background: var(--color-gold); color: var(--color-dark); }
+    .pp-form-box--dark .pp-form-btn:hover { background: var(--color-gold-hover,#CF952F); }
+    .pp-form-box--dark .pp-form-success__title { color: var(--color-cream); }
+    .pp-form-box--dark .pp-form-success__body { color: rgba(242,228,206,.65); }
+
+    @media (max-width: 740px) {
+      .pp-panelist__inner { grid-template-columns: 1fr; gap: 36px; }
+    }
+
+    /* ─── Mobile global ─── */
+    @media (max-width: 768px) {
+      .pp-hero { padding: 88px 20px 48px; }
+      .pp-stats { gap: 20px; }
+      .pp-featured, .pp-upcoming, .pp-archive,
+      .pp-topics, .pp-suggest, .pp-archive { padding-top: 48px; padding-bottom: 48px; }
+      .pp-panelist { padding: 48px 20px; }
+      .pp-eco { padding: 48px 20px; }
+      .pp-closing { padding: 48px 20px; }
+      .pp-section-title { font-size: clamp(22px,5vw,30px); }
+      .pp-btn-primary, .pp-btn-secondary { padding: 13px 20px; font-size: 13px; }
+    }
+    @media (max-width: 480px) {
+      .pp-hero { padding: 80px 16px 40px; }
+      .pp-hero__ctas { flex-direction: column; }
+      .pp-hero__ctas a { text-align: center; justify-content: center; }
+      .pp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+      .pp-archive-card__cta { padding: 9px 14px; font-size: 11px; }
+      .pp-archive-card__actions { gap: 8px; }
+    }
+
+    /* ═══════════════════════════
+       ECOSYSTEM
+    ═══════════════════════════ */
+    .pp-eco {
+      background: var(--color-dark);
+      padding: 80px clamp(20px,5vw,56px);
+    }
+    .pp-eco__inner { max-width: 1040px; margin: 0 auto; }
+    .pp-eco__kicker {
+      font-size: 11px; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase; color: rgba(242,228,206,.4); margin-bottom: 10px;
+    }
+    .pp-eco__title {
+      font-family: var(--font-display);
+      font-size: clamp(20px,3vw,30px); font-weight: 700;
+      color: var(--color-cream); margin-bottom: 8px; line-height: 1.25;
+    }
+    .pp-eco__body {
+      font-size: clamp(14px,1.6vw,15px); color: rgba(242,228,206,.55);
+      line-height: 1.75; max-width: 680px; margin-bottom: 36px;
+    }
+    .pp-eco__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+      gap: 14px;
+    }
+    .pp-eco__link {
+      background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.09);
+      border-radius: 12px; padding: 18px 20px; text-decoration: none;
+      transition: background .2s, transform .2s cubic-bezier(.16,1,.3,1);
+    }
+    .pp-eco__link:hover { background: rgba(255,255,255,.09); transform: translateY(-2px); }
+    .pp-eco__link-title {
+      font-family: var(--font-display); font-size: 14px; font-weight: 600;
+      color: var(--color-cream); margin-bottom: 4px;
+    }
+    .pp-eco__link-desc { font-size: 12px; color: rgba(242,228,206,.45); line-height: 1.5; }
+
+    /* ═══════════════════════════
+       CLOSING STRIP
+    ═══════════════════════════ */
+    .pp-closing {
+      background: var(--color-accent);
+      padding: 64px clamp(20px,5vw,56px);
+      text-align: center;
+    }
+    .pp-closing__inner { max-width: 680px; margin: 0 auto; }
+    .pp-closing__headline {
+      font-family: var(--font-display);
+      font-size: clamp(22px,4vw,36px); font-weight: 700;
+      color: var(--color-cream); line-height: 1.2; margin-bottom: 28px;
+    }
+    .pp-closing__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+    .pp-closing__btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; background: var(--color-cream); color: var(--color-accent);
+      border-radius: 8px; font-family: var(--font-display);
+      font-size: 14px; font-weight: 700; text-decoration: none;
+      border: 1.5px solid var(--color-cream);
+      transition: background .2s, color .2s, transform .18s;
+    }
+    .pp-closing__btn-primary:hover { background: var(--color-dark); color: var(--color-cream); border-color: var(--color-dark); transform: translateY(-1px); }
+    .pp-closing__btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px; background: transparent; color: var(--color-cream);
+      border-radius: 8px; font-family: var(--font-display);
+      font-size: 14px; font-weight: 700; text-decoration: none;
+      border: 1.5px solid rgba(242,228,206,.5);
+      transition: border-color .2s, background .2s, transform .18s;
+    }
+    .pp-closing__btn-secondary:hover { border-color: var(--color-cream); background: rgba(255,255,255,.08); transform: translateY(-1px); }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="art-nav" id="artNav">
+    <a href="/images/index.html" class="art-nav__brand">Jose × Jocelyn</a>
+    <div class="art-nav__right">
+      <a href="/articles/" class="art-nav__link">La Voz del Día</a>
+      <a href="/career-templates.html" class="art-nav__link">Templates</a>
+      <a href="/bridge-year.html" class="art-nav__link">Bridge Year</a>
+      <a href="/coffee-chat.html" class="art-nav__link">Coffee Chat</a>
+      <a href="/opportunity-board.html" class="art-nav__link">Opportunities</a>
+      <a href="/partner-panels.html" class="art-nav__link" style="color:var(--color-dark);font-weight:600;">Panels</a>
+      <a href="/resume-reviews.html" class="art-nav__link">Resumes</a>
+      <a href="/images/index.html#contact" class="art-nav__link">Get in Touch</a>
+    </div>
+    <button class="art-nav__burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="art-nav__mobile" id="mobileNav">
+    <div class="art-nav__mobile-panel">
+      <a href="/articles/" class="art-nav__mobile-link">La Voz del Día</a>
+      <a href="/career-templates.html" class="art-nav__mobile-link">Templates</a>
+      <a href="/bridge-year.html" class="art-nav__mobile-link">Bridge Year</a>
+      <a href="/coffee-chat.html" class="art-nav__mobile-link">Coffee Chat</a>
+      <a href="/opportunity-board.html" class="art-nav__mobile-link">Opportunities</a>
+      <a href="/partner-panels.html" class="art-nav__mobile-link art-nav__mobile-link--active">Panels</a>
+      <a href="/resume-reviews.html" class="art-nav__mobile-link">Resumes</a>
+      <a href="/images/index.html#contact" class="art-nav__mobile-link">Get in Touch</a>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════
+       HERO
+  ════════════════════════════════ -->
+  <header class="pp-hero" id="top">
+    <p class="pp-hero__kicker">Community · Live Conversations</p>
+    <h1 class="pp-hero__title">Partner <em>Panels</em></h1>
+    <p class="pp-hero__sub">Live conversations with people who have actually walked the path.</p>
+    <p class="pp-hero__body">
+      Partner Panels are live Zoom conversations hosted by Jose and Jocelyn with students, recent grads, professionals, recruiters, founders, and community leaders across tech, data, and adjacent career spaces. These sessions are built to <strong>make career paths more visible, more honest, and more actionable</strong> for people navigating the journey from campus to career.
+    </p>
+    <div class="pp-hero__ctas">
+      <a href="#upcoming" class="pp-btn-primary">View Upcoming Panels</a>
+      <a href="#archive" class="pp-btn-secondary">Watch Past Panels</a>
+    </div>
+    <div class="pp-stats">
+      <div>
+        <div class="pp-stat__num">12<em>+</em></div>
+        <div class="pp-stat__label">Panels hosted</div>
+      </div>
+      <div>
+        <div class="pp-stat__num">35<em>+</em></div>
+        <div class="pp-stat__label">Speakers featured</div>
+      </div>
+      <div>
+        <div class="pp-stat__num">8<em>+</em></div>
+        <div class="pp-stat__label">Career topics covered</div>
+      </div>
+      <div>
+        <div class="pp-stat__num">↗</div>
+        <div class="pp-stat__label">Growing archive of recordings &amp; flyers</div>
+      </div>
+    </div>
+  </header>
+
+  <hr class="pp-divider" />
+
+  <!-- ═══════════════════════════════
+       FEATURED NEXT PANEL
+  ════════════════════════════════ -->
+  <section class="pp-featured" id="featured">
+    <div class="pp-featured__head">
+      <p class="pp-kicker">Section 01 · Next Up</p>
+      <h2 class="pp-section-title">Featured Next Panel</h2>
+    </div>
+
+    <div class="pp-featured-card">
+      <!-- Left body -->
+      <div class="pp-featured-card__body">
+        <div class="pp-featured-card__eyebrow">
+          <span class="pp-featured-card__live-badge">
+            <span class="pp-featured-card__live-dot"></span>
+            Coming up
+          </span>
+          <span class="pp-tag pp-tag--gold">May 8, 2026</span>
+          <span class="pp-tag pp-tag--muted">Zoom</span>
+        </div>
+        <h3 class="pp-featured-card__title">Breaking Into Tech Without a Traditional Path</h3>
+        <p class="pp-featured-card__desc">
+          A live conversation with apprentices, career changers, first-generation professionals, and early-career technologists about how they found their way into tech without a perfectly linear path. This session is designed for students and recent grads who feel like they are behind, off-track, or trying to enter the industry without the <strong>"usual" credentials</strong>.
+        </p>
+        <div class="pp-featured-card__panelists">
+          <p class="pp-featured-card__panelists-label">Panelists</p>
+          <div class="pp-featured-card__panelist">A first-gen software engineer who landed through an apprenticeship</div>
+          <div class="pp-featured-card__panelist">A recent grad working in data analytics</div>
+          <div class="pp-featured-card__panelist">A professional who pivoted into tech from another field</div>
+          <div class="pp-featured-card__panelist">A recruiter focused on early-career access and inclusion</div>
+        </div>
+        <div class="pp-featured-card__actions">
+          <a href="#" class="pp-btn-primary">RSVP on Zoom</a>
+          <a href="#" onclick="addToCalendar('Breaking Into Tech Without a Traditional Path','2026-05-08T19:00','2026-05-08T20:30');return false;" class="pp-btn-secondary">Add to Calendar</a>
+          <a href="#" class="pp-btn-secondary">View Flyer</a>
+        </div>
+        <p class="pp-featured-card__note">Can't make it live? Register anyway to get the recording if it becomes available.</p>
+      </div>
+
+      <!-- Right sidebar -->
+      <div class="pp-featured-card__sidebar">
+        <div>
+          <p class="pp-featured-card__detail-label">Date</p>
+          <p class="pp-featured-card__detail-value">Thursday, May 8, 2026</p>
+        </div>
+        <div>
+          <p class="pp-featured-card__detail-label">Time</p>
+          <p class="pp-featured-card__detail-value">7:00 PM ET</p>
+          <p class="pp-featured-card__detail-sub">4:00 PM PT · 6:00 PM CT</p>
+        </div>
+        <div>
+          <p class="pp-featured-card__detail-label">Format</p>
+          <p class="pp-featured-card__detail-value">Live on Zoom</p>
+          <p class="pp-featured-card__detail-sub">Free to attend</p>
+        </div>
+        <div>
+          <p class="pp-featured-card__detail-label">Hosted by</p>
+          <p class="pp-featured-card__detail-value">Jose Cruz-Lopez</p>
+          <p class="pp-featured-card__detail-sub">+ Jocelyn Vazquez</p>
+        </div>
+        <div>
+          <p class="pp-featured-card__detail-label">Best for</p>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;">
+            <span class="pp-tag pp-tag--teal">Students</span>
+            <span class="pp-tag pp-tag--gold">Recent Grads</span>
+            <span class="pp-tag pp-tag--accent">Bridge Year</span>
+            <span class="pp-tag pp-tag--navy">Career Changers</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="pp-divider" />
+
+  <!-- ═══════════════════════════════
+       UPCOMING PANELS
+  ════════════════════════════════ -->
+  <section class="pp-upcoming" id="upcoming">
+    <div class="pp-upcoming__head">
+      <p class="pp-kicker">Section 02</p>
+      <h2 class="pp-section-title">Upcoming Panels</h2>
+      <p class="pp-section-sub">Register. Show up. Ask the questions you never had the chance to ask.</p>
+      <p class="pp-section-body">Join live conversations designed to help students and early-career talent hear directly from people who have navigated the internships, first offers, pivots, rejections, and wins that shape the road from campus to career. Each session is built around <strong>practical insight, not generic advice.</strong></p>
+    </div>
+
+    <div class="pp-upcoming__grid">
+
+      <!-- Panel card 1 -->
+      <article class="pp-panel-card">
+        <span class="pp-panel-card__date-badge">📅 May 20, 2026</span>
+        <h3 class="pp-panel-card__title">From Internship Search to First Offer</h3>
+        <p class="pp-panel-card__desc">A conversation about what actually changes between looking for internships and preparing for full-time roles. This panel focuses on timing, positioning, confidence, and the mistakes students make when they assume the same strategy works for both.</p>
+        <div class="pp-panel-card__meta">
+          <div class="pp-panel-card__meta-row">
+            <span class="pp-panel-card__meta-icon">🕐</span>
+            <span>6:30 PM ET &nbsp;·&nbsp; <span class="pp-panel-card__meta-val">Zoom</span></span>
+          </div>
+          <div class="pp-panel-card__meta-row">
+            <span class="pp-panel-card__meta-icon">🎯</span>
+            <span>Best for: <span class="pp-panel-card__meta-val">Juniors, Seniors, Recent Grads</span></span>
+          </div>
+        </div>
+        <div class="pp-panel-card__panelists">
+          <strong>Panelists</strong>
+          Campus recruiter at a major company<br/>
+          Recent graduate in a first full-time role<br/>
+          Student who converted an internship into an offer
+        </div>
+        <div class="pp-panel-card__tags">
+          <span class="pp-tag pp-tag--blue">Internships</span>
+          <span class="pp-tag pp-tag--gold">New Grad</span>
+          <span class="pp-tag pp-tag--muted">Recruiting</span>
+        </div>
+        <div class="pp-panel-card__actions">
+          <a href="#" class="pp-panel-card__cta-primary">Reserve Your Spot</a>
+          <a href="#" onclick="addToCalendar('From Internship Search to First Offer','2026-05-20T18:30','2026-05-20T20:00');return false;" class="pp-panel-card__cta-sm">📅 Calendar</a>
+          <a href="#" class="pp-panel-card__cta-sm">🗒 Flyer</a>
+        </div>
+      </article>
+
+      <!-- Panel card 2 -->
+      <article class="pp-panel-card">
+        <span class="pp-panel-card__date-badge">📅 June 5, 2026</span>
+        <h3 class="pp-panel-card__title">First-Gen Voices in Tech</h3>
+        <p class="pp-panel-card__desc">A panel centered on the experiences first-generation students and professionals carry into internships, interviews, and full-time roles. This session is focused on honesty, language, confidence, and navigating spaces that were not built with everyone in mind.</p>
+        <div class="pp-panel-card__meta">
+          <div class="pp-panel-card__meta-row">
+            <span class="pp-panel-card__meta-icon">🕐</span>
+            <span>7:30 PM ET &nbsp;·&nbsp; <span class="pp-panel-card__meta-val">Zoom</span></span>
+          </div>
+          <div class="pp-panel-card__meta-row">
+            <span class="pp-panel-card__meta-icon">🎯</span>
+            <span>Best for: <span class="pp-panel-card__meta-val">First-Gen, Transfer, Underrepresented</span></span>
+          </div>
+        </div>
+        <div class="pp-panel-card__panelists">
+          <strong>Panelists</strong>
+          First-gen software engineer<br/>
+          First-gen product or data professional<br/>
+          Student leader or community advocate
+        </div>
+        <div class="pp-panel-card__tags">
+          <span class="pp-tag pp-tag--teal">First-Gen in Tech</span>
+          <span class="pp-tag pp-tag--blue">Community</span>
+          <span class="pp-tag pp-tag--muted">Identity</span>
+        </div>
+        <div class="pp-panel-card__actions">
+          <a href="#" class="pp-panel-card__cta-primary">RSVP on Zoom</a>
+          <a href="#" onclick="addToCalendar('First-Gen Voices in Tech','2026-06-05T19:30','2026-06-05T21:00');return false;" class="pp-panel-card__cta-sm">📅 Calendar</a>
+          <a href="#" class="pp-panel-card__cta-sm">🗒 Flyer</a>
+        </div>
+      </article>
+
+      <!-- Panel card 3 -->
+      <article class="pp-panel-card">
+        <span class="pp-panel-card__date-badge">📅 June 18, 2026</span>
+        <h3 class="pp-panel-card__title">What Recruiters Wish Students Knew Earlier</h3>
+        <p class="pp-panel-card__desc">A practical session with recruiters and early-career hiring voices about resumes, outreach, interview signals, application timing, and the small things students do that either help them stand out or quietly knock them out of the process.</p>
+        <div class="pp-panel-card__meta">
+          <div class="pp-panel-card__meta-row">
+            <span class="pp-panel-card__meta-icon">🕐</span>
+            <span>7:00 PM ET &nbsp;·&nbsp; <span class="pp-panel-card__meta-val">Zoom</span></span>
+          </div>
+          <div class="pp-panel-card__meta-row">
+            <span class="pp-panel-card__meta-icon">🎯</span>
+            <span>Best for: <span class="pp-panel-card__meta-val">Anyone in internship or new grad recruiting</span></span>
+          </div>
+        </div>
+        <div class="pp-panel-card__panelists">
+          <strong>Panelists</strong>
+          University recruiter<br/>
+          Program manager or talent partner<br/>
+          Early-career professional on what worked
+        </div>
+        <div class="pp-panel-card__tags">
+          <span class="pp-tag pp-tag--navy">Recruiting</span>
+          <span class="pp-tag pp-tag--blue">Interviewing</span>
+          <span class="pp-tag pp-tag--muted">Resume</span>
+        </div>
+        <div class="pp-panel-card__actions">
+          <a href="#" class="pp-panel-card__cta-primary">Save My Spot</a>
+          <a href="#" onclick="addToCalendar('What Recruiters Wish Students Knew Earlier','2026-06-18T19:00','2026-06-18T20:30');return false;" class="pp-panel-card__cta-sm">📅 Calendar</a>
+          <a href="#" class="pp-panel-card__cta-sm">🗒 Flyer</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <hr class="pp-divider" />
+
+  <!-- ═══════════════════════════════
+       PAST PANELS ARCHIVE
+  ════════════════════════════════ -->
+  <section class="pp-archive" id="archive">
+    <div class="pp-archive__head">
+      <p class="pp-kicker">Section 03</p>
+      <h2 class="pp-section-title">Past Panels</h2>
+      <p class="pp-section-sub">A growing archive of conversations you can come back to.</p>
+      <p class="pp-section-body">Missed a live session? Past panels live here as a growing archive of conversations, recordings, flyers, and takeaways. Every session is meant to stay useful after the event ends, so you can come back to the conversations <strong>most relevant to where you are right now.</strong></p>
+    </div>
+
+    <div class="pp-archive__list">
+
+      <!-- Archive card 1 -->
+      <article class="pp-archive-card">
+        <div class="pp-archive-card__main">
+          <div>
+            <p class="pp-archive-card__date">April 3, 2026</p>
+            <h3 class="pp-archive-card__title">Still Recruiting in April: What Now?</h3>
+            <p class="pp-archive-card__recap">A candid conversation for students and recent grads still searching late in the cycle. The panel focused on how to reset your search, where to look next, how to talk about your timeline without shame, and what kinds of roles and programs still make sense when things did not go according to plan.</p>
+            <p class="pp-archive-card__panelists">
+              <strong>Panelists:</strong> Recent grad in a bridge-year search &nbsp;·&nbsp; Professional who found a late-cycle opportunity &nbsp;·&nbsp; Community builder supporting first-gen students
+            </p>
+            <div class="pp-archive-card__tags">
+              <span class="pp-tag pp-tag--accent">Bridge Year</span>
+              <span class="pp-tag pp-tag--gold">Late-Cycle Recruiting</span>
+              <span class="pp-tag pp-tag--teal">Internships</span>
+              <span class="pp-tag pp-tag--muted">Confidence</span>
+              <span class="pp-tag pp-tag--muted">New Grad</span>
+            </div>
+          </div>
+          <div class="pp-archive-card__actions">
+            <a href="#" class="pp-archive-card__cta pp-archive-card__cta--watch">▶ Watch Recording</a>
+            <a href="#" class="pp-archive-card__cta pp-archive-card__cta--flyer">🗒 View Flyer</a>
+            <button class="pp-archive-card__cta pp-archive-card__cta--takeaways" onclick="toggleTakeaways(this)" data-target="takeaways-1">✦ Key Takeaways</button>
+          </div>
+        </div>
+        <div class="pp-takeaways" id="takeaways-1">
+          <div class="pp-takeaways__inner">
+            <p class="pp-takeaways__title">Key Takeaways from This Session</p>
+            <div class="pp-takeaways__list">
+              <div class="pp-takeaways__item">Late-cycle recruiting is real, but requires a narrower and more intentional strategy - not more applications.</div>
+              <div class="pp-takeaways__item">Students often need better positioning and a clearer narrative, not just more volume in their search.</div>
+              <div class="pp-takeaways__item">Alternative entry points like apprenticeships and niche fellowships matter more than most people realize late in the cycle.</div>
+              <div class="pp-takeaways__item">Talking about your timeline without shame is a skill - and it is one you can practice and get better at before the interview room.</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Archive card 2 -->
+      <article class="pp-archive-card">
+        <div class="pp-archive-card__main">
+          <div>
+            <p class="pp-archive-card__date">March 14, 2026</p>
+            <h3 class="pp-archive-card__title">How to Navigate Rejection Without Spiraling</h3>
+            <p class="pp-archive-card__recap">This session focused on the emotional and strategic side of recruiting setbacks. Panelists discussed how to process rejection, learn from interviews, protect confidence, and keep moving without losing momentum or identity in the process.</p>
+            <p class="pp-archive-card__panelists">
+              <strong>Panelists:</strong> Early-career professional &nbsp;·&nbsp; Student mental health and support voice &nbsp;·&nbsp; Student leader who navigated repeated rejection
+            </p>
+            <div class="pp-archive-card__tags">
+              <span class="pp-tag pp-tag--blue">Interviewing</span>
+              <span class="pp-tag pp-tag--accent">Resilience</span>
+              <span class="pp-tag pp-tag--teal">First-Gen</span>
+              <span class="pp-tag pp-tag--muted">Confidence</span>
+            </div>
+          </div>
+          <div class="pp-archive-card__actions">
+            <a href="#" class="pp-archive-card__cta pp-archive-card__cta--watch">▶ Watch Recording</a>
+            <a href="#" class="pp-archive-card__cta pp-archive-card__cta--flyer">🗒 View Flyer</a>
+            <button class="pp-archive-card__cta pp-archive-card__cta--takeaways" onclick="toggleTakeaways(this)" data-target="takeaways-2">✦ Key Takeaways</button>
+          </div>
+        </div>
+        <div class="pp-takeaways" id="takeaways-2">
+          <div class="pp-takeaways__inner">
+            <p class="pp-takeaways__title">Key Takeaways from This Session</p>
+            <div class="pp-takeaways__list">
+              <div class="pp-takeaways__item">Rejection is data, not a verdict - the way you process it determines whether it becomes information or identity.</div>
+              <div class="pp-takeaways__item">Building a short post-rejection ritual (reflect, document, reset) helps break the spiral faster than pushing straight into more applications.</div>
+              <div class="pp-takeaways__item">First-gen students are statistically more likely to over-personalize rejection - separating performance from worth is a core skill to develop early.</div>
+              <div class="pp-takeaways__item">The students who bounce back quickest usually have one trusted person in their corner who normalizes the experience.</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Archive card 3 -->
+      <article class="pp-archive-card">
+        <div class="pp-archive-card__main">
+          <div>
+            <p class="pp-archive-card__date">February 22, 2026</p>
+            <h3 class="pp-archive-card__title">Coffee Chats That Actually Lead Somewhere</h3>
+            <p class="pp-archive-card__recap">A session about how to approach networking without sounding transactional, how to ask better questions, and how to turn one conversation into long-term connection and career insight.</p>
+            <p class="pp-archive-card__panelists">
+              <strong>Panelists:</strong> Technical recruiter &nbsp;·&nbsp; Recent grad in their first role &nbsp;·&nbsp; Student community leader
+            </p>
+            <div class="pp-archive-card__tags">
+              <span class="pp-tag pp-tag--navy">Networking</span>
+              <span class="pp-tag pp-tag--blue">Coffee Chats</span>
+              <span class="pp-tag pp-tag--gold">LinkedIn</span>
+              <span class="pp-tag pp-tag--muted">Relationships</span>
+            </div>
+          </div>
+          <div class="pp-archive-card__actions">
+            <a href="#" class="pp-archive-card__cta pp-archive-card__cta--watch">▶ Watch Recording</a>
+            <a href="#" class="pp-archive-card__cta pp-archive-card__cta--flyer">🗒 View Flyer</a>
+            <button class="pp-archive-card__cta pp-archive-card__cta--takeaways" onclick="toggleTakeaways(this)" data-target="takeaways-3">✦ Key Takeaways</button>
+          </div>
+        </div>
+        <div class="pp-takeaways" id="takeaways-3">
+          <div class="pp-takeaways__inner">
+            <p class="pp-takeaways__title">Key Takeaways from This Session</p>
+            <div class="pp-takeaways__list">
+              <div class="pp-takeaways__item">The best first messages are specific, short, and show you actually read the other person's profile - not templated.</div>
+              <div class="pp-takeaways__item">Asking "what do you wish someone had told you at my stage?" almost always unlocks the most honest, useful parts of the conversation.</div>
+              <div class="pp-takeaways__item">A coffee chat only "leads somewhere" if you follow up within 48 hours and stay in touch in a non-transactional way after.</div>
+              <div class="pp-takeaways__item">Most people in tech are genuinely willing to talk - the barrier is almost always on the student side, not the professional side.</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <hr class="pp-divider" />
+
+  <!-- ═══════════════════════════════
+       TOPIC BROWSE
+  ════════════════════════════════ -->
+  <section class="pp-topics" id="topics">
+    <div class="pp-topics__head">
+      <p class="pp-kicker">Section 04</p>
+      <h2 class="pp-section-title">Browse by Topic</h2>
+      <p class="pp-section-sub">Find the conversations that match where you are right now.</p>
+      <p class="pp-section-body">Not every panel is for everyone. Browse the archive by topic to find the conversations most relevant to what you are navigating.</p>
+    </div>
+    <div class="pp-topics__chips" id="topicChips">
+      <span class="pp-topic-chip active" data-topic="all">All Topics</span>
+      <span class="pp-topic-chip" data-topic="internships">Internships</span>
+      <span class="pp-topic-chip" data-topic="new-grad">New Grad Roles</span>
+      <span class="pp-topic-chip" data-topic="bridge-year">Bridge Year</span>
+      <span class="pp-topic-chip" data-topic="first-gen">First-Gen in Tech</span>
+      <span class="pp-topic-chip" data-topic="apprenticeships">Apprenticeships</span>
+      <span class="pp-topic-chip" data-topic="interviewing">Interviewing</span>
+      <span class="pp-topic-chip" data-topic="recruiting">Recruiting</span>
+      <span class="pp-topic-chip" data-topic="networking">Networking</span>
+      <span class="pp-topic-chip" data-topic="pivots">Career Pivots</span>
+      <span class="pp-topic-chip" data-topic="workplace">Workplace Readiness</span>
+      <span class="pp-topic-chip" data-topic="data">Data Careers</span>
+      <span class="pp-topic-chip" data-topic="community">Community Building</span>
+    </div>
+    <p class="pp-topics__note">Whether you are preparing for your first internship, trying to land your first full-time role, or figuring out how to keep going after a hard recruiting season - there is a panel path here for you.</p>
+  </section>
+
+  <hr class="pp-divider" />
+
+  <!-- ═══════════════════════════════
+       SUGGEST A FUTURE PANEL
+  ════════════════════════════════ -->
+  <section class="pp-suggest" id="suggest">
+    <div class="pp-suggest__layout">
+      <!-- Intro -->
+      <div>
+        <p class="pp-suggest__intro-kicker">Section 05</p>
+        <h2 class="pp-suggest__intro-title">What panel should we host next?</h2>
+        <p class="pp-suggest__intro-body">
+          The best panel ideas come directly from the questions people are already living through. If there is a conversation, role, industry, or perspective you want us to feature in a future Partner Panel, <strong>send it here.</strong> We use community feedback to shape what we host next.
+        </p>
+      </div>
+
+      <!-- Form -->
+      <div class="pp-form-box" id="suggestFormBox">
+        <div id="suggestFormContent">
+          <div class="pp-form-row">
+            <label class="pp-form-label" for="suggestTopic">Panel topic you want to see <span>*</span></label>
+            <input class="pp-form-input" type="text" id="suggestTopic" placeholder="Ex: Breaking into product management without prior experience" />
+          </div>
+          <div class="pp-form-row">
+            <label class="pp-form-label" for="suggestWhy">Why would this be helpful? <span>*</span></label>
+            <textarea class="pp-form-textarea" id="suggestWhy" placeholder="Tell us what question, challenge, or gap this panel would help address…"></textarea>
+          </div>
+          <div class="pp-form-row pp-form-row-2">
+            <div>
+              <label class="pp-form-label" for="suggestStage">Your stage <span>*</span></label>
+              <select class="pp-form-select" id="suggestStage">
+                <option value="">Select stage…</option>
+                <option>First-Year</option>
+                <option>Sophomore</option>
+                <option>Junior</option>
+                <option>Senior</option>
+                <option>Recent Grad</option>
+                <option>Bridge Year</option>
+                <option>Career Transition</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="pp-form-label" for="suggestCategory">Category <span>*</span></label>
+              <select class="pp-form-select" id="suggestCategory">
+                <option value="">Select category…</option>
+                <option>Internships</option>
+                <option>New Grad Roles</option>
+                <option>Apprenticeships</option>
+                <option>Interviewing</option>
+                <option>Networking</option>
+                <option>First-Gen Experience</option>
+                <option>Data Careers</option>
+                <option>Software Engineering</option>
+                <option>Recruiting</option>
+                <option>Career Pivots</option>
+                <option>Workplace Readiness</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="pp-form-row">
+            <label class="pp-form-label" for="suggestEmail">Email <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional - if you want a heads-up when we host it)</span></label>
+            <input class="pp-form-input" type="email" id="suggestEmail" placeholder="your@email.com" />
+          </div>
+          <button class="pp-form-btn" onclick="submitSuggestForm()">Send Topic Suggestion</button>
+          <p class="pp-form-note">Not every idea becomes a panel immediately, but every submission helps shape what we build next.</p>
+        </div>
+        <div class="pp-form-success" id="suggestFormSuccess">
+          <div class="pp-form-success__icon pp-form-success__icon--gold">✓</div>
+          <div class="pp-form-success__title">Suggestion received!</div>
+          <p class="pp-form-success__body">Thank you - we read every submission. If we host a panel on your topic, we'll let you know if you left an email. Keep an eye on upcoming panels.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="pp-divider" />
+
+  <!-- ═══════════════════════════════
+       BECOME A PANELIST / PARTNER
+  ════════════════════════════════ -->
+  <section class="pp-panelist" id="panelist">
+    <div class="pp-panelist__inner">
+      <!-- Intro -->
+      <div>
+        <p class="pp-panelist__intro-kicker">Section 06</p>
+        <h2 class="pp-panelist__intro-title">Want to speak or partner with us?</h2>
+        <p class="pp-panelist__intro-body">
+          If you are a student leader, recent grad, professional, recruiter, founder, or community builder who wants to join a future panel or co-host a conversation with us, <strong>we would love to hear from you.</strong> We are especially interested in voices that bring lived experience, honest perspective, and practical value for students navigating the path from campus to career.
+        </p>
+        <div class="pp-panelist__perks">
+          <div class="pp-panelist__perk">
+            <span class="pp-panelist__perk-icon">✓</span>
+            <span>We actively seek first-gen, underrepresented, and nontraditional voices</span>
+          </div>
+          <div class="pp-panelist__perk">
+            <span class="pp-panelist__perk-icon">✓</span>
+            <span>You don't need a big platform - just real experience and genuine perspective</span>
+          </div>
+          <div class="pp-panelist__perk">
+            <span class="pp-panelist__perk-icon">✓</span>
+            <span>Partnership and sponsorship inquiries also welcome</span>
+          </div>
+          <div class="pp-panelist__perk">
+            <span class="pp-panelist__perk-icon">✓</span>
+            <span>All panels are free for attendees - we keep it accessible intentionally</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="pp-form-box pp-form-box--dark" id="panelistFormBox">
+        <div id="panelistFormContent">
+          <div class="pp-form-row pp-form-row-2">
+            <div>
+              <label class="pp-form-label" for="plName">Full Name <span>*</span></label>
+              <input class="pp-form-input" type="text" id="plName" placeholder="Your name" />
+            </div>
+            <div>
+              <label class="pp-form-label" for="plEmail">Email <span>*</span></label>
+              <input class="pp-form-input" type="email" id="plEmail" placeholder="your@email.com" />
+            </div>
+          </div>
+          <div class="pp-form-row">
+            <label class="pp-form-label" for="plLinkedIn">LinkedIn Profile <span>*</span></label>
+            <input class="pp-form-input" type="url" id="plLinkedIn" placeholder="linkedin.com/in/yourname" />
+          </div>
+          <div class="pp-form-row">
+            <label class="pp-form-label" for="plRole">Current Role / Organization <span>*</span></label>
+            <input class="pp-form-input" type="text" id="plRole" placeholder="e.g. SWE @ Stripe, CS student @ BU" />
+          </div>
+          <div class="pp-form-row">
+            <label class="pp-form-label" for="plTopic">What topic could you speak on? <span>*</span></label>
+            <textarea class="pp-form-textarea" id="plTopic" placeholder="What experience, perspective, or insight would you bring to a panel?"></textarea>
+          </div>
+          <div class="pp-form-row">
+            <label class="pp-form-label" for="plInterest">Interested in… <span>*</span></label>
+            <select class="pp-form-select" id="plInterest">
+              <option value="">Select…</option>
+              <option>Joining as a Panelist</option>
+              <option>Community Partnership</option>
+              <option>Sponsorship</option>
+              <option>Co-hosting a Session</option>
+              <option>Not sure yet - just want to connect</option>
+            </select>
+          </div>
+          <div class="pp-form-row">
+            <label class="pp-form-label" for="plNotes">Anything else we should know?</label>
+            <textarea class="pp-form-textarea" id="plNotes" placeholder="Optional - any context that helps us understand your interest or background"></textarea>
+          </div>
+          <button class="pp-form-btn" onclick="submitPanelistForm()">Express Interest</button>
+        </div>
+        <div class="pp-form-success" id="panelistFormSuccess">
+          <div class="pp-form-success__icon pp-form-success__icon--teal">✓</div>
+          <div class="pp-form-success__title" style="color:var(--color-cream);">We'd love to connect.</div>
+          <p class="pp-form-success__body" style="color:rgba(242,228,206,.65);">Thank you for your interest in speaking or partnering. We'll be in touch at your email within a few days to learn more.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       ECOSYSTEM
+  ════════════════════════════════ -->
+  <section class="pp-eco" id="ecosystem">
+    <div class="pp-eco__inner">
+      <p class="pp-eco__kicker">The J&amp;J Ecosystem</p>
+      <h2 class="pp-eco__title">How Partner Panels fit the bigger picture.</h2>
+      <p class="pp-eco__body">Partner Panels are one part of the larger J&amp;J ecosystem. The Opportunity Board helps you find what is open. The Coffee Chat Network helps you meet people you can learn from directly. The Career Templates page gives you scripts, trackers, and tools you can use immediately. The Interview Prep Hub helps you get ready for the room. Partner Panels sit in the middle of all of that as the <strong style="color:var(--color-gold);">live conversation layer</strong> - the place where questions become dialogue, and information becomes community.</p>
+      <div class="pp-eco__grid">
+        <a href="/opportunity-board.html" class="pp-eco__link">
+          <div class="pp-eco__link-title">Opportunity Board</div>
+          <div class="pp-eco__link-desc">Curated internships, apprenticeships &amp; roles</div>
+        </a>
+        <a href="/coffee-chat.html" class="pp-eco__link">
+          <div class="pp-eco__link-title">Coffee Chat Network</div>
+          <div class="pp-eco__link-desc">Connect with people who've walked this path</div>
+        </a>
+        <a href="/bridge-year.html" class="pp-eco__link">
+          <div class="pp-eco__link-title">Bridge Year Hub</div>
+          <div class="pp-eco__link-desc">Your path when the offer didn't come yet</div>
+        </a>
+        <a href="/career-templates.html" class="pp-eco__link">
+          <div class="pp-eco__link-title">Career Templates</div>
+          <div class="pp-eco__link-desc">Scripts &amp; trackers for outreach &amp; applications</div>
+        </a>
+        <a href="/interview-prep.html" class="pp-eco__link">
+          <div class="pp-eco__link-title">Interview Prep Hub</div>
+          <div class="pp-eco__link-desc">Structured prep for every stage and type</div>
+        </a>
+        <a href="/articles/" class="pp-eco__link">
+          <div class="pp-eco__link-title">La Voz del Día</div>
+          <div class="pp-eco__link-desc">Weekly essays on careers, identity &amp; early-career life</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════
+       CLOSING STRIP
+  ════════════════════════════════ -->
+  <section class="pp-closing">
+    <div class="pp-closing__inner">
+      <h2 class="pp-closing__headline">Come to listen. Come to ask. Come to see what is possible.</h2>
+      <div class="pp-closing__btns">
+        <a href="#upcoming" class="pp-closing__btn-primary">Browse Upcoming Panels</a>
+        <a href="#archive" class="pp-closing__btn-secondary">Explore the Archive</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="/nav-prefetch.js"></script>
+  <script>
+    /* ─── Nav scroll shadow ─── */
+    var artNav = document.getElementById('artNav');
+    window.addEventListener('scroll', function() {
+      artNav.classList.toggle('art-nav--scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    /* ─── Mobile nav ─── */
+    (function(){
+      var burger = document.querySelector('.art-nav__burger');
+      var nav = document.getElementById('mobileNav');
+      if (!burger || !nav) return;
+      function toggle(open) {
+        nav.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', String(open));
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
+      burger.addEventListener('click', function() { toggle(!nav.classList.contains('open')); });
+      nav.addEventListener('click', function(e) { if (e.target === nav) toggle(false); });
+      document.addEventListener('keydown', function(e) { if (e.key === 'Escape') toggle(false); });
+    })();
+
+    /* ─── Expandable takeaways ─── */
+    function toggleTakeaways(btn) {
+      var targetId = btn.dataset.target;
+      var panel = document.getElementById(targetId);
+      var isOpen = panel.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.pp-takeaways').forEach(function(p) { p.classList.remove('open'); });
+      document.querySelectorAll('.pp-archive-card__cta--takeaways').forEach(function(b) { b.textContent = '✦ Key Takeaways'; });
+      // Open target if it was closed
+      if (!isOpen) {
+        panel.classList.add('open');
+        btn.textContent = '✦ Hide Takeaways';
+      }
+    }
+
+    /* ─── Topic chip filter (visual-only for now) ─── */
+    document.querySelectorAll('.pp-topic-chip').forEach(function(chip) {
+      chip.addEventListener('click', function() {
+        document.querySelectorAll('.pp-topic-chip').forEach(function(c) { c.classList.remove('active'); });
+        chip.classList.add('active');
+      });
+    });
+
+    /* ─── Add to calendar (ICS download) ─── */
+    function addToCalendar(title, start, end) {
+      var startStr = start.replace(/[-:]/g,'') + '00';
+      var endStr   = end.replace(/[-:]/g,'') + '00';
+      var ics = [
+        'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//JoseJocelyn//Panels//EN',
+        'BEGIN:VEVENT',
+        'DTSTART:' + startStr,
+        'DTEND:'   + endStr,
+        'SUMMARY:' + title + ' - J&J Partner Panel',
+        'DESCRIPTION:Hosted by Jose Cruz-Lopez and Jocelyn Vazquez. Live on Zoom.',
+        'URL:https://josejocelyn.com/partner-panels.html',
+        'END:VEVENT', 'END:VCALENDAR'
+      ].join('\r\n');
+      var blob = new Blob([ics], { type: 'text/calendar' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = title.replace(/[^a-z0-9]/gi,'_').toLowerCase() + '.ics';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    /* ─── Suggest form submit ─── */
+    function submitSuggestForm() {
+      var topic    = document.getElementById('suggestTopic').value.trim();
+      var why      = document.getElementById('suggestWhy').value.trim();
+      var stage    = document.getElementById('suggestStage').value;
+      var category = document.getElementById('suggestCategory').value;
+      if (!topic || !why || !stage || !category) {
+        alert('Please fill in all required fields before submitting.');
+        return;
+      }
+      document.getElementById('suggestFormContent').style.display = 'none';
+      document.getElementById('suggestFormSuccess').style.display = 'block';
+      document.getElementById('suggestFormBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    /* ─── Panelist form submit ─── */
+    function submitPanelistForm() {
+      var name     = document.getElementById('plName').value.trim();
+      var email    = document.getElementById('plEmail').value.trim();
+      var linkedin = document.getElementById('plLinkedIn').value.trim();
+      var role     = document.getElementById('plRole').value.trim();
+      var topic    = document.getElementById('plTopic').value.trim();
+      var interest = document.getElementById('plInterest').value;
+      if (!name || !email || !linkedin || !role || !topic || !interest) {
+        alert('Please fill in all required fields before submitting.');
+        return;
+      }
+      document.getElementById('panelistFormContent').style.display = 'none';
+      document.getElementById('panelistFormSuccess').style.display = 'block';
+      document.getElementById('panelistFormBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+</body>
+</html>
