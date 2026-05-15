@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>if("scrollRestoration"in history)history.scrollRestoration="auto";</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The LinkedIn Series | Jose x Jocelyn</title>
+  <meta name="description" content="One topic. Two perspectives. Real-time notes from both sides of the bridge - archived and organized by episode." />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/article.css" />
+  <style>
+    html, body { background: var(--color-cream); }
+
+    /* LinkedIn logo blue (matches /images/linkedin_logo.png) */
+    :root { --linkedin-brand-blue: #0a66c2; }
+    .ls-linkedin {
+      color: var(--linkedin-brand-blue);
+    }
+
+    /* ---- Page hero ---- */
+    .ls-hero {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 120px clamp(20px,5vw,56px) 48px;
+    }
+    .ls-hero__kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 18px;
+    }
+    .ls-hero__title {
+      font-family: var(--font-display);
+      font-size: clamp(36px,6.5vw,68px);
+      font-weight: 700;
+      line-height: 1.06;
+      color: var(--color-dark);
+      margin-bottom: 20px;
+    }
+    .ls-hero__title em { font-style: normal; color: var(--color-accent); }
+    .ls-hero__sub {
+      font-size: clamp(15px,2vw,18px);
+      color: var(--color-muted);
+      line-height: 1.7;
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+    .ls-hero__sub strong { color: var(--color-dark); font-weight: 600; }
+
+    /* Stats row */
+    .ls-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      border: 1.5px solid rgba(0,0,0,0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      max-width: 640px;
+      background: var(--color-white);
+    }
+    .ls-stat {
+      flex: 1;
+      min-width: 130px;
+      padding: 18px 20px;
+      border-right: 1px solid rgba(0,0,0,0.08);
+    }
+    .ls-stat:last-child { border-right: none; }
+    .ls-stat__num {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-dark);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .ls-stat__label {
+      font-size: 12px;
+      color: var(--color-muted);
+      line-height: 1.4;
+    }
+
+    /* ---- Controls ---- */
+    .ls-controls {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 clamp(20px,5vw,56px) 40px;
+    }
+    .ls-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .ls-filter {
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid rgba(0,0,0,0.12);
+      background: var(--color-white);
+      color: var(--color-muted);
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .ls-filter:hover { color: var(--color-dark); border-color: rgba(0,0,0,0.25); }
+    .ls-filter--active { background: var(--color-dark); color: var(--color-cream); border-color: var(--color-dark); }
+
+    /* Divider */
+    .ls-divider {
+      max-width: 1040px;
+      margin: 0 auto 48px;
+      padding: 0 clamp(20px,5vw,56px);
+    }
+    .ls-divider hr { border: none; border-top: 1px solid rgba(0,0,0,0.08); }
+
+    /* ---- Episode list ---- */
+    .ls-episodes {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 clamp(20px,5vw,56px) 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+    }
+
+    .ls-ep {
+      display: block;
+    }
+
+    /* Episode header */
+    .ls-ep__head {
+      display: flex;
+      align-items: flex-start;
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+    .ls-ep__num {
+      font-family: var(--font-display);
+      font-size: clamp(40px,5vw,56px);
+      font-weight: 700;
+      line-height: 1;
+      color: rgba(0,0,0,0.08);
+      flex-shrink: 0;
+      min-width: 72px;
+    }
+    .ls-ep__info { flex: 1; min-width: 0; }
+    .ls-ep__badges {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .ls-ep__lens {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 4px;
+      color: var(--color-white);
+    }
+    .ls-ep__lens--jose    { background: var(--color-teal); }
+    .ls-ep__lens--jocelyn { background: var(--color-accent); }
+    .ls-ep__lens--both    { background: var(--color-navy); }
+    .ls-ep__tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      padding: 3px 10px;
+      border-radius: 4px;
+      background: rgba(0,0,0,0.06);
+    }
+    .ls-ep__title {
+      font-family: var(--font-display);
+      font-size: clamp(20px,2.8vw,28px);
+      font-weight: 600;
+      color: var(--color-dark);
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .ls-ep__summary {
+      font-size: 15px;
+      color: var(--color-muted);
+      line-height: 1.6;
+      max-width: 640px;
+      margin-bottom: 8px;
+    }
+    .ls-ep__why {
+      font-size: 13px;
+      color: var(--color-teal);
+      font-weight: 500;
+    }
+    .ls-ep__why::before { content: "Why it matters: "; font-weight: 700; }
+
+    /* Post grid inside episode */
+    .ls-ep__posts {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .ls-post {
+      background: var(--color-white);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .ls-post--featured {
+      border-color: var(--color-gold);
+      background: rgba(232,168,56,0.04);
+    }
+    .ls-post__type {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+    }
+    .ls-post__title {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-dark);
+      line-height: 1.4;
+    }
+    .ls-post__preview {
+      font-size: 13px;
+      color: var(--color-muted);
+      line-height: 1.55;
+      flex: 1;
+    }
+    .ls-post__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: auto;
+    }
+    .ls-post__author {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 3px;
+      color: var(--color-white);
+    }
+    .ls-post__author--jose    { background: var(--color-teal); }
+    .ls-post__author--jocelyn { background: var(--color-accent); }
+    .ls-post__author--both    { background: var(--color-navy); }
+    .ls-post__status {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-muted);
+      padding: 2px 8px;
+      border-radius: 3px;
+      background: rgba(0,0,0,0.05);
+    }
+    .ls-post__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-teal);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .ls-post__cta:hover { color: var(--color-dark); }
+
+    /* ---- How it works ---- */
+    .ls-how {
+      background: var(--color-navy);
+      padding: clamp(48px,7vw,88px) clamp(20px,5vw,56px);
+    }
+    .ls-how__inner {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .ls-how__kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 16px;
+    }
+    .ls-how__title {
+      font-family: var(--font-display);
+      font-size: clamp(24px,3.5vw,36px);
+      font-weight: 700;
+      color: var(--color-cream);
+      margin-bottom: 40px;
+    }
+    .ls-how__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+    }
+    .ls-how__item {}
+    .ls-how__item-icon {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-gold);
+      margin-bottom: 10px;
+      line-height: 1;
+    }
+    .ls-how__item-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--color-cream);
+      margin-bottom: 6px;
+    }
+    .ls-how__item-desc {
+      font-size: 14px;
+      color: rgba(242,228,206,0.65);
+      line-height: 1.6;
+    }
+
+    /* ---- Request form ---- */
+    .ls-form-wrap {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: clamp(56px,8vw,96px) clamp(20px,5vw,56px);
+    }
+    .ls-form-box {
+      background: var(--color-white);
+      border-radius: 16px;
+      padding: clamp(32px,4vw,56px);
+      border: 1px solid rgba(0,0,0,0.07);
+      max-width: 640px;
+    }
+    .ls-form-box__kicker {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 12px;
+    }
+    .ls-form-box__title {
+      font-family: var(--font-display);
+      font-size: clamp(22px,3vw,30px);
+      font-weight: 700;
+      color: var(--color-dark);
+      margin-bottom: 8px;
+    }
+    .ls-form-box__sub {
+      font-size: 15px;
+      color: var(--color-muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+    .ls-form-row { margin-bottom: 16px; }
+    .ls-form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-muted);
+      margin-bottom: 6px;
+    }
+    .ls-form-input,
+    .ls-form-select,
+    .ls-form-textarea {
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: 15px;
+      padding: 12px 14px;
+      border: 1.5px solid rgba(0,0,0,0.12);
+      border-radius: 8px;
+      background: var(--color-white);
+      color: var(--color-dark);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .ls-form-textarea { min-height: 90px; resize: vertical; line-height: 1.55; }
+    .ls-form-input:focus,
+    .ls-form-select:focus,
+    .ls-form-textarea:focus { border-color: var(--color-gold); }
+    .ls-form-select { appearance: none; cursor: pointer; }
+    .ls-form-btn {
+      margin-top: 6px;
+      padding: 13px 28px;
+      background: var(--color-dark);
+      color: var(--color-cream);
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .ls-form-btn:hover { background: var(--color-accent); transform: translateY(-1px); }
+
+    /* Episode hidden state for filtering */
+    .ls-ep[hidden] { display: none; }
+
+    .ls-no-results {
+      text-align: center;
+      padding: 64px 0;
+      color: var(--color-muted);
+      display: none;
+    }
+    .ls-no-results--visible { display: block; }
+
+    @media (max-width: 640px) {
+      .ls-ep__head { flex-direction: column; gap: 8px; }
+      .ls-ep__num { font-size: 32px; min-width: unset; }
+      .ls-how__grid { grid-template-columns: 1fr 1fr; }
+      .ls-stats { flex-direction: column; }
+      .ls-stat { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.08); }
+      .ls-stat:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="art-nav" id="artNav">
+    <a href="/images/index.html" class="art-nav__brand">Jose × Jocelyn</a>
+    <div class="art-nav__right">
+      <a href="/articles/" class="art-nav__link">La Voz del Día</a>
+      <a href="/career-templates.html" class="art-nav__link">Templates</a>
+      <a href="/bridge-year.html" class="art-nav__link">Bridge Year</a>
+      <a href="/coffee-chat.html" class="art-nav__link">Coffee Chat</a>
+      <a href="/opportunity-board.html" class="art-nav__link">Opportunities</a>
+      <a href="/partner-panels.html" class="art-nav__link">Panels</a>
+      <a href="/images/index.html#contact" class="art-nav__link">Get in Touch</a>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <header class="ls-hero">
+    <p class="ls-hero__kicker">From Campus to Career · Content Series</p>
+    <h1 class="ls-hero__title">The <span class="ls-linkedin">LinkedIn</span> <em>Series</em></h1>
+    <p class="ls-hero__sub">One topic. Two perspectives. Real-time notes from both sides of the bridge.<br /><br /><strong>Jose</strong> covers the student lens - internships, outreach, applications, rejection, and figuring things out in real time. <strong>Jocelyn</strong> covers the post-grad lens - interviews, offers, onboarding, and early-career growth. Every episode lives on LinkedIn first, then gets archived here.</p>
+    <div class="ls-stats">
+      <div class="ls-stat">
+        <div class="ls-stat__num">10</div>
+        <div class="ls-stat__label">Episodes planned</div>
+      </div>
+      <div class="ls-stat">
+        <div class="ls-stat__num" id="publishedCount">0</div>
+        <div class="ls-stat__label">Posts published</div>
+      </div>
+      <div class="ls-stat">
+        <div class="ls-stat__num">2</div>
+        <div class="ls-stat__label">Lenses</div>
+      </div>
+      <div class="ls-stat">
+        <div class="ls-stat__num">Weekly</div>
+        <div class="ls-stat__label">Updated</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== FILTERS ===== -->
+  <div class="ls-controls">
+    <div class="ls-filters" role="group" aria-label="Filter episodes">
+      <button class="ls-filter ls-filter--active" data-f="all">All Posts</button>
+      <button class="ls-filter" data-f="jose">Jose's Lens</button>
+      <button class="ls-filter" data-f="jocelyn">Jocelyn's Lens</button>
+      <button class="ls-filter" data-f="both">Both Perspectives</button>
+      <button class="ls-filter" data-f="internships">Internships</button>
+      <button class="ls-filter" data-f="offers">Offers</button>
+      <button class="ls-filter" data-f="rejection">Rejection</button>
+      <button class="ls-filter" data-f="on-the-job">On the Job</button>
+    </div>
+  </div>
+
+  <div class="ls-divider"><hr /></div>
+
+  <!-- ===== EPISODES ===== -->
+  <main class="ls-episodes" id="epList">
+
+    <!-- EP 01 -->
+    <div class="ls-ep" data-lens="both" data-topics="internships rejection">
+      <div class="ls-ep__head">
+        <div class="ls-ep__num">01</div>
+        <div class="ls-ep__info">
+          <div class="ls-ep__badges">
+            <span class="ls-ep__lens ls-ep__lens--both">Both</span>
+            <span class="ls-ep__tag">Internships</span>
+            <span class="ls-ep__tag">Rejection</span>
+          </div>
+          <h2 class="ls-ep__title">Still Recruiting in April</h2>
+          <p class="ls-ep__summary">Jose covers where to find late-cycle roles and how to move fast when everyone says it's too late. Jocelyn explains how hiring teams view late applicants and how to frame "still searching" in interviews.</p>
+          <p class="ls-ep__why">Late-cycle recruiting is where most first-gen students lose momentum - this episode reframes it as a real strategy, not a fallback.</p>
+        </div>
+      </div>
+      <div class="ls-ep__posts">
+        <div class="ls-post ls-post--featured">
+          <div class="ls-post__type">Announcement</div>
+          <div class="ls-post__title">Kicking off Ep. 01 - Still Recruiting in April</div>
+          <div class="ls-post__preview">Series launch post introducing the episode premise and what's coming from both lenses.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--both">Both</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Student Lens</div>
+          <div class="ls-post__title">Where the late-cycle roles actually are (and how to find them fast)</div>
+          <div class="ls-post__preview">The exact search process Jose uses - company career pages, Handshake filters, outreach-first applications, and why LinkedIn is the last place to look.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Post-Grad Lens</div>
+          <div class="ls-post__title">How hiring teams actually see late applicants</div>
+          <div class="ls-post__preview">What Jocelyn learned being on the inside - reneges open seats, budget comes in late, and late applicants can actually move faster than early ones.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Recap &amp; CTA</div>
+          <div class="ls-post__title">Ep. 01 Recap - The late-cycle playbook in one post</div>
+          <div class="ls-post__preview">Full episode summary, key takeaways from both lenses, and links to the related article and application tracker template.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--both">Both</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EP 02 -->
+    <div class="ls-ep" data-lens="jose" data-topics="internships">
+      <div class="ls-ep__head">
+        <div class="ls-ep__num">02</div>
+        <div class="ls-ep__info">
+          <div class="ls-ep__badges">
+            <span class="ls-ep__lens ls-ep__lens--jose">Jose</span>
+            <span class="ls-ep__tag">Internships</span>
+          </div>
+          <h2 class="ls-ep__title">What Nobody Tells You About Internship Apps</h2>
+          <p class="ls-ep__summary">The timeline myths most students believe, when early-ID programs actually close (much earlier than you think), and how most students apply so late they never had a real shot.</p>
+          <p class="ls-ep__why">Most students don't lose the recruiting game at the interview - they lose it before they even apply. This episode fixes that.</p>
+        </div>
+      </div>
+      <div class="ls-ep__posts">
+        <div class="ls-post">
+          <div class="ls-post__type">Student Lens</div>
+          <div class="ls-post__title">The internship recruiting timeline nobody shows you</div>
+          <div class="ls-post__preview">When early-ID programs open, when they actually close, and why applying in February for a summer internship is already too late for most top firms.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Student Lens</div>
+          <div class="ls-post__title">How most students apply wrong (and how to fix it)</div>
+          <div class="ls-post__preview">The real habits separating students who land roles from those who wonder what went wrong - tracking, follow-up cadence, and targeting over volume.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Carousel</div>
+          <div class="ls-post__title">The recruiting timeline, slide by slide</div>
+          <div class="ls-post__preview">A visual breakdown of the full internship recruiting calendar - when to research, when to apply, when to follow up, and when it's actually over.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EP 03 -->
+    <div class="ls-ep" data-lens="jocelyn" data-topics="offers on-the-job">
+      <div class="ls-ep__head">
+        <div class="ls-ep__num">03</div>
+        <div class="ls-ep__info">
+          <div class="ls-ep__badges">
+            <span class="ls-ep__lens ls-ep__lens--jocelyn">Jocelyn</span>
+            <span class="ls-ep__tag">Offers</span>
+            <span class="ls-ep__tag">On the Job</span>
+          </div>
+          <h2 class="ls-ep__title">How Return Offers Actually Work</h2>
+          <p class="ls-ep__summary">What managers track all summer, the unspoken criteria they use to make return offer decisions, and how to position yourself for a yes before the summer ends.</p>
+          <p class="ls-ep__why">Most interns try to impress during their last two weeks. The ones who get return offers started on day one.</p>
+        </div>
+      </div>
+      <div class="ls-ep__posts">
+        <div class="ls-post">
+          <div class="ls-post__type">Post-Grad Lens</div>
+          <div class="ls-post__title">What your manager is actually tracking this summer</div>
+          <div class="ls-post__preview">The real criteria behind return offer decisions - visibility, initiative, relationships, communication patterns, and how you handle uncertainty.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Post-Grad Lens</div>
+          <div class="ls-post__title">The unspoken criteria nobody puts in the intern handbook</div>
+          <div class="ls-post__preview">Culture fit signals, how you navigate ambiguity, whether you ask the right questions - the soft factors that often matter more than project output.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Carousel</div>
+          <div class="ls-post__title">The return offer checklist</div>
+          <div class="ls-post__preview">A week-by-week guide for the first 10 weeks of an internship, built around the moments that matter most for getting a return offer.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EP 04 -->
+    <div class="ls-ep" data-lens="both" data-topics="offers">
+      <div class="ls-ep__head">
+        <div class="ls-ep__num">04</div>
+        <div class="ls-ep__info">
+          <div class="ls-ep__badges">
+            <span class="ls-ep__lens ls-ep__lens--both">Both</span>
+            <span class="ls-ep__tag">Offers</span>
+          </div>
+          <h2 class="ls-ep__title">Reading Your First Full-Time Offer</h2>
+          <p class="ls-ep__summary">Jose breaks down what's confusing about comp, titles, and benefits when you've never seen a six-figure offer before. Jocelyn walks through exactly how she broke down her first full-time offer - and what she negotiated.</p>
+          <p class="ls-ep__why">First-gen students often accept the first number they see. This episode gives you the vocabulary and framework to actually read what you're signing.</p>
+        </div>
+      </div>
+      <div class="ls-ep__posts">
+        <div class="ls-post">
+          <div class="ls-post__type">Student Lens</div>
+          <div class="ls-post__title">I have an offer. Now what does any of this mean?</div>
+          <div class="ls-post__preview">Base, bonus, equity, vesting, benefits, 401k match - a plain-language breakdown for students who've never seen an offer letter before.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Post-Grad Lens</div>
+          <div class="ls-post__title">How I broke down my first offer - and what I pushed back on</div>
+          <div class="ls-post__preview">Jocelyn's real story: the number, the confusion, the negotiation conversation, and what she wishes she had known when the offer hit her inbox.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Carousel</div>
+          <div class="ls-post__title">The anatomy of a full-time offer</div>
+          <div class="ls-post__preview">Every line item explained: base salary, signing bonus, equity (RSUs vs options), benefits, PTO, and what's actually negotiable.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--both">Both</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EP 05 -->
+    <div class="ls-ep" data-lens="jose" data-topics="internships">
+      <div class="ls-ep__head">
+        <div class="ls-ep__num">05</div>
+        <div class="ls-ep__info">
+          <div class="ls-ep__badges">
+            <span class="ls-ep__lens ls-ep__lens--jose">Jose</span>
+            <span class="ls-ep__tag">Internships</span>
+          </div>
+          <h2 class="ls-ep__title">Cold Outreach That Gets Replies</h2>
+          <p class="ls-ep__summary">Exact message frameworks, subject lines that work, follow-up timing, and everything you should not say in a cold LinkedIn DM or outreach email.</p>
+          <p class="ls-ep__why">Cold outreach is the most underused lever in student recruiting. Most students do it once, hear nothing, and stop. This episode fixes the execution.</p>
+        </div>
+      </div>
+      <div class="ls-ep__posts">
+        <div class="ls-post">
+          <div class="ls-post__type">Student Lens</div>
+          <div class="ls-post__title">The cold DM that actually gets a response</div>
+          <div class="ls-post__preview">Three message frameworks - one for recruiters, one for engineers, one for alumni - and the exact structure that makes each one work.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Student Lens</div>
+          <div class="ls-post__title">The follow-up sequence (without sounding desperate)</div>
+          <div class="ls-post__preview">Day 1, Day 7, Day 14 - the exact timing and phrasing for following up on outreach that hasn't gotten a response yet.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Carousel</div>
+          <div class="ls-post__title">What not to say in a cold DM (and why it kills your shot)</div>
+          <div class="ls-post__preview">Real examples of cold outreach that doesn't work - too long, too generic, too desperate - and the rewritten versions that actually convert.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EP 06 -->
+    <div class="ls-ep" data-lens="jocelyn" data-topics="on-the-job">
+      <div class="ls-ep__head">
+        <div class="ls-ep__num">06</div>
+        <div class="ls-ep__info">
+          <div class="ls-ep__badges">
+            <span class="ls-ep__lens ls-ep__lens--jocelyn">Jocelyn</span>
+            <span class="ls-ep__tag">On the Job</span>
+          </div>
+          <h2 class="ls-ep__title">Your First 90 Days in a Tech Role</h2>
+          <p class="ls-ep__summary">How to onboard effectively, build relationships without being annoying, find your footing fast, and make your work visible in a corporate environment.</p>
+          <p class="ls-ep__why">The first 90 days set the tone for your entire first year. Most people coast through them. The ones who don't are the ones who get promoted.</p>
+        </div>
+      </div>
+      <div class="ls-ep__posts">
+        <div class="ls-post">
+          <div class="ls-post__type">Post-Grad Lens</div>
+          <div class="ls-post__title">The first 30 days: your only job is to listen</div>
+          <div class="ls-post__preview">Why the first month isn't about impressing anyone - it's about understanding the team, the culture, and what actually matters here.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Post-Grad Lens</div>
+          <div class="ls-post__title">How to build relationships at work without being weird about it</div>
+          <div class="ls-post__preview">First-gen-specific advice on navigating office dynamics - who to connect with, how often, and why being too eager can backfire just as much as being too quiet.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Carousel</div>
+          <div class="ls-post__title">The 30-60-90 framework for your first role</div>
+          <div class="ls-post__preview">Three phases, three mindsets, three sets of goals - a visual guide to structuring your first three months so you actually find your footing.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EP 07 -->
+    <div class="ls-ep" data-lens="both" data-topics="rejection">
+      <div class="ls-ep__head">
+        <div class="ls-ep__num">07</div>
+        <div class="ls-ep__info">
+          <div class="ls-ep__badges">
+            <span class="ls-ep__lens ls-ep__lens--both">Both</span>
+            <span class="ls-ep__tag">Rejection</span>
+          </div>
+          <h2 class="ls-ep__title">How to Handle Rejection Without Spiraling</h2>
+          <p class="ls-ep__summary">Jose shares the real-time feelings of rejection and what he does next. Jocelyn breaks down what rejection actually tells you - and what it doesn't - and how she reframes it.</p>
+          <p class="ls-ep__why">Rejection is not a signal you did it wrong. But nobody tells you that in the moment. This episode is the conversation we wish we had when it happened to us.</p>
+        </div>
+      </div>
+      <div class="ls-ep__posts">
+        <div class="ls-post">
+          <div class="ls-post__type">Student Lens</div>
+          <div class="ls-post__title">I just got rejected. Here's what I actually did next.</div>
+          <div class="ls-post__preview">A real account of what rejection feels like in real time, the temptation to spiral, and the small actions that helped Jose keep moving forward.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Post-Grad Lens</div>
+          <div class="ls-post__title">What rejection is actually telling you (it's not what you think)</div>
+          <div class="ls-post__preview">Three real stories of final-round rejections, what the actual reasons were, and why none of them were about being inadequate.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Recap</div>
+          <div class="ls-post__title">Ep. 07 Recap - Rejection doesn't mean you did it wrong</div>
+          <div class="ls-post__preview">A grounded, direct recap of both perspectives - with a link to the full article and a reminder that the process is longer than any single outcome.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--both">Both</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EP 08 -->
+    <div class="ls-ep" data-lens="both" data-topics="internships">
+      <div class="ls-ep__head">
+        <div class="ls-ep__num">08</div>
+        <div class="ls-ep__info">
+          <div class="ls-ep__badges">
+            <span class="ls-ep__lens ls-ep__lens--both">Both</span>
+            <span class="ls-ep__tag">Internships</span>
+          </div>
+          <h2 class="ls-ep__title">Low GPA, First-Gen, No Networks - Now What?</h2>
+          <p class="ls-ep__summary">An honest conversation about structural disadvantages and what actually moves the needle when you don't have the traditional markers of access.</p>
+          <p class="ls-ep__why">A lot of advice is written for people who are one good resumé away from success. This episode is for everyone else.</p>
+        </div>
+      </div>
+      <div class="ls-ep__posts">
+        <div class="ls-post">
+          <div class="ls-post__type">Student Lens</div>
+          <div class="ls-post__title">What I actually did when my GPA wasn't competitive</div>
+          <div class="ls-post__preview">The moves Jose made when the standard path felt closed - alternative entry points, skills-forward positioning, and the companies that genuinely don't filter by GPA.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Post-Grad Lens</div>
+          <div class="ls-post__title">What the hiring team actually sees when there's no network</div>
+          <div class="ls-post__preview">Jocelyn on being first-gen in a field full of legacy connections - what she substituted for networks, and what she'd tell herself to do differently.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Carousel</div>
+          <div class="ls-post__title">The moves that work when you don't have traditional access</div>
+          <div class="ls-post__preview">A practical slide deck on the levers that actually shift outcomes for first-gen students - fellowships, alternate pipelines, community programs, and visibility plays.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--both">Both</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EP 09 -->
+    <div class="ls-ep" data-lens="both" data-topics="internships offers on-the-job">
+      <div class="ls-ep__head">
+        <div class="ls-ep__num">09</div>
+        <div class="ls-ep__info">
+          <div class="ls-ep__badges">
+            <span class="ls-ep__lens ls-ep__lens--both">Both</span>
+            <span class="ls-ep__tag">Internships</span>
+            <span class="ls-ep__tag">Offers</span>
+            <span class="ls-ep__tag">On the Job</span>
+          </div>
+          <h2 class="ls-ep__title">Internship to Full-Time: The Handoff</h2>
+          <p class="ls-ep__summary">The relay in one episode - Jose on landing the internship, Jocelyn on turning it into a career. The full arc from first application to full-time offer, told from both ends.</p>
+          <p class="ls-ep__why">The whole point of this series is in this episode. The handoff is the thing we built this platform to make visible.</p>
+        </div>
+      </div>
+      <div class="ls-ep__posts">
+        <div class="ls-post">
+          <div class="ls-post__type">Student Lens</div>
+          <div class="ls-post__title">How I land internships - the real process, not the polished version</div>
+          <div class="ls-post__preview">Jose's actual system: where he looks, how he tracks, how he reaches out, what happens when things go wrong, and what a "yes" actually feels like.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Post-Grad Lens</div>
+          <div class="ls-post__title">How I turned my internship into a full-time role</div>
+          <div class="ls-post__preview">Jocelyn on the specific moves she made during her internship - the relationships she built, the visibility she created, and the conversation she had to ask for the offer.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Recap</div>
+          <div class="ls-post__title">The full arc - from first app to full-time offer</div>
+          <div class="ls-post__preview">Both perspectives woven together into one complete narrative. The relay baton, passed from Jose's side of the bridge to Jocelyn's.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--both">Both</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EP 10 -->
+    <div class="ls-ep" data-lens="both" data-topics="internships offers rejection on-the-job">
+      <div class="ls-ep__head">
+        <div class="ls-ep__num">10</div>
+        <div class="ls-ep__info">
+          <div class="ls-ep__badges">
+            <span class="ls-ep__lens ls-ep__lens--both">Both</span>
+            <span class="ls-ep__tag">Internships</span>
+            <span class="ls-ep__tag">Offers</span>
+            <span class="ls-ep__tag">Rejection</span>
+            <span class="ls-ep__tag">On the Job</span>
+          </div>
+          <h2 class="ls-ep__title">What We Wish We Knew Earlier</h2>
+          <p class="ls-ep__summary">Personal, storytelling-forward, designed to go viral. Jose and Jocelyn each share the one thing they wish someone had told them before they started - and why it matters more than any tactic.</p>
+          <p class="ls-ep__why">This is the episode people share. It's not about strategy - it's about truth.</p>
+        </div>
+      </div>
+      <div class="ls-ep__posts">
+        <div class="ls-post">
+          <div class="ls-post__type">Student Lens</div>
+          <div class="ls-post__title">What I wish I knew before I started applying</div>
+          <div class="ls-post__preview">Jose's most personal post in the series - the things no one told him, the assumptions he made that cost him time, and what he'd go back and change.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jose">Jose</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Post-Grad Lens</div>
+          <div class="ls-post__title">What I wish I knew before I graduated</div>
+          <div class="ls-post__preview">Jocelyn on the gap between college and the real world - the things she had to learn the hard way that nobody warned her about and that she now tells every first-gen student she mentors.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--jocelyn">Jocelyn</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+        <div class="ls-post">
+          <div class="ls-post__type">Recap &amp; CTA</div>
+          <div class="ls-post__title">Ep. 10 Recap - The full series in one post</div>
+          <div class="ls-post__preview">A look back at all 10 episodes, the most important lessons from each, and a call to action for the next cohort of first-gen students ready to start their journey.</div>
+          <div class="ls-post__footer">
+            <span class="ls-post__author ls-post__author--both">Both</span>
+            <span class="ls-post__status">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ls-no-results" id="noResults" aria-live="polite">
+      <p>No episodes match that filter.</p>
+    </div>
+
+  </main>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="ls-how">
+    <div class="ls-how__inner">
+      <p class="ls-how__kicker">The Ecosystem</p>
+      <h2 class="ls-how__title">How this series works</h2>
+      <div class="ls-how__grid">
+        <div class="ls-how__item">
+          <div class="ls-how__item-icon">01</div>
+          <div class="ls-how__item-title"><span class="ls-linkedin">LinkedIn</span> Series</div>
+          <div class="ls-how__item-desc">Where content is published in real time. Follow Jose and Jocelyn to get each post as it drops.</div>
+        </div>
+        <div class="ls-how__item">
+          <div class="ls-how__item-icon">02</div>
+          <div class="ls-how__item-title">This Archive</div>
+          <div class="ls-how__item-desc">Every post organized by episode, labeled, searchable, and connected to related resources. Your home base.</div>
+        </div>
+        <div class="ls-how__item">
+          <div class="ls-how__item-icon">03</div>
+          <div class="ls-how__item-title">Career Templates</div>
+          <div class="ls-how__item-desc">Every episode connects to a copy-paste tool you can use immediately - outreach scripts, trackers, planners.</div>
+        </div>
+        <div class="ls-how__item">
+          <div class="ls-how__item-icon">04</div>
+          <div class="ls-how__item-title">La Voz del Día</div>
+          <div class="ls-how__item-desc">The deeper breakdown of each episode - longer analysis, more context, and the nuance that doesn't fit in a LinkedIn post.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== REQUEST FORM ===== -->
+  <div class="ls-form-wrap">
+    <div class="ls-form-box">
+      <p class="ls-form-box__kicker">Shape the Series</p>
+      <h2 class="ls-form-box__title">What do you want us to cover?</h2>
+      <p class="ls-form-box__sub">We source episode topics directly from the people reading this. Tell us where you're stuck and we'll build an episode around it.</p>
+      <form onsubmit="return false;">
+        <div class="ls-form-row">
+          <label class="ls-form-label" for="topicField">Your topic or question</label>
+          <textarea class="ls-form-textarea" id="topicField" placeholder="e.g. How do I handle a gap in my resume? What do I do after I get ghosted by a recruiter?"></textarea>
+        </div>
+        <div class="ls-form-row">
+          <label class="ls-form-label" for="emailField">Your email</label>
+          <input class="ls-form-input" type="email" id="emailField" placeholder="you@school.edu" />
+        </div>
+        <div class="ls-form-row">
+          <label class="ls-form-label" for="topicCat">Topic area (optional)</label>
+          <select class="ls-form-select" id="topicCat">
+            <option value="">Select a category…</option>
+            <option>Internship search</option>
+            <option>Offers &amp; negotiation</option>
+            <option>Recruiting &amp; outreach</option>
+            <option>Workplace &amp; onboarding</option>
+            <option>Mindset &amp; rejection</option>
+          </select>
+        </div>
+        <button class="ls-form-btn" type="submit">Submit Topic</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="art-footer" style="max-width:1040px;">
+    <span class="art-footer__copy">Jose x Jocelyn &copy; 2026</span>
+    <div class="art-footer__links">
+      <a href="/images/index.html" class="art-footer__link">Home</a>
+      <a href="/articles/" class="art-footer__link">La Voz del Día</a>
+      <a href="/career-templates.html" class="art-footer__link">Templates</a>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll shadow
+    const nav = document.getElementById('artNav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('art-nav--scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    // Filter logic
+    const filters = document.querySelectorAll('.ls-filter');
+    const episodes = document.querySelectorAll('.ls-ep');
+    const noResults = document.getElementById('noResults');
+
+    // Lens-based filters
+    const lensFilters = new Set(['all', 'jose', 'jocelyn', 'both']);
+    // Topic-based filters
+    const topicFilters = new Set(['internships', 'offers', 'rejection', 'on-the-job']);
+
+    filters.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filters.forEach(b => b.classList.remove('ls-filter--active'));
+        btn.classList.add('ls-filter--active');
+        const f = btn.dataset.f;
+        let visible = 0;
+
+        episodes.forEach(ep => {
+          const lens   = ep.dataset.lens;
+          const topics = ep.dataset.topics || '';
+
+          let show = false;
+          if (f === 'all')       show = true;
+          else if (lensFilters.has(f)) show = lens === f;
+          else if (topicFilters.has(f)) show = topics.includes(f);
+
+          ep.hidden = !show;
+          if (show) visible++;
+        });
+
+        noResults.classList.toggle('ls-no-results--visible', visible === 0);
+      });
+    });
+  </script>
+</body>
+</html>
