@@ -173,7 +173,7 @@ export default function Home() {
   }, [])
 
   const handleWaitlistSubmit = useCallback(async () => {
-    if (!waitlistName.trim() || !waitlistEmail.trim() || !waitlistSchool.trim()) return
+    if (!waitlistName.trim() || !waitlistEmail.trim()) return
     setWaitlistLoading(true)
     setWaitlistError('')
     try {
@@ -186,7 +186,7 @@ export default function Home() {
         body: JSON.stringify({
           name: waitlistName.trim(),
           email: waitlistEmail.trim(),
-          school: waitlistSchool.trim(),
+          school: waitlistSchool.trim() || null,
           lang,
         }),
       })
@@ -1326,7 +1326,7 @@ export default function Home() {
               </div>
               {waitlistError && <p role="alert" className="modal__error">{waitlistError}</p>}
               <div className="modal__footer">
-                <button className="modal__btn" disabled={waitlistLoading || !waitlistName.trim() || !waitlistEmail.trim() || !waitlistSchool.trim()} onClick={handleWaitlistSubmit}>
+                <button className="modal__btn" disabled={waitlistLoading || !waitlistName.trim() || !waitlistEmail.trim()} onClick={handleWaitlistSubmit}>
                   {waitlistLoading ? t.waitlistSubmitting : t.waitlistSubmit}
                 </button>
                 <span className="modal__reassurance">{t.waitlistReassurance}</span>
