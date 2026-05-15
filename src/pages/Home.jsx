@@ -224,6 +224,36 @@ export default function Home() {
     }
   }, [waitlistOpen, closeWaitlist])
 
+  useEffect(() => {
+    if (!waitlistSent) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const box = waitlistRef.current
+    if (!box) return
+    const rect = box.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + Math.min(rect.height * 0.32, 180)
+    const pieces = 96
+    for (let i = 0; i < pieces; i++) {
+      const w = 7 + Math.random() * 14
+      const h = 3 + Math.random() * 9
+      const color = CONFETTI_COLORS[(Math.random() * CONFETTI_COLORS.length) | 0]
+      const el = document.createElement('div')
+      el.setAttribute('aria-hidden', 'true')
+      el.style.cssText = `position:fixed;left:${cx}px;top:${cy}px;width:${w}px;height:${h}px;background:${color};border-radius:2px;pointer-events:none;z-index:10100;will-change:transform,opacity;`
+      document.body.appendChild(el)
+      const angle = Math.random() * Math.PI * 2
+      const dist = 140 + Math.random() * 320
+      const dur = 1.1 + Math.random() * 1.1
+      gsap.set(el, { xPercent: -50, yPercent: -50 })
+      const tl = gsap.timeline({ onComplete: () => el.remove() })
+      tl.fromTo(el,
+        { opacity: 1, scale: 0.6, rotation: Math.random() * 360, x: 0, y: 0 },
+        { x: Math.cos(angle) * dist, y: Math.sin(angle) * dist + 140, rotation: `+=${(Math.random() - 0.5) * 760}`, scale: 0.45, duration: dur, ease: 'power3.out' }
+      )
+      tl.fromTo(el, { opacity: 1 }, { opacity: 0, duration: dur * 0.42, ease: 'power2.in' }, dur * 0.58)
+    }
+  }, [waitlistSent])
+
   /* ── Gallery carousel ── */
   function initGallery() {
     const track = galleryRef.current
@@ -1333,13 +1363,22 @@ export default function Home() {
               </div>
             </>
           ) : (
-            <>
-              <p className="modal__kicker">{t.waitlistKicker}</p>
-              <h3 className="modal__title modal__title--sent" id="waitlist-title">{t.waitlistSentTitle}</h3>
-              <p className="modal__msg">{t.waitlistSentMsg}</p>
-              <p className="modal__signature">{t.waitlistSentSignature}</p>
-              <button className="modal__btn modal__btn--ghost" onClick={closeWaitlist}>{t.modalClose}</button>
-            </>
+            <div className="modal__celebrate">
+              <p className="modal__kicker modal__kicker--celebrate">{t.waitlistKicker}</p>
+              <div className="modal__title-row modal__title--celebrate">
+                <h3 className="modal__title modal__title--sent" id="waitlist-title">{t.waitlistSentTitle}</h3>
+                <img
+                  src="/images/sun.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="modal__sun"
+                  draggable="false"
+                />
+              </div>
+              <p className="modal__msg modal__msg--celebrate">{t.waitlistSentMsg}</p>
+              <p className="modal__signature modal__signature--celebrate">{t.waitlistSentSignature}</p>
+              <button className="modal__btn modal__btn--ghost modal__btn--celebrate" onClick={closeWaitlist}>{t.modalClose}</button>
+            </div>
           )}
         </div>
       </div>
