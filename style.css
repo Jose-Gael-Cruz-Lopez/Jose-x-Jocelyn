@@ -704,6 +704,57 @@ ul { list-style: none; }
 }
 
 /* ============================================
+   HERO — Waitlist CTA (pre-launch mode)
+   Sharp poster-stamp in the brand's editorial voice
+   ============================================ */
+.hero__waitlist-cta {
+  margin-top: clamp(-10px, -0.4vw, 0px);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: clamp(14px, 1.9vw, 18px) clamp(28px, 4.2vw, 40px);
+  font-family: var(--font-display);
+  font-size: clamp(14px, 1.65vw, 17px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-dark);
+  background: var(--color-gold);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transform: rotate(-2deg);
+  transition: transform 0.32s var(--ease-out), background 0.22s var(--ease-out);
+}
+
+.hero__waitlist-cta:hover {
+  background: var(--color-gold-hover);
+  transform: rotate(0deg) scale(1.02);
+}
+
+.hero__waitlist-cta:active {
+  transform: rotate(0deg) scale(0.99);
+}
+
+.hero__waitlist-cta:focus-visible {
+  outline: 2px solid var(--color-cream);
+  outline-offset: 3px;
+}
+
+.hero__waitlist-cta-arrow {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  top: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__waitlist-cta { transition: background 0.22s ease; transform: rotate(-2deg); }
+  .hero__waitlist-cta:hover { transform: rotate(-2deg); }
+  .hero__waitlist-cta:active { transform: rotate(-2deg); }
+}
+
+/* ============================================
    INTRO — 50/50 split (2×2 banners left, text right)
    ============================================ */
 .intro {

@@ -871,6 +871,23 @@ export default function Home() {
             <span className="hero__foot-sep" aria-hidden="true"> · </span>
             <span className="hero__foot-phrase">{t.heroFoot3}</span>
           </p>
+          {WAITLIST_MODE && (
+            <button
+              type="button"
+              className="hero__waitlist-cta"
+              onClick={openWaitlist}
+              aria-haspopup="dialog"
+              aria-controls="waitlistModal"
+            >
+              <span className="hero__waitlist-cta-label">{tNav.waitlist}</span>
+              <span className="hero__waitlist-cta-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="13 6 19 12 13 18" />
+                </svg>
+              </span>
+            </button>
+          )}
         </div>
         <div className="hero__chrome-strip hero__chrome-strip--bottom" aria-hidden="true" />
       </section>
